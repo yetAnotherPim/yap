@@ -52,7 +52,7 @@ jobs:
         needs:
             - Composer-Audit
             - Init
-        uses: PHPCS.yaml
+        uses: ./.github/workflows/php-cs-fixer.yaml
 
     PHPStan:
         needs:
