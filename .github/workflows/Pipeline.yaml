@@ -94,3 +94,13 @@ jobs:
         with:
             CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
             PREVIOUS_PHP_VERSION: ${{ needs.Init.outputs.PREVIOUS_PHP_VERSION }}
+
+    FunctionalTests:
+        needs:
+            - UnitTests
+            #- IntegrationTests
+            - Init
+        uses: ./.github/workflows/Functional-Tests.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+            PREVIOUS_PHP_VERSION: ${{ needs.Init.outputs.PREVIOUS_PHP_VERSION }}
