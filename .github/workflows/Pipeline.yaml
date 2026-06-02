@@ -47,3 +47,9 @@ jobs:
         uses: ./.github/workflows/Lint-Twig.yaml
         with:
             CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+
+    PHPCS:
+        needs:
+            - Composer-Audit
+            - Init
+        uses: ./.github/workflows/Phpcs.yaml
