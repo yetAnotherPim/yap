@@ -45,6 +45,7 @@ jobs:
             - name: Create Database
               run: |
                   sleep 10
+                  docker ps
                   bin/console doctrine:database:create
 
             - name: Run migrations
