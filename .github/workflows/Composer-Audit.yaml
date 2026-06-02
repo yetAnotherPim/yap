@@ -19,7 +19,6 @@ jobs:
                   php-version: "${{ inputs.CURRENT_PHP_VERSION }}"
                   tools: pecl, composer:2
                   extensions: mbstring
-                  coverage: xdebug
 
             - name: Get Composer Cache Directory
               id: composer-cache
