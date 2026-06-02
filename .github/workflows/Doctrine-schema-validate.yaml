@@ -11,21 +11,27 @@ jobs:
         name: Validate
         runs-on: ubuntu-latest
         env:
-            APP_ENV: dev
+            APP_ENV: test
+        services:
+            postgres:
+                image: postgres:16
+                env:
+                    POSTGRES_DB: app_test
+                    POSTGRES_USER: app
+                    POSTGRES_PASSWORD: !ChangeMe!
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
         steps:
             - uses: actions/checkout@v4
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: "${{ inputs.CURRENT_PHP_VERSION }}"
                   tools: pecl
-
-            - name: Cache Docker images
-              uses: ScribeMD/docker-cache@0.5.0
-              with:
-                  key: docker-${{ runner.os }}-${{ hashFiles('docker-compose.yaml') }}
-
-            - name: Create Docker Universe
-              run: docker compose up -d
 
             - name: Get Composer Cache Directory
               id: composer-cache
@@ -41,11 +47,6 @@ jobs:
 
             - name: Install dependencies
               run: composer install --prefer-dist
-
-            - name: Create Database
-              run: |
-                  sleep 30
-                  bin/console doctrine:database:create
 
             - name: Run migrations
               run: bin/console doctrine:migrations:migrate
