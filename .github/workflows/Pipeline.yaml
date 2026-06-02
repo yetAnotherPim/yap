@@ -52,4 +52,13 @@ jobs:
         needs:
             - Composer-Audit
             - Init
-        uses: ./.github/workflows/Phpcs.yaml
+        uses: PHPCS.yaml
+
+    PHPStan:
+        needs:
+            - Composer-Audit
+            - Init
+        uses: ./.github/workflows/PHPStan.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+            PREVIOUS_PHP_VERSION: ${{ needs.Init.outputs.PREVIOUS_PHP_VERSION }}
