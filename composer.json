@@ -96,6 +96,12 @@
         ],
         "test-units": [
             "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite unit --coverage-html coverage_unit"
+        ],
+        "test-integration": [
+            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite integration --coverage-html coverage_unit"
+        ],
+        "test-functional": [
+            "exit 1;"
         ]
     },
     "conflict": {
