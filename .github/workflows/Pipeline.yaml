@@ -39,3 +39,11 @@ jobs:
         uses: ./.github/workflows/Lint-Yaml.yaml
         with:
             CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+
+    Lint-Twig:
+        needs:
+            - Composer-Audit
+            - Init
+        uses: ./.github/workflows/Lint-Twig.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
