@@ -11,7 +11,7 @@ jobs:
         name: Validate
         runs-on: ubuntu-latest
         env:
-            APP_ENV: test
+            APP_ENV: dev
         steps:
             - uses: actions/checkout@v4
             - uses: shivammathur/setup-php@v2
