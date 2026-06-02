@@ -1,0 +1,54 @@
+on:
+    workflow_call:
+        inputs:
+            CURRENT_PHP_VERSION:
+                type: string
+                required: true
+
+name: Analyse
+jobs:
+    doctrine:
+        name: Validate
+        runs-on: ubuntu-latest
+        env:
+            APP_ENV: test
+        steps:
+            - uses: actions/checkout@v4
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "${{ inputs.CURRENT_PHP_VERSION }}"
+                  tools: pecl
+
+            - name: Cache Docker images
+              uses: ScribeMD/docker-cache@0.5.0
+              with:
+                  key: docker-${{ runner.os }}-${{ hashFiles('docker-compose.yaml') }}
+
+            - name: Create Docker Universe
+              run: docker compose up -d
+
+            - name: Get Composer Cache Directory
+              id: composer-cache
+              run: |
+                  echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              run: composer install --prefer-dist
+
+            - name: Create Database
+              run: |
+                  sleep 10
+                  bin/console doctrine:database:create
+
+            - name: Run migrations
+              run: bin/console doctrine:migrations:migrate
+
+            - name: Validate
+              run: bin/console doctrine:schema:validate -n -vv
