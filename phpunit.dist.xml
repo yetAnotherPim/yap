@@ -7,6 +7,8 @@
          failOnDeprecation="true"
          failOnNotice="true"
          failOnWarning="true"
+         failOnRisky="true"
+         beStrictAboutCoverageMetadata="true"
          bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
 >
@@ -18,8 +20,11 @@
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+        <testsuite name="unit">
+            <directory>tests/unit</directory>
+        </testsuite>
+        <testsuite name="integration">
+            <directory>tests/integration</directory>
         </testsuite>
     </testsuites>
 
@@ -40,5 +45,9 @@
     </source>
 
     <extensions>
+        <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension">
+            <parameter name="clock-mock-namespaces" value="App" />
+            <parameter name="dns-mock-namespaces" value="App" />
+        </bootstrap>
     </extensions>
 </phpunit>
