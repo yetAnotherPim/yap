@@ -21,6 +21,9 @@ class ProductApiTest extends ApiTestCase {
         parent::setUp();
     }
 
+    // TODO: api test multiple products with multiple identifier, some sharing same identifier (condition -> used, new)
+    // TODO: test: find products with no identifier
+
 
     public function testGetProduct(): void {
         $product = ProductFactory::createOne();

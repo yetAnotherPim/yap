@@ -69,9 +69,7 @@ class Identifier
         $this->value = $value;
     }
 
-    // TODO: api test multiple products with multiple identifier, some sharing same identifier (condition -> used, new)
     // TODO: route products/{gtin}/54653456546 + test
-    // TODO: test: find products with no identifier
 
     public function getProduct(): Product
     {
