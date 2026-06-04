@@ -1,0 +1,106 @@
+on:
+    workflow_dispatch:
+    pull_request:
+    push:
+        branches:
+            - main
+
+name: Pipeline
+
+env:
+    CURRENT_PHP_VERSION: '8.5'
+    PREVIOUS_PHP_VERSION: '8.4'
+
+jobs:
+    Init:
+        runs-on: ubuntu-latest
+        outputs:
+            CURRENT_PHP_VERSION: ${{ steps.init.outputs.CURRENT_PHP_VERSION }}
+            PREVIOUS_PHP_VERSION: ${{ steps.init.outputs.PREVIOUS_PHP_VERSION }}
+        steps:
+            -   name: Init Variables
+                id: init
+                run: |
+                    echo $CURRENT_PHP_VERSION
+                    echo "CURRENT_PHP_VERSION=$CURRENT_PHP_VERSION" >> $GITHUB_OUTPUT
+                    echo "PREVIOUS_PHP_VERSION=$PREVIOUS_PHP_VERSION" >> $GITHUB_OUTPUT
+
+    Composer-Audit:
+        needs:
+            - Init
+        uses: ./.github/workflows/Composer-Audit.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+
+    Lint-Yaml:
+        needs:
+            - Composer-Audit
+            - Init
+        uses: ./.github/workflows/Lint-Yaml.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+
+    Lint-Twig:
+        needs:
+            - Composer-Audit
+            - Init
+        uses: ./.github/workflows/Lint-Twig.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+
+    Doctrine-Schema:
+        needs:
+            - Composer-Audit
+            - Init
+        uses: ./.github/workflows/Doctrine-schema-validate.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+
+    PHPCS:
+        needs:
+            - Composer-Audit
+            - Init
+        uses: ./.github/workflows/PHPCS.yaml
+
+    PHPStan:
+        needs:
+            - Composer-Audit
+            - Init
+        uses: ./.github/workflows/PHPStan.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+            PREVIOUS_PHP_VERSION: ${{ needs.Init.outputs.PREVIOUS_PHP_VERSION }}
+
+    UnitTests:
+        needs:
+            - Lint-Yaml
+            - Doctrine-Schema
+            - PHPCS
+            - PHPStan
+            - Init
+        uses: ./.github/workflows/Unit-Tests.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+            PREVIOUS_PHP_VERSION: ${{ needs.Init.outputs.PREVIOUS_PHP_VERSION }}
+
+    IntegrationTests:
+        needs:
+            - Lint-Yaml
+            - Doctrine-Schema
+            - PHPCS
+            - PHPStan
+            - Init
+        uses: ./.github/workflows/Integration-Tests.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+            PREVIOUS_PHP_VERSION: ${{ needs.Init.outputs.PREVIOUS_PHP_VERSION }}
+
+    FunctionalTests:
+        needs:
+            - UnitTests
+            #- IntegrationTests
+            - Init
+        uses: ./.github/workflows/Functional-Tests.yaml
+        with:
+            CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+            PREVIOUS_PHP_VERSION: ${{ needs.Init.outputs.PREVIOUS_PHP_VERSION }}

@@ -1,0 +1,55 @@
+on:
+    workflow_call:
+        inputs:
+            CURRENT_PHP_VERSION:
+                type: string
+                required: true
+
+name: Analyse
+jobs:
+    doctrine:
+        name: Validate
+        runs-on: ubuntu-latest
+        env:
+            APP_ENV: test
+        services:
+            postgres:
+                image: postgres:16
+                env:
+                    POSTGRES_DB: app_test
+                    POSTGRES_USER: app
+                    POSTGRES_PASSWORD: "!ChangeMe!"
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+        steps:
+            - uses: actions/checkout@v4
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "${{ inputs.CURRENT_PHP_VERSION }}"
+                  tools: pecl
+
+            - name: Get Composer Cache Directory
+              id: composer-cache
+              run: |
+                  echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              run: composer install --prefer-dist
+
+            - name: Run migrations
+              run: bin/console doctrine:migrations:migrate
+
+            - name: Validate
+              run: bin/console doctrine:schema:validate -n -vv
