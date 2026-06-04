@@ -26,7 +26,7 @@
         <testsuite name="integration">
             <directory>tests/integration</directory>
         </testsuite>
-        <testsuite name="functional">
+        <testsuite name="api">
             <directory>tests/functional/api</directory>
         </testsuite>
     </testsuites>
@@ -48,6 +48,9 @@
     </source>
 
     <extensions>
+        <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension">
+            <parameter name="enabled-auto-reset" value="true"/>
+        </bootstrap>
         <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension">
             <parameter name="clock-mock-namespaces" value="App" />
             <parameter name="dns-mock-namespaces" value="App" />

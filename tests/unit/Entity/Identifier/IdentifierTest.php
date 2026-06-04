@@ -46,7 +46,7 @@ class IdentifierTest extends TestCase
     {
         return [
             ['setValue', 'getValue', 'value'],
-            ['setValue', 'getValue', null, \TypeError::class]
+            ['setValue', 'getValue', null, \TypeError::class],
         ];
     }
 }

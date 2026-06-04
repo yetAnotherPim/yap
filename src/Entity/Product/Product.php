@@ -91,12 +91,7 @@ class Product
 
     public function removeIdentifier(Identifier $identifier): static
     {
-        if ($this->identifiers->removeElement($identifier)) {
-            // set the owning side to null (unless already changed)
-            if ($identifier->getProduct() === $this) {
-                $identifier->setProduct(null);
-            }
-        }
+        $this->identifiers->removeElement($identifier);
 
         return $this;
     }

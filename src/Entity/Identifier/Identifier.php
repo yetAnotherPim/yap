@@ -33,7 +33,7 @@ class Identifier
     #[ORM\JoinColumn(nullable: false)]
     private IdentifierType $type;
 
-    //TODO: convert to int or string
+    // TODO: convert to int or string
     #[ORM\Column(length: 255)]
     #[NotBlank]
     private string $value;
@@ -46,6 +46,7 @@ class Identifier
     {
         return $this->id;
     }
+
     public function getType(): IdentifierType
     {
         return $this->type;
@@ -68,9 +69,9 @@ class Identifier
         $this->value = $value;
     }
 
-    //TODO: api test multiple products with multiple identifier, some sharing same identifier (condition -> used, new)
-    //TODO: route products/{gtin}/54653456546 + test
-    //TODO: test: find products with no identifier
+    // TODO: api test multiple products with multiple identifier, some sharing same identifier (condition -> used, new)
+    // TODO: route products/{gtin}/54653456546 + test
+    // TODO: test: find products with no identifier
 
     public function getProduct(): Product
     {
@@ -83,6 +84,4 @@ class Identifier
 
         return $this;
     }
-
-
 }

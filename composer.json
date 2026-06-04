@@ -102,10 +102,10 @@
             "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite unit --coverage-html coverage_unit"
         ],
         "test-integration": [
-            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite integration --coverage-html coverage_unit"
+            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite integration --coverage-html coverage_integration"
         ],
-        "test-functional": [
-            "exit 1;"
+        "test-api": [
+            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite api"
         ]
     },
     "conflict": {
@@ -133,6 +133,7 @@
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^8.1",
         "symfony/stopwatch": "8.1.*",
-        "symfony/web-profiler-bundle": "8.1.*"
+        "symfony/web-profiler-bundle": "8.1.*",
+        "zenstruck/foundry": "^2.10"
     }
 }
