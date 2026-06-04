@@ -6,7 +6,10 @@ namespace App\Entity\Product;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Identifier\Identifier;
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
@@ -27,6 +30,17 @@ class Product
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    /**
+     * @var Collection<int, Identifier>
+     */
+    #[ORM\OneToMany(targetEntity: Identifier::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $identifiers;
+
+    public function __construct()
+    {
+        $this->identifiers = new ArrayCollection();
+    }
 
     public function getId(): Uuid
     {
@@ -53,6 +67,36 @@ class Product
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Identifier>
+     */
+    public function getIdentifiers(): Collection
+    {
+        return $this->identifiers;
+    }
+
+    public function addIdentifier(Identifier $identifier): static
+    {
+        if (!$this->identifiers->contains($identifier)) {
+            $this->identifiers->add($identifier);
+            $identifier->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdentifier(Identifier $identifier): static
+    {
+        if ($this->identifiers->removeElement($identifier)) {
+            // set the owning side to null (unless already changed)
+            if ($identifier->getProduct() === $this) {
+                $identifier->setProduct(null);
+            }
+        }
 
         return $this;
     }
