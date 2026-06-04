@@ -10,6 +10,7 @@ use App\Entity\Identifier\Type\Enum\DataType;
 use App\Repository\IdentifierTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -27,6 +28,7 @@ class IdentifierType
 
     #[ORM\Column(length: 255, unique: true)]
     #[NotBlank]
+    #[Groups(['product:read'])]
     private string $title;
 
     #[ORM\Column(enumType: DataType::class)]

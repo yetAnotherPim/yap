@@ -6,12 +6,14 @@ namespace App\Entity\Identifier;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Identifier\Type\Enum\DataType;
 use App\Entity\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Repository\IdentifierRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -31,14 +33,15 @@ class Identifier
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['product:read'])]
     private IdentifierType $type;
 
-    // TODO: convert to int or string
     #[ORM\Column(length: 255)]
     #[NotBlank]
+    #[Groups(['product:read'])]
     private string $value;
 
-    #[ORM\ManyToOne(inversedBy: 'identifiers')]
+    #[ORM\ManyToOne(cascade: ['all'], inversedBy: 'identifiers')]
     #[ORM\JoinColumn(nullable: false)]
     private Product $product;
 
@@ -57,6 +60,22 @@ class Identifier
         $this->type = $type;
 
         return $this;
+    }
+
+    #[ApiProperty(
+        openapiContext: [
+            'type' => 'integer|string',
+            'example' => 040005255656,
+        ]
+    )]
+    #[Groups(['product:read'])]
+    public function getTypedValue(): string|int
+    {
+        if (true === isset($this->type) && DataType::Integer === $this->getType()->getDataType()) {
+            return (int) $this->value;
+        }
+
+        return $this->value;
     }
 
     public function getValue(): string

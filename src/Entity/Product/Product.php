@@ -12,10 +12,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['product:read']]
+)]
 class Product
 {
     #[ORM\Id]
@@ -35,7 +38,10 @@ class Product
      * @var Collection<int, Identifier>
      */
     #[ORM\OneToMany(targetEntity: Identifier::class, mappedBy: 'product', orphanRemoval: true)]
+    #[Groups(['product:read'])]
     private Collection $identifiers;
+
+    //TODO: test associations
 
     public function __construct()
     {
