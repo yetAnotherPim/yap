@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Entity;
+namespace App\Tests\unit\Entity\Product;
 
 use App\Entity\Product\Product;
 use App\Tests\helper\Trait\SetterGetterTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(Product::class)]
 class ProductTest extends TestCase
@@ -18,9 +20,9 @@ class ProductTest extends TestCase
     public function testGetId(): void
     {
         $entity = new Product();
-        $this->setByReflection($entity, 'id', '06596b45-b9cd-7514-8000-dbce2c5d54f0');
+        $this->setByReflection($entity, 'id', Uuid::v7());
 
-        $this->assertEquals('06596b45-b9cd-7514-8000-dbce2c5d54f0', $entity->getId());
+        $this->assertInstanceOf(UuidV7::class, $entity->getId());
     }
 
     /**

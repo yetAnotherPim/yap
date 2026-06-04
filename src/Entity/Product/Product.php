@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity\Product;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
@@ -19,6 +19,7 @@ class Product
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
+    #[ApiProperty(identifier: true)]
     private Uuid $id;
 
     #[ORM\Column]

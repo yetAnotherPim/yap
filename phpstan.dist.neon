@@ -1,4 +1,6 @@
 parameters:
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
     level: max
     bootstrapFiles:
         - ./vendor/autoload.php
@@ -10,3 +12,5 @@ parameters:
         - tests/
     excludePaths:
         - tests/bootstrap.php
+        - tests/object-manager.php
+        - config/reference.php
