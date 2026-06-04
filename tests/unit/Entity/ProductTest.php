@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Entity;
 
-use App\Entity\Product;
+use App\Entity\Product\Product;
 use App\Tests\helper\Trait\SetterGetterTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
