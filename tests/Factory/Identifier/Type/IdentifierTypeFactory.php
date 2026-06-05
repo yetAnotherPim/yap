@@ -25,6 +25,7 @@ final class IdentifierTypeFactory extends PersistentObjectFactory
         return [
             'dataType' => self::faker()->randomElement(DataType::cases()),
             'title' => self::faker()->text(255),
+            'createdAt' => self::faker()->dateTime(),
         ];
     }
 }

@@ -27,6 +27,7 @@ final class IdentifierFactory extends PersistentObjectFactory
             'product' => ProductFactory::new(),
             'type' => IdentifierTypeFactory::new(),
             'value' => self::faker()->text(255),
+            'createdAt' => self::faker()->dateTime(),
         ];
     }
 }
