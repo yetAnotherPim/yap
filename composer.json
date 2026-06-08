@@ -119,6 +119,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.95",
+        "justinrainbow/json-schema": "^6.9",
         "mockery/mockery": "^1.6",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.2",

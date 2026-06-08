@@ -44,6 +44,7 @@ class Product
     private ?\DateTimeImmutable $updatedAt = null;
 
     //TODO: test associations
+    //TODO: set created at and updted at -> integration test
 
     public function __construct()
     {
