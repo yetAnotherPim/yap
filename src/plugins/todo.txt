@@ -1,0 +1,12 @@
+TODO:
+-autoload: (if active)
+    plugins/*/Crontroller
+    plugins/*/Entity
+    plugins/*/services.yaml
+
+-on activation: load migration
+
+Plugins:
+Feeds
+    -Settings: external Storages -> encrypted in DB
+
