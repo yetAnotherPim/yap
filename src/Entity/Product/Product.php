@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity\Product;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Entity\Identifier\Identifier;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,8 +19,18 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource(
+#[Get(
     normalizationContext: ['groups' => ['product:read']]
+)]
+#[GetCollection(
+    normalizationContext: ['groups' => ['product:read']],
+    parameters: [
+        'hasIdentifiers' => new QueryParameter(
+            filter: new ExistsFilter(),
+            description: 'Filter products that have/don\'t have identifiers',
+            property: 'identifiers',
+        ),
+    ]
 )]
 class Product
 {

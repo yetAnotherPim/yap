@@ -56,18 +56,29 @@ class ProductApiTest extends ApiTestCase
     }
 
     /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
     public function testGetProductsWithoutIdentifier(): void
     {
         SimpleProductStory::load();
-        ProductFactory::createOne();
+        ProductFactory::createOne([
+            'identifiers' => [],
+        ]);
 
-        $response = $this->client->request('GET', '/api/products');
-
+        $response = $this->client->request('GET', '/api/products?hasIdentifiers=1');
+        $this->assertJsonContains(['totalItems' => 1]);
+        $this->assertStringContainsString('"identifiers":[{"@id":', $response->getContent());
         $this->assertResponseStatusCodeSame(200);
 
-        // TODO: add assertions
+        $response = $this->client->request('GET', '/api/products?hasIdentifiers=0');
+
+        $this->assertJsonContains(['totalItems' => 1]);
+        $this->assertStringContainsString('"identifiers":[]', $response->getContent());
+        $this->assertResponseStatusCodeSame(200);
     }
 
     /**
