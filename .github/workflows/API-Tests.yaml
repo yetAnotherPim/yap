@@ -39,17 +39,18 @@ jobs:
         - name: Create Docker Universe
           run: docker compose up -d
 
-        - name: Get Composer Cache Directory
-          id: composer-cache
-          run: |
-              echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        # TODO: reimplement cache
+        #- name: Get Composer Cache Directory
+        #  id: composer-cache
+        #  run: |
+        #      echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-        - name: Cache Composer dependencies
-          uses: actions/cache@v5
-          with:
-              path: ${{ steps.composer-cache.outputs.dir }}
-              key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-              restore-keys: ${{ runner.os }}-composer-
+        #- name: Cache Composer dependencies
+        #  uses: actions/cache@v5
+        #  with:
+        #      path: ${{ steps.composer-cache.outputs.dir }}
+        #      key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        #      restore-keys: ${{ runner.os }}-composer-
 
         - name: Install dependencies
           if: ${{ matrix.php-version != inputs.CURRENT_PHP_VERSION }}
