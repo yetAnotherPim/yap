@@ -44,6 +44,7 @@ jobs:
               run: |
                   echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
                   echo $GITHUB_OUTPUT
+                  echo ${{ steps.composer-cache.outputs.dir }}
 
             - name: Cache Composer dependencies
               uses: actions/cache@v5
