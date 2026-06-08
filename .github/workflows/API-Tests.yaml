@@ -28,10 +28,14 @@ jobs:
               tools: pecl
               coverage: xdebug
 
-        - name: Cache Docker images
-          uses: ScribeMD/docker-cache@0.5.0
+        - name: Cache Docker Compose Images
+          id: cache-docker
+          uses: seijikohara/docker-compose-cache-action@v1
           with:
-              key: docker-${{ runner.os }}-${{ hashFiles('compose.yaml') }}
+              compose-files: |
+                  compose.yml
+                  docker-compose.prod.yml
+              cache-key-prefix: yap-docker-images
 
         - name: Create Docker Universe
           run: docker compose up -d
