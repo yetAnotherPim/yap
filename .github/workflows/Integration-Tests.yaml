@@ -14,8 +14,6 @@ jobs:
     integration:
         name: Test
         runs-on: ubuntu-latest
-        env:
-            APP_ENV: test
         strategy:
             fail-fast: false
             matrix:
@@ -34,7 +32,6 @@ jobs:
               with:
                   compose-files: |
                       compose.yml
-                      docker-compose.prod.yml
                   cache-key-prefix: yap-docker-images
 
             - name: Create Docker Universe

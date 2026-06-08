@@ -34,7 +34,6 @@ jobs:
           with:
               compose-files: |
                   compose.yml
-                  docker-compose.prod.yml
               cache-key-prefix: yap-docker-images
 
         - name: Create Docker Universe
