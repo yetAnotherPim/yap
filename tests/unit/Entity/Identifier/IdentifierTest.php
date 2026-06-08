@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\unit\Entity\Identifier;
 
 use App\Entity\Identifier\Identifier;
+use App\Entity\Identifier\Type\Enum\DataType;
+use App\Entity\Identifier\Type\IdentifierType;
+use App\Entity\Product\Product;
 use App\Tests\helper\Trait\SetterGetterTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(Identifier::class)]
-class IdentifierTest extends TestCase
+class IdentifierTest extends MockeryTestCase
 {
     use SetterGetterTrait;
 
@@ -23,6 +26,20 @@ class IdentifierTest extends TestCase
         $this->setByReflection($entity, 'id', Uuid::v7());
 
         $this->assertInstanceOf(UuidV7::class, $entity->getId());
+    }
+
+    public function testGetTypedValue(): void
+    {
+        $identifierTypeMock = \Mockery::mock(IdentifierType::class);
+        $entity = new Identifier()->setType($identifierTypeMock);
+        $entity->setValue('123456');
+
+        $identifierTypeMock
+            ->shouldReceive('getDataType')
+            ->once()
+            ->andReturn(DataType::Integer);
+
+        $this->assertEquals(123456, $entity->getTypedValue());
     }
 
     /**
@@ -47,6 +64,15 @@ class IdentifierTest extends TestCase
         return [
             ['setValue', 'getValue', 'value'],
             ['setValue', 'getValue', null, \TypeError::class],
+            ['setUpdatedAt', 'getUpdatedAt', new \DateTimeImmutable('now')],
+            ['setUpdatedAt', 'getUpdatedAt', new \DateTime('now'), \TypeError::class],
+            ['setUpdatedAt', 'getUpdatedAt', null],
+            ['setCreatedAt', 'getCreatedAt', new \DateTimeImmutable('now')],
+            ['setCreatedAt', 'getCreatedAt', new \DateTime('now'), \TypeError::class],
+            ['setCreatedAt', 'getCreatedAt', null, \TypeError::class],
+            ['setValue', 'getTypedValue', 'value'],
+            ['setProduct', 'getProduct', \Mockery::mock(Product::class)],
+            ['setProduct', 'getProduct', null, \TypeError::class],
         ];
     }
 }
