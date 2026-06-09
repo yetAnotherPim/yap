@@ -6,8 +6,11 @@ namespace App\Entity\Product;
 
 use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Entity\Identifier\Identifier;
 use App\Repository\ProductRepository;
@@ -27,11 +30,14 @@ use Symfony\Component\Uid\Uuid;
     parameters: [
         'hasIdentifiers' => new QueryParameter(
             filter: new ExistsFilter(),
-            description: 'Filter products that have/don\'t have identifiers',
             property: 'identifiers',
+            description: 'Filter products that have/don\'t have identifiers',
         ),
     ]
 )]
+#[Post]
+#[Patch]
+#[Delete]
 class Product
 {
     #[ORM\Id]
@@ -49,14 +55,13 @@ class Product
     private Collection $identifiers;
 
     #[ORM\Column]
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'identifier:filter'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'identifier:filter'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    // TODO: test associations
     // TODO: set created at and updted at -> integration test
 
     public function __construct()

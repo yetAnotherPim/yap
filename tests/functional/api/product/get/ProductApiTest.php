@@ -32,8 +32,6 @@ class ProductApiTest extends ApiTestCase
         parent::setUp();
     }
 
-    // TODO: test: find products with no identifier
-    // TODO: test deletion of identifiertype will remove related identifiers => integration test
     // TODO: test updating identifier will update products updated at
 
     /**
