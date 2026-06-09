@@ -32,8 +32,6 @@ class ProductApiTest extends ApiTestCase
         parent::setUp();
     }
 
-    // TODO: test updating identifier will update products updated at
-
     /**
      * @throws TransportExceptionInterface
      */

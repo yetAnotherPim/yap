@@ -1,4 +1,5 @@
 TODO:
+-PluginManager
 -autoload: (if active)
     plugins/*/Crontroller
     plugins/*/Entity
@@ -9,4 +10,6 @@ TODO:
 Plugins:
 Feeds
     -Settings: external Storages -> encrypted in DB
+Messenger Plugin: Entity-Updates (changeSet) via Message (JSON)
+ElasticSearch
 
