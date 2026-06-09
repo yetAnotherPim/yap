@@ -7,9 +7,9 @@
         "php": ">=8.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "api-platform/doctrine-orm": "^4.3",
-        "api-platform/symfony": "^4.3",
-        "doctrine/doctrine-bundle": "^3.2",
+        "api-platform/doctrine-orm": "^4.3.10",
+        "api-platform/symfony": "^4.3.10",
+        "doctrine/doctrine-bundle": "^3.2.3",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6",
         "nelmio/cors-bundle": "^2.6",
@@ -102,10 +102,10 @@
             "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite unit --coverage-html coverage_unit"
         ],
         "test-integration": [
-            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite integration --coverage-html coverage_unit"
+            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite integration --coverage-html coverage_integration"
         ],
-        "test-functional": [
-            "exit 1;"
+        "test-api": [
+            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite api"
         ]
     },
     "conflict": {
@@ -118,21 +118,23 @@
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.95",
+        "friendsofphp/php-cs-fixer": "^3.95.4",
+        "justinrainbow/json-schema": "^6.9",
         "mockery/mockery": "^1.6",
         "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^2.2",
-        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan": "^2.2.2",
+        "phpstan/phpstan-doctrine": "^2.0.25",
         "phpstan/phpstan-mockery": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
-        "phpunit/phpunit": "^13.1",
+        "phpunit/phpunit": "^13.1.14",
         "symfony/browser-kit": "8.1.*",
         "symfony/css-selector": "8.1.*",
         "symfony/debug-bundle": "8.1.*",
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^8.1",
         "symfony/stopwatch": "8.1.*",
-        "symfony/web-profiler-bundle": "8.1.*"
+        "symfony/web-profiler-bundle": "8.1.*",
+        "zenstruck/foundry": "^2.10"
     }
 }

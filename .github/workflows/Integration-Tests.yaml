@@ -11,9 +11,11 @@ on:
 name: Test
 
 jobs:
-    unit:
+    integration:
         name: Test
         runs-on: ubuntu-latest
+        env:
+            APP_ENV: test
         strategy:
             fail-fast: false
             matrix:
@@ -26,17 +28,29 @@ jobs:
                   tools: pecl
                   coverage: xdebug
 
-            - name: Get Composer Cache Directory
-              id: composer-cache
-              run: |
-                  echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-            - name: Cache Composer dependencies
-              uses: actions/cache@v4
+            - name: Cache Docker Compose Images
+              id: cache-docker
+              uses: seijikohara/docker-compose-cache-action@v1
               with:
-                  path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: ${{ runner.os }}-composer-
+                  compose-files: |
+                      compose.yml
+                  cache-key-prefix: yap-docker-images
+
+            - name: Create Docker Universe
+              run: docker compose up -d
+
+            # TODO: reimplement cache
+            #- name: Get Composer Cache Directory
+            #  id: composer-cache
+            #  run: |
+            #      echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            #- name: Cache Composer dependencies
+            #  uses: actions/cache@v5
+            #  with:
+            #      path: ${{ steps.composer-cache.outputs.dir }}
+            #      key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+            #      restore-keys: ${{ runner.os }}-composer-
 
             - name: Install dependencies
               if: ${{ matrix.php-version != inputs.CURRENT_PHP_VERSION }}

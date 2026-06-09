@@ -1,0 +1,5 @@
+TODO:
+-default (value untranslated)
+- translatable (bool)
+- filterable (bool)
+- section (association)

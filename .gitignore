@@ -13,6 +13,7 @@
 /phpunit.xml
 /.phpunit.cache/
 /coverage_unit/
+/coverage_integration/
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###

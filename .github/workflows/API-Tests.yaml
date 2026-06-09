@@ -1,0 +1,72 @@
+on:
+    workflow_call:
+        inputs:
+            CURRENT_PHP_VERSION:
+                type: string
+                required: true
+            PREVIOUS_PHP_VERSION:
+                type: string
+                required: true
+
+name: Test
+
+jobs:
+    api:
+        name: Test
+        runs-on: ubuntu-latest
+        env:
+            APP_ENV: test
+        strategy:
+            fail-fast: false
+            matrix:
+                php-version: [ "${{ inputs.PREVIOUS_PHP_VERSION }}","${{ inputs.CURRENT_PHP_VERSION }}" ]
+        steps:
+        - uses: actions/checkout@v4
+        - uses: shivammathur/setup-php@v2
+          with:
+              php-version: ${{ matrix.php-version }}
+              tools: pecl
+              coverage: xdebug
+
+        - name: Cache Docker Compose Images
+          id: cache-docker
+          uses: seijikohara/docker-compose-cache-action@v1
+          with:
+              compose-files: |
+                  compose.yml
+              cache-key-prefix: yap-docker-images
+
+        - name: Create Docker Universe
+          run: docker compose up -d
+
+        # TODO: reimplement cache
+        #- name: Get Composer Cache Directory
+        #  id: composer-cache
+        #  run: |
+        #      echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+        #- name: Cache Composer dependencies
+        #  uses: actions/cache@v5
+        #  with:
+        #      path: ${{ steps.composer-cache.outputs.dir }}
+        #      key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        #      restore-keys: ${{ runner.os }}-composer-
+
+        - name: Install dependencies
+          if: ${{ matrix.php-version != inputs.CURRENT_PHP_VERSION }}
+          run: composer install --prefer-dist --ignore-platform-req=php
+
+        - name: Install dependencies
+          if: ${{ matrix.php-version == inputs.CURRENT_PHP_VERSION }}
+          run: composer install --prefer-dist
+
+        - name: Create Database
+          run: |
+              sleep 10
+              bin/console doctrine:database:create
+
+        - name: Run migrations
+          run: bin/console doctrine:migrations:migrate
+
+        - name: run Tests
+          run: vendor/bin/phpunit --testsuite api

@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Entity\Product;
 
+use App\Entity\Identifier\Identifier;
 use App\Entity\Product\Product;
+use App\Tests\helper\Trait\AssociationTrait;
 use App\Tests\helper\Trait\SetterGetterTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(Product::class)]
-class ProductTest extends TestCase
+class ProductTest extends MockeryTestCase
 {
     use SetterGetterTrait;
+    use AssociationTrait;
 
     public function testGetId(): void
     {
@@ -32,6 +35,15 @@ class ProductTest extends TestCase
     public function testSetterGetter(string $setter, string $getter, mixed $value, ?string $expectedException = null): void
     {
         $this->performSetterGetterTesting($setter, $getter, $value, $expectedException);
+    }
+
+    /**
+     * @param class-string $targetValue
+     */
+    #[DataProvider('associationDataProvider')]
+    public function testAssociations(string $getter, string $adder, string $remover, string $targetValue, ?string $inverseSetter = null): void
+    {
+        $this->performOneToManyAssociationTesting($getter, $adder, $remover, $targetValue, $inverseSetter);
     }
 
     protected function getTargetClass(): string
@@ -51,6 +63,16 @@ class ProductTest extends TestCase
             ['setCreatedAt', 'getCreatedAt', new \DateTimeImmutable('now')],
             ['setCreatedAt', 'getCreatedAt', new \DateTime('now'), \TypeError::class],
             ['setCreatedAt', 'getCreatedAt', null, \TypeError::class],
+        ];
+    }
+
+    /**
+     * @return array{array{0:string, 1:string, 2:string, 3:class-string, 4?:string}}
+     */
+    public static function associationDataProvider(): array
+    {
+        return [
+            ['getIdentifiers', 'addIdentifier', 'removeIdentifier', Identifier::class, 'setProduct'],
         ];
     }
 }

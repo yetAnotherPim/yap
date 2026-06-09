@@ -51,6 +51,12 @@ class IdentifierTypeTest extends TestCase
             ['setDataType', 'getDataType', DataType::String],
             ['setDataType', 'getDataType', DataType::Integer],
             ['setDataType', 'getDataType', null, \TypeError::class],
+            ['setUpdatedAt', 'getUpdatedAt', new \DateTimeImmutable('now')],
+            ['setUpdatedAt', 'getUpdatedAt', new \DateTime('now'), \TypeError::class],
+            ['setUpdatedAt', 'getUpdatedAt', null],
+            ['setCreatedAt', 'getCreatedAt', new \DateTimeImmutable('now')],
+            ['setCreatedAt', 'getCreatedAt', new \DateTime('now'), \TypeError::class],
+            ['setCreatedAt', 'getCreatedAt', null, \TypeError::class],
         ];
     }
 }
