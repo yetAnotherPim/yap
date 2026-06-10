@@ -21,6 +21,8 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
+// TODO: add parent relation
+
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[Get(
     normalizationContext: ['groups' => ['product:read']]
@@ -63,6 +65,7 @@ class Product
     private ?\DateTimeImmutable $updatedAt = null;
 
     // TODO: set created at and updted at -> integration test
+    // TODO: test section or fieldType deleted, but field assigned to product -> what happens?
 
     public function __construct()
     {
