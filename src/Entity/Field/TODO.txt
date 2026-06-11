@@ -1,3 +1,5 @@
 TODO:
 -default (value untranslated)
 -add translation
+
+-product.type -> product templates, assiciated with sections -> order for frontend (template)

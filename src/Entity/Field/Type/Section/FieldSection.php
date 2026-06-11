@@ -6,6 +6,7 @@ namespace App\Entity\Field\Type\Section;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Abstract\AbstractEntity;
 use App\Entity\Field\Type\FieldType;
 use App\Repository\FieldSectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +17,8 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: FieldSectionRepository::class)]
 #[ApiResource]
-class FieldSection
+#[ORM\HasLifecycleCallbacks]
+class FieldSection extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -34,15 +36,11 @@ class FieldSection
     #[ORM\OneToMany(targetEntity: FieldType::class, mappedBy: 'section', orphanRemoval: true)]
     private Collection $fieldTypes;
 
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
     public function __construct()
     {
         $this->fieldTypes = new ArrayCollection();
+
+        parent::__construct();
     }
 
     public function getId(): Uuid
@@ -86,25 +84,5 @@ class FieldSection
         $this->fieldTypes->removeElement($fieldType);
 
         return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 }

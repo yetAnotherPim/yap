@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\Abstract\AbstractEntity;
 use App\Entity\Identifier\Identifier;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,10 +38,11 @@ use Symfony\Component\Uid\Uuid;
         ),
     ]
 )]
-#[Post]
-#[Patch]
+#[Post(denormalizationContext: ['groups' => ['product:write']])]
+#[Patch(denormalizationContext: ['groups' => ['product:write']])]
 #[Delete]
-class Product
+#[ORM\HasLifecycleCallbacks]
+class Product extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -52,24 +54,17 @@ class Product
     /**
      * @var Collection<int, Identifier>
      */
-    #[ORM\OneToMany(targetEntity: Identifier::class, mappedBy: 'product', orphanRemoval: true)]
-    #[Groups(['product:read'])]
+    #[ORM\OneToMany(targetEntity: Identifier::class, mappedBy: 'product', cascade: ['all'], orphanRemoval: true)]
+    #[Groups(['product:read', 'product:write'])]
     private Collection $identifiers;
 
-    #[ORM\Column]
-    #[Groups(['product:read', 'identifier:filter'])]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['product:read', 'identifier:filter'])]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    // TODO: set created at and updted at -> integration test
     // TODO: test section or fieldType deleted, but field assigned to product -> what happens?
 
     public function __construct()
     {
         $this->identifiers = new ArrayCollection();
+
+        parent::__construct();
     }
 
     public function getId(): Uuid
@@ -98,30 +93,6 @@ class Product
     public function removeIdentifier(Identifier $identifier): static
     {
         $this->identifiers->removeElement($identifier);
-
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
 
         return $this;
     }

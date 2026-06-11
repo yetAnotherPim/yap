@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\functional\api\product\get;
+namespace App\Tests\functional\api\filter\GET;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;

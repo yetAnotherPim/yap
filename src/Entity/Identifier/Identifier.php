@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\OpenApi\Model\Operation;
+use App\Entity\Abstract\AbstractEntity;
 use App\Entity\Identifier\Type\Enum\DataType;
 use App\Entity\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
@@ -42,7 +43,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
         'type' => new QueryParameter(filter: new ExactFilter(), property: 'type.title', required: true),
     ]
 )]
-class Identifier
+#[ORM\HasLifecycleCallbacks]
+class Identifier extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -53,24 +55,18 @@ class Identifier
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['product:read', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
     private IdentifierType $type;
 
     #[ORM\Column(length: 255)]
     #[NotBlank]
-    #[Groups(['product:read', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
     private string $value;
 
     #[ORM\ManyToOne(cascade: ['all'], inversedBy: 'identifiers')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['identifier:filter'])]
     private Product $product;
-
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): Uuid
     {
@@ -125,25 +121,5 @@ class Identifier
         $this->product = $product;
 
         return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 }

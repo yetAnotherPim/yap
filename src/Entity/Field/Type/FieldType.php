@@ -6,6 +6,7 @@ namespace App\Entity\Field\Type;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Abstract\AbstractEntity;
 use App\Entity\Field\Type\Section\FieldSection;
 use App\Repository\FieldTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +15,8 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: FieldTypeRepository::class)]
 #[ApiResource]
-class FieldType
+#[ORM\HasLifecycleCallbacks]
+class FieldType extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -35,12 +37,6 @@ class FieldType
     #[ORM\ManyToOne(inversedBy: 'fieldTypes')]
     #[ORM\JoinColumn(nullable: false)]
     private FieldSection $section;
-
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): Uuid
     {
@@ -91,25 +87,5 @@ class FieldType
         $this->section = $section;
 
         return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 }

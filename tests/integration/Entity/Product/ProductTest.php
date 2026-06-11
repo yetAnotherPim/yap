@@ -58,4 +58,22 @@ class ProductTest extends KernelTestCase
         $identifiers = new ArrayCollection($repository->findAll());
         $this->assertCount(2, $identifiers);
     }
+
+    public function testSettingUpdatedAtOnUpdate(): void
+    {
+        // TODO: should get updated on association change (addIdentifier etc.)
+        $product = new Product();
+
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        $this->assertNull($product->getUpdatedAt());
+
+        $product->setCreatedAt(new \DateTimeImmutable());
+
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        $this->assertNotNull($product->getUpdatedAt());
+    }
 }
