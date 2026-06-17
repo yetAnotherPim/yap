@@ -12,8 +12,10 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
-use App\Entity\Abstract\AbstractEntity;
-use App\Entity\Identifier\Identifier;
+use ApiPlatform\OpenApi\Model\Operation;
+use App\Entity\Abstract\TimestampableEntity;
+use App\Entity\Product\Field\Field;
+use App\Entity\Product\Identifier\Identifier;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,8 +32,13 @@ use Symfony\Component\Uid\Uuid;
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['product:read']],
+)]
+#[GetCollection(
+    uriTemplate: 'filter/hasIdentifier',
+    openapi: new Operation(summary: 'Filter products that have/don\'t have identifiers', tags: ['filter']),
+    normalizationContext: ['groups' => ['product:read']],
     parameters: [
-        'hasIdentifiers' => new QueryParameter(
+        'value' => new QueryParameter(
             filter: new ExistsFilter(),
             property: 'identifiers',
             description: 'Filter products that have/don\'t have identifiers',
@@ -42,7 +49,7 @@ use Symfony\Component\Uid\Uuid;
 #[Patch(denormalizationContext: ['groups' => ['product:write']])]
 #[Delete]
 #[ORM\HasLifecycleCallbacks]
-class Product extends AbstractEntity
+class Product extends TimestampableEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -58,11 +65,19 @@ class Product extends AbstractEntity
     #[Groups(['product:read', 'product:write'])]
     private Collection $identifiers;
 
+    /**
+     * @var Collection<int, Field>
+     */
+    #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'product', cascade: ['all'], orphanRemoval: true)]
+    #[Groups(['product:read', 'product:write'])]
+    private Collection $fields;
+
     // TODO: test section or fieldType deleted, but field assigned to product -> what happens?
 
     public function __construct()
     {
         $this->identifiers = new ArrayCollection();
+        $this->fields = new ArrayCollection();
 
         parent::__construct();
     }
@@ -93,6 +108,31 @@ class Product extends AbstractEntity
     public function removeIdentifier(Identifier $identifier): static
     {
         $this->identifiers->removeElement($identifier);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Field>
+     */
+    public function getFields(): Collection
+    {
+        return $this->fields;
+    }
+
+    public function addField(Field $field): static
+    {
+        if (!$this->fields->contains($field)) {
+            $this->fields->add($field);
+            $field->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeField(Field $field): static
+    {
+        $this->fields->removeElement($field);
 
         return $this;
     }

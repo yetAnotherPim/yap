@@ -9,6 +9,7 @@
          failOnWarning="true"
          failOnRisky="true"
          beStrictAboutCoverageMetadata="true"
+         requireCoverageMetadata="true"
          bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
 >

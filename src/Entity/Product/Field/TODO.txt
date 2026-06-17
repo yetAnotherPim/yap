@@ -1,0 +1,14 @@
+TODO:
+-add translation
+-updated_at product and field on translation add or update - test if updated at at field is working (relatedtimestampable)
+
+-product.type -> product templates, assiciated with sections -> order for frontend (template)
+-filter:
+    -filter pruducts by field values -> and-filter
+    -filter by translations
+
+
+-add integration test for updating updatedAt
+-add api test   - creation via product as with identifier
+                - get
+                - patch with updated at

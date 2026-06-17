@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Story;
 
-use App\Entity\Identifier\Type\Enum\DataType;
-use App\Tests\Factory\Identifier\IdentifierFactory;
-use App\Tests\Factory\Identifier\Type\IdentifierTypeFactory;
+use App\Entity\Product\Identifier\Type\Enum\DataType;
+use App\Tests\Factory\Product\Identifier\IdentifierFactory;
+use App\Tests\Factory\Product\Identifier\Type\IdentifierTypeFactory;
 use App\Tests\Factory\Product\ProductFactory;
 use Zenstruck\Foundry\Story;
 

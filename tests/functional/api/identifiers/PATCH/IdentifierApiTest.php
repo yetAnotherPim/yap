@@ -6,14 +6,16 @@ namespace App\Tests\functional\api\identifiers\PATCH;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
-use App\Entity\Identifier\Identifier;
-use App\Tests\Factory\Identifier\IdentifierFactory;
+use App\Entity\Product\Identifier\Identifier;
+use App\Tests\Factory\Product\Identifier\IdentifierFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(Identifier::class)]
 class IdentifierApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

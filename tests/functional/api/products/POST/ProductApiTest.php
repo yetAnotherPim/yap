@@ -6,18 +6,20 @@ namespace App\Tests\functional\api\products\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
-use App\Entity\Identifier\Identifier;
-use App\Entity\Identifier\Type\IdentifierType;
+use App\Entity\Product\Identifier\Identifier;
+use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Repository\ProductRepository;
-use App\Tests\Factory\Identifier\Type\IdentifierTypeFactory;
+use App\Tests\Factory\Product\Identifier\Type\IdentifierTypeFactory;
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(Product::class)]
 class ProductApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

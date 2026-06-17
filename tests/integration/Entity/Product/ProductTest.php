@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Entity\Product;
 
-use App\Entity\Identifier\Identifier;
-use App\Entity\Identifier\Type\IdentifierType;
+use App\Entity\Product\Identifier\Identifier;
+use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Repository\IdentifierRepository;
+use App\Tests\Factory\Product\Identifier\IdentifierFactory;
 use App\Tests\Story\ProductsSharingIdentifierStory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,7 +62,6 @@ class ProductTest extends KernelTestCase
 
     public function testSettingUpdatedAtOnUpdate(): void
     {
-        // TODO: should get updated on association change (addIdentifier etc.)
         $product = new Product();
 
         $this->entityManager->persist($product);
@@ -69,7 +69,9 @@ class ProductTest extends KernelTestCase
 
         $this->assertNull($product->getUpdatedAt());
 
-        $product->setCreatedAt(new \DateTimeImmutable());
+        $identifier = IdentifierFactory::createOne();
+
+        $product->addIdentifier($identifier);
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();
