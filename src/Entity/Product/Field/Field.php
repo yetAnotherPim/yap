@@ -14,6 +14,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: FieldRepository::class)]
@@ -38,6 +39,7 @@ class Field extends RelatedTimestampableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
     private FieldType $type;
 
     #[ORM\ManyToOne(inversedBy: 'fields')]
@@ -45,6 +47,7 @@ class Field extends RelatedTimestampableEntity
     private Product $product;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
     private ?string $value = null;
 
     public function getId(): Uuid

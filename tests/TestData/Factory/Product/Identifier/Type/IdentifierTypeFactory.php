@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Factory\Product\Identifier\Type;
+namespace App\Tests\TestData\Factory\Product\Identifier\Type;
 
 use App\Entity\Product\Identifier\Type\Enum\DataType;
 use App\Entity\Product\Identifier\Type\IdentifierType;

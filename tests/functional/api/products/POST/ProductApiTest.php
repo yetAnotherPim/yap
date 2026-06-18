@@ -6,11 +6,14 @@ namespace App\Tests\functional\api\products\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Repository\ProductRepository;
-use App\Tests\Factory\Product\Identifier\Type\IdentifierTypeFactory;
+use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
+use App\Tests\TestData\Factory\Product\Identifier\Type\IdentifierTypeFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -52,10 +55,11 @@ class ProductApiTest extends ApiTestCase
      */
     public function testPost(): void
     {
-        // TODO: test orphan removal via api deletion as in integration test
-
         /** @phpstan-var IdentifierType $identifierType */
         $identifierType = IdentifierTypeFactory::createOne();
+
+        /** @phpstan-var FieldType $fieldType */
+        $fieldType = FieldTypeFactory::createOne();
 
         $this->client->request(
             'POST',
@@ -66,6 +70,12 @@ class ProductApiTest extends ApiTestCase
                                     {
                                         "value":"123456",
                                         "type":"/api/identifier_types/'.$identifierType->getId().'"
+                                    }
+                                ],
+                                "fields":[
+                                    {
+                                        "value":"123456",
+                                        "type":"/api/field_types/'.$fieldType->getId().'"
                                     }
                                 ]
                             }',
@@ -81,9 +91,14 @@ class ProductApiTest extends ApiTestCase
 
         $this->assertInstanceOf(Product::class, $product);
         $this->assertCount(1, $product->getIdentifiers());
+        $this->assertCount(1, $product->getFields());
 
         $identifier = $product->getIdentifiers()->first();
         $this->assertInstanceOf(Identifier::class, $identifier);
         $this->assertEquals('123456', $identifier->getValue());
+
+        $field = $product->getFields()->first();
+        $this->assertInstanceOf(Field::class, $field);
+        $this->assertEquals('123456', $field->getValue());
     }
 }

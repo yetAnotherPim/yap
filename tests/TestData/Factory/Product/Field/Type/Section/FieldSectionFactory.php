@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Factory\Product;
+namespace App\Tests\TestData\Factory\Product\Field\Type\Section;
 
-use App\Entity\Product\Product;
+use App\Entity\Product\Field\Type\Section\FieldSection;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentObjectFactory<Product>
+ * @extends PersistentObjectFactory<FieldSection>
  */
-final class ProductFactory extends PersistentObjectFactory
+final class FieldSectionFactory extends PersistentObjectFactory
 {
     #[\Override]
     public static function class(): string
     {
-        return Product::class;
+        return FieldSection::class;
     }
 
     #[\Override]
@@ -23,6 +23,7 @@ final class ProductFactory extends PersistentObjectFactory
     {
         return [
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'title' => self::faker()->text(255),
         ];
     }
 }

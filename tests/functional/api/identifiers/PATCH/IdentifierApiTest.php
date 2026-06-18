@@ -7,7 +7,7 @@ namespace App\Tests\functional\api\identifiers\PATCH;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Product\Identifier\Identifier;
-use App\Tests\Factory\Product\Identifier\IdentifierFactory;
+use App\Tests\TestData\Factory\Product\Identifier\IdentifierFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;

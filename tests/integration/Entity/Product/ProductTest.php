@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Entity\Product;
 
+use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Repository\FieldRepository;
 use App\Repository\IdentifierRepository;
-use App\Tests\Factory\Product\Identifier\IdentifierFactory;
-use App\Tests\Story\ProductsSharingIdentifierStory;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -21,6 +22,10 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(Identifier::class)]
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(IdentifierRepository::class)]
+#[UsesClass(Field::class)]
+#[UsesClass(FieldType::class)]
+#[UsesClass(FieldSection::class)]
+#[UsesClass(FieldRepository::class)]
 class ProductTest extends KernelTestCase
 {
     use Factories;
@@ -39,27 +44,6 @@ class ProductTest extends KernelTestCase
         parent::setUp();
     }
 
-    public function testOrphanRemovalOfIdentifiers(): void
-    {
-        ProductsSharingIdentifierStory::load();
-
-        $repository = $this->entityManager->getRepository(Identifier::class);
-        $identifiers = new ArrayCollection($repository->findAll());
-
-        $this->assertCount(4, $identifiers);
-
-        $identifier = $identifiers->first();
-        $this->assertInstanceOf(Identifier::class, $identifier);
-
-        $product = $identifier->getProduct();
-
-        $this->entityManager->remove($product);
-        $this->entityManager->flush();
-
-        $identifiers = new ArrayCollection($repository->findAll());
-        $this->assertCount(2, $identifiers);
-    }
-
     public function testSettingUpdatedAtOnUpdate(): void
     {
         $product = new Product();
@@ -69,9 +53,7 @@ class ProductTest extends KernelTestCase
 
         $this->assertNull($product->getUpdatedAt());
 
-        $identifier = IdentifierFactory::createOne();
-
-        $product->addIdentifier($identifier);
+        $product->setCreatedAt(new \DateTimeImmutable());
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();

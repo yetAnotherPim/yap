@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Product;
 
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
@@ -32,10 +34,20 @@ use Symfony\Component\Uid\Uuid;
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['product:read']],
+    parameters: [
+        'createdAt' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'createdAt',
+        ),
+        'updatedAt' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'updatedAt',
+        ),
+    ]
 )]
 #[GetCollection(
     uriTemplate: 'filter/hasIdentifier',
-    openapi: new Operation(summary: 'Filter products that have/don\'t have identifiers', tags: ['filter']),
+    openapi: new Operation(tags: ['filter'], summary: 'Filter products that have/don\'t have identifiers'),
     normalizationContext: ['groups' => ['product:read']],
     parameters: [
         'value' => new QueryParameter(
@@ -73,6 +85,7 @@ class Product extends TimestampableEntity
     private Collection $fields;
 
     // TODO: test section or fieldType deleted, but field assigned to product -> what happens?
+    // TODO: test orphan removal via api deletion as in integration test
 
     public function __construct()
     {
