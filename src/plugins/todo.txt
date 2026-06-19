@@ -13,3 +13,4 @@ Feeds
 Messenger Plugin: Entity-Updates (changeSet) via Message (JSON)
 ElasticSearch
 
+FieldType -> translation for title
