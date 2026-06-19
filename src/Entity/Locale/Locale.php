@@ -32,4 +32,6 @@ class Locale
     {
         return $this->id;
     }
+
+    // TODO: remove translations on deletion -> api-test + integration test
 }

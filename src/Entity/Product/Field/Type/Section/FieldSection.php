@@ -27,7 +27,7 @@ class FieldSection extends TimestampableEntity
     #[ApiProperty(identifier: true)]
     private Uuid $id;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     private string $title;
 
     /**
@@ -48,7 +48,6 @@ class FieldSection extends TimestampableEntity
         return $this->id;
     }
 
-    // TODO: add translation
     public function getTitle(): string
     {
         return $this->title;
@@ -85,4 +84,7 @@ class FieldSection extends TimestampableEntity
 
         return $this;
     }
+
+    // TODO: add translation for title
+    // TODO: remove translations on locale deletion -> api-test + integration test
 }

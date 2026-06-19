@@ -11,11 +11,14 @@ use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Repository\FieldTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: FieldTypeRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\UniqueConstraint(name: 'fieldtype_title_section', fields: ['title', 'section'])]
 class FieldType extends TimestampableEntity
 {
     #[ORM\Id]
@@ -24,6 +27,11 @@ class FieldType extends TimestampableEntity
     #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
     #[ApiProperty(identifier: true)]
     private Uuid $id;
+
+    #[ORM\Column(length: 255, nullable: false)]
+    #[NotBlank]
+    #[Groups(['product:read', 'identifier:filter'])]
+    private string $title;
 
     #[ORM\Column]
     private bool $translatable;
@@ -41,6 +49,18 @@ class FieldType extends TimestampableEntity
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     public function isTranslatable(): bool
@@ -88,4 +108,7 @@ class FieldType extends TimestampableEntity
 
         return $this;
     }
+
+    // TODO: add translation for title
+    // TODO: remove translations on locale deletion -> api-test + integration test
 }

@@ -49,6 +49,8 @@ class FieldTypeTest extends MockeryTestCase
     public static function setterGetterProvider(): array
     {
         return [
+            ['setTitle', 'getTitle', 'field_title'],
+            ['setTitle', 'getTitle', null, \TypeError::class],
             ['setTranslatable', 'isTranslatable', true],
             ['setTranslatable', 'isTranslatable', null, \TypeError::class],
             ['setFilterable', 'isFilterable', true],

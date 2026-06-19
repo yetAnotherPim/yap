@@ -30,6 +30,8 @@ class Field extends RelatedTimestampableEntity
         Product::class => 'product',
     ];
 
+    // TODO: remove translations on locale deletion -> api-test + integration test
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
