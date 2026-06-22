@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\functional\api\locale\DELETE;
+namespace App\Tests\functional\api\locales\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
@@ -38,38 +38,43 @@ class LocaleApiTest extends ApiTestCase
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function testGetCollection(): void
+    public function testPost(): void
+    {
+        $this->client->request(
+            'POST',
+            '/api/locales',
+            [
+                'body' => '{
+                                "id":"de_DE"
+                            }',
+            ]
+        );
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertJsonContains(['id' => 'de_DE']);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testPostDuplicate(): void
     {
         LocaleFactory::createOne(['id' => 'de_DE']);
-        LocaleFactory::createOne(['id' => 'en_GB']);
 
         $this->client->request(
-            'GET',
-            '/api/locales'
+            'POST',
+            '/api/locales',
+            [
+                'body' => '{
+                                "id":"de_DE"
+                            }',
+            ]
         );
 
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
-
-        $this->client->request(
-            'DELETE',
-            '/api/locales/de_DE'
-        );
-
-        $this->client->request(
-            'GET',
-            '/api/locales'
-        );
-
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 1]);
-
-        $this->client->request(
-            'GET',
-            '/api/locales/en_GB'
-        );
-
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['id' => 'en_GB']);
+        $this->assertResponseStatusCodeSame(500);
     }
 }

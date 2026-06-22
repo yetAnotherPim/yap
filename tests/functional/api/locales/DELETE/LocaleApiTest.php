@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\functional\api\locale\GET;
+namespace App\Tests\functional\api\locales\DELETE;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
@@ -38,26 +38,6 @@ class LocaleApiTest extends ApiTestCase
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function testGet(): void
-    {
-        LocaleFactory::createOne(['id' => 'de_DE']);
-
-        $this->client->request(
-            'GET',
-            '/api/locales/de_DE'
-        );
-
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['id' => 'de_DE']);
-    }
-
-    /**
-     * @throws ClientExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
-     */
     public function testGetCollection(): void
     {
         LocaleFactory::createOne(['id' => 'de_DE']);
@@ -70,5 +50,26 @@ class LocaleApiTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request(
+            'DELETE',
+            '/api/locales/de_DE'
+        );
+
+        $this->client->request(
+            'GET',
+            '/api/locales'
+        );
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request(
+            'GET',
+            '/api/locales/en_GB'
+        );
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['id' => 'en_GB']);
     }
 }
