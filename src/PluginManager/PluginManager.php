@@ -10,10 +10,17 @@ use App\Repository\PluginRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class PluginManager
 {
+    private const string SERVICE_DEFINITION_FILE = 'services.yaml';
+    private const string PLUGIN_FOLDER = __DIR__.'/../plugins/';
+
     /** @phpstan-var Collection<int, Plugin> $plugins */
     private Collection $plugins;
 
@@ -23,6 +30,12 @@ class PluginManager
         iterable $plugins,
         private PluginRepository $pluginRepository,
         private EntityManagerInterface $entityManager,
+        #[Autowire(param: 'kernel.environment')]
+        private string $appEnv,
+        #[Autowire(param: 'kernel.project_dir')]
+        private string $projectDir,
+        #[Autowire(param: 'plugin_configuration_folder')]
+        private string $pluginConfigurationFolder,
     ) {
         $plugins = $plugins instanceof \Traversable ? iterator_to_array($plugins) : $plugins;
 
@@ -32,8 +45,6 @@ class PluginManager
     // TODO: test activation/deactivation with loading of services
     // TODO: test update
     // TODO: test refresh with updating entities
-
-    // TODO: getActivePlugins
 
     // TODO: add unit tests
 
@@ -76,13 +87,65 @@ class PluginManager
      */
     public function getActivePlugins(): Collection
     {
-        // TODO: check if plugin still exists
+        return $this->pluginRepository->getActivePlugins();
+    }
 
-        // TODO: autoload plugin services
-        // TODO: add services.yaml to autoload config
-        // TODO: lod twig folder
+    public function dumpPluginConfiguration(): bool
+    {
+        $activePlugins = [];
 
-        return new ArrayCollection();
+        foreach ($this->getActivePlugins() as $plugin) {
+            $serviceDefinitionFile = $plugin->getName().'/'.self::SERVICE_DEFINITION_FILE;
+
+            if (false === file_exists(self::PLUGIN_FOLDER.$serviceDefinitionFile)) {
+                continue;
+            }
+
+            $activePlugins[] = $plugin->getName();
+        }
+
+        return (bool) file_put_contents(
+            $this->projectDir.$this->pluginConfigurationFolder.$this->appEnv.'_plugin_configuration',
+            implode(PHP_EOL, $activePlugins)
+        );
+    }
+
+    public static function loadActivePlugins(string $appEnv, ContainerBuilder $container): void
+    {
+        /** @var string $projectDir */
+        $projectDir = $container->getParameter('kernel.project_dir');
+        /** @var string $pluginConfigurationFolder */
+        $pluginConfigurationFolder = $container->getParameter('plugin_configuration_folder');
+
+        $dumpedConfigurationFile = $projectDir.$pluginConfigurationFolder.$appEnv.'_plugin_configuration';
+
+        if (false === file_exists($dumpedConfigurationFile)) {
+            return;
+        }
+
+        $activePlugins = file($dumpedConfigurationFile);
+
+        if (false === $activePlugins) {
+            return;
+        }
+
+        foreach ($activePlugins as $pluginName) {
+            $serviceDefinitionFile = self::PLUGIN_FOLDER.trim($pluginName).'/'.self::SERVICE_DEFINITION_FILE;
+
+            if (false === file_exists($serviceDefinitionFile)) {
+                continue;
+            }
+
+            $loader = new YamlFileLoader(
+                $container,
+                new FileLocator(self::PLUGIN_FOLDER.'/'.trim($pluginName))
+            );
+
+            try {
+                $loader->load(self::SERVICE_DEFINITION_FILE);
+            } catch (\Exception $e) {
+            }
+        }
     }
 
     private function getPluginEntity(string $namespace): Plugin

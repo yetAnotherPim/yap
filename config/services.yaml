@@ -1,7 +1,5 @@
-#TODO: import plugin/{...}/config/services.yaml if plugin is active
-#TODO: add active plugin folder to autowire
-
 parameters:
+    plugin_configuration_folder: "/var/plugin_configuration/"
 
 services:
     _defaults:
@@ -10,7 +8,8 @@ services:
 
     App\:
         resource: '../src/'
-        exclude: '../src/plugins/'
+        exclude:
+            - '../src/plugins/'
 
     plugins:
         namespace: App\plugins\

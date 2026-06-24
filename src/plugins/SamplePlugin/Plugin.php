@@ -8,6 +8,7 @@ use App\PluginManager\Plugin\PluginInterface;
 
 class Plugin implements PluginInterface
 {
+    /** return name of plugin, name has to match the plugin's folder */
     public function getName(): string
     {
         return 'SamplePlugin';
@@ -18,6 +19,11 @@ class Plugin implements PluginInterface
         return '0.9.0';
     }
 
+    /**
+     * Create database schema
+     * Use: CREATE TABLE IF NOT EXISTS ...
+     * to avoid that the query itself fails.
+     */
     public function activate(): static
     {
         // TODO: provide em
@@ -34,6 +40,10 @@ class Plugin implements PluginInterface
         return $this;
     }
 
+    /**
+     * Update database schema
+     * Use: version_compare().
+     */
     public function update(string $fromVersion): static
     {
         // TODO: provide em

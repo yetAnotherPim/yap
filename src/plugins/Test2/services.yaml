@@ -1,0 +1,10 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\plugins\Test2\:
+        resource: './'
+        exclude: './Plugin.php'
