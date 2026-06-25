@@ -65,6 +65,7 @@ class PluginManager
     // TODO: test activation/deactivation with loading of services
     // TODO: test update
     // TODO: test refresh with updating entities
+    // TDOD: add integration tests for whole pluginmanager
 
     // TODO: add unit tests
 
@@ -136,6 +137,7 @@ class PluginManager
         $projectDir = $container->getParameter('kernel.project_dir');
         /** @var string $pluginConfigurationFolder */
         $pluginConfigurationFolder = $container->getParameter('plugin_configuration_folder');
+        $successfullyLoaded = true;
 
         $dumpedConfigurationFile = $projectDir.$pluginConfigurationFolder.$appEnv.'_plugin_configuration';
 
@@ -164,7 +166,10 @@ class PluginManager
             try {
                 $loader->load(self::SERVICE_DEFINITION_FILE);
             } catch (\Exception $e) {
+                $successfullyLoaded = false;
             }
         }
+
+        $container->setParameter('plugins_loaded_successfully', $successfullyLoaded);
     }
 }

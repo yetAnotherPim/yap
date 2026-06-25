@@ -21,7 +21,7 @@ class Plugin implements PluginInterface
 
     public function activate(EntityManagerInterface $entityManager): static
     {
-         return $this;
+        return $this;
     }
 
     public function deactivate(EntityManagerInterface $entityManager): static
