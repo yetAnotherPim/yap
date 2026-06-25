@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\PluginManager;
 
 use App\Entity\Plugin\Plugin;
+use App\PluginManager\Event\Enum\Action;
 use App\PluginManager\Plugin\PluginInterface;
 use App\Repository\PluginRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,31 +16,50 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PluginManager
 {
     private const string SERVICE_DEFINITION_FILE = 'services.yaml';
     private const string PLUGIN_FOLDER = __DIR__.'/../plugins/';
 
-    /** @phpstan-var Collection<int, Plugin> $plugins */
+    /** @phpstan-var Collection<int, PluginInterface> $plugins */
     private Collection $plugins;
 
-    /** @phpstan-param iterable<int, Plugin> $plugins */
+    /** @phpstan-param iterable<int, PluginInterface> $plugins */
     public function __construct(
         #[AutowireIterator('plugin')]
         iterable $plugins,
-        private PluginRepository $pluginRepository,
-        private EntityManagerInterface $entityManager,
+        private readonly PluginRepository $pluginRepository,
+        private readonly EntityManagerInterface $entityManager,
         #[Autowire(param: 'kernel.environment')]
-        private string $appEnv,
+        private readonly string $appEnv,
         #[Autowire(param: 'kernel.project_dir')]
-        private string $projectDir,
+        private readonly string $projectDir,
         #[Autowire(param: 'plugin_configuration_folder')]
-        private string $pluginConfigurationFolder,
+        private readonly string $pluginConfigurationFolder,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
         $plugins = $plugins instanceof \Traversable ? iterator_to_array($plugins) : $plugins;
 
         $this->plugins = new ArrayCollection($plugins);
+    }
+
+    public function performWorkflow(Action $action, string $name): void
+    {
+        $pluginInstance = $this->plugins->findFirst(static fn (int $key, PluginInterface $plugin): bool => $plugin->getName() === $name);
+
+        if (!$pluginInstance instanceof PluginInterface) {
+            return;
+        }
+
+        $pluginEntity = $this->pluginRepository->getPluginEntity(\get_class($pluginInstance));
+
+        if (null === $pluginEntity) {
+            return;
+        }
+
+        $this->eventDispatcher->dispatch(new $action->value($pluginInstance, $pluginEntity));
     }
 
     // TODO: test activation/deactivation with loading of services
@@ -62,7 +82,7 @@ class PluginManager
                 continue;
             }
 
-            $pluginEntity = $this->getPluginEntity(\get_class($plugin));
+            $pluginEntity = $this->pluginRepository->getPluginEntity(\get_class($plugin)) ?? new Plugin()->setNamespace(\get_class($plugin));
 
             $pluginEntity
                 ->setName($plugin->getName())
@@ -146,10 +166,5 @@ class PluginManager
             } catch (\Exception $e) {
             }
         }
-    }
-
-    private function getPluginEntity(string $namespace): Plugin
-    {
-        return $this->pluginRepository->findOneBy(['namespace' => $namespace]) ?? new Plugin()->setNamespace($namespace);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\plugins\Test2;
 
 use App\PluginManager\Plugin\PluginInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Plugin implements PluginInterface
 {
@@ -18,28 +19,18 @@ class Plugin implements PluginInterface
         return '0.9.0';
     }
 
-    public function activate(): static
+    public function activate(EntityManagerInterface $entityManager): static
     {
-        // TODO: provide em
-        // TODO: test install integration
-
         return $this;
     }
 
-    public function deactivate(): static
+    public function deactivate(EntityManagerInterface $entityManager): static
     {
-        // TODO: provide em
-        // TODO: test uninstall
-
         return $this;
     }
 
-    public function update(string $fromVersion): static
+    public function update(string $fromVersion, EntityManagerInterface $entityManager): static
     {
-        // TODO: provide em
-        // TODO: provide fromVersion
-        // TODO: test update
-
         return $this;
     }
 }

@@ -14,3 +14,4 @@ parameters:
         - tests/bootstrap.php
         - tests/object-manager.php
         - config/reference.php
+    treatPhpDocTypesAsCertain: false

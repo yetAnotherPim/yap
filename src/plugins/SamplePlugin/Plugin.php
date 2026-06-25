@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\plugins\SamplePlugin;
 
 use App\PluginManager\Plugin\PluginInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Plugin implements PluginInterface
 {
@@ -24,17 +25,15 @@ class Plugin implements PluginInterface
      * Use: CREATE TABLE IF NOT EXISTS ...
      * to avoid that the query itself fails.
      */
-    public function activate(): static
+    public function activate(EntityManagerInterface $entityManager): static
     {
-        // TODO: provide em
         // TODO: test install integration
 
         return $this;
     }
 
-    public function deactivate(): static
+    public function deactivate(EntityManagerInterface $entityManager): static
     {
-        // TODO: provide em
         // TODO: test uninstall
 
         return $this;
@@ -44,10 +43,8 @@ class Plugin implements PluginInterface
      * Update database schema
      * Use: version_compare().
      */
-    public function update(string $fromVersion): static
+    public function update(string $fromVersion, EntityManagerInterface $entityManager): static
     {
-        // TODO: provide em
-        // TODO: provide fromVersion
         // TODO: test update
 
         return $this;

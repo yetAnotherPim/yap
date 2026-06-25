@@ -14,7 +14,7 @@ class CacheClearerDecorator implements CacheClearerInterface
 {
     public function __construct(
         private PluginManager $pluginManager,
-        #[AutowireDecorated()]
+        #[AutowireDecorated]
         private CacheClearerInterface $inner,
     ) {
     }

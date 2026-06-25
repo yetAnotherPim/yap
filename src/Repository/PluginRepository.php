@@ -41,4 +41,9 @@ class PluginRepository extends ServiceEntityRepository
     {
         return new ArrayCollection($this->findBy(['active' => true]));
     }
+
+    public function getPluginEntity(string $namespace): ?Plugin
+    {
+        return $this->findOneBy(['namespace' => $namespace]);
+    }
 }

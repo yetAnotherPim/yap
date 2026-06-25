@@ -16,10 +16,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'yap:plugins:list', description: 'List available plugins')]
 class PluginsListCommand
 {
-    public function __construct(private PluginManager $pluginManager)
+    public function __construct(private readonly PluginManager $pluginManager)
     {
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function __invoke(
         SymfonyStyle $io,
         OutputInterface $output,
