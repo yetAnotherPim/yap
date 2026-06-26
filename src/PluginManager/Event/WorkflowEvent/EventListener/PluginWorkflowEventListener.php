@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace App\PluginManager\Event\WorkflowEvent\EventListener;
 
-use App\Kernel;
+use App\PluginManager\Cache\CacheClearer;
+use App\PluginManager\Event\Enum\Action;
+use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
 use App\PluginManager\Event\WorkflowEvent\PluginActivateEvent;
 use App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent;
 use App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 class PluginWorkflowEventListener
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly Kernel $kernel,
+        private readonly CacheClearer $cacheClearer,
     ) {
     }
 
+    /**
+     * @throws PluginWorkflowException
+     */
     #[AsEventListener(priority: 25)]
     public function onActivate(PluginActivateEvent $event): void
     {
@@ -32,7 +34,7 @@ class PluginWorkflowEventListener
             $pluginInstance->activate($this->entityManager);
         } catch (\Throwable $exception) {
             // TODO: plugin logger
-            return;
+            throw new PluginWorkflowException(Action::ACTIVATE, $event->getPluginEntity()->getName(), $exception->getMessage(), $exception->getCode(), $exception);
         }
 
         $pluginEntity
@@ -45,6 +47,9 @@ class PluginWorkflowEventListener
         $this->finalise();
     }
 
+    /**
+     * @throws PluginWorkflowException
+     */
     #[AsEventListener(priority: 25)]
     public function onDeactivate(PluginDeactivateEvent $event): void
     {
@@ -54,8 +59,8 @@ class PluginWorkflowEventListener
         try {
             $pluginInstance->deactivate($this->entityManager);
         } catch (\Throwable $exception) {
+            throw new PluginWorkflowException(Action::DEACTIVATE, $event->getPluginEntity()->getName(), $exception->getMessage(), $exception->getCode(), $exception);
             // TODO: plugin logger
-            return;
         }
 
         $pluginEntity
@@ -67,6 +72,9 @@ class PluginWorkflowEventListener
         $this->finalise();
     }
 
+    /**
+     * @throws PluginWorkflowException
+     */
     #[AsEventListener(priority: 25)]
     public function onUpdate(PluginUpdateEvent $event): void
     {
@@ -80,8 +88,8 @@ class PluginWorkflowEventListener
         try {
             $pluginInstance->update($pluginEntity->getInstalledVersion(), $this->entityManager);
         } catch (\Throwable $exception) {
+            throw new PluginWorkflowException(Action::UPDATE, $event->getPluginEntity()->getName(), $exception->getMessage(), $exception->getCode(), $exception);
             // TODO: plugin logger
-            return;
         }
 
         $pluginEntity
@@ -94,9 +102,8 @@ class PluginWorkflowEventListener
         $this->finalise();
     }
 
-    public function finalise(): void
+    private function finalise(): void
     {
-        $application = new Application($this->kernel);
-        $application->doRun(new ArrayInput(['cache:clear']), new NullOutput());
+        $this->cacheClearer->clear();
     }
 }

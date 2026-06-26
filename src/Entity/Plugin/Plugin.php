@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entity\Plugin;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
+use ApiPlatform\OpenApi\Model\RequestBody;
+use ApiPlatform\OpenApi\Model\Response;
+use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\PluginRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
@@ -15,6 +23,115 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\UniqueConstraint(name: 'plugin_name', fields: ['name'])]
 #[ORM\UniqueConstraint(name: 'plugin_namespace', fields: ['namespace'])]
 #[ORM\Cache()]
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new GetCollection(
+            openapi: new Operation(tags: ['Plugin'], summary: 'Clear application cache for reloading plugins'),
+            uriTemplate: 'refresh/plugins',
+            provider: PluginsRefreshProvider::class
+        ),
+
+        // TODO: remove default responses
+        new Post(
+            routeName: 'perform_plugin_workflow',
+            openapi: new Operation(
+                parameters: [
+                    new Parameter(
+                        name: 'name',
+                        in: 'path',
+                        schema: ['type' => 'string'],
+                        required: true
+                    ),
+                    new Parameter(
+                        name: 'action',
+                        in: 'path',
+                        schema: ['type' => 'string', 'enum' => ['update', 'activate', 'deactivate']],
+                        required: true
+                    ),
+                ],
+                requestBody: new RequestBody(content: new \ArrayObject()),
+                responses: [
+                    201 => new Response('Unused', new \ArrayObject()),
+                    202 => new Response(
+                        content: new \ArrayObject([
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'success' => ['type' => 'boolean'],
+                                    ],
+                                ],
+                                'example' => [
+                                    'success' => true,
+                                ],
+                            ],
+                        ]
+                        )
+                    ),
+                    400 => new Response(
+                        description: 'Invalid action given',
+                        content: new \ArrayObject([
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'success' => ['type' => 'boolean'],
+                                        'errorMessage' => ['type' => 'string'],
+                                    ],
+                                ],
+                                'example' => [
+                                    'success' => true,
+                                    'errorMessage' => 'Invalid action given',
+                                ],
+                            ],
+                        ]
+                        )
+                    ),
+                    412 => new Response(
+                        description: 'Plugin invalid or not found',
+                        content: new \ArrayObject([
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'success' => ['type' => 'boolean'],
+                                        'errorMessage' => ['type' => 'string'],
+                                    ],
+                                ],
+                                'example' => [
+                                    'success' => true,
+                                    'errorMessage' => 'Plugin invalid or not found',
+                                ],
+                            ],
+                        ]
+                        )
+                    ),
+                    422 => new Response(
+                        content: new \ArrayObject([
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'success' => ['type' => 'boolean'],
+                                        'errorMessage' => ['type' => 'string'],
+                                    ],
+                                ],
+                                'example' => [
+                                    'success' => true,
+                                    'errorMessage' => 'Something went wrong',
+                                ],
+                            ],
+                        ]
+                        )
+                    ),
+                ],
+                summary: 'Activate/Deactivate & Update Plugins'
+            ),
+            read: false, name: 'workflow'
+        ),
+    ]
+)]
 class Plugin
 {
     #[ORM\Id]

@@ -28,7 +28,13 @@ class PluginDeactivateCommand
         #[Argument(description: 'Plugin name')]
         string $pluginName,
     ): int {
-        $this->pluginManager->performWorkflow(Action::DEACTIVATE, $pluginName);
+        $result = $this->pluginManager->performWorkflow(Action::DEACTIVATE, $pluginName);
+
+        if (false === $result) {
+            $io->error('Plugin cannot be deactivated!');
+
+            return Command::FAILURE;
+        }
 
         return Command::SUCCESS;
     }

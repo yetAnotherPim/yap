@@ -6,6 +6,7 @@ namespace App\PluginManager;
 
 use App\Entity\Plugin\Plugin;
 use App\PluginManager\Event\Enum\Action;
+use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
 use App\PluginManager\Plugin\PluginInterface;
 use App\Repository\PluginRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,26 +46,32 @@ class PluginManager
         $this->plugins = new ArrayCollection($plugins);
     }
 
-    public function performWorkflow(Action $action, string $name): void
+    /**
+     * @throws PluginWorkflowException
+     */
+    public function performWorkflow(Action $action, string $name): bool
     {
         $pluginInstance = $this->plugins->findFirst(static fn (int $key, PluginInterface $plugin): bool => $plugin->getName() === $name);
 
         if (!$pluginInstance instanceof PluginInterface) {
-            return;
+            return false;
         }
 
         $pluginEntity = $this->pluginRepository->getPluginEntity(\get_class($pluginInstance));
 
         if (null === $pluginEntity) {
-            return;
+            return false;
         }
 
         $this->eventDispatcher->dispatch(new $action->value($pluginInstance, $pluginEntity));
+
+        return true;
     }
 
-    // TODO: test activation/deactivation with loading of services
+    // TODO: test commands as api
     // TODO: test update
-    // TODO: test refresh with updating entities
+        //api
+        //command
     // TDOD: add integration tests for whole pluginmanager
 
     // TODO: add unit tests

@@ -16,3 +16,15 @@ services:
         resource: '../src/plugins/*/Plugin.php'
         tags: [ plugin ]
 
+when@test:
+    services:
+        _defaults:
+            autowire: true
+            autoconfigure: true
+            public: true
+
+when@prod:
+    parameters:
+        .container.dumper.inline_factories: true
+        debug.container.dump: false
+

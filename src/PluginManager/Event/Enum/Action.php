@@ -13,4 +13,15 @@ enum Action: string
     case UPDATE = PluginUpdateEvent::class;
     case ACTIVATE = PluginActivateEvent::class;
     case DEACTIVATE = PluginDeactivateEvent::class;
+
+    public static function tryFromName(string $name): ?static
+    {
+        switch (strtoupper($name)) {
+            case 'UPDATE': return self::UPDATE;
+            case 'ACTIVATE': return self::ACTIVATE;
+            case 'DEACTIVATE': return self::DEACTIVATE;
+        }
+
+        return null;
+    }
 }

@@ -28,7 +28,13 @@ class PluginActivateCommand
         #[Argument(description: 'Plugin name')]
         string $pluginName,
     ): int {
-        $this->pluginManager->performWorkflow(Action::ACTIVATE, $pluginName);
+        $result = $this->pluginManager->performWorkflow(Action::ACTIVATE, $pluginName);
+
+        if (false === $result) {
+            $io->error('Plugin cannot be activated!');
+
+            return Command::FAILURE;
+        }
 
         return Command::SUCCESS;
     }

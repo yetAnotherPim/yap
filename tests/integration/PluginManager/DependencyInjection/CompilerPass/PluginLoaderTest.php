@@ -15,13 +15,14 @@ use App\plugins\SamplePlugin\Entity\SampleEntity;
 use App\plugins\SamplePlugin\Plugin;
 use App\plugins\SamplePlugin\Repository\SampleRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 #[CoversClass(PluginLoader::class)]
+#[CoversMethod(PluginManager::class, 'loadActivePlugins')]
 #[UsesClass(Kernel::class)]
-#[UsesClass(PluginManager::class)]
 class PluginLoaderTest extends KernelTestCase
 {
     public function setUp(): void
