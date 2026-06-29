@@ -23,6 +23,11 @@ when@test:
             autoconfigure: true
             public: true
 
+        plugins:
+            namespace: App\Tests\TestData\plugins\
+            resource: '../tests/TestData/plugins/*/Plugin.php'
+            tags: [ plugin ]
+
 when@prod:
     parameters:
         .container.dumper.inline_factories: true

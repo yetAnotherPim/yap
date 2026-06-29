@@ -7,6 +7,7 @@ namespace App\Tests\functional\api\locales\POST;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Locale\Locale;
+use App\Repository\LocaleRepository;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -17,6 +18,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(Locale::class)]
+#[CoversClass(LocaleRepository::class)]
 class LocaleApiTest extends ApiTestCase
 {
     use Factories;

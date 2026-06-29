@@ -82,8 +82,10 @@ class PluginWorkflowEventListener
         $pluginEntity = $event->getPluginEntity();
 
         if (null === $pluginEntity->getInstalledVersion()) {
-            return;
+            throw new PluginWorkflowException(Action::UPDATE, $event->getPluginEntity()->getName(), 'Plugin is not installed');
         }
+
+        $event->setFromVersion($pluginEntity->getInstalledVersion());
 
         try {
             $pluginInstance->update($pluginEntity->getInstalledVersion(), $this->entityManager);

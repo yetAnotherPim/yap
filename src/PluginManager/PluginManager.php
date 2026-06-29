@@ -68,12 +68,6 @@ class PluginManager
         return true;
     }
 
-    // TODO: test commands as api
-    // TODO: test update
-        //api
-        //command
-    // TDOD: add integration tests for whole pluginmanager
-
     // TODO: add unit tests
 
     /**

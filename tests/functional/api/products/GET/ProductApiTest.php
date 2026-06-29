@@ -6,11 +6,15 @@ namespace App\Tests\functional\api\products\GET;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Product\Identifier\Identifier;
+use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Repository\ProductRepository;
 use App\Tests\TestData\Factory\Product\ProductFactory;
 use App\Tests\TestData\Story\ProductsSharingIdentifierStory;
 use App\Tests\TestData\Story\SimpleProductStory;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -19,6 +23,9 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(Product::class)]
+#[CoversClass(ProductRepository::class)]
+#[UsesClass(Identifier::class)]
+#[UsesClass(IdentifierType::class)]
 class ProductApiTest extends ApiTestCase
 {
     use Factories;

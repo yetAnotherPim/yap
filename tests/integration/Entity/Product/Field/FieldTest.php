@@ -10,6 +10,9 @@ use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Kernel;
+use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
+use App\PluginManager\PluginManager;
 use App\Repository\FieldRepository;
 use App\Repository\IdentifierRepository;
 use App\Tests\TestData\Factory\Product\Field\FieldFactory;
@@ -29,6 +32,9 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(FieldType::class)]
 #[UsesClass(FieldSection::class)]
 #[UsesClass(FieldRepository::class)]
+#[UsesClass(Kernel::class)]
+#[UsesClass(PluginLoader::class)]
+#[UsesClass(PluginManager::class)]
 class FieldTest extends KernelTestCase
 {
     use Factories;

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/stephan/workspace/yap/src</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=14.2.2" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=14.2.2" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">/Users/stephan/workspace/yap/src</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Classes</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">5</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">10</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">15</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">20</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="PluginManager/PluginManager.php.html#22"><circle cx="603.2" cy="53.0" r="20.0" class="bubble-warning"><title>App\PluginManager\PluginManager — Coverage: 75.4% | Lines: 57 | Complexity: 18</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#16"><circle cx="780.0" cy="201.5" r="15.9" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener — Coverage: 100.0% | Lines: 36 | Complexity: 9</title></circle></a>
+ <a href="Controller/Api/PluginWorkflowController.php.html#17"><circle cx="780.0" cy="267.5" r="14.0" class="bubble-success"><title>App\Controller\Api\PluginWorkflowController — Coverage: 100.0% | Lines: 28 | Complexity: 5</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#137"><circle cx="780.0" cy="135.5" r="11.5" class="bubble-success"><title>App\Entity\Plugin\Plugin — Coverage: 100.0% | Lines: 19 | Complexity: 13</title></circle></a>
+ <a href="PluginManager/Command/PluginsListCommand.php.html#17"><circle cx="60.0" cy="251.0" r="11.5" class="bubble-danger"><title>App\PluginManager\Command\PluginsListCommand — Coverage: 0.0% | Lines: 19 | Complexity: 6</title></circle></a>
+ <a href="Entity/Product/Product.php.html#64"><circle cx="620.0" cy="185.0" r="11.2" class="bubble-warning"><title>App\Entity\Product\Product — Coverage: 77.8% | Lines: 18 | Complexity: 10</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#22"><circle cx="60.0" cy="168.5" r="10.3" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType — Coverage: 0.0% | Lines: 15 | Complexity: 11</title></circle></a>
+ <a href="plugins/SamplePlugin/Plugin.php.html#11"><circle cx="780.0" cy="251.0" r="10.3" class="bubble-success"><title>App\plugins\SamplePlugin\Plugin — Coverage: 100.0% | Lines: 15 | Complexity: 6</title></circle></a>
+ <a href="Entity/Product/Field/Type/Section/FieldSection.php.html#21"><circle cx="60.0" cy="218.0" r="9.6" class="bubble-danger"><title>App\Entity\Product\Field\Type\Section\FieldSection — Coverage: 0.0% | Lines: 13 | Complexity: 8</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#47"><circle cx="780.0" cy="185.0" r="9.2" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier — Coverage: 100.0% | Lines: 12 | Complexity: 10</title></circle></a>
+ <a href="Entity/Product/Field/Field.php.html#27"><circle cx="780.0" cy="234.5" r="8.4" class="bubble-success"><title>App\Entity\Product\Field\Field — Coverage: 100.0% | Lines: 10 | Complexity: 7</title></circle></a>
+ <a href="Repository/PluginRepository.php.html#16"><circle cx="780.0" cy="284.0" r="8.4" class="bubble-success"><title>App\Repository\PluginRepository — Coverage: 100.0% | Lines: 10 | Complexity: 4</title></circle></a>
+ <a href="Entity/Product/Identifier/Type/IdentifierType.php.html#22"><circle cx="780.0" cy="267.5" r="7.0" class="bubble-success"><title>App\Entity\Product\Identifier\Type\IdentifierType — Coverage: 100.0% | Lines: 7 | Complexity: 5</title></circle></a>
+ <a href="Entity/Abstract/RelatedTimestampableEntity.php.html#9"><circle cx="660.0" cy="300.5" r="6.5" class="bubble-warning"><title>App\Entity\Abstract\RelatedTimestampableEntity — Coverage: 83.3% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Command/PluginActivateCommand.php.html#16"><circle cx="60.0" cy="300.5" r="6.5" class="bubble-danger"><title>App\PluginManager\Command\PluginActivateCommand — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Command/PluginDeactivateCommand.php.html#16"><circle cx="60.0" cy="300.5" r="6.5" class="bubble-danger"><title>App\PluginManager\Command\PluginDeactivateCommand — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Command/PluginUpdateCommand.php.html#16"><circle cx="60.0" cy="300.5" r="6.5" class="bubble-danger"><title>App\PluginManager\Command\PluginUpdateCommand — Coverage: 0.0% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#10"><circle cx="420.0" cy="267.5" r="6.5" class="bubble-danger"><title>App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent — Coverage: 50.0% | Lines: 6 | Complexity: 5</title></circle></a>
+ <a href="PluginManager/Event/Enum/Action.php.html#11"><circle cx="780.0" cy="284.0" r="5.9" class="bubble-success"><title>App\PluginManager\Event\Enum\Action — Coverage: 100.0% | Lines: 5 | Complexity: 4</title></circle></a>
+ <a href="Entity/Trait/UpdatedAtTrait.php.html#10"><circle cx="780.0" cy="300.5" r="5.3" class="bubble-success"><title>App\Entity\Trait\UpdatedAtTrait — Coverage: 100.0% | Lines: 4 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Cache/CacheClearer.php.html#12"><circle cx="780.0" cy="317.0" r="4.6" class="bubble-success"><title>App\PluginManager\Cache\CacheClearer — Coverage: 100.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/Cache/Decorator/CacheClearerDecorator.php.html#13"><circle cx="780.0" cy="317.0" r="4.6" class="bubble-success"><title>App\PluginManager\Cache\Decorator\CacheClearerDecorator — Coverage: 100.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/Exception/PluginWorkflowException.php.html#9"><circle cx="300.0" cy="300.5" r="4.6" class="bubble-danger"><title>App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException — Coverage: 33.3% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginActivateEvent.php.html#10"><circle cx="780.0" cy="300.5" r="4.6" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginActivateEvent — Coverage: 100.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginDeactivateEvent.php.html#10"><circle cx="780.0" cy="300.5" r="4.6" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent — Coverage: 100.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/State/PluginsRefreshProvider.php.html#15"><circle cx="780.0" cy="317.0" r="4.6" class="bubble-success"><title>App\PluginManager\State\PluginsRefreshProvider — Coverage: 100.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="Entity/Locale/Locale.php.html#22"><circle cx="780.0" cy="317.0" r="4.0" class="bubble-success"><title>App\Entity\Locale\Locale — Coverage: 100.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/DependencyInjection/CompilerPass/PluginLoader.php.html#11"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>App\PluginManager\DependencyInjection\CompilerPass\PluginLoader — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Trait/CreatedAtTrait.php.html#10"><circle cx="780.0" cy="317.0" r="4.0" class="bubble-success"><title>App\Entity\Trait\CreatedAtTrait — Coverage: 100.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="Entity/Abstract/TimestampableEntity.php.html#10"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>App\Entity\Abstract\TimestampableEntity — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Kernel.php.html#12"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>App\Kernel — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/FieldRepository.php.html#14"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>App\Repository\FieldRepository — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/FieldSectionRepository.php.html#14"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>App\Repository\FieldSectionRepository — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/FieldTypeRepository.php.html#14"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>App\Repository\FieldTypeRepository — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/IdentifierRepository.php.html#14"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>App\Repository\IdentifierRepository — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/IdentifierTypeRepository.php.html#14"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>App\Repository\IdentifierTypeRepository — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/LocaleRepository.php.html#14"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>App\Repository\LocaleRepository — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/ProductRepository.php.html#14"><circle cx="780.0" cy="333.5" r="4.0" class="bubble-success"><title>App\Repository\ProductRepository — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Command/SampleCommand.php.html#16"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>App\plugins\SamplePlugin\Command\SampleCommand — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Controller/SampleController.php.html#11"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>App\plugins\SamplePlugin\Controller\SampleController — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Repository/SampleRepository.php.html#14"><circle cx="60.0" cy="333.5" r="4.0" class="bubble-danger"><title>App\plugins\SamplePlugin\Repository\SampleRepository — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Class</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#22">App\Entity\Product\Field\Type\FieldType</a></td><td class="text-right">132</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Section/FieldSection.php.html#21">App\Entity\Product\Field\Type\Section\FieldSection</a></td><td class="text-right">72</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginsListCommand.php.html#17">App\PluginManager\Command\PluginsListCommand</a></td><td class="text-right">42</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/PluginManager.php.html#22">App\PluginManager\PluginManager</a></td><td class="text-right">22.80</td><td class="text-right">75.4%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#137">App\Entity\Plugin\Plugin</a></td><td class="text-right">13</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginActivateCommand.php.html#16">App\PluginManager\Command\PluginActivateCommand</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginDeactivateCommand.php.html#16">App\PluginManager\Command\PluginDeactivateCommand</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginUpdateCommand.php.html#16">App\PluginManager\Command\PluginUpdateCommand</a></td><td class="text-right">12</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#64">App\Entity\Product\Product</a></td><td class="text-right">11.10</td><td class="text-right">77.8%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#47">App\Entity\Product\Identifier\Identifier</a></td><td class="text-right">10</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#16">App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener</a></td><td class="text-right">9</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#10">App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent</a></td><td class="text-right">8.12</td><td class="text-right">50.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Field.php.html#27">App\Entity\Product\Field\Field</a></td><td class="text-right">7</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Plugin.php.html#11">App\plugins\SamplePlugin\Plugin</a></td><td class="text-right">6</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/Exception/PluginWorkflowException.php.html#9">App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException</a></td><td class="text-right">5.67</td><td class="text-right">33.3%</td></tr>
+  <tr><td><a href="Controller/Api/PluginWorkflowController.php.html#17">App\Controller\Api\PluginWorkflowController</a></td><td class="text-right">5</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Type/IdentifierType.php.html#22">App\Entity\Product\Identifier\Type\IdentifierType</a></td><td class="text-right">5</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/Enum/Action.php.html#11">App\PluginManager\Event\Enum\Action</a></td><td class="text-right">4</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/PluginRepository.php.html#16">App\Repository\PluginRepository</a></td><td class="text-right">4</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Abstract/RelatedTimestampableEntity.php.html#9">App\Entity\Abstract\RelatedTimestampableEntity</a></td><td class="text-right">3.04</td><td class="text-right">83.3%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginActivateEvent.php.html#10">App\PluginManager\Event\WorkflowEvent\PluginActivateEvent</a></td><td class="text-right">3</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginDeactivateEvent.php.html#10">App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent</a></td><td class="text-right">3</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Trait/UpdatedAtTrait.php.html#10">App\Entity\Trait\UpdatedAtTrait</a></td><td class="text-right">3</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Locale/Locale.php.html#22">App\Entity\Locale\Locale</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Cache/CacheClearer.php.html#12">App\PluginManager\Cache\CacheClearer</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Cache/Decorator/CacheClearerDecorator.php.html#13">App\PluginManager\Cache\Decorator\CacheClearerDecorator</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/State/PluginsRefreshProvider.php.html#15">App\PluginManager\State\PluginsRefreshProvider</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/FieldSectionRepository.php.html#14">App\Repository\FieldSectionRepository</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/FieldTypeRepository.php.html#14">App\Repository\FieldTypeRepository</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Command/SampleCommand.php.html#16">App\plugins\SamplePlugin\Command\SampleCommand</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Controller/SampleController.php.html#11">App\plugins\SamplePlugin\Controller\SampleController</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Repository/SampleRepository.php.html#14">App\plugins\SamplePlugin\Repository\SampleRepository</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Trait/CreatedAtTrait.php.html#10">App\Entity\Trait\CreatedAtTrait</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Abstract/TimestampableEntity.php.html#10">App\Entity\Abstract\TimestampableEntity</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Kernel.php.html#12">App\Kernel</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/DependencyInjection/CompilerPass/PluginLoader.php.html#11">App\PluginManager\DependencyInjection\CompilerPass\PluginLoader</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/FieldRepository.php.html#14">App\Repository\FieldRepository</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/IdentifierRepository.php.html#14">App\Repository\IdentifierRepository</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/IdentifierTypeRepository.php.html#14">App\Repository\IdentifierTypeRepository</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/LocaleRepository.php.html#14">App\Repository\LocaleRepository</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/ProductRepository.php.html#14">App\Repository\ProductRepository</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Enum/InputType.php.html#7">App\Entity\Product\Field\Type\Enum\InputType</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Type/Enum/DataType.php.html#7">App\Entity\Product\Identifier\Type\Enum\DataType</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Decoration/ServiceDecoration.php.html#7">App\plugins\SamplePlugin\Decoration\ServiceDecoration</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Entity/SampleEntity.php.html#11">App\plugins\SamplePlugin\Entity\SampleEntity</a></td><td class="text-right">0</td><td class="text-right">100.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <div class="row dashboard-row">
+    <div class="col-md-6">
+     <h3>Methods</h3>
+     <p class="text-muted small">Bubble size = executable lines. Hover for details, click to navigate.</p>
+     <div class="file-coverage-chart">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+ <style>
+  .bubble-success { fill: var(--phpunit-success-bar); opacity: 0.7; }
+  .bubble-warning { fill: var(--phpunit-warning-bar); opacity: 0.7; }
+  .bubble-danger { fill: var(--phpunit-danger-bar); opacity: 0.7; }
+  .bubble-success:hover, .bubble-warning:hover, .bubble-danger:hover { opacity: 1; stroke: var(--bs-emphasis-color); stroke-width: 1.5; }
+  .chart-grid { stroke: var(--bs-border-color); stroke-width: 0.5; stroke-dasharray: 4,4; opacity: 0.5; }
+  .chart-axis { stroke: var(--bs-border-color); stroke-width: 1; }
+  .chart-label { fill: var(--bs-body-color); font-size: 11px; font-family: var(--bs-font-sans-serif, sans-serif); }
+  .chart-title { fill: var(--bs-body-color); font-size: 12px; font-family: var(--bs-font-sans-serif, sans-serif); }
+ </style>
+ <line x1="60.0" y1="20" x2="60.0" y2="350" class="chart-grid"/>
+ <text x="60.0" y="368" text-anchor="middle" class="chart-label">0%</text>
+ <line x1="204.0" y1="20" x2="204.0" y2="350" class="chart-grid"/>
+ <text x="204.0" y="368" text-anchor="middle" class="chart-label">20%</text>
+ <line x1="348.0" y1="20" x2="348.0" y2="350" class="chart-grid"/>
+ <text x="348.0" y="368" text-anchor="middle" class="chart-label">40%</text>
+ <line x1="492.0" y1="20" x2="492.0" y2="350" class="chart-grid"/>
+ <text x="492.0" y="368" text-anchor="middle" class="chart-label">60%</text>
+ <line x1="636.0" y1="20" x2="636.0" y2="350" class="chart-grid"/>
+ <text x="636.0" y="368" text-anchor="middle" class="chart-label">80%</text>
+ <line x1="780.0" y1="20" x2="780.0" y2="350" class="chart-grid"/>
+ <text x="780.0" y="368" text-anchor="middle" class="chart-label">100%</text>
+ <line x1="60" y1="350.0" x2="780" y2="350.0" class="chart-grid"/>
+ <text x="52" y="350.0" text-anchor="end" dominant-baseline="middle" class="chart-label">0</text>
+ <line x1="60" y1="267.5" x2="780" y2="267.5" class="chart-grid"/>
+ <text x="52" y="267.5" text-anchor="end" dominant-baseline="middle" class="chart-label">2</text>
+ <line x1="60" y1="185.0" x2="780" y2="185.0" class="chart-grid"/>
+ <text x="52" y="185.0" text-anchor="end" dominant-baseline="middle" class="chart-label">4</text>
+ <line x1="60" y1="102.5" x2="780" y2="102.5" class="chart-grid"/>
+ <text x="52" y="102.5" text-anchor="end" dominant-baseline="middle" class="chart-label">6</text>
+ <line x1="60" y1="20.0" x2="780" y2="20.0" class="chart-grid"/>
+ <text x="52" y="20.0" text-anchor="end" dominant-baseline="middle" class="chart-label">8</text>
+ <line x1="60" y1="20" x2="60" y2="350" class="chart-axis"/>
+ <line x1="60" y1="350" x2="780" y2="350" class="chart-axis"/>
+ <text x="420.0" y="395" text-anchor="middle" class="chart-title">Line Coverage (%)</text>
+ <text x="15" y="185.0" text-anchor="middle" transform="rotate(-90, 15, 185.0)" class="chart-title">Cyclomatic Complexity</text>
+ <a href="Controller/Api/PluginWorkflowController.php.html#28"><circle cx="780.0" cy="185.0" r="20.0" class="bubble-success"><title>App\Controller\Api\PluginWorkflowController::performWorkflow — Coverage: 100.0% | Lines: 27 | Complexity: 4</title></circle></a>
+ <a href="PluginManager/PluginManager.php.html#141"><circle cx="368.6" cy="102.5" r="17.6" class="bubble-danger"><title>App\PluginManager\PluginManager::loadActivePlugins — Coverage: 42.9% | Lines: 21 | Complexity: 6</title></circle></a>
+ <a href="PluginManager/Command/PluginsListCommand.php.html#26"><circle cx="60.0" cy="143.8" r="16.3" class="bubble-danger"><title>App\PluginManager\Command\PluginsListCommand::__invoke — Coverage: 0.0% | Lines: 18 | Complexity: 5</title></circle></a>
+ <a href="PluginManager/PluginManager.php.html#82"><circle cx="732.0" cy="226.2" r="14.9" class="bubble-success"><title>App\PluginManager\PluginManager::getPlugins — Coverage: 93.3% | Lines: 15 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#79"><circle cx="780.0" cy="226.2" r="13.9" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::onUpdate — Coverage: 100.0% | Lines: 13 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#28"><circle cx="780.0" cy="267.5" r="12.8" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::onActivate — Coverage: 100.0% | Lines: 11 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#54"><circle cx="780.0" cy="267.5" r="12.2" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::onDeactivate — Coverage: 100.0% | Lines: 10 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/PluginManager.php.html#121"><circle cx="780.0" cy="226.2" r="12.2" class="bubble-success"><title>App\PluginManager\PluginManager::dumpPluginConfiguration — Coverage: 100.0% | Lines: 10 | Complexity: 3</title></circle></a>
+ <a href="PluginManager/PluginManager.php.html#52"><circle cx="690.0" cy="226.2" r="10.9" class="bubble-warning"><title>App\PluginManager\PluginManager::performWorkflow — Coverage: 87.5% | Lines: 8 | Complexity: 3</title></circle></a>
+ <a href="Repository/PluginRepository.php.html#26"><circle cx="780.0" cy="308.8" r="10.2" class="bubble-success"><title>App\Repository\PluginRepository::deleteOrphans — Coverage: 100.0% | Lines: 7 | Complexity: 1</title></circle></a>
+ <a href="Entity/Abstract/RelatedTimestampableEntity.php.html#17"><circle cx="660.0" cy="226.2" r="9.4" class="bubble-warning"><title>App\Entity\Abstract\RelatedTimestampableEntity::updateRelated — Coverage: 83.3% | Lines: 6 | Complexity: 3</title></circle></a>
+ <a href="plugins/SamplePlugin/Plugin.php.html#31"><circle cx="780.0" cy="308.8" r="9.4" class="bubble-success"><title>App\plugins\SamplePlugin\Plugin::activate — Coverage: 100.0% | Lines: 6 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Plugin.php.html#56"><circle cx="780.0" cy="267.5" r="9.4" class="bubble-success"><title>App\plugins\SamplePlugin\Plugin::update — Coverage: 100.0% | Lines: 6 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/Command/PluginActivateCommand.php.html#25"><circle cx="60.0" cy="267.5" r="8.6" class="bubble-danger"><title>App\PluginManager\Command\PluginActivateCommand::__invoke — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/Command/PluginDeactivateCommand.php.html#25"><circle cx="60.0" cy="267.5" r="8.6" class="bubble-danger"><title>App\PluginManager\Command\PluginDeactivateCommand::__invoke — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/Command/PluginUpdateCommand.php.html#25"><circle cx="60.0" cy="267.5" r="8.6" class="bubble-danger"><title>App\PluginManager\Command\PluginUpdateCommand::__invoke — Coverage: 0.0% | Lines: 5 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/Event/Enum/Action.php.html#17"><circle cx="780.0" cy="185.0" r="8.6" class="bubble-success"><title>App\PluginManager\Event\Enum\Action::tryFromName — Coverage: 100.0% | Lines: 5 | Complexity: 4</title></circle></a>
+ <a href="Entity/Product/Field/Type/Section/FieldSection.php.html#71"><circle cx="60.0" cy="267.5" r="7.7" class="bubble-danger"><title>App\Entity\Product\Field\Type\Section\FieldSection::addFieldType — Coverage: 0.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Entity/Product/Product.php.html#111"><circle cx="780.0" cy="267.5" r="7.7" class="bubble-success"><title>App\Entity\Product\Product::addIdentifier — Coverage: 100.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Entity/Product/Product.php.html#136"><circle cx="780.0" cy="267.5" r="7.7" class="bubble-success"><title>App\Entity\Product\Product::addField — Coverage: 100.0% | Lines: 4 | Complexity: 2</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#230"><circle cx="780.0" cy="267.5" r="6.7" class="bubble-success"><title>App\Entity\Plugin\Plugin::isUpdatable — Coverage: 100.0% | Lines: 3 | Complexity: 2</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#99"><circle cx="780.0" cy="226.2" r="6.7" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier::getTypedValue — Coverage: 100.0% | Lines: 3 | Complexity: 3</title></circle></a>
+ <a href="Entity/Product/Product.php.html#90"><circle cx="780.0" cy="308.8" r="6.7" class="bubble-success"><title>App\Entity\Product\Product::__construct — Coverage: 100.0% | Lines: 3 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#174"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Plugin\Plugin::setName — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#186"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Plugin\Plugin::setNamespace — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#198"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Plugin\Plugin::setActive — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#210"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Plugin\Plugin::setInstalledVersion — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#222"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Plugin\Plugin::setVersion — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Field.php.html#65"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Product\Field\Field::setType — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Field.php.html#77"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Product\Field\Field::setProduct — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Field.php.html#89"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Product\Field\Field::setValue — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#59"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::setTitle — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#71"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::setTranslatable — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#83"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::setFilterable — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#105"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::setSection — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/Section/FieldSection.php.html#39"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Field\Type\Section\FieldSection::__construct — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/Section/FieldSection.php.html#56"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Field\Type\Section\FieldSection::setTitle — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/Section/FieldSection.php.html#81"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Field\Type\Section\FieldSection::removeFieldType — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#85"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier::setType — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#123"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier::setProduct — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Type/IdentifierType.php.html#49"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Product\Identifier\Type\IdentifierType::setTitle — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Type/IdentifierType.php.html#61"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Product\Identifier\Type\IdentifierType::setDataType — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Product.php.html#121"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Product::removeIdentifier — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Product.php.html#146"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\Entity\Product\Product::removeField — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Cache/CacheClearer.php.html#18"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\PluginManager\Cache\CacheClearer::clear — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Cache/Decorator/CacheClearerDecorator.php.html#22"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\PluginManager\Cache\Decorator\CacheClearerDecorator::clear — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/DependencyInjection/CompilerPass/PluginLoader.php.html#13"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\PluginManager\DependencyInjection\CompilerPass\PluginLoader::process — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#30"><circle cx="60.0" cy="308.8" r="5.4" class="bubble-danger"><title>App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::setFromVersion — Coverage: 0.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/PluginManager.php.html#31"><circle cx="780.0" cy="267.5" r="5.4" class="bubble-success"><title>App\PluginManager\PluginManager::__construct — Coverage: 100.0% | Lines: 2 | Complexity: 2</title></circle></a>
+ <a href="PluginManager/State/PluginsRefreshProvider.php.html#24"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\PluginManager\State\PluginsRefreshProvider::provide — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Entity/Trait/UpdatedAtTrait.php.html#21"><circle cx="780.0" cy="308.8" r="5.4" class="bubble-success"><title>App\Entity\Trait\UpdatedAtTrait::setUpdatedAt — Coverage: 100.0% | Lines: 2 | Complexity: 1</title></circle></a>
+ <a href="Controller/Api/PluginWorkflowController.php.html#19"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Controller\Api\PluginWorkflowController::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Abstract/TimestampableEntity.php.html#15"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Abstract\TimestampableEntity::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Locale/Locale.php.html#24"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Locale\Locale::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Locale/Locale.php.html#31"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Locale\Locale::getId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#164"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Plugin\Plugin::getId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#169"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Plugin\Plugin::getName — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#181"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Plugin\Plugin::getNamespace — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#193"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Plugin\Plugin::isActive — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#205"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Plugin\Plugin::getInstalledVersion — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Plugin/Plugin.php.html#217"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Plugin\Plugin::getVersion — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Field.php.html#55"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Field\Field::getId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Field.php.html#60"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Field\Field::getType — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Field.php.html#72"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Field\Field::getProduct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Field.php.html#84"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Field\Field::getValue — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#49"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#54"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::getTitle — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#66"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::isTranslatable — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#78"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::isFilterable — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#90"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::getInputType — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#95"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::setInputType — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/FieldType.php.html#100"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\FieldType::getSection — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/Section/FieldSection.php.html#46"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\Section\FieldSection::getId — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/Section/FieldSection.php.html#51"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\Section\FieldSection::getTitle — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Field/Type/Section/FieldSection.php.html#66"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Entity\Product\Field\Type\Section\FieldSection::getFieldTypes — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#75"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier::getId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#80"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier::getType — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#108"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier::getValue — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#113"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier::setValue — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Identifier.php.html#118"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Identifier\Identifier::getProduct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Type/IdentifierType.php.html#39"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Identifier\Type\IdentifierType::getId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Type/IdentifierType.php.html#44"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Identifier\Type\IdentifierType::getTitle — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Identifier/Type/IdentifierType.php.html#56"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Identifier\Type\IdentifierType::getDataType — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Product.php.html#98"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Product::getId — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Product.php.html#106"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Product::getIdentifiers — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Product/Product.php.html#131"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Product\Product::getFields — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Kernel.php.html#16"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Kernel::build — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Cache/CacheClearer.php.html#14"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Cache\CacheClearer::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Cache/Decorator/CacheClearerDecorator.php.html#15"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Cache\Decorator\CacheClearerDecorator::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Command/PluginActivateCommand.php.html#18"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\PluginManager\Command\PluginActivateCommand::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Command/PluginDeactivateCommand.php.html#18"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\PluginManager\Command\PluginDeactivateCommand::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Command/PluginUpdateCommand.php.html#18"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\PluginManager\Command\PluginUpdateCommand::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Command/PluginsListCommand.php.html#19"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\PluginManager\Command\PluginsListCommand::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#18"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#105"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::finalise — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/Exception/PluginWorkflowException.php.html#11"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/Exception/PluginWorkflowException.php.html#16"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException::getAction — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/Exception/PluginWorkflowException.php.html#21"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException::getPluginName — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginActivateEvent.php.html#12"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginActivateEvent::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginActivateEvent.php.html#18"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginActivateEvent::getPluginInstance — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginActivateEvent.php.html#23"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginActivateEvent::getPluginEntity — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginDeactivateEvent.php.html#12"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginDeactivateEvent.php.html#18"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent::getPluginInstance — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginDeactivateEvent.php.html#23"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent::getPluginEntity — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#14"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#20"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::getPluginInstance — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#25"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::getPluginEntity — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#37"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::getFromVersion — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/PluginManager.php.html#116"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\PluginManager::getActivePlugins — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="PluginManager/State/PluginsRefreshProvider.php.html#18"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\PluginManager\State\PluginsRefreshProvider::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/FieldRepository.php.html#16"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Repository\FieldRepository::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/FieldSectionRepository.php.html#16"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Repository\FieldSectionRepository::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/FieldTypeRepository.php.html#16"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\Repository\FieldTypeRepository::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/IdentifierRepository.php.html#16"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Repository\IdentifierRepository::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/IdentifierTypeRepository.php.html#16"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Repository\IdentifierTypeRepository::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/LocaleRepository.php.html#16"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Repository\LocaleRepository::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/PluginRepository.php.html#18"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Repository\PluginRepository::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/PluginRepository.php.html#40"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Repository\PluginRepository::getActivePlugins — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/PluginRepository.php.html#45"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Repository\PluginRepository::getPluginEntity — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Repository/ProductRepository.php.html#16"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Repository\ProductRepository::__construct — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Command/SampleCommand.php.html#18"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\plugins\SamplePlugin\Command\SampleCommand::execute — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Controller/SampleController.php.html#14"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\plugins\SamplePlugin\Controller\SampleController::index — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Plugin.php.html#14"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\plugins\SamplePlugin\Plugin::getName — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Plugin.php.html#19"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\plugins\SamplePlugin\Plugin::getVersion — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Plugin.php.html#46"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\plugins\SamplePlugin\Plugin::deactivate — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="plugins/SamplePlugin/Repository/SampleRepository.php.html#16"><circle cx="60.0" cy="308.8" r="4.0" class="bubble-danger"><title>App\plugins\SamplePlugin\Repository\SampleRepository::__construct — Coverage: 0.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Trait/CreatedAtTrait.php.html#16"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Trait\CreatedAtTrait::getCreatedAt — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Trait/CreatedAtTrait.php.html#21"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Trait\CreatedAtTrait::setCreatedAt — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Trait/UpdatedAtTrait.php.html#16"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Trait\UpdatedAtTrait::getUpdatedAt — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+ <a href="Entity/Trait/UpdatedAtTrait.php.html#29"><circle cx="780.0" cy="308.8" r="4.0" class="bubble-success"><title>App\Entity\Trait\UpdatedAtTrait::updateUpdatedAt — Coverage: 100.0% | Lines: 1 | Complexity: 1</title></circle></a>
+</svg>
+     </div>
+    </div>
+    <div class="col-md-6 dashboard-column">
+     <h3>&nbsp;</h3>
+     <p class="text-muted small">Sorted by descending CRAP (Change Risk Anti-Patterns) index.</p>
+     <div class="scrollbox">
+<table class="table">
+ <thead>
+  <tr>
+   <th>Method</th>
+   <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+   <th class="text-right">Coverage</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr><td><a href="PluginManager/Command/PluginsListCommand.php.html#26">App\PluginManager\Command\PluginsListCommand::__invoke</a></td><td class="text-right">30</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/PluginManager.php.html#141">App\PluginManager\PluginManager::loadActivePlugins</a></td><td class="text-right">12.72</td><td class="text-right">42.9%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Section/FieldSection.php.html#71">App\Entity\Product\Field\Type\Section\FieldSection::addFieldType</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginActivateCommand.php.html#25">App\PluginManager\Command\PluginActivateCommand::__invoke</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginDeactivateCommand.php.html#25">App\PluginManager\Command\PluginDeactivateCommand::__invoke</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginUpdateCommand.php.html#25">App\PluginManager\Command\PluginUpdateCommand::__invoke</a></td><td class="text-right">6</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/Api/PluginWorkflowController.php.html#28">App\Controller\Api\PluginWorkflowController::performWorkflow</a></td><td class="text-right">4</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/Enum/Action.php.html#17">App\PluginManager\Event\Enum\Action::tryFromName</a></td><td class="text-right">4</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Abstract/RelatedTimestampableEntity.php.html#17">App\Entity\Abstract\RelatedTimestampableEntity::updateRelated</a></td><td class="text-right">3.04</td><td class="text-right">83.3%</td></tr>
+  <tr><td><a href="PluginManager/PluginManager.php.html#52">App\PluginManager\PluginManager::performWorkflow</a></td><td class="text-right">3.02</td><td class="text-right">87.5%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#99">App\Entity\Product\Identifier\Identifier::getTypedValue</a></td><td class="text-right">3</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#79">App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::onUpdate</a></td><td class="text-right">3</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/PluginManager.php.html#82">App\PluginManager\PluginManager::getPlugins</a></td><td class="text-right">3.00</td><td class="text-right">93.3%</td></tr>
+  <tr><td><a href="PluginManager/PluginManager.php.html#121">App\PluginManager\PluginManager::dumpPluginConfiguration</a></td><td class="text-right">3</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#230">App\Entity\Plugin\Plugin::isUpdatable</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#49">App\Entity\Product\Field\Type\FieldType::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#54">App\Entity\Product\Field\Type\FieldType::getTitle</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#59">App\Entity\Product\Field\Type\FieldType::setTitle</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#66">App\Entity\Product\Field\Type\FieldType::isTranslatable</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#71">App\Entity\Product\Field\Type\FieldType::setTranslatable</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#78">App\Entity\Product\Field\Type\FieldType::isFilterable</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#83">App\Entity\Product\Field\Type\FieldType::setFilterable</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#90">App\Entity\Product\Field\Type\FieldType::getInputType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#95">App\Entity\Product\Field\Type\FieldType::setInputType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#100">App\Entity\Product\Field\Type\FieldType::getSection</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/FieldType.php.html#105">App\Entity\Product\Field\Type\FieldType::setSection</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Section/FieldSection.php.html#39">App\Entity\Product\Field\Type\Section\FieldSection::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Section/FieldSection.php.html#46">App\Entity\Product\Field\Type\Section\FieldSection::getId</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Section/FieldSection.php.html#51">App\Entity\Product\Field\Type\Section\FieldSection::getTitle</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Section/FieldSection.php.html#56">App\Entity\Product\Field\Type\Section\FieldSection::setTitle</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Section/FieldSection.php.html#66">App\Entity\Product\Field\Type\Section\FieldSection::getFieldTypes</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Type/Section/FieldSection.php.html#81">App\Entity\Product\Field\Type\Section\FieldSection::removeFieldType</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#111">App\Entity\Product\Product::addIdentifier</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#121">App\Entity\Product\Product::removeIdentifier</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#136">App\Entity\Product\Product::addField</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#146">App\Entity\Product\Product::removeField</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginActivateCommand.php.html#18">App\PluginManager\Command\PluginActivateCommand::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginDeactivateCommand.php.html#18">App\PluginManager\Command\PluginDeactivateCommand::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginUpdateCommand.php.html#18">App\PluginManager\Command\PluginUpdateCommand::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Command/PluginsListCommand.php.html#19">App\PluginManager\Command\PluginsListCommand::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#28">App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::onActivate</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#54">App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::onDeactivate</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/Exception/PluginWorkflowException.php.html#16">App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException::getAction</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/Exception/PluginWorkflowException.php.html#21">App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException::getPluginName</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#30">App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::setFromVersion</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#37">App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::getFromVersion</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="PluginManager/PluginManager.php.html#31">App\PluginManager\PluginManager::__construct</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/FieldSectionRepository.php.html#16">App\Repository\FieldSectionRepository::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Repository/FieldTypeRepository.php.html#16">App\Repository\FieldTypeRepository::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Command/SampleCommand.php.html#18">App\plugins\SamplePlugin\Command\SampleCommand::execute</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Controller/SampleController.php.html#14">App\plugins\SamplePlugin\Controller\SampleController::index</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Plugin.php.html#56">App\plugins\SamplePlugin\Plugin::update</a></td><td class="text-right">2</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Repository/SampleRepository.php.html#16">App\plugins\SamplePlugin\Repository\SampleRepository::__construct</a></td><td class="text-right">2</td><td class="text-right">0.0%</td></tr>
+  <tr><td><a href="Controller/Api/PluginWorkflowController.php.html#19">App\Controller\Api\PluginWorkflowController::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Abstract/TimestampableEntity.php.html#15">App\Entity\Abstract\TimestampableEntity::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Locale/Locale.php.html#24">App\Entity\Locale\Locale::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Locale/Locale.php.html#31">App\Entity\Locale\Locale::getId</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#164">App\Entity\Plugin\Plugin::getId</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#169">App\Entity\Plugin\Plugin::getName</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#174">App\Entity\Plugin\Plugin::setName</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#181">App\Entity\Plugin\Plugin::getNamespace</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#186">App\Entity\Plugin\Plugin::setNamespace</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#193">App\Entity\Plugin\Plugin::isActive</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#198">App\Entity\Plugin\Plugin::setActive</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#205">App\Entity\Plugin\Plugin::getInstalledVersion</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#210">App\Entity\Plugin\Plugin::setInstalledVersion</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#217">App\Entity\Plugin\Plugin::getVersion</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Plugin/Plugin.php.html#222">App\Entity\Plugin\Plugin::setVersion</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Field.php.html#55">App\Entity\Product\Field\Field::getId</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Field.php.html#60">App\Entity\Product\Field\Field::getType</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Field.php.html#65">App\Entity\Product\Field\Field::setType</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Field.php.html#72">App\Entity\Product\Field\Field::getProduct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Field.php.html#77">App\Entity\Product\Field\Field::setProduct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Field.php.html#84">App\Entity\Product\Field\Field::getValue</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Field/Field.php.html#89">App\Entity\Product\Field\Field::setValue</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#75">App\Entity\Product\Identifier\Identifier::getId</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#80">App\Entity\Product\Identifier\Identifier::getType</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#85">App\Entity\Product\Identifier\Identifier::setType</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#108">App\Entity\Product\Identifier\Identifier::getValue</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#113">App\Entity\Product\Identifier\Identifier::setValue</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#118">App\Entity\Product\Identifier\Identifier::getProduct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Identifier.php.html#123">App\Entity\Product\Identifier\Identifier::setProduct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Type/IdentifierType.php.html#39">App\Entity\Product\Identifier\Type\IdentifierType::getId</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Type/IdentifierType.php.html#44">App\Entity\Product\Identifier\Type\IdentifierType::getTitle</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Type/IdentifierType.php.html#49">App\Entity\Product\Identifier\Type\IdentifierType::setTitle</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Type/IdentifierType.php.html#56">App\Entity\Product\Identifier\Type\IdentifierType::getDataType</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Identifier/Type/IdentifierType.php.html#61">App\Entity\Product\Identifier\Type\IdentifierType::setDataType</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#90">App\Entity\Product\Product::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#98">App\Entity\Product\Product::getId</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#106">App\Entity\Product\Product::getIdentifiers</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Product/Product.php.html#131">App\Entity\Product\Product::getFields</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Kernel.php.html#16">App\Kernel::build</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Cache/CacheClearer.php.html#14">App\PluginManager\Cache\CacheClearer::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Cache/CacheClearer.php.html#18">App\PluginManager\Cache\CacheClearer::clear</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Cache/Decorator/CacheClearerDecorator.php.html#15">App\PluginManager\Cache\Decorator\CacheClearerDecorator::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Cache/Decorator/CacheClearerDecorator.php.html#22">App\PluginManager\Cache\Decorator\CacheClearerDecorator::clear</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/DependencyInjection/CompilerPass/PluginLoader.php.html#13">App\PluginManager\DependencyInjection\CompilerPass\PluginLoader::process</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#18">App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/EventListener/PluginWorkflowEventListener.php.html#105">App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener::finalise</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/Exception/PluginWorkflowException.php.html#11">App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginActivateEvent.php.html#12">App\PluginManager\Event\WorkflowEvent\PluginActivateEvent::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginActivateEvent.php.html#18">App\PluginManager\Event\WorkflowEvent\PluginActivateEvent::getPluginInstance</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginActivateEvent.php.html#23">App\PluginManager\Event\WorkflowEvent\PluginActivateEvent::getPluginEntity</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginDeactivateEvent.php.html#12">App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginDeactivateEvent.php.html#18">App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent::getPluginInstance</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginDeactivateEvent.php.html#23">App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent::getPluginEntity</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#14">App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#20">App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::getPluginInstance</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/Event/WorkflowEvent/PluginUpdateEvent.php.html#25">App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent::getPluginEntity</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/PluginManager.php.html#116">App\PluginManager\PluginManager::getActivePlugins</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/State/PluginsRefreshProvider.php.html#18">App\PluginManager\State\PluginsRefreshProvider::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="PluginManager/State/PluginsRefreshProvider.php.html#24">App\PluginManager\State\PluginsRefreshProvider::provide</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/FieldRepository.php.html#16">App\Repository\FieldRepository::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/IdentifierRepository.php.html#16">App\Repository\IdentifierRepository::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/IdentifierTypeRepository.php.html#16">App\Repository\IdentifierTypeRepository::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/LocaleRepository.php.html#16">App\Repository\LocaleRepository::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/PluginRepository.php.html#18">App\Repository\PluginRepository::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/PluginRepository.php.html#26">App\Repository\PluginRepository::deleteOrphans</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/PluginRepository.php.html#40">App\Repository\PluginRepository::getActivePlugins</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/PluginRepository.php.html#45">App\Repository\PluginRepository::getPluginEntity</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Repository/ProductRepository.php.html#16">App\Repository\ProductRepository::__construct</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Plugin.php.html#14">App\plugins\SamplePlugin\Plugin::getName</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Plugin.php.html#19">App\plugins\SamplePlugin\Plugin::getVersion</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Plugin.php.html#31">App\plugins\SamplePlugin\Plugin::activate</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="plugins/SamplePlugin/Plugin.php.html#46">App\plugins\SamplePlugin\Plugin::deactivate</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Trait/CreatedAtTrait.php.html#16">App\Entity\Trait\CreatedAtTrait::getCreatedAt</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Trait/CreatedAtTrait.php.html#21">App\Entity\Trait\CreatedAtTrait::setCreatedAt</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Trait/UpdatedAtTrait.php.html#16">App\Entity\Trait\UpdatedAtTrait::getUpdatedAt</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Trait/UpdatedAtTrait.php.html#21">App\Entity\Trait\UpdatedAtTrait::setUpdatedAt</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+  <tr><td><a href="Entity/Trait/UpdatedAtTrait.php.html#29">App\Entity\Trait\UpdatedAtTrait::updateUpdatedAt</a></td><td class="text-right">1</td><td class="text-right">100.0%</td></tr>
+ </tbody>
+</table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 14.2.2</a> using <a href="https://www.php.net/" target="_top">PHP 8.5.6</a> and <a href="https://phpunit.de/">PHPUnit 13.2.1</a> at Mon Jun 29 13:06:32 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
+</html>

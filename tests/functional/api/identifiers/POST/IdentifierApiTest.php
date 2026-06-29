@@ -9,9 +9,13 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Repository\IdentifierRepository;
+use App\Repository\IdentifierTypeRepository;
+use App\Repository\ProductRepository;
 use App\Tests\TestData\Factory\Product\Identifier\Type\IdentifierTypeFactory;
 use App\Tests\TestData\Factory\Product\ProductFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -19,6 +23,11 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[CoversClass(Identifier::class)]
+#[CoversClass(IdentifierRepository::class)]
+#[UsesClass(Product::class)]
+#[UsesClass(ProductRepository::class)]
+#[UsesClass(IdentifierType::class)]
+#[UsesClass(IdentifierTypeRepository::class)]
 class IdentifierApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

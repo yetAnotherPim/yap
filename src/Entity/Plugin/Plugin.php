@@ -16,6 +16,7 @@ use App\Repository\PluginRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: PluginRepository::class)]
@@ -25,14 +26,15 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Cache()]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            normalizationContext: ['groups' => ['plugin:read']],
+        ),
         new GetCollection(
             openapi: new Operation(tags: ['Plugin'], summary: 'Clear application cache for reloading plugins'),
             uriTemplate: 'refresh/plugins',
-            provider: PluginsRefreshProvider::class
+            provider: PluginsRefreshProvider::class,
+            normalizationContext: ['groups' => ['plugin:refresh']],
         ),
-
-        // TODO: remove default responses
         new Post(
             routeName: 'perform_plugin_workflow',
             openapi: new Operation(
@@ -140,16 +142,22 @@ class Plugin
     #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
     private Uuid $id;
 
+    #[Groups(['plugin:refresh', 'plugin:read'])]
     #[ORM\Column(length: 255)]
     private string $name;
+    #[Groups(['plugin:refresh', 'plugin:read'])]
     #[ORM\Column(length: 255)]
     private string $namespace;
 
+    #[Groups(['plugin:refresh', 'plugin:read'])]
     #[ORM\Column]
     private bool $active = false;
 
+    #[Groups(['plugin:refresh', 'plugin:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $installedVersion = null;
+
+    #[Groups(['plugin:refresh'])]
     private string $version;
 
     public function getId(): Uuid
@@ -217,6 +225,7 @@ class Plugin
         return $this;
     }
 
+    #[Groups(['plugin:refresh'])]
     public function isUpdatable(): bool
     {
         if (null === $this->getInstalledVersion()) {

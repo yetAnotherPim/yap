@@ -106,7 +106,7 @@
             "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite integration --coverage-html coverage_integration"
         ],
         "test-api": [
-            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite api"
+            "XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite api --coverage-html coverage_api"
         ]
     },
     "conflict": {
