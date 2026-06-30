@@ -142,14 +142,16 @@ class PluginManager
 
         $dumpedConfigurationFile = $projectDir.$pluginConfigurationFolder.$appEnv.'_plugin_configuration';
 
-        if (false === file_exists($dumpedConfigurationFile)) {
+        if (false === file_exists($dumpedConfigurationFile) || false === is_readable($dumpedConfigurationFile)) {
             return;
         }
 
         $activePlugins = file($dumpedConfigurationFile);
 
         if (false === $activePlugins) {
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         foreach ($activePlugins as $pluginName) {

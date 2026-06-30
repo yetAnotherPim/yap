@@ -20,6 +20,7 @@ use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\DatabaseTrait;
+use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,8 +51,7 @@ class PluginActivateCommandTest extends KernelTestCase
 {
     use Factories;
     use DatabaseTrait;
-
-    private ApplicationTester $applicationTester;
+    use PluginCommandTrait;
 
     protected function setUp(): void
     {
@@ -80,32 +80,12 @@ class PluginActivateCommandTest extends KernelTestCase
         file_put_contents($dumpfilePath, '');
         $this->assertFalse($this->tableExists('sample_plugin'));
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugins:list',
-                    '--refresh' => true,
-                ]
-            );
-
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:activate',
-                    'plugin-name' => 'SamplePlugin',
-                ]
-            );
-
-        $this->applicationTester->assertCommandIsSuccessful();
+        $this->refreshPlugins();
+        $this->activatePlugin('SamplePlugin', true);
 
         $this->assertTrue($this->tableExists('sample_plugin'));
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugins:list',
-                ]
-            );
+        $this->listPlugins(true);
 
         $this->assertFileExists($dumpfilePath);
         /** @phpstan-var string $dumpFileContent */
@@ -114,7 +94,6 @@ class PluginActivateCommandTest extends KernelTestCase
         $this->assertStringContainsString('SamplePlugin', $dumpFileContent);
         $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
 
-        $this->applicationTester->assertCommandIsSuccessful();
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.9.0               x', $output);
@@ -123,13 +102,7 @@ class PluginActivateCommandTest extends KernelTestCase
 
     public function testPluginActivateWithMissingEntity(): void
     {
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:activate',
-                    'plugin-name' => 'SamplePlugin',
-                ]
-            );
+        $this->activatePlugin('SamplePlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
@@ -146,13 +119,7 @@ class PluginActivateCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:activate',
-                    'plugin-name' => 'DeletedPlugin',
-                ]
-            );
+        $this->activatePlugin('DeletedPlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
@@ -162,21 +129,8 @@ class PluginActivateCommandTest extends KernelTestCase
 
     public function testPluginActivateCausingError(): void
     {
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugins:list',
-                    '--refresh' => true,
-                ]
-            );
-
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:activate',
-                    'plugin-name' => 'TestPlugin',
-                ]
-            );
+        $this->refreshPlugins();
+        $this->activatePlugin('TestPlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();

@@ -19,6 +19,7 @@ use App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent;
 use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\PluginRepository;
+use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -46,8 +47,7 @@ use Zenstruck\Foundry\Test\Factories;
 class PluginDeactivateCommandTest extends KernelTestCase
 {
     use Factories;
-
-    private ApplicationTester $applicationTester;
+    use PluginCommandTrait;
 
     protected function setUp(): void
     {
@@ -73,15 +73,8 @@ class PluginDeactivateCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugins:list',
-                    '--refresh' => true,
-                ]
-            );
+        $this->refreshPlugins(true);
 
-        $this->applicationTester->assertCommandIsSuccessful();
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.9.0               x', $output);
@@ -95,22 +88,8 @@ class PluginDeactivateCommandTest extends KernelTestCase
         $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
         $this->assertStringNotContainsString('DeletedPlugin', $dumpFileContent);
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:deactivate',
-                    'plugin-name' => 'SamplePlugin',
-                ]
-            );
-
-        $this->applicationTester->assertCommandIsSuccessful();
-
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugins:list',
-                ]
-            );
+        $this->deactivatePlugin('SamplePlugin', true);
+        $this->listPlugins(true);
 
         $this->assertFileExists($dumpfilePath);
         /** @phpstan-var string $dumpFileContent */
@@ -119,7 +98,6 @@ class PluginDeactivateCommandTest extends KernelTestCase
         $this->assertStringNotContainsString('SamplePlugin', $dumpFileContent);
         $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
 
-        $this->applicationTester->assertCommandIsSuccessful();
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                x        0.9.0     0.9.0               x', $output);
@@ -128,13 +106,7 @@ class PluginDeactivateCommandTest extends KernelTestCase
 
     public function testPluginDeactivateWithMissingEntity(): void
     {
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:deactivate',
-                    'plugin-name' => 'SamplePlugin',
-                ]
-            );
+        $this->deactivatePlugin('SamplePlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
@@ -151,13 +123,7 @@ class PluginDeactivateCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:deactivate',
-                    'plugin-name' => 'DeletedPlugin',
-                ]
-            );
+        $this->deactivatePlugin('DeletedPlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
@@ -167,21 +133,9 @@ class PluginDeactivateCommandTest extends KernelTestCase
 
     public function testPluginDeactivateCausingError(): void
     {
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugins:list',
-                    '--refresh' => true,
-                ]
-            );
+        $this->refreshPlugins();
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:deactivate',
-                    'plugin-name' => 'TestPlugin',
-                ]
-            );
+        $this->deactivatePlugin('TestPlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();

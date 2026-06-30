@@ -22,6 +22,7 @@ use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\DatabaseTrait;
+use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,8 +55,7 @@ class PluginUpdateCommandTest extends KernelTestCase
 {
     use Factories;
     use DatabaseTrait;
-
-    private ApplicationTester $applicationTester;
+    use PluginCommandTrait;
 
     protected function setUp(): void
     {
@@ -82,64 +82,26 @@ class PluginUpdateCommandTest extends KernelTestCase
     {
         $this->assertFalse($this->columnExists('sample_plugin', 'new_column'));
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugins:list',
-                    '--refresh' => true,
-                ]
-            );
+        $this->refreshPlugins();
+        $this->activatePlugin('SamplePlugin', true);
+        $this->updatePlugin('SamplePlugin', true);
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:activate',
-                    'plugin-name' => 'SamplePlugin',
-                ]
-            );
-
-        $this->applicationTester->assertCommandIsSuccessful();
-
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:update',
-                    'plugin-name' => 'SamplePlugin',
-                ]
-            );
-
-        $this->applicationTester->assertCommandIsSuccessful();
         $this->assertFalse($this->columnExists('sample_plugin', 'new_column'));
 
         $repository = $this->entityManager->getRepository(Plugin::class);
         $plugin = $repository->findOneBy(['name' => 'SamplePlugin']);
 
         $this->assertInstanceOf(Plugin::class, $plugin);
-
         $plugin->setInstalledVersion('0.8.0');
 
         $this->entityManager->persist($plugin);
         $this->entityManager->flush();
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:update',
-                    'plugin-name' => 'SamplePlugin',
-                ]
-            );
+        $this->updatePlugin('SamplePlugin', true);
 
-        $this->applicationTester->assertCommandIsSuccessful();
         $this->assertTrue($this->columnExists('sample_plugin', 'new_column'));
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugins:list',
-                ]
-            );
-
-        $this->applicationTester->assertCommandIsSuccessful();
+        $this->refreshPlugins(true);
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.9.0               x', $output);
@@ -148,13 +110,7 @@ class PluginUpdateCommandTest extends KernelTestCase
 
     public function testPluginUpdateWithMissingEntity(): void
     {
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:update',
-                    'plugin-name' => 'SamplePlugin',
-                ]
-            );
+        $this->updatePlugin('SamplePlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
@@ -171,18 +127,28 @@ class PluginUpdateCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:update',
-                    'plugin-name' => 'DeletedPlugin',
-                ]
-            );
+        $this->updatePlugin('DeletedPlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('[ERROR] Plugin cannot be updated!', $output);
+    }
+
+    public function testPluginUpdateWithMissingInstalledVersion(): void
+    {
+        PluginFactory::createOne([
+            'name' => 'SamplePlugin',
+            'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
+            'active' => true,
+        ]);
+
+        $this->updatePlugin('SamplePlugin');
+
+        $this->applicationTester->assertCommandFailed();
+        $output = $this->applicationTester->getDisplay();
+
+        $this->assertStringContainsString('Plugin is not installed', $output);
     }
 
     public function testPluginAUpdateCausingError(): void
@@ -194,13 +160,7 @@ class PluginUpdateCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
-        $this->applicationTester
-            ->run(
-                [
-                    'command' => 'yap:plugin:update',
-                    'plugin-name' => 'TestPlugin',
-                ]
-            );
+        $this->updatePlugin('TestPlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
