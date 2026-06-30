@@ -23,7 +23,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Zenstruck\Foundry\Test\Factories;
 
@@ -47,7 +46,6 @@ class PluginListCommandTest extends KernelTestCase
     use PluginCommandTrait;
 
     private const string DUMPFILE_PATH = __DIR__.'/../../../var/plugin_configuration/test_plugin_configuration';
-
 
     protected function setUp(): void
     {
@@ -145,6 +143,7 @@ class PluginListCommandTest extends KernelTestCase
         $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
     }
+
     public function testPluginRefresh2(): void
     {
         self::getContainer()->set(\App\Tests\TestData\plugins\TestPlugin\Plugin::class, new \stdClass());

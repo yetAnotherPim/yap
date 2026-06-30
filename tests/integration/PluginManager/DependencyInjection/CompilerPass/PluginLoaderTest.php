@@ -88,8 +88,8 @@ class PluginLoaderTest extends KernelTestCase
             'environment' => 'nd',
         ]);
 
-        $this->assertFalse(self::$kernel->getContainer()->hasParameter('plugins_loaded_successfully'));
         $this->assertInstanceOf(KernelInterface::class, self::$kernel);
+        $this->assertFalse(self::$kernel->getContainer()->hasParameter('plugins_loaded_successfully'));
     }
 
     public function testLoadActivePluginsWithUnreadableDumpfile(): void
@@ -102,8 +102,8 @@ class PluginLoaderTest extends KernelTestCase
             'environment' => 'ud',
         ]);
 
-        $this->assertFalse(self::$kernel->getContainer()->hasParameter('plugins_loaded_successfully'));
         $this->assertInstanceOf(KernelInterface::class, self::$kernel);
+        $this->assertFalse(self::$kernel->getContainer()->hasParameter('plugins_loaded_successfully'));
     }
 
     public function testLoadActivePluginsWithMissingServiceDefinitionFile(): void
@@ -114,7 +114,7 @@ class PluginLoaderTest extends KernelTestCase
             'environment' => 'msdf',
         ]);
 
-        $this->assertTrue(self::$kernel->getContainer()->hasParameter('plugins_loaded_successfully'));
         $this->assertInstanceOf(KernelInterface::class, self::$kernel);
+        $this->assertTrue(self::$kernel->getContainer()->hasParameter('plugins_loaded_successfully'));
     }
 }

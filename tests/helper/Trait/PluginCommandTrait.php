@@ -20,7 +20,7 @@ trait PluginCommandTrait
                 ]
             );
 
-        if(true === $expectSuccess) {
+        if (true === $expectSuccess) {
             $this->applicationTester->assertCommandIsSuccessful();
         }
     }
@@ -34,7 +34,7 @@ trait PluginCommandTrait
                 ]
             );
 
-        if(true === $expectSuccess) {
+        if (true === $expectSuccess) {
             $this->applicationTester->assertCommandIsSuccessful();
         }
     }
@@ -49,7 +49,7 @@ trait PluginCommandTrait
                 ]
             );
 
-        if(true === $expectSuccess) {
+        if (true === $expectSuccess) {
             $this->applicationTester->assertCommandIsSuccessful();
         }
     }
@@ -64,7 +64,7 @@ trait PluginCommandTrait
                 ]
             );
 
-        if(true === $expectSuccess) {
+        if (true === $expectSuccess) {
             $this->applicationTester->assertCommandIsSuccessful();
         }
     }
@@ -79,7 +79,7 @@ trait PluginCommandTrait
                 ]
             );
 
-        if(true === $expectSuccess) {
+        if (true === $expectSuccess) {
             $this->applicationTester->assertCommandIsSuccessful();
         }
     }

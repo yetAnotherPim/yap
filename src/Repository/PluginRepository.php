@@ -20,8 +20,6 @@ class PluginRepository extends ServiceEntityRepository
         parent::__construct($registry, Plugin::class);
     }
 
-    // TODO: add tests
-
     /** @phpstan-param Collection<int, Plugin> $pluginCollection */
     public function deleteOrphans(Collection $pluginCollection): void
     {
