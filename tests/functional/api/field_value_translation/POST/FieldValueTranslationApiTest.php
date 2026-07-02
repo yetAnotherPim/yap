@@ -2,15 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\functional\api\field\PATCH;
+namespace App\Tests\functional\api\field_value_translation\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Product;
 use App\Repository\FieldRepository;
+use App\Repository\FieldTypeRepository;
+use App\Repository\FieldValueTranslationRepository;
+use App\Repository\LocaleRepository;
+use App\Repository\ProductRepository;
+use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Field\FieldFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -20,12 +27,18 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-#[CoversClass(Field::class)]
-#[CoversClass(FieldRepository::class)]
+#[CoversClass(FieldValueTranslation::class)]
+#[CoversClass(FieldValueTranslationRepository::class)]
+#[UsesClass(Field::class)]
+#[UsesClass(FieldRepository::class)]
+#[UsesClass(Locale::class)]
+#[UsesClass(LocaleRepository::class)]
 #[UsesClass(FieldType::class)]
 #[UsesClass(FieldSection::class)]
 #[UsesClass(Product::class)]
-class FieldApiTest extends ApiTestCase
+#[UsesClass(ProductRepository::class)]
+#[UsesClass(FieldTypeRepository::class)]
+class FieldValueTranslationApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;
 
@@ -45,25 +58,34 @@ class FieldApiTest extends ApiTestCase
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function testPatch(): void
+    public function testPost(): void
     {
-        /** @phpstan-var Field $field */
         $field = FieldFactory::createOne();
+        $locale = LocaleFactory::createOne(['id' => 'en_GB']);
 
         $response = $this->client->request(
-            'PATCH',
-            '/api/fields/'.$field->getId(),
+            'POST',
+            '/api/field_value_translations',
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
                 'body' => '{
-                                "value":"123456"
+                                "value":"123456",
+                                "field":"/api/fields/'.$field->getId().'",
+                                "locale":"/api/locales/'.$locale->getId().'"
                             }',
             ]
         );
 
-        $this->assertResponseStatusCodeSame(200);
+        $this->assertResponseStatusCodeSame(201);
         $this->assertJsonContains(['value' => '123456']);
         $this->assertStringContainsString('"createdAt":', $response->getContent());
-        $this->assertStringContainsString('"updatedAt":', $response->getContent());
+        $this->assertStringNotContainsString('"updatedAt":', $response->getContent());
+
+        /** @phpstan-var string $id */
+        $id = $response->toArray()['id'];
+
+        /** test products contains fields */
+        $response = $this->client->request('GET', '/api/products/'.$field->getProduct()->getId());
+        $this->assertStringContainsString($id, $response->getContent());
+        $this->assertStringContainsString('"locale":"\/api\/locales\/en_GB","value":"123456"', $response->getContent());
     }
 }

@@ -27,6 +27,7 @@ final class FieldFactory extends PersistentObjectFactory
             'product' => ProductFactory::new(),
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'type' => FieldTypeFactory::new(),
+            'translations' => [],
         ];
     }
 }

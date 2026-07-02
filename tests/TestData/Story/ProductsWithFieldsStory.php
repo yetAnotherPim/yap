@@ -8,7 +8,7 @@ use App\Tests\TestData\Factory\Product\Field\FieldFactory;
 use App\Tests\TestData\Factory\Product\ProductFactory;
 use Zenstruck\Foundry\Story;
 
-final class ProductWithFieldsStory extends Story
+final class ProductsWithFieldsStory extends Story
 {
     public function build(): void
     {

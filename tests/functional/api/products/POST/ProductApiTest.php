@@ -54,7 +54,6 @@ class ProductApiTest extends ApiTestCase
         $container = $this->getContainer();
 
         $productRepository = $container->get(ProductRepository::class);
-
         $this->assertInstanceOf(ProductRepository::class, $productRepository);
 
         $this->productRepository = $productRepository;

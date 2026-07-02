@@ -19,7 +19,9 @@ use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
@@ -47,6 +49,9 @@ class PluginListCommandTest extends KernelTestCase
 
     private const string DUMPFILE_PATH = __DIR__.'/../../../var/plugin_configuration/test_plugin_configuration';
 
+    /** @phpstan-var LoggerInterface|MockInterface  */
+    private LoggerInterface $loggerMock;
+
     protected function setUp(): void
     {
         new Filesystem()->remove(self::DUMPFILE_PATH);
@@ -58,6 +63,9 @@ class PluginListCommandTest extends KernelTestCase
         $application->setAutoExit(false);
 
         $this->applicationTester = new ApplicationTester($application);
+
+        $this->loggerMock = \Mockery::mock(LoggerInterface::class);
+        self::getContainer()->set('monolog.logger.plugin', $this->loggerMock);
 
         parent::setUp();
     }
@@ -76,6 +84,16 @@ class PluginListCommandTest extends KernelTestCase
             'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
             'active' => true,
         ]);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Service definition file for {pluginName} not found',
+                [
+                    'pluginName' => 'DeletedPlugin',
+                ]
+            );
 
         $this->listPlugins(true);
 
@@ -118,6 +136,16 @@ class PluginListCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Service definition file for {pluginName} not found',
+                [
+                    'pluginName' => 'DeletedPlugin',
+                ]
+            );
+
         $this->refreshPlugins(true);
 
         $output = $this->applicationTester->getDisplay();
@@ -147,6 +175,16 @@ class PluginListCommandTest extends KernelTestCase
     public function testPluginRefresh2(): void
     {
         self::getContainer()->set(\App\Tests\TestData\plugins\TestPlugin\Plugin::class, new \stdClass());
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                '{pluginInstance} is invalid',
+                [
+                    'pluginInstance' => \get_class(new \stdClass()),
+                ]
+            );
 
         $this->refreshPlugins(true);
 

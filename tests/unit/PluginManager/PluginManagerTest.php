@@ -14,10 +14,11 @@ use App\Repository\PluginRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -32,12 +33,17 @@ class PluginManagerTest extends MockeryTestCase
 
     private string $projectDir;
 
+    /** @phpstan-var LoggerInterface|MockInterface  */
+    private LoggerInterface $loggerMock;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->filesystem = new Filesystem();
         $this->projectDir = sys_get_temp_dir().'/'.uniqid('plugin_manager_test_', true);
+
+        $this->loggerMock = \Mockery::mock(LoggerInterface::class);
 
         $this->filesystem->mkdir($this->projectDir);
     }
@@ -60,6 +66,10 @@ class PluginManagerTest extends MockeryTestCase
             ->andReturn($activePlugins);
 
         $pluginManager = $this->createPluginManager(pluginRepository: $pluginRepository);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         self::assertSame($activePlugins, $pluginManager->getActivePlugins());
     }
@@ -93,6 +103,10 @@ class PluginManagerTest extends MockeryTestCase
             eventDispatcher: $eventDispatcher,
         );
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
+
         self::assertTrue($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
     }
 
@@ -103,6 +117,17 @@ class PluginManagerTest extends MockeryTestCase
             ->shouldNotReceive('dispatch');
 
         $pluginManager = $this->createPluginManager(eventDispatcher: $eventDispatcher);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Instance of {pluginName} not found',
+                [
+                    'pluginName' => 'UnknownPlugin',
+                    'action' => 'ACTIVATE',
+                ]
+            );
 
         self::assertFalse($pluginManager->performWorkflow(Action::ACTIVATE, 'UnknownPlugin'));
     }
@@ -133,6 +158,17 @@ class PluginManagerTest extends MockeryTestCase
             pluginRepository: $pluginRepository,
             eventDispatcher: $eventDispatcher,
         );
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                '{pluginName} not found',
+                [
+                    'pluginName' => 'SamplePlugin',
+                    'action' => 'ACTIVATE',
+                ]
+            );
 
         self::assertFalse($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
     }
@@ -172,6 +208,10 @@ class PluginManagerTest extends MockeryTestCase
             pluginRepository: $pluginRepository,
             entityManager: $entityManager,
         );
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         $result = $pluginManager->getPlugins();
 
@@ -221,6 +261,10 @@ class PluginManagerTest extends MockeryTestCase
             entityManager: $entityManager,
         );
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
+
         $result = $pluginManager->getPlugins();
 
         self::assertSame($existingEntity, $result->first());
@@ -253,6 +297,16 @@ class PluginManagerTest extends MockeryTestCase
             entityManager: $entityManager,
         );
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                '{pluginInstance} is invalid',
+                [
+                    'pluginInstance' => \get_class(new \stdClass()),
+                ]
+            );
+
         self::assertCount(0, $pluginManager->getPlugins());
     }
 
@@ -275,6 +329,16 @@ class PluginManagerTest extends MockeryTestCase
             projectDir: $this->projectDir,
             pluginConfigurationFolder: '/',
         );
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Service definition file for {pluginName} not found',
+                [
+                    'pluginName' => 'NonExistentPlugin',
+                ]
+            );
 
         self::assertTrue($pluginManager->dumpPluginConfiguration());
         self::assertStringEqualsFile(
@@ -302,6 +366,16 @@ class PluginManagerTest extends MockeryTestCase
             pluginConfigurationFolder: '/',
         );
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Service definition file for {pluginName} not found',
+                [
+                    'pluginName' => 'NonExistentPlugin',
+                ]
+            );
+
         self::assertFalse($pluginManager->dumpPluginConfiguration());
     }
 
@@ -310,6 +384,10 @@ class PluginManagerTest extends MockeryTestCase
         $container = $this->createContainerMock();
         $container
             ->shouldNotReceive('setParameter');
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         PluginManager::loadActivePlugins('test', $container);
     }
@@ -328,6 +406,10 @@ class PluginManagerTest extends MockeryTestCase
             ->once()
             ->with('plugins_loaded_successfully', true);
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
+
         PluginManager::loadActivePlugins('test', $container);
     }
 
@@ -345,10 +427,14 @@ class PluginManagerTest extends MockeryTestCase
             ->once()
             ->with('plugins_loaded_successfully', false);
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
+
         PluginManager::loadActivePlugins('test', $container);
     }
 
-    private function createContainerMock(): ContainerBuilder&Mockery\MockInterface
+    private function createContainerMock(): ContainerBuilder&MockInterface
     {
         $container = \Mockery::mock(ContainerBuilder::class);
         $container
@@ -383,6 +469,7 @@ class PluginManagerTest extends MockeryTestCase
             $projectDir,
             $pluginConfigurationFolder,
             $eventDispatcher ?? \Mockery::mock(EventDispatcherInterface::class),
+            $this->loggerMock
         );
     }
 }

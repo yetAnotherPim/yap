@@ -8,7 +8,10 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Type\Section\FieldSection;
+use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Repository\FieldTypeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -30,7 +33,7 @@ class FieldType extends TimestampableEntity
 
     #[ORM\Column(length: 255, nullable: false)]
     #[NotBlank]
-    #[Groups(['product:read', 'identifier:filter'])]
+    #[Groups(['product:read', 'field:read', 'identifier:filter'])]
     private string $title;
 
     #[ORM\Column]
@@ -45,6 +48,18 @@ class FieldType extends TimestampableEntity
     #[ORM\ManyToOne(inversedBy: 'fieldTypes')]
     #[ORM\JoinColumn(nullable: false)]
     private FieldSection $section;
+
+    /**
+     * @var Collection<int, FieldTypeTitleTranslation>
+     */
+    #[ORM\OneToMany(targetEntity: FieldTypeTitleTranslation::class, mappedBy: 'FieldType', orphanRemoval: true)]
+    private Collection $translations;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->translations = new ArrayCollection();
+    }
 
     public function getId(): Uuid
     {
@@ -109,6 +124,30 @@ class FieldType extends TimestampableEntity
         return $this;
     }
 
-    // TODO: add translation for title
     // TODO: remove translations on locale deletion -> api-test + integration test
+
+    /**
+     * @return Collection<int, FieldTypeTitleTranslation>
+     */
+    public function getTranslations(): Collection
+    {
+        return $this->translations;
+    }
+
+    public function addTranslation(FieldTypeTitleTranslation $translation): static
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations->add($translation);
+            $translation->setFieldType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTranslation(FieldTypeTitleTranslation $translation): static
+    {
+        $this->translations->removeElement($translation);
+
+        return $this;
+    }
 }

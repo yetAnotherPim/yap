@@ -21,8 +21,10 @@ use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
@@ -49,6 +51,9 @@ class PluginDeactivateCommandTest extends KernelTestCase
     use Factories;
     use PluginCommandTrait;
 
+    /** @phpstan-var LoggerInterface|MockInterface  */
+    private LoggerInterface $loggerMock;
+
     protected function setUp(): void
     {
         self::bootKernel();
@@ -58,6 +63,9 @@ class PluginDeactivateCommandTest extends KernelTestCase
         $application->setAutoExit(false);
 
         $this->applicationTester = new ApplicationTester($application);
+
+        $this->loggerMock = \Mockery::mock(LoggerInterface::class);
+        self::getContainer()->set('monolog.logger.plugin', $this->loggerMock);
 
         parent::setUp();
     }
@@ -72,6 +80,10 @@ class PluginDeactivateCommandTest extends KernelTestCase
             'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
             'active' => true,
         ]);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         $this->refreshPlugins(true);
 
@@ -106,6 +118,17 @@ class PluginDeactivateCommandTest extends KernelTestCase
 
     public function testPluginDeactivateWithMissingEntity(): void
     {
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                '{pluginName} not found',
+                [
+                    'pluginName' => 'SamplePlugin',
+                    'action' => 'DEACTIVATE',
+                ]
+            );
+
         $this->deactivatePlugin('SamplePlugin');
 
         $this->applicationTester->assertCommandFailed();
@@ -123,6 +146,17 @@ class PluginDeactivateCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Instance of {pluginName} not found',
+                [
+                    'pluginName' => 'DeletedPlugin',
+                    'action' => 'DEACTIVATE',
+                ]
+            );
+
         $this->deactivatePlugin('DeletedPlugin');
 
         $this->applicationTester->assertCommandFailed();
@@ -134,6 +168,18 @@ class PluginDeactivateCommandTest extends KernelTestCase
     public function testPluginDeactivateCausingError(): void
     {
         $this->refreshPlugins();
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'An error occurred at {pluginInstance}::deactivate()',
+                [
+                    'pluginInstance' => \App\Tests\TestData\plugins\TestPlugin\Plugin::class,
+                    'message' => 'Oops',
+                    'exception' => \get_class(new \RuntimeException()),
+                ]
+            );
 
         $this->deactivatePlugin('TestPlugin');
 

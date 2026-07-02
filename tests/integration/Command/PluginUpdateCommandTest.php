@@ -26,8 +26,10 @@ use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
@@ -57,6 +59,9 @@ class PluginUpdateCommandTest extends KernelTestCase
     use DatabaseTrait;
     use PluginCommandTrait;
 
+    /** @phpstan-var LoggerInterface|MockInterface  */
+    private LoggerInterface $loggerMock;
+
     protected function setUp(): void
     {
         self::bootKernel();
@@ -66,6 +71,9 @@ class PluginUpdateCommandTest extends KernelTestCase
         $application->setAutoExit(false);
 
         $this->applicationTester = new ApplicationTester($application);
+
+        $this->loggerMock = \Mockery::mock(LoggerInterface::class);
+        self::getContainer()->set('monolog.logger.plugin', $this->loggerMock);
 
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
@@ -81,6 +89,10 @@ class PluginUpdateCommandTest extends KernelTestCase
     public function testPluginUpdate(): void
     {
         $this->assertFalse($this->columnExists('sample_plugin', 'new_column'));
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         $this->refreshPlugins();
         $this->activatePlugin('SamplePlugin', true);
@@ -110,6 +122,17 @@ class PluginUpdateCommandTest extends KernelTestCase
 
     public function testPluginUpdateWithMissingEntity(): void
     {
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                '{pluginName} not found',
+                [
+                    'pluginName' => 'SamplePlugin',
+                    'action' => 'UPDATE',
+                ]
+            );
+
         $this->updatePlugin('SamplePlugin');
 
         $this->applicationTester->assertCommandFailed();
@@ -127,6 +150,17 @@ class PluginUpdateCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Instance of {pluginName} not found',
+                [
+                    'pluginName' => 'DeletedPlugin',
+                    'action' => 'UPDATE',
+                ]
+            );
+
         $this->updatePlugin('DeletedPlugin');
 
         $this->applicationTester->assertCommandFailed();
@@ -142,6 +176,17 @@ class PluginUpdateCommandTest extends KernelTestCase
             'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
             'active' => true,
         ]);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Plugin {pluginInstance} is not installed',
+                [
+                    'pluginInstance' => \App\plugins\SamplePlugin\Plugin::class,
+                    'toVersion' => '0.9.0',
+                ]
+            );
 
         $this->updatePlugin('SamplePlugin');
 
@@ -159,6 +204,20 @@ class PluginUpdateCommandTest extends KernelTestCase
             'namespace' => 'App\\Tests\\TestData\\plugins\\TestPlugin\\Plugin',
             'active' => true,
         ]);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'An error occurred at {pluginInstance}::update()',
+                [
+                    'pluginInstance' => \App\Tests\TestData\plugins\TestPlugin\Plugin::class,
+                    'fromVersion' => '0.8.0',
+                    'toVersion' => '0.9.0',
+                    'message' => 'Error',
+                    'exception' => \get_class(new \RuntimeException()),
+                ]
+            );
 
         $this->updatePlugin('TestPlugin');
 

@@ -24,8 +24,10 @@ use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
@@ -53,6 +55,9 @@ class PluginActivateCommandTest extends KernelTestCase
     use DatabaseTrait;
     use PluginCommandTrait;
 
+    /** @phpstan-var LoggerInterface|MockInterface  */
+    private LoggerInterface $loggerMock;
+
     protected function setUp(): void
     {
         self::bootKernel();
@@ -62,6 +67,9 @@ class PluginActivateCommandTest extends KernelTestCase
         $application->setAutoExit(false);
 
         $this->applicationTester = new ApplicationTester($application);
+
+        $this->loggerMock = \Mockery::mock(LoggerInterface::class);
+        self::getContainer()->set('monolog.logger.plugin', $this->loggerMock);
 
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
@@ -79,6 +87,10 @@ class PluginActivateCommandTest extends KernelTestCase
         $dumpfilePath = __DIR__.'/../../../var/plugin_configuration/test_plugin_configuration';
         file_put_contents($dumpfilePath, '');
         $this->assertFalse($this->tableExists('sample_plugin'));
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         $this->refreshPlugins();
         $this->activatePlugin('SamplePlugin', true);
@@ -102,6 +114,17 @@ class PluginActivateCommandTest extends KernelTestCase
 
     public function testPluginActivateWithMissingEntity(): void
     {
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                '{pluginName} not found',
+                [
+                    'pluginName' => 'SamplePlugin',
+                    'action' => 'ACTIVATE',
+                ]
+            );
+
         $this->activatePlugin('SamplePlugin');
 
         $this->applicationTester->assertCommandFailed();
@@ -119,6 +142,17 @@ class PluginActivateCommandTest extends KernelTestCase
             'active' => true,
         ]);
 
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Instance of {pluginName} not found',
+                [
+                    'pluginName' => 'DeletedPlugin',
+                    'action' => 'ACTIVATE',
+                ]
+            );
+
         $this->activatePlugin('DeletedPlugin');
 
         $this->applicationTester->assertCommandFailed();
@@ -129,6 +163,18 @@ class PluginActivateCommandTest extends KernelTestCase
 
     public function testPluginActivateCausingError(): void
     {
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'An error occurred at {pluginInstance}::activate()',
+                [
+                    'pluginInstance' => \App\Tests\TestData\plugins\TestPlugin\Plugin::class,
+                    'message' => 'Oops',
+                    'exception' => \get_class(new \RuntimeException()),
+                ]
+            );
+
         $this->refreshPlugins();
         $this->activatePlugin('TestPlugin');
 

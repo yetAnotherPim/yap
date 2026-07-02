@@ -90,17 +90,12 @@
           },
           "value": {
             "type": ["string", "null"]
-          },
-          "typedValue": {
-            "type": ["string", "integer"]
           }
         },
         "required": [
           "@id",
           "@type",
-          "type",
-          "value",
-          "typedValue"
+          "type"
         ]
       }
     },

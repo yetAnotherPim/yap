@@ -85,7 +85,6 @@ class Product extends TimestampableEntity
     private Collection $fields;
 
     // TODO: test section or fieldType deleted, but field assigned to product -> what happens?
-    // TODO: test orphan removal via api deletion as in integration test
 
     public function __construct()
     {

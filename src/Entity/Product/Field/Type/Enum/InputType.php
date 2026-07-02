@@ -15,4 +15,6 @@ enum InputType: string
     case Date = 'date';
     case Time = 'time';
     case Tree = 'tree';
+    case File = 'file';
+    case Filepath = 'filepath';
 }

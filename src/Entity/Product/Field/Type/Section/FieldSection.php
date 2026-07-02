@@ -85,6 +85,5 @@ class FieldSection extends TimestampableEntity
         return $this;
     }
 
-    // TODO: add translation for title
     // TODO: remove translations on locale deletion -> api-test + integration test
 }

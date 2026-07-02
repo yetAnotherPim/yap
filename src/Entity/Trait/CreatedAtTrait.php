@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 trait CreatedAtTrait
 {
     #[ORM\Column]
-    #[Groups(['product:read', 'identifier:filter'])]
+    #[Groups(['product:read', 'field:read', 'identifier:filter'])]
     protected \DateTimeImmutable $createdAt;
 
     public function getCreatedAt(): \DateTimeImmutable

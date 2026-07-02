@@ -4,3 +4,4 @@ Feeds
     -Settings: external Storages -> encrypted in DB
 Messenger Plugin: Entity-Updates (changeSet) via Message (JSON)
 ElasticSearch
+Stockmodul - Referenz für Bestandsänderung (History)

@@ -67,7 +67,7 @@ class Identifier extends RelatedTimestampableEntity
     #[Groups(['product:read', 'product:write', 'identifier:filter'])]
     private string $value;
 
-    #[ORM\ManyToOne(cascade: ['all'], inversedBy: 'identifiers')]
+    #[ORM\ManyToOne(inversedBy: 'identifiers')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['identifier:filter'])]
     private Product $product;

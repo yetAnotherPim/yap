@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestData\Story;
 
 use App\Entity\Product\Identifier\Type\Enum\DataType;
+use App\Tests\TestData\Factory\Product\Field\FieldFactory;
 use App\Tests\TestData\Factory\Product\Identifier\IdentifierFactory;
 use App\Tests\TestData\Factory\Product\Identifier\Type\IdentifierTypeFactory;
 use App\Tests\TestData\Factory\Product\ProductFactory;
@@ -16,6 +17,10 @@ final class SimpleProductStory extends Story
     {
         $product = ProductFactory::createOne(
             [
+                'fields' => [
+                    FieldFactory::new(),
+                    FieldFactory::new(),
+                ],
                 'identifiers' => [
                     IdentifierFactory::new(
                         [

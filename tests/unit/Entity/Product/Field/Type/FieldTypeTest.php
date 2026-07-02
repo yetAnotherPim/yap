@@ -7,6 +7,8 @@ namespace App\Tests\unit\Entity\Product\Field\Type;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Section\FieldSection;
+use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
+use App\Tests\helper\Trait\AssociationTrait;
 use App\Tests\helper\Trait\SetterGetterTrait;
 use App\Tests\helper\Trait\UpdatedAtTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -20,6 +22,7 @@ class FieldTypeTest extends MockeryTestCase
 {
     use SetterGetterTrait;
     use UpdatedAtTrait;
+    use AssociationTrait;
 
     public function testGetId(): void
     {
@@ -36,6 +39,15 @@ class FieldTypeTest extends MockeryTestCase
     public function testSetterGetter(string $setter, string $getter, mixed $value, ?string $expectedException = null): void
     {
         $this->performSetterGetterTesting($setter, $getter, $value, $expectedException);
+    }
+
+    /**
+     * @param class-string $targetValue
+     */
+    #[DataProvider('associationDataProvider')]
+    public function testAssociations(string $getter, string $adder, string $remover, string $targetValue, ?string $inverseSetter = null): void
+    {
+        $this->performOneToManyAssociationTesting($getter, $adder, $remover, $targetValue, $inverseSetter);
     }
 
     protected function getTargetClass(): string
@@ -65,6 +77,16 @@ class FieldTypeTest extends MockeryTestCase
             ['setCreatedAt', 'getCreatedAt', new \DateTimeImmutable('now')],
             ['setCreatedAt', 'getCreatedAt', new \DateTime('now'), \TypeError::class],
             ['setCreatedAt', 'getCreatedAt', null, \TypeError::class],
+        ];
+    }
+
+    /**
+     * @return array{array{0:string, 1:string, 2:string, 3:class-string, 4?:string}}
+     */
+    public static function associationDataProvider(): array
+    {
+        return [
+            ['getTranslations', 'addTranslation', 'removeTranslation', FieldTypeTitleTranslation::class, 'setFieldType'],
         ];
     }
 }

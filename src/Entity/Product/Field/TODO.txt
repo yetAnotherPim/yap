@@ -1,8 +1,9 @@
 TODO:
--add translation
 -updated_at product and field on translation add or update - test if updated at at field is working (relatedtimestampable)
 
 -product.type -> product templates, assiciated with sections -> order for frontend (template)
+    -default valuies based on product.type
+
 -filter:
     -filter pruducts by field values -> and-filter
     -filter by translations

@@ -12,6 +12,7 @@ use App\Repository\PluginRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
@@ -40,6 +41,7 @@ class PluginManager
         #[Autowire(param: 'plugin_configuration_folder')]
         private readonly string $pluginConfigurationFolder,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly LoggerInterface $pluginLogger,
     ) {
         $plugins = $plugins instanceof \Traversable ? iterator_to_array($plugins) : $plugins;
 
@@ -54,12 +56,28 @@ class PluginManager
         $pluginInstance = $this->plugins->findFirst(static fn (int $key, PluginInterface $plugin): bool => $plugin->getName() === $name);
 
         if (!$pluginInstance instanceof PluginInterface) {
+            $this->pluginLogger->error(
+                'Instance of {pluginName} not found',
+                [
+                    'pluginName' => $name,
+                    'action' => $action->name,
+                ]
+            );
+
             return false;
         }
 
         $pluginEntity = $this->pluginRepository->getPluginEntity(\get_class($pluginInstance));
 
         if (null === $pluginEntity) {
+            $this->pluginLogger->error(
+                '{pluginName} not found',
+                [
+                    'pluginName' => $name,
+                    'action' => $action->name,
+                ]
+            );
+
             return false;
         }
 
@@ -67,8 +85,6 @@ class PluginManager
 
         return true;
     }
-
-    // TODO: add unit tests
 
     /**
      * @return Collection<int, Plugin>
@@ -80,7 +96,12 @@ class PluginManager
 
         foreach ($this->plugins as $plugin) {
             if (!$plugin instanceof PluginInterface) {
-                // TODO: log plugin log
+                $this->pluginLogger->error(
+                    '{pluginInstance} is invalid',
+                    [
+                        'pluginInstance' => \get_class($plugin),
+                    ]
+                );
                 continue;
             }
 
@@ -120,6 +141,12 @@ class PluginManager
             $serviceDefinitionFile = $plugin->getName().'/'.self::SERVICE_DEFINITION_FILE;
 
             if (false === file_exists(self::PLUGIN_FOLDER.$serviceDefinitionFile)) {
+                $this->pluginLogger->error(
+                    'Service definition file for {pluginName} not found',
+                    [
+                        'pluginName' => $plugin->getName(),
+                    ]
+                );
                 continue;
             }
 

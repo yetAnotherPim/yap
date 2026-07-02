@@ -6,10 +6,17 @@ namespace App\Entity\Product\Field;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Entity\Abstract\RelatedTimestampableEntity;
+use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
 use App\Repository\FieldRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
@@ -24,13 +31,18 @@ use Symfony\Component\Uid\Uuid;
 #[Index(name: 'index_field_product_id', fields: ['product'])]
 #[Index(name: 'index_field_value', fields: ['value'])]
 #[ORM\UniqueConstraint(name: 'field_product_type', fields: ['type', 'product'])]
+#[Patch(
+    denormalizationContext: ['groups' => ['field:write']],
+    normalizationContext: ['groups' => ['field:read']]
+)]
+#[Post(denormalizationContext: ['groups' => ['field:write']])]
+#[Get]
+#[GetCollection]
 class Field extends RelatedTimestampableEntity
 {
     protected array $updatableRelations = [
         Product::class => 'product',
     ];
-
-    // TODO: remove translations on locale deletion -> api-test + integration test
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -41,16 +53,30 @@ class Field extends RelatedTimestampableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'field:write', 'field:read', 'identifier:filter'])]
     private FieldType $type;
 
     #[ORM\ManyToOne(inversedBy: 'fields')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['field:write'])]
     private Product $product;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'field:write', 'field:read', 'identifier:filter'])]
     private ?string $value = null;
+
+    /**
+     * @var Collection<int, FieldValueTranslation>
+     */
+    #[ORM\OneToMany(targetEntity: FieldValueTranslation::class, mappedBy: 'field', cascade: ['all'], orphanRemoval: true)]
+    #[Groups(['product:read', 'product:write', 'field:write', 'field:read', 'identifier:filter'])]
+    private Collection $translations;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->translations = new ArrayCollection();
+    }
 
     public function getId(): Uuid
     {
@@ -89,6 +115,31 @@ class Field extends RelatedTimestampableEntity
     public function setValue(?string $value): static
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FieldValueTranslation>
+     */
+    public function getTranslations(): Collection
+    {
+        return $this->translations;
+    }
+
+    public function addTranslation(FieldValueTranslation $fieldValueTranslation): static
+    {
+        if (!$this->translations->contains($fieldValueTranslation)) {
+            $this->translations->add($fieldValueTranslation);
+            $fieldValueTranslation->setField($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTranslation(FieldValueTranslation $fieldValueTranslation): static
+    {
+        $this->translations->removeElement($fieldValueTranslation);
 
         return $this;
     }

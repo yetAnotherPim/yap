@@ -6,6 +6,9 @@ namespace App\Tests\functional\api\filter\GET;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
@@ -28,6 +31,9 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(IdentifierRepository::class)]
 #[CoversClass(ProductRepository::class)]
 #[UsesClass(IdentifierType::class)]
+#[UsesClass(Field::class)]
+#[UsesClass(FieldType::class)]
+#[UsesClass(FieldSection::class)]
 class FilterTest extends ApiTestCase
 {
     use Factories;

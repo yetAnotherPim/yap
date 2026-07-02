@@ -16,7 +16,7 @@ use App\PluginManager\PluginManager;
 use App\Repository\FieldRepository;
 use App\Repository\IdentifierRepository;
 use App\Tests\TestData\Factory\Product\Field\FieldFactory;
-use App\Tests\TestData\Story\ProductWithFieldsStory;
+use App\Tests\TestData\Story\ProductsWithFieldsStory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -55,7 +55,7 @@ class FieldTest extends KernelTestCase
 
     public function testOrphanRemoval(): void
     {
-        ProductWithFieldsStory::load();
+        ProductsWithFieldsStory::load();
 
         $repository = $this->entityManager->getRepository(Field::class);
         $fields = new ArrayCollection($repository->findAll());

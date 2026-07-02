@@ -11,6 +11,7 @@ use App\PluginManager\Event\WorkflowEvent\PluginActivateEvent;
 use App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent;
 use App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 class PluginWorkflowEventListener
@@ -18,6 +19,7 @@ class PluginWorkflowEventListener
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly CacheClearer $cacheClearer,
+        private readonly LoggerInterface $pluginLogger,
     ) {
     }
 
@@ -33,7 +35,15 @@ class PluginWorkflowEventListener
         try {
             $pluginInstance->activate($this->entityManager);
         } catch (\Throwable $exception) {
-            // TODO: plugin logger
+            $this->pluginLogger->error(
+                'An error occurred at {pluginInstance}::activate()',
+                [
+                    'pluginInstance' => \get_class($pluginInstance),
+                    'message' => $exception->getMessage(),
+                    'exception' => \get_class($exception),
+                ]
+            );
+
             throw new PluginWorkflowException(Action::ACTIVATE, $event->getPluginEntity()->getName(), $exception->getMessage(), $exception->getCode(), $exception);
         }
 
@@ -59,8 +69,16 @@ class PluginWorkflowEventListener
         try {
             $pluginInstance->deactivate($this->entityManager);
         } catch (\Throwable $exception) {
+            $this->pluginLogger->error(
+                'An error occurred at {pluginInstance}::deactivate()',
+                [
+                    'pluginInstance' => \get_class($pluginInstance),
+                    'message' => $exception->getMessage(),
+                    'exception' => \get_class($exception),
+                ]
+            );
+
             throw new PluginWorkflowException(Action::DEACTIVATE, $event->getPluginEntity()->getName(), $exception->getMessage(), $exception->getCode(), $exception);
-            // TODO: plugin logger
         }
 
         $pluginEntity
@@ -82,6 +100,14 @@ class PluginWorkflowEventListener
         $pluginEntity = $event->getPluginEntity();
 
         if (null === $pluginEntity->getInstalledVersion()) {
+            $this->pluginLogger->error(
+                'Plugin {pluginInstance} is not installed',
+                [
+                    'pluginInstance' => \get_class($pluginInstance),
+                    'toVersion' => $pluginInstance->getVersion(),
+                ]
+            );
+
             throw new PluginWorkflowException(Action::UPDATE, $event->getPluginEntity()->getName(), 'Plugin is not installed');
         }
 
@@ -90,8 +116,18 @@ class PluginWorkflowEventListener
         try {
             $pluginInstance->update($pluginEntity->getInstalledVersion(), $this->entityManager);
         } catch (\Throwable $exception) {
+            $this->pluginLogger->error(
+                'An error occurred at {pluginInstance}::update()',
+                [
+                    'pluginInstance' => \get_class($pluginInstance),
+                    'fromVersion' => $event->getFromVersion(),
+                    'toVersion' => $pluginInstance->getVersion(),
+                    'message' => $exception->getMessage(),
+                    'exception' => \get_class($exception),
+                ]
+            );
+
             throw new PluginWorkflowException(Action::UPDATE, $event->getPluginEntity()->getName(), $exception->getMessage(), $exception->getCode(), $exception);
-            // TODO: plugin logger
         }
 
         $pluginEntity

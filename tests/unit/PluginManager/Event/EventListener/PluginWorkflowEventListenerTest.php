@@ -14,13 +14,29 @@ use App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent;
 use App\PluginManager\Plugin\PluginInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Log\LoggerInterface;
 
 #[CoversClass(PluginWorkflowEventListener::class)]
 #[UsesClass(PluginWorkflowException::class)]
 class PluginWorkflowEventListenerTest extends MockeryTestCase
 {
+    /** @phpstan-var LoggerInterface|MockInterface  */
+    private LoggerInterface $loggerMock;
+
+    /** @phpstan-var CacheClearer|MockInterface  */
+    private CacheClearer $cacheClearer;
+
+    public function setUp(): void
+    {
+        $this->loggerMock = \Mockery::mock(LoggerInterface::class);
+        $this->cacheClearer = \Mockery::mock(CacheClearer::class);
+
+        parent::setUp();
+    }
+
     /**
      * @throws PluginWorkflowException
      */
@@ -38,8 +54,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->once();
 
-        $cacheClearer = \Mockery::mock(CacheClearer::class);
-        $cacheClearer
+        $this->cacheClearer
             ->shouldReceive('clear')
             ->once();
 
@@ -67,7 +82,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->with('1.0.0')
             ->andReturn($pluginEntityMock);
 
-        $listener = new PluginWorkflowEventListener($entityManagerMock, $cacheClearer);
+        $listener = new PluginWorkflowEventListener($entityManagerMock, $this->cacheClearer, $this->loggerMock);
 
         $eventMock = \Mockery::mock(PluginActivateEvent::class);
 
@@ -80,6 +95,10 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('getPluginEntity')
             ->once()
             ->andReturn($pluginEntityMock);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         $listener->onActivate($eventMock);
     }
@@ -100,8 +119,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->never();
 
-        $cacheClearer = \Mockery::mock(CacheClearer::class);
-        $cacheClearer
+        $this->cacheClearer
             ->shouldReceive('clear')
             ->never();
 
@@ -129,7 +147,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('setInstalledVersion')
             ->never();
 
-        $listener = new PluginWorkflowEventListener($entityManagerMock, $cacheClearer);
+        $listener = new PluginWorkflowEventListener($entityManagerMock, $this->cacheClearer, $this->loggerMock);
 
         $eventMock = \Mockery::mock(PluginActivateEvent::class);
 
@@ -144,6 +162,18 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->andReturn($pluginEntityMock);
 
         $this->expectException(PluginWorkflowException::class);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'An error occurred at {pluginInstance}::activate()',
+                [
+                    'pluginInstance' => \get_class($pluginInstanceMock),
+                    'message' => 'Error',
+                    'exception' => \get_class(new \RuntimeException()),
+                ]
+            );
 
         $listener->onActivate($eventMock);
     }
@@ -165,8 +195,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->once();
 
-        $cacheClearer = \Mockery::mock(CacheClearer::class);
-        $cacheClearer
+        $this->cacheClearer
             ->shouldReceive('clear')
             ->once();
 
@@ -183,7 +212,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->with(false)
             ->andReturn($pluginEntityMock);
 
-        $listener = new PluginWorkflowEventListener($entityManagerMock, $cacheClearer);
+        $listener = new PluginWorkflowEventListener($entityManagerMock, $this->cacheClearer, $this->loggerMock);
 
         $eventMock = \Mockery::mock(PluginDeactivateEvent::class);
 
@@ -196,6 +225,10 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('getPluginEntity')
             ->once()
             ->andReturn($pluginEntityMock);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         $listener->onDeactivate($eventMock);
     }
@@ -216,8 +249,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->never();
 
-        $cacheClearer = \Mockery::mock(CacheClearer::class);
-        $cacheClearer
+        $this->cacheClearer
             ->shouldReceive('clear')
             ->never();
 
@@ -241,7 +273,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('setActive')
             ->never();
 
-        $listener = new PluginWorkflowEventListener($entityManagerMock, $cacheClearer);
+        $listener = new PluginWorkflowEventListener($entityManagerMock, $this->cacheClearer, $this->loggerMock);
 
         $eventMock = \Mockery::mock(PluginDeactivateEvent::class);
 
@@ -256,6 +288,18 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->andReturn($pluginEntityMock);
 
         $this->expectException(PluginWorkflowException::class);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'An error occurred at {pluginInstance}::deactivate()',
+                [
+                    'pluginInstance' => \get_class($pluginInstanceMock),
+                    'message' => 'Error',
+                    'exception' => \get_class(new \RuntimeException()),
+                ]
+            );
 
         $listener->onDeactivate($eventMock);
     }
@@ -277,8 +321,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->once();
 
-        $cacheClearer = \Mockery::mock(CacheClearer::class);
-        $cacheClearer
+        $this->cacheClearer
             ->shouldReceive('clear')
             ->once();
 
@@ -311,7 +354,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->with(true)
             ->andReturn($pluginEntityMock);
 
-        $listener = new PluginWorkflowEventListener($entityManagerMock, $cacheClearer);
+        $listener = new PluginWorkflowEventListener($entityManagerMock, $this->cacheClearer, $this->loggerMock);
 
         $eventMock = \Mockery::mock(PluginUpdateEvent::class);
 
@@ -329,6 +372,10 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('setFromVersion')
             ->once()
             ->with('0.9.0');
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
 
         $listener->onUpdate($eventMock);
     }
@@ -349,8 +396,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->never();
 
-        $cacheClearer = \Mockery::mock(CacheClearer::class);
-        $cacheClearer
+        $this->cacheClearer
             ->shouldReceive('clear')
             ->never();
 
@@ -363,7 +409,8 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
 
         $pluginInstanceMock
             ->shouldReceive('getVersion')
-            ->never();
+            ->once()
+            ->andReturn('1.0.0');
 
         $pluginEntityMock
             ->shouldReceive('getName')
@@ -379,7 +426,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('setInstalledVersion')
             ->never();
 
-        $listener = new PluginWorkflowEventListener($entityManagerMock, $cacheClearer);
+        $listener = new PluginWorkflowEventListener($entityManagerMock, $this->cacheClearer, $this->loggerMock);
 
         $eventMock = \Mockery::mock(PluginUpdateEvent::class);
 
@@ -398,7 +445,26 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->once()
             ->with('0.9.0');
 
+        $eventMock
+            ->shouldReceive('getFromVersion')
+            ->once()
+            ->andReturn('0.9.0');
+
         $this->expectException(PluginWorkflowException::class);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'An error occurred at {pluginInstance}::update()',
+                [
+                    'pluginInstance' => \get_class($pluginInstanceMock),
+                    'fromVersion' => '0.9.0',
+                    'toVersion' => '1.0.0',
+                    'message' => 'Error',
+                    'exception' => \get_class(new \RuntimeException()),
+                ]
+            );
 
         $listener->onUpdate($eventMock);
     }
@@ -419,8 +485,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->never();
 
-        $cacheClearer = \Mockery::mock(CacheClearer::class);
-        $cacheClearer
+        $this->cacheClearer
             ->shouldReceive('clear')
             ->never();
 
@@ -431,7 +496,8 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
 
         $pluginInstanceMock
             ->shouldReceive('getVersion')
-            ->never();
+            ->once()
+            ->andReturn('1.0.0');
 
         $pluginEntityMock
             ->shouldReceive('getName')
@@ -447,7 +513,7 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->shouldReceive('setInstalledVersion')
             ->never();
 
-        $listener = new PluginWorkflowEventListener($entityManagerMock, $cacheClearer);
+        $listener = new PluginWorkflowEventListener($entityManagerMock, $this->cacheClearer, $this->loggerMock);
 
         $eventMock = \Mockery::mock(PluginUpdateEvent::class);
 
@@ -466,6 +532,17 @@ class PluginWorkflowEventListenerTest extends MockeryTestCase
             ->never();
 
         $this->expectException(PluginWorkflowException::class);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Plugin {pluginInstance} is not installed',
+                [
+                    'pluginInstance' => \get_class($pluginInstanceMock),
+                    'toVersion' => '1.0.0',
+                ]
+            );
 
         $listener->onUpdate($eventMock);
     }

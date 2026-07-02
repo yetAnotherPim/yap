@@ -12,6 +12,7 @@ abstract class RelatedTimestampableEntity extends TimestampableEntity
     protected array $updatableRelations = [
     ];
     // TODO: handle remove
+    // TODO: handle set via POST
 
     #[ORM\PreUpdate]
     public function updateRelated(): void
