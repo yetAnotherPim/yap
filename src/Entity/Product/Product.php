@@ -26,7 +26,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
-// TODO: add parent relation
+// TODO: add parent relation -> provide fieldTypes[] for distinction
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[Get(
