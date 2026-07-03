@@ -6,6 +6,11 @@ namespace App\Entity\Product\Field\Type;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
@@ -22,6 +27,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint(name: 'fieldtype_title_section', fields: ['title', 'section'])]
+#[Patch(
+    denormalizationContext: ['groups' => ['field_type:write']],
+    normalizationContext: ['groups' => ['field_type:read']]
+)]
+#[Post(denormalizationContext: ['groups' => ['field_type:write']])]
+#[Get]
+#[GetCollection]
+#[Delete]
 class FieldType extends TimestampableEntity
 {
     #[ORM\Id]
@@ -33,26 +46,31 @@ class FieldType extends TimestampableEntity
 
     #[ORM\Column(length: 255, nullable: false)]
     #[NotBlank]
-    #[Groups(['product:read', 'field:read', 'identifier:filter'])]
+    #[Groups(['product:read', 'field:read', 'identifier:filter', 'field_type:write', 'field_type:read'])]
     private string $title;
 
     #[ORM\Column]
+    #[Groups(['field_type:write', 'field_type:read'])]
     private bool $translatable;
 
     #[ORM\Column]
+    #[Groups(['field_type:write', 'field_type:read'])]
     private bool $filterable;
 
     #[ORM\Column]
+    #[Groups(['field_type:write', 'field_type:read'])]
     private Enum\InputType $inputType;
 
     #[ORM\ManyToOne(inversedBy: 'fieldTypes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private FieldSection $section;
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['field_type:write'])]
+    private ?FieldSection $section;
 
     /**
      * @var Collection<int, FieldTypeTitleTranslation>
      */
-    #[ORM\OneToMany(targetEntity: FieldTypeTitleTranslation::class, mappedBy: 'FieldType', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: FieldTypeTitleTranslation::class, mappedBy: 'fieldType', cascade: ['all'], orphanRemoval: true)]
+    #[Groups(['field_type:write', 'field_type:read'])]
     private Collection $translations;
 
     public function __construct()
@@ -112,12 +130,12 @@ class FieldType extends TimestampableEntity
         $this->inputType = $inputType;
     }
 
-    public function getSection(): FieldSection
+    public function getSection(): ?FieldSection
     {
         return $this->section;
     }
 
-    public function setSection(FieldSection $section): static
+    public function setSection(?FieldSection $section): static
     {
         $this->section = $section;
 

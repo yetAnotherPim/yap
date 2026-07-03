@@ -23,7 +23,7 @@ class Locale
 {
     public function __construct(
         #[ORM\Id]
-        #[ORM\Column(length: 5)]
+        #[ORM\Column(length: 8)]
         private string $id,
     ) {
     }

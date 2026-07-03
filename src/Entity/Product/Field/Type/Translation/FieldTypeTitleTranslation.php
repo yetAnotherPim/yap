@@ -34,16 +34,16 @@ class FieldTypeTitleTranslation extends RelatedTimestampableEntity
     private Uuid $id;
 
     #[ORM\ManyToOne]
-    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'identifier:filter', 'field_type:write', 'field_type:read'])]
     #[ORM\JoinColumn(nullable: false)]
     private Locale $locale;
 
-    #[ORM\ManyToOne(inversedBy: 'translation')]
+    #[ORM\ManyToOne(inversedBy: 'translations')]
     #[ORM\JoinColumn(nullable: false)]
-    private FieldType $FieldType;
+    private FieldType $fieldType;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'identifier:filter', 'field_type:write', 'field_type:read'])]
     private ?string $value = null;
 
     public function getId(): Uuid
@@ -65,12 +65,12 @@ class FieldTypeTitleTranslation extends RelatedTimestampableEntity
 
     public function getFieldType(): FieldType
     {
-        return $this->FieldType;
+        return $this->fieldType;
     }
 
-    public function setFieldType(FieldType $FieldType): static
+    public function setFieldType(FieldType $fieldType): static
     {
-        $this->FieldType = $FieldType;
+        $this->fieldType = $fieldType;
 
         return $this;
     }

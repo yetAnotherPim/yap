@@ -63,6 +63,9 @@ class FieldValueTranslationApiTest extends ApiTestCase
         $field = FieldFactory::createOne();
         $locale = LocaleFactory::createOne(['id' => 'en_GB']);
 
+        $product = $field->getProduct();
+        $updatedAt = $product->getUpdatedAt();
+
         $response = $this->client->request(
             'POST',
             '/api/field_value_translations',
@@ -87,5 +90,7 @@ class FieldValueTranslationApiTest extends ApiTestCase
         $response = $this->client->request('GET', '/api/products/'.$field->getProduct()->getId());
         $this->assertStringContainsString($id, $response->getContent());
         $this->assertStringContainsString('"locale":"\/api\/locales\/en_GB","value":"123456"', $response->getContent());
+
+        $this->assertNotEquals($updatedAt, $product->getUpdatedAt());
     }
 }

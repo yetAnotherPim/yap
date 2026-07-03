@@ -33,7 +33,7 @@ class FieldSection extends TimestampableEntity
     /**
      * @var Collection<int, FieldType>
      */
-    #[ORM\OneToMany(targetEntity: FieldType::class, mappedBy: 'section', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: FieldType::class, mappedBy: 'section', orphanRemoval: false)]
     private Collection $fieldTypes;
 
     public function __construct()
@@ -80,7 +80,10 @@ class FieldSection extends TimestampableEntity
 
     public function removeFieldType(FieldType $fieldType): static
     {
-        $this->fieldTypes->removeElement($fieldType);
+        if ($this->fieldTypes->contains($fieldType)) {
+            $this->fieldTypes->removeElement($fieldType);
+            $fieldType->setSection(null);
+        }
 
         return $this;
     }

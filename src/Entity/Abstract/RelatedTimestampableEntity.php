@@ -6,15 +6,16 @@ namespace App\Entity\Abstract;
 
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 abstract class RelatedTimestampableEntity extends TimestampableEntity
 {
     /** @var array<class-string, string> */
     protected array $updatableRelations = [
     ];
-    // TODO: handle remove
-    // TODO: handle set via POST
 
     #[ORM\PreUpdate]
+    #[ORM\PrePersist]
+    #[ORM\PreRemove]
     public function updateRelated(): void
     {
         foreach ($this->updatableRelations as $type => $relation) {

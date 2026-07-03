@@ -6,6 +6,7 @@ namespace App\Entity\Product\Field;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
@@ -38,6 +39,7 @@ use Symfony\Component\Uid\Uuid;
 #[Post(denormalizationContext: ['groups' => ['field:write']])]
 #[Get]
 #[GetCollection]
+#[Delete]
 class Field extends RelatedTimestampableEntity
 {
     protected array $updatableRelations = [

@@ -58,6 +58,8 @@ class FieldApiTest extends ApiTestCase
         /** @phpstan-var Product $product */
         $product = ProductFactory::createOne();
 
+        $this->assertNull($product->getUpdatedAt());
+
         $response = $this->client->request(
             'POST',
             '/api/fields',
@@ -81,5 +83,6 @@ class FieldApiTest extends ApiTestCase
         /** test products contains fields */
         $response = $this->client->request('GET', '/api/products/'.$product->getId());
         $this->assertStringContainsString($id, $response->getContent());
+        $this->assertNotNull($product->getUpdatedAt());
     }
 }
