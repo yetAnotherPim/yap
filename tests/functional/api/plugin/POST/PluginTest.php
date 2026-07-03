@@ -8,8 +8,10 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Controller\Api\PluginWorkflowController;
 use App\Entity\Plugin\Plugin;
+use App\Kernel;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
+use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
 use App\PluginManager\Event\Enum\Action;
 use App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
@@ -24,6 +26,7 @@ use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -45,6 +48,8 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
+#[CoversMethod(Kernel::class, 'build')]
+#[CoversClass(PluginLoader::class)]
 class PluginTest extends ApiTestCase
 {
     use DatabaseTrait;
@@ -94,6 +99,21 @@ class PluginTest extends ApiTestCase
 
         $dumpfileContent = file_get_contents(__DIR__.'/../../../../../var/plugin_configuration/test_plugin_configuration');
         $this->assertEmpty($dumpfileContent);
+    }
+
+    /**
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws Exception
+     * @throws TransportExceptionInterface
+     */
+    public function testPluginActivationWithMissingEntity(): void
+    {
+        $this->client->request('POST', '/api/plugin/activate/SamplePlugin');
+        $this->assertResponseStatusCodeSame(412);
+        $this->assertJsonContains(['success' => false, 'errorMessage' => 'Plugin invalid or not found']);
     }
 
     /**
