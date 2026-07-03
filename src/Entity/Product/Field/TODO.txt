@@ -6,4 +6,11 @@ TODO:
     -filter pruducts by field values -> and-filter
     -filter by translations
 
+-setup command
+    after composer install
+    set db config
+    dump env for prod
+    create keys
+    -> test via pipeline (supported php versions) with fixture for api user and check api is available
+
 

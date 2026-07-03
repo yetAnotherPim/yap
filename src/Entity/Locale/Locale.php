@@ -34,4 +34,6 @@ class Locale
     }
 
     // TODO: remove translations on deletion -> api-test + integration test
+    //create FieldValue and FieldTitleTranslations -> check repo
+    //delete locale, check via that other translations still exist
 }

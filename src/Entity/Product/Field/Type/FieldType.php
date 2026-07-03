@@ -142,8 +142,6 @@ class FieldType extends TimestampableEntity
         return $this;
     }
 
-    // TODO: remove translations on locale deletion -> api-test + integration test
-
     /**
      * @return Collection<int, FieldTypeTitleTranslation>
      */
