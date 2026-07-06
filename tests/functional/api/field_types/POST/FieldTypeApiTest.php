@@ -63,6 +63,7 @@ class FieldTypeApiTest extends ApiTestCase
             [
                 'body' => '{
                                 "title":"Product name",
+                                "code":"product_name",
                                 "translatable": true,
                                 "filterable": true,
                                 "inputType": "string",

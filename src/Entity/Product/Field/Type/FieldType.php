@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\Entity(repositoryClass: FieldTypeRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\UniqueConstraint(name: 'fieldtype_title_section', fields: ['title', 'section'])]
+#[ORM\UniqueConstraint(name: 'fieldtype_code_section', fields: ['code', 'section'])]
 #[Patch(
     denormalizationContext: ['groups' => ['field_type:write']],
     normalizationContext: ['groups' => ['field_type:read']]
@@ -43,6 +43,11 @@ class FieldType extends TimestampableEntity
     #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
     #[ApiProperty(identifier: true)]
     private Uuid $id;
+
+    #[ORM\Column(length: 255, nullable: false)]
+    #[NotBlank]
+    #[Groups(['product:read', 'field:read', 'identifier:filter', 'field_type:write', 'field_type:read'])]
+    private string $code;
 
     #[ORM\Column(length: 255, nullable: false)]
     #[NotBlank]
@@ -82,6 +87,17 @@ class FieldType extends TimestampableEntity
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): FieldType
+    {
+        $this->code = $code;
+        return $this;
     }
 
     public function getTitle(): string

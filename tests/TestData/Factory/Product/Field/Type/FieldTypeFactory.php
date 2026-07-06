@@ -25,6 +25,7 @@ final class FieldTypeFactory extends PersistentObjectFactory
     {
         return [
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'code' => self::faker()->text(15),
             'title' => self::faker()->text(15),
             'filterable' => self::faker()->boolean(),
             'inputType' => self::faker()->randomElement(InputType::cases()),

@@ -6,15 +6,23 @@ namespace App\Tests\functional\api\products\GET;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Repository\ProductRepository;
+use App\Tests\TestData\Factory\Locale\LocaleFactory;
+use App\Tests\TestData\Factory\Product\Field\FieldFactory;
+use App\Tests\TestData\Factory\Product\Field\Translation\FieldValueTranslationFactory;
+use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
 use App\Tests\TestData\Factory\Product\ProductFactory;
+use App\Tests\TestData\Story\MultipleProductsStory;
 use App\Tests\TestData\Story\ProductsSharingIdentifierStory;
+use App\Tests\TestData\Story\ProductsWithFieldsAndTranslationsStory;
 use App\Tests\TestData\Story\SimpleProductStory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -32,6 +40,8 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(Field::class)]
 #[UsesClass(FieldType::class)]
 #[UsesClass(FieldSection::class)]
+#[UsesClass(Locale::class)]
+#[UsesClass(FieldValueTranslation::class)]
 class ProductApiTest extends ApiTestCase
 {
     use Factories;
@@ -127,5 +137,121 @@ class ProductApiTest extends ApiTestCase
 
         $this->client->request('GET', '/api/products?updatedAt[gt]=2022-02-22');
         $this->assertJsonContains(['totalItems' => 0]);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testGetProductsWithoutIdentifier(): void
+    {
+        SimpleProductStory::load();
+        ProductFactory::createOne([
+            'identifiers' => [],
+        ]);
+
+        $response = $this->client->request('GET', '/api/products?hasIdentifier=true');
+        $this->assertJsonContains(['totalItems' => 1]);
+        $this->assertStringContainsString('"identifiers":[{"@id":', $response->getContent());
+        $this->assertResponseStatusCodeSame(200);
+
+        $response = $this->client->request('GET', '/api/products?hasIdentifier=false');
+
+        $this->assertJsonContains(['totalItems' => 1]);
+        $this->assertStringContainsString('"identifiers":[]', $response->getContent());
+        $this->assertResponseStatusCodeSame(200);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function testGetProductsViaIdentifier(): void
+    {
+        MultipleProductsStory::load();
+
+        $this->client->request('GET', '/api/products?identifierIs=1111');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request('GET', '/api/products?identifierLike=0111');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request('GET', '/api/products?identifierIs[]=1111&identifierIs[]=2222');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 2]);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function testGetProductsViaIdentifierAndType(): void
+    {
+        MultipleProductsStory::load();
+
+        $this->client->request('GET', '/api/products?identifierLike=1111&identifierType=Internal');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request('GET', '/api/products?identifierLike=01111&identifierType=GTIN');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request('GET', '/api/products?identifierLike[]=1111&identifierLike[]=2222&identifierType=Internal');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 2]);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function testGetProductsViaFieldValueAndType(): void
+    {
+        ProductsWithFieldsAndTranslationsStory::load();
+
+        $this->client->request('GET', '/api/products?fieldValueIs=Product1');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request('GET', '/api/products?fieldValueIs=Product1&fieldTypeCode=product_name');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request('GET', '/api/products?fieldValueIs=Product1&fieldTypeCode=similar_to');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request('GET', '/api/products?fieldValueLike=Product&fieldTypeCode=product_name');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 2]);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function testGetProductsViaTranslatedFieldValueAndType(): void
+    {
+        ProductsWithFieldsAndTranslationsStory::load();
+
+        //TODO: test multiple fields
     }
 }

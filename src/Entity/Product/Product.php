@@ -7,16 +7,19 @@ namespace App\Entity\Product;
 use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
 use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
-use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Parameter;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Type\Translation\State\FieldTranslationFilterProvider;
 use App\Entity\Product\Identifier\Identifier;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -43,19 +46,46 @@ use Symfony\Component\Uid\Uuid;
             filter: new ComparisonFilter(new ExactFilter()),
             property: 'updatedAt',
         ),
-    ]
-)]
-#[GetCollection(
-    uriTemplate: 'filter/hasIdentifier',
-    openapi: new Operation(tags: ['filter'], summary: 'Filter products that have/don\'t have identifiers'),
-    normalizationContext: ['groups' => ['product:read']],
-    parameters: [
-        'value' => new QueryParameter(
+        'hasIdentifier' => new QueryParameter(
             filter: new ExistsFilter(),
             property: 'identifiers',
             description: 'Filter products that have/don\'t have identifiers',
         ),
+        'identifierIs' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'identifiers.value',
+            description: 'Filter products by identifier matching value exactly',
+        ),
+        'identifierLike' => new QueryParameter(
+            filter: new PartialSearchFilter(),
+            property: 'identifiers.value',
+            description: 'Filter products by identifier matching value partially',
+        ),
+        'identifierType' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'identifiers.type.title',
+        ),
+        'fieldValueIs' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'fields.value',
+            description: 'Filter products by field matching value exactly',
+        ),
+        'fieldValueLike' => new QueryParameter(
+            filter: new PartialSearchFilter(),
+            property: 'fields.value',
+            description: 'Filter products by field matching value partially',
+        ),
+        'fieldTypeCode' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'fields.type.code',
+        ),
     ]
+)]
+#[GetCollection(
+    //TODO: solve
+    uriTemplate: '/blubb/test/{locale}',
+    provider: FieldTranslationFilterProvider::class,
+    normalizationContext: ['groups' => ['product:read']],
 )]
 #[Post(denormalizationContext: ['groups' => ['product:write']])]
 #[Patch(denormalizationContext: ['groups' => ['product:write']])]

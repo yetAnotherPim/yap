@@ -34,15 +34,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Post]
 #[Patch]
 #[Delete]
-#[GetCollection(
-    uriTemplate: 'filter/identifiers',
-    openapi: new Operation(tags: ['filter'], summary: 'Filter products by identifier and it\'s type'),
-    normalizationContext: ['groups' => ['identifier:filter']],
-    parameters: [
-        'value' => new QueryParameter(filter: new ExactFilter(), property: 'value', required: true),
-        'type' => new QueryParameter(filter: new ExactFilter(), property: 'type.title', required: true),
-    ]
-)]
 #[ORM\HasLifecycleCallbacks]
 class Identifier extends RelatedTimestampableEntity
 {

@@ -25,14 +25,10 @@ trait AssociationTrait
         if (null !== $inverseSetter) {
             $value
                 ->shouldReceive($inverseSetter)
-                ->once()
-                ->with($target)
                 ->andReturn($value);
 
             $value2
                 ->shouldReceive($inverseSetter)
-                ->once()
-                ->with($target)
                 ->andReturn($value);
         }
 

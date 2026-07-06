@@ -63,6 +63,8 @@ class FieldTypeTest extends MockeryTestCase
         return [
             ['setTitle', 'getTitle', 'field_title'],
             ['setTitle', 'getTitle', null, \TypeError::class],
+            ['setCode', 'getCode', 'field_code'],
+            ['setCode', 'getCode', null, \TypeError::class],
             ['setTranslatable', 'isTranslatable', true],
             ['setTranslatable', 'isTranslatable', null, \TypeError::class],
             ['setFilterable', 'isFilterable', true],
@@ -70,7 +72,7 @@ class FieldTypeTest extends MockeryTestCase
             ['setInputType', 'getInputType', InputType::String],
             ['setInputType', 'getInputType', null, \TypeError::class],
             ['setSection', 'getSection', \Mockery::mock(FieldSection::class)],
-            ['setSection', 'getSection', null, \TypeError::class],
+            ['setSection', 'getSection', null],
             ['setUpdatedAt', 'getUpdatedAt', new \DateTimeImmutable('now')],
             ['setUpdatedAt', 'getUpdatedAt', new \DateTime('now'), \TypeError::class],
             ['setUpdatedAt', 'getUpdatedAt', null],
