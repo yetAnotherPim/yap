@@ -15,10 +15,6 @@ use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Repository\ProductRepository;
-use App\Tests\TestData\Factory\Locale\LocaleFactory;
-use App\Tests\TestData\Factory\Product\Field\FieldFactory;
-use App\Tests\TestData\Factory\Product\Field\Translation\FieldValueTranslationFactory;
-use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
 use App\Tests\TestData\Factory\Product\ProductFactory;
 use App\Tests\TestData\Story\MultipleProductsStory;
 use App\Tests\TestData\Story\ProductsSharingIdentifierStory;
@@ -109,11 +105,12 @@ class ProductApiTest extends ApiTestCase
     {
         ProductFactory::createOne(['createdAt' => new \DateTimeImmutable('2022-02-22'), 'updatedAt' => new \DateTimeImmutable('2022-02-22')]);
         ProductFactory::createOne(['createdAt' => new \DateTimeImmutable('2022-02-21'), 'updatedAt' => new \DateTimeImmutable('2022-02-21')]);
+        ProductFactory::createOne(['createdAt' => new \DateTimeImmutable('2022-02-21 12:00:00'), 'updatedAt' => new \DateTimeImmutable('2022-02-21 12:00:00')]);
 
-        $this->client->request('GET', '/api/products');
+        $response = $this->client->request('GET', '/api/products');
 
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
 
         $jsonSchema = file_get_contents(__DIR__.'/../../../../JsonSchema/products.schema.json');
 
@@ -121,22 +118,58 @@ class ProductApiTest extends ApiTestCase
         $this->assertMatchesJsonSchema($jsonSchema);
 
         $this->client->request('GET', '/api/products?createdAt[gte]=2022-02-21');
+        $this->assertJsonContains(['totalItems' => 3]);
+
+        $this->client->request('GET', '/api/products?createdAt[gte]=2022-02-21 12:00:00');
         $this->assertJsonContains(['totalItems' => 2]);
 
         $this->client->request('GET', '/api/products?createdAt[gte]=2022-02-22');
         $this->assertJsonContains(['totalItems' => 1]);
 
-        $this->client->request('GET', '/api/products?createdAt[gt]=2022-02-22');
+        $this->client->request('GET', '/api/products?createdAt[gte]=2022-02-23');
         $this->assertJsonContains(['totalItems' => 0]);
 
+        $this->client->request('GET', '/api/products?createdAt[lte]=2022-02-21');
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request('GET', '/api/products?createdAt[lte]=2022-02-21 12:00:00');
+        $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request('GET', '/api/products?createdAt[lte]=2022-02-22');
+        $this->assertJsonContains(['totalItems' => 3]);
+
+        $this->client->request('GET', '/api/products?createdAt[lt]=2022-02-22');
+        $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request('GET', '/api/products?createdAt[lte]=2022-02-23');
+        $this->assertJsonContains(['totalItems' => 3]);
+
         $this->client->request('GET', '/api/products?updatedAt[gte]=2022-02-21');
+        $this->assertJsonContains(['totalItems' => 3]);
+
+        $this->client->request('GET', '/api/products?updatedAt[gte]=2022-02-21 12:00:00');
         $this->assertJsonContains(['totalItems' => 2]);
 
         $this->client->request('GET', '/api/products?updatedAt[gte]=2022-02-22');
         $this->assertJsonContains(['totalItems' => 1]);
 
-        $this->client->request('GET', '/api/products?updatedAt[gt]=2022-02-22');
+        $this->client->request('GET', '/api/products?updatedAt[gte]=2022-02-23');
         $this->assertJsonContains(['totalItems' => 0]);
+
+        $this->client->request('GET', '/api/products?updatedAt[lte]=2022-02-21');
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request('GET', '/api/products?updatedAt[lte]=2022-02-21 12:00:00');
+        $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request('GET', '/api/products?updatedAt[lte]=2022-02-22');
+        $this->assertJsonContains(['totalItems' => 3]);
+
+        $this->client->request('GET', '/api/products?updatedAt[lt]=2022-02-22');
+        $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request('GET', '/api/products?updatedAt[lte]=2022-02-23');
+        $this->assertJsonContains(['totalItems' => 3]);
     }
 
     /**
@@ -232,6 +265,10 @@ class ProductApiTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 1]);
 
+        $this->client->request('GET', '/api/products?fieldValueIs[]=Product1&fieldValueIs[]=Product2&fieldTypeCode=product_name');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 2]);
+
         $this->client->request('GET', '/api/products?fieldValueIs=Product1&fieldTypeCode=similar_to');
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 1]);
@@ -252,6 +289,22 @@ class ProductApiTest extends ApiTestCase
     {
         ProductsWithFieldsAndTranslationsStory::load();
 
-        //TODO: test multiple fields
+        $this->client->request('GET', '/api/products?fieldTranslatedValueIs[]=Produkt1&fieldTranslatedValueIs[]=Producto1&fieldTypeCode=product_name');
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $jsonSchema = file_get_contents(__DIR__.'/../../../../JsonSchema/products.schema.json');
+
+        $this->assertIsString($jsonSchema);
+        $this->assertMatchesJsonSchema($jsonSchema);
+
+        $this->client->request('GET', '/api/products?fieldTranslatedValueIs=Produkt1&fieldTypeCode=product_name');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request('GET', '/api/products?fieldTranslatedValueIs=Produkt1&fieldTypeCode=product_name&locale=es_ES');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 0]);
     }
 }

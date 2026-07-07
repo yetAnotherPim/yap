@@ -19,10 +19,10 @@ use App\plugins\SamplePlugin\Decoration\ServiceDecoration;
 use App\plugins\SamplePlugin\Entity\SampleEntity;
 use App\plugins\SamplePlugin\Repository\SampleRepository;
 use App\Repository\PluginRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -43,8 +43,6 @@ class PluginTest extends ApiTestCase
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
-
-    private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
@@ -124,8 +122,11 @@ class PluginTest extends ApiTestCase
         );
 
         self::getContainer()->reset();
-        self::$kernel->shutdown();
-        self::$kernel->boot();
+        $kernel = self::$kernel;
+
+        $this->assertInstanceOf(KernelInterface::class, $kernel);
+        $kernel->shutdown();
+        $kernel->boot();
 
         $container = self::getContainer();
 

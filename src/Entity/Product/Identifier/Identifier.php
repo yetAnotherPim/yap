@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Product\Identifier;
 
-use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\QueryParameter;
-use ApiPlatform\OpenApi\Model\Operation;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Product\Identifier\Type\Enum\DataType;
 use App\Entity\Product\Identifier\Type\IdentifierType;

@@ -12,6 +12,7 @@ use App\Entity\Product\Field\Field;
 use App\Repository\FieldValueTranslationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -20,6 +21,7 @@ use Symfony\Component\Uid\Uuid;
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint(name: 'field_translation_locale_field', fields: ['locale', 'field'])]
+#[Index(name: 'index_field_translation_value', fields: ['value'])]
 class FieldValueTranslation extends RelatedTimestampableEntity
 {
     protected array $updatableRelations = [

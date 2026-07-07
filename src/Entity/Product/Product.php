@@ -12,14 +12,11 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
-use ApiPlatform\OpenApi\Model\Parameter;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Field;
-use App\Entity\Product\Field\Type\Translation\State\FieldTranslationFilterProvider;
 use App\Entity\Product\Identifier\Identifier;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -79,13 +76,21 @@ use Symfony\Component\Uid\Uuid;
             filter: new ExactFilter(),
             property: 'fields.type.code',
         ),
+        'fieldTranslatedValueIs' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'fields.translations.value',
+            description: 'Filter products by field matching translated value exactly',
+        ),
+        'fieldTranslatedValueLike' => new QueryParameter(
+            filter: new PartialSearchFilter(),
+            property: 'fields.translations.value',
+            description: 'Filter products by field matching translated value partially',
+        ),
+        'locale' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'fields.translations.locale.id'
+        ),
     ]
-)]
-#[GetCollection(
-    //TODO: solve
-    uriTemplate: '/blubb/test/{locale}',
-    provider: FieldTranslationFilterProvider::class,
-    normalizationContext: ['groups' => ['product:read']],
 )]
 #[Post(denormalizationContext: ['groups' => ['product:write']])]
 #[Patch(denormalizationContext: ['groups' => ['product:write']])]

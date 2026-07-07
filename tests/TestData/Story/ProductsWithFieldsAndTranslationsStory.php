@@ -37,14 +37,13 @@ final class ProductsWithFieldsAndTranslationsStory extends Story
                         'translations' => [
                             FieldValueTranslationFactory::new([
                                 'locale' => $localeDE,
-                                'value' => 'Produkt1'
+                                'value' => 'Produkt1',
                             ]),
                             FieldValueTranslationFactory::new([
                                 'locale' => $localeES,
-                                'value' => 'Producto1'
+                                'value' => 'Producto1',
                             ]),
-
-                        ]
+                        ],
                     ]),
                     FieldFactory::new([
                         'type' => $fieldType2,
@@ -63,14 +62,13 @@ final class ProductsWithFieldsAndTranslationsStory extends Story
                         'translations' => [
                             FieldValueTranslationFactory::new([
                                 'locale' => $localeDE,
-                                'value' => 'Produkt2'
+                                'value' => 'Produkt2',
                             ]),
                             FieldValueTranslationFactory::new([
                                 'locale' => $localeES,
-                                'value' => 'Producto2'
+                                'value' => 'Producto2',
                             ]),
-
-                        ]
+                        ],
                     ]),
                     FieldFactory::new([
                         'type' => $fieldType2,

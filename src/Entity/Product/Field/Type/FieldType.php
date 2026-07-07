@@ -18,6 +18,7 @@ use App\Repository\FieldTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -35,6 +36,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Get]
 #[GetCollection]
 #[Delete]
+#[Index(name: 'index_field_type_code', fields: ['code'])]
 class FieldType extends TimestampableEntity
 {
     #[ORM\Id]
@@ -97,6 +99,7 @@ class FieldType extends TimestampableEntity
     public function setCode(string $code): FieldType
     {
         $this->code = $code;
+
         return $this;
     }
 
