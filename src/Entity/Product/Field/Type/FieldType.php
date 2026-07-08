@@ -12,13 +12,11 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Abstract\TimestampableEntity;
-use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Repository\FieldTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -27,7 +25,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\Entity(repositoryClass: FieldTypeRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\UniqueConstraint(name: 'fieldtype_code_section', fields: ['code', 'section'])]
+#[ORM\UniqueConstraint(name: 'index_product_field_type_code', fields: ['code'])]
 #[Patch(
     denormalizationContext: ['groups' => ['field_type:write']],
     normalizationContext: ['groups' => ['field_type:read']]
@@ -36,7 +34,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Get]
 #[GetCollection]
 #[Delete]
-#[Index(name: 'index_field_type_code', fields: ['code'])]
 class FieldType extends TimestampableEntity
 {
     #[ORM\Id]
@@ -48,12 +45,12 @@ class FieldType extends TimestampableEntity
 
     #[ORM\Column(length: 255, nullable: false)]
     #[NotBlank]
-    #[Groups(['product:read', 'field:read', 'identifier:filter', 'field_type:write', 'field_type:read'])]
+    #[Groups(['product:read', 'field:read', 'field_type:write', 'field_type:read'])]
     private string $code;
 
     #[ORM\Column(length: 255, nullable: false)]
     #[NotBlank]
-    #[Groups(['product:read', 'field:read', 'identifier:filter', 'field_type:write', 'field_type:read'])]
+    #[Groups(['product:read', 'field:read', 'field_type:write', 'field_type:read'])]
     private string $title;
 
     #[ORM\Column]
@@ -67,11 +64,6 @@ class FieldType extends TimestampableEntity
     #[ORM\Column]
     #[Groups(['field_type:write', 'field_type:read'])]
     private Enum\InputType $inputType;
-
-    #[ORM\ManyToOne(inversedBy: 'fieldTypes')]
-    #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['field_type:write'])]
-    private ?FieldSection $section;
 
     /**
      * @var Collection<int, FieldTypeTitleTranslation>
@@ -147,18 +139,6 @@ class FieldType extends TimestampableEntity
     public function setInputType(Enum\InputType $inputType): void
     {
         $this->inputType = $inputType;
-    }
-
-    public function getSection(): ?FieldSection
-    {
-        return $this->section;
-    }
-
-    public function setSection(?FieldSection $section): static
-    {
-        $this->section = $section;
-
-        return $this;
     }
 
     /**

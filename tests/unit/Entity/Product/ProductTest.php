@@ -7,6 +7,7 @@ namespace App\Tests\unit\Entity\Product;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Tests\helper\Trait\AssociationTrait;
 use App\Tests\helper\Trait\SetterGetterTrait;
 use App\Tests\helper\Trait\UpdatedAtTrait;
@@ -65,7 +66,8 @@ class ProductTest extends MockeryTestCase
             ['setUpdatedAt', 'getUpdatedAt', null],
             ['setCreatedAt', 'getCreatedAt', new \DateTimeImmutable('now')],
             ['setCreatedAt', 'getCreatedAt', new \DateTime('now'), \TypeError::class],
-            ['setCreatedAt', 'getCreatedAt', null, \TypeError::class],
+            ['setProductType', 'getProductType', \Mockery::mock(ProductType::class)],
+            ['setProductType', 'getProductType', null, \TypeError::class],
         ];
     }
 

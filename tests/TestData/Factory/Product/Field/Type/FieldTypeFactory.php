@@ -6,7 +6,6 @@ namespace App\Tests\TestData\Factory\Product\Field\Type;
 
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Tests\TestData\Factory\Product\Field\Type\Section\FieldSectionFactory;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
@@ -29,7 +28,6 @@ final class FieldTypeFactory extends PersistentObjectFactory
             'title' => self::faker()->text(15),
             'filterable' => self::faker()->boolean(),
             'inputType' => self::faker()->randomElement(InputType::cases()),
-            'section' => FieldSectionFactory::new(),
             'translatable' => self::faker()->boolean(),
         ];
     }

@@ -6,13 +6,14 @@ namespace App\Tests\integration\Entity\Product\Identifier;
 
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Repository\FieldRepository;
 use App\Repository\IdentifierRepository;
 use App\Tests\TestData\Factory\Product\Identifier\IdentifierFactory;
+use App\Tests\TestData\Factory\Product\Type\ProductTypeFactory;
 use App\Tests\TestData\Story\ProductsSharingIdentifierStory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,8 +28,8 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(IdentifierRepository::class)]
 #[UsesClass(Field::class)]
 #[UsesClass(FieldType::class)]
-#[UsesClass(FieldSection::class)]
 #[UsesClass(FieldRepository::class)]
+#[UsesClass(ProductType::class)]
 class IdentifierTest extends KernelTestCase
 {
     use Factories;
@@ -70,7 +71,10 @@ class IdentifierTest extends KernelTestCase
 
     public function testSettingUpdatedAtOnUpdate(): void
     {
+        $productType = ProductTypeFactory::createOne();
+
         $product = new Product();
+        $product->setProductType($productType);
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();

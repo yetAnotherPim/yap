@@ -2,26 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\TestData\Factory\Product\Field\Type\Section;
+namespace App\Tests\TestData\Factory\Product\Type;
 
-use App\Entity\Product\Field\Type\Section\FieldSection;
+use App\Entity\Product\Type\ProductType;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentObjectFactory<FieldSection>
+ * @extends PersistentObjectFactory<ProductType>
  */
-final class FieldSectionFactory extends PersistentObjectFactory
+final class ProductTypeFactory extends PersistentObjectFactory
 {
     #[\Override]
     public static function class(): string
     {
-        return FieldSection::class;
+        return ProductType::class;
     }
 
     #[\Override]
-    protected function defaults(): array|callable
+    protected function defaults(): array
     {
         return [
+            'code' => self::faker()->text(255),
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'title' => self::faker()->text(255),
         ];

@@ -9,6 +9,7 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Repository\IdentifierRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\ProductRepository;
@@ -28,6 +29,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(IdentifierTypeRepository::class)]
+#[UsesClass(ProductType::class)]
 class IdentifierApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

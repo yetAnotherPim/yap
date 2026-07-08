@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Product\Field\Type\Section\FieldSection;
+use App\Entity\Product\Type\ProductType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<FieldSection>
+ * @extends ServiceEntityRepository<ProductType>
  */
-class FieldSectionRepository extends ServiceEntityRepository
+class ProductTypeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, FieldSection::class);
+        parent::__construct($registry, ProductType::class);
     }
 }

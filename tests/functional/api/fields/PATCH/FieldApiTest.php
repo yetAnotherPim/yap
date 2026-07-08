@@ -10,8 +10,8 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Repository\FieldRepository;
 use App\Repository\FieldValueTranslationRepository;
 use App\Repository\LocaleRepository;
@@ -33,8 +33,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(FieldValueTranslation::class)]
 #[UsesClass(FieldValueTranslationRepository::class)]
 #[UsesClass(FieldType::class)]
-#[UsesClass(FieldSection::class)]
 #[UsesClass(Product::class)]
+#[UsesClass(ProductType::class)]
 class FieldApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

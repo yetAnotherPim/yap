@@ -10,10 +10,10 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Repository\ProductRepository;
 use App\Tests\TestData\Factory\Product\ProductFactory;
 use App\Tests\TestData\Story\MultipleProductsStory;
@@ -35,9 +35,9 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(Field::class)]
 #[UsesClass(FieldType::class)]
-#[UsesClass(FieldSection::class)]
 #[UsesClass(Locale::class)]
 #[UsesClass(FieldValueTranslation::class)]
+#[UsesClass(ProductType::class)]
 class ProductApiTest extends ApiTestCase
 {
     use Factories;

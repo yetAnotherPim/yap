@@ -12,6 +12,7 @@ use App\Entity\Product\Field\Type\FieldType;
 use App\Repository\FieldTypeTitleTranslationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -19,7 +20,8 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: FieldTypeTitleTranslationRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\UniqueConstraint(name: 'fieldtype_translation_locale_fieldtype', fields: ['locale', 'field_type'])]
+#[Index(name: 'index_product_field_type_translation_fieldtype_id', columns: ['field_type_id'])]
+#[ORM\UniqueConstraint(name: 'index_product_field_type_translation_locale_fieldtype', fields: ['locale', 'field_type'])]
 class FieldTypeTitleTranslation extends RelatedTimestampableEntity
 {
     protected array $updatableRelations = [
@@ -34,7 +36,7 @@ class FieldTypeTitleTranslation extends RelatedTimestampableEntity
     private Uuid $id;
 
     #[ORM\ManyToOne]
-    #[Groups(['product:read', 'product:write', 'identifier:filter', 'field_type:write', 'field_type:read'])]
+    #[Groups(['product:read', 'product:write', 'field_type:write', 'field_type:read'])]
     #[ORM\JoinColumn(nullable: false)]
     private Locale $locale;
 
@@ -43,7 +45,7 @@ class FieldTypeTitleTranslation extends RelatedTimestampableEntity
     private FieldType $fieldType;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['product:read', 'product:write', 'identifier:filter', 'field_type:write', 'field_type:read'])]
+    #[Groups(['product:read', 'product:write', 'field_type:write', 'field_type:read'])]
     private ?string $value = null;
 
     public function getId(): Uuid

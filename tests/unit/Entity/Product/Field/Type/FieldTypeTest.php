@@ -6,7 +6,6 @@ namespace App\Tests\unit\Entity\Product\Field\Type;
 
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Tests\helper\Trait\AssociationTrait;
 use App\Tests\helper\Trait\SetterGetterTrait;
@@ -71,8 +70,6 @@ class FieldTypeTest extends MockeryTestCase
             ['setFilterable', 'isFilterable', null, \TypeError::class],
             ['setInputType', 'getInputType', InputType::String],
             ['setInputType', 'getInputType', null, \TypeError::class],
-            ['setSection', 'getSection', \Mockery::mock(FieldSection::class)],
-            ['setSection', 'getSection', null],
             ['setUpdatedAt', 'getUpdatedAt', new \DateTimeImmutable('now')],
             ['setUpdatedAt', 'getUpdatedAt', new \DateTime('now'), \TypeError::class],
             ['setUpdatedAt', 'getUpdatedAt', null],

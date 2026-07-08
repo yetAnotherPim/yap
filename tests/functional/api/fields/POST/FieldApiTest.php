@@ -8,8 +8,8 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Repository\FieldRepository;
 use App\Repository\FieldTypeRepository;
 use App\Repository\ProductRepository;
@@ -26,10 +26,10 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[CoversClass(Field::class)]
 #[CoversClass(FieldRepository::class)]
 #[UsesClass(FieldType::class)]
-#[UsesClass(FieldSection::class)]
 #[UsesClass(Product::class)]
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(FieldTypeRepository::class)]
+#[UsesClass(ProductType::class)]
 class FieldApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

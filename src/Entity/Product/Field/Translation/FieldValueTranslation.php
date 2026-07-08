@@ -20,8 +20,10 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: FieldValueTranslationRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\UniqueConstraint(name: 'field_translation_locale_field', fields: ['locale', 'field'])]
-#[Index(name: 'index_field_translation_value', fields: ['value'])]
+#[ORM\UniqueConstraint(name: 'index_product_field_translation_locale_field', fields: ['locale', 'field'])]
+#[Index(name: 'index_product_field_translation_value', fields: ['value'])]
+#[Index(name: 'index_product_field_translation_locale', columns: ['locale_id'])]
+#[Index(name: 'index_product_field_translation_field', columns: ['field_id'])]
 class FieldValueTranslation extends RelatedTimestampableEntity
 {
     protected array $updatableRelations = [
@@ -36,7 +38,7 @@ class FieldValueTranslation extends RelatedTimestampableEntity
     private Uuid $id;
 
     #[ORM\ManyToOne]
-    #[Groups(['product:read', 'product:write', 'identifier:filter', 'field:write', 'field:read'])]
+    #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
     #[ORM\JoinColumn(nullable: false)]
     private Locale $locale;
 
@@ -45,7 +47,7 @@ class FieldValueTranslation extends RelatedTimestampableEntity
     private Field $field;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['product:read', 'product:write', 'identifier:filter', 'field:write', 'field:read'])]
+    #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
     private ?string $value = null;
 
     public function getId(): Uuid

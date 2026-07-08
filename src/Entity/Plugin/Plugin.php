@@ -21,8 +21,8 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: PluginRepository::class)]
 #[Index(name: 'index_plugin_name', fields: ['name'])]
-#[ORM\UniqueConstraint(name: 'plugin_name', fields: ['name'])]
-#[ORM\UniqueConstraint(name: 'plugin_namespace', fields: ['namespace'])]
+#[ORM\UniqueConstraint(name: 'index_plugin_name', fields: ['name'])]
+#[ORM\UniqueConstraint(name: 'index_plugin_namespace', fields: ['namespace'])]
 #[ORM\Cache()]
 #[ApiResource(
     operations: [

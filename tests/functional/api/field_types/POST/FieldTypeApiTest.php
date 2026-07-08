@@ -9,13 +9,10 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
-use App\Repository\FieldSectionRepository;
 use App\Repository\FieldTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
-use App\Tests\TestData\Factory\Product\Field\Type\Section\FieldSectionFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -26,8 +23,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[CoversClass(FieldType::class)]
 #[CoversClass(FieldTypeRepository::class)]
-#[UsesClass(FieldSection::class)]
-#[UsesClass(FieldSectionRepository::class)]
 #[UsesClass(Locale::class)]
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(FieldTypeTitleTranslation::class)]
@@ -55,7 +50,6 @@ class FieldTypeApiTest extends ApiTestCase
     public function testPost(): void
     {
         $locale = LocaleFactory::createOne(['id' => 'de_DE']);
-        $fieldSection = FieldSectionFactory::createOne();
 
         $response = $this->client->request(
             'POST',
@@ -67,7 +61,6 @@ class FieldTypeApiTest extends ApiTestCase
                                 "translatable": true,
                                 "filterable": true,
                                 "inputType": "string",
-                                "section": "/api/field_sections/'.$fieldSection->getId().'",
                                 "translations": [
                                     {
                                         "locale": "/api/locales/'.$locale->getId().'",
@@ -85,7 +78,6 @@ class FieldTypeApiTest extends ApiTestCase
         $this->assertJsonContains(['inputType' => 'string']);
 
         $this->assertStringContainsString('"\/api\/field_type_title_translations\/', $response->getContent());
-        $this->assertStringContainsString('"\/api\/field_sections\/'.$fieldSection->getId().'"', $response->getContent());
         $this->assertStringContainsString('"createdAt":', $response->getContent());
     }
 }

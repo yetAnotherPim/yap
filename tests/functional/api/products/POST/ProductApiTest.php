@@ -8,17 +8,19 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Entity\Product\Field\Type\Section\FieldSection;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Repository\FieldRepository;
 use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\ProductRepository;
+use App\Repository\ProductTypeRepository;
 use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
 use App\Tests\TestData\Factory\Product\Identifier\Type\IdentifierTypeFactory;
+use App\Tests\TestData\Factory\Product\Type\ProductTypeFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -34,11 +36,12 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(FieldRepository::class)]
 #[UsesClass(FieldType::class)]
 #[UsesClass(FieldTypeRepository::class)]
-#[UsesClass(FieldSection::class)]
 #[UsesClass(Identifier::class)]
 #[UsesClass(IdentifierRepository::class)]
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(IdentifierTypeRepository::class)]
+#[UsesClass(ProductType::class)]
+#[UsesClass(ProductTypeRepository::class)]
 class ProductApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;
@@ -70,6 +73,9 @@ class ProductApiTest extends ApiTestCase
      */
     public function testPost(): void
     {
+        /** @phpstan-var ProductType $productType */
+        $productType = ProductTypeFactory::createOne();
+
         /** @phpstan-var IdentifierType $identifierType */
         $identifierType = IdentifierTypeFactory::createOne();
 
@@ -81,6 +87,7 @@ class ProductApiTest extends ApiTestCase
             '/api/products',
             [
                 'body' => '{
+                                "productType":"/api/product_types/'.$productType->getId().'",
                                 "identifiers":[
                                     {
                                         "value":"123456",

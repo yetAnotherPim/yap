@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\TestData\Factory\Product;
 
 use App\Entity\Product\Product;
+use App\Tests\TestData\Factory\Product\Type\ProductTypeFactory;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
@@ -22,6 +23,7 @@ final class ProductFactory extends PersistentObjectFactory
     protected function defaults(): array|callable
     {
         return [
+            'productType' => ProductTypeFactory::new(),
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
     }

@@ -16,7 +16,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: IdentifierTypeRepository::class)]
-#[ORM\UniqueConstraint(name: 'identifier_type_title', columns: ['title'])]
+#[ORM\UniqueConstraint(name: 'index_product_identifier_type_title', columns: ['title'])]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
 class IdentifierType extends TimestampableEntity
@@ -30,7 +30,7 @@ class IdentifierType extends TimestampableEntity
 
     #[ORM\Column(length: 255, unique: true)]
     #[NotBlank]
-    #[Groups(['product:read', 'identifier:filter'])]
+    #[Groups(['product:read'])]
     private string $title;
 
     #[ORM\Column(enumType: DataType::class)]

@@ -2,6 +2,11 @@ TODO:
 Plugins:
 Feeds
     -Settings: external Storages -> encrypted in DB
-Messenger Plugin: Entity-Updates (changeSet) via Message (JSON)
+Messenger Plugin:
+    -Entity-Updates (changeSet) via Message (JSON)
+    -Empfangen von Updates
 ElasticSearch
+Redis
+external Storage
+Cron für Markplätze (Produktdaten)
 Stockmodul - Referenz für Bestandsänderung (History)

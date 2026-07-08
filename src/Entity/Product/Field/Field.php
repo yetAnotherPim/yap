@@ -28,10 +28,10 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: FieldRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
-#[Index(name: 'index_field_type_id', fields: ['type'])]
-#[Index(name: 'index_field_product_id', fields: ['product'])]
-#[Index(name: 'index_field_value', fields: ['value'])]
-#[ORM\UniqueConstraint(name: 'field_product_type', fields: ['type', 'product'])]
+#[Index(name: 'index_product_field_type', fields: ['type'])]
+#[Index(name: 'index_product_field_product', fields: ['product'])]
+#[Index(name: 'index_product_field_value', fields: ['value'])]
+#[ORM\UniqueConstraint(name: 'index_product_field_product_type', fields: ['type', 'product'])]
 #[Patch(
     denormalizationContext: ['groups' => ['field:write']],
     normalizationContext: ['groups' => ['field:read']]
@@ -55,7 +55,7 @@ class Field extends RelatedTimestampableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['product:read', 'product:write', 'field:write', 'field:read', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
     private FieldType $type;
 
     #[ORM\ManyToOne(inversedBy: 'fields')]
@@ -64,14 +64,14 @@ class Field extends RelatedTimestampableEntity
     private Product $product;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['product:read', 'product:write', 'field:write', 'field:read', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
     private ?string $value = null;
 
     /**
      * @var Collection<int, FieldValueTranslation>
      */
     #[ORM\OneToMany(targetEntity: FieldValueTranslation::class, mappedBy: 'field', cascade: ['all'], orphanRemoval: true)]
-    #[Groups(['product:read', 'product:write', 'field:write', 'field:read', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
     private Collection $translations;
 
     public function __construct()

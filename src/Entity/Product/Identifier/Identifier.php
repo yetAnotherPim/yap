@@ -23,9 +23,9 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: IdentifierRepository::class)]
-#[Index(name: 'index_identifier_type_id', fields: ['type'])]
-#[Index(name: 'index_intendifier_product_id', fields: ['product'])]
-#[ORM\UniqueConstraint(name: 'identifier_product_type', fields: ['type', 'product'])]
+#[Index(name: 'index_product_identifier_type', fields: ['type'])]
+#[Index(name: 'index_product_intendifier_product', fields: ['product'])]
+#[ORM\UniqueConstraint(name: 'index_product_identifier_product_type', fields: ['type', 'product'])]
 #[Get]
 #[GetCollection]
 #[Post]
@@ -47,17 +47,16 @@ class Identifier extends RelatedTimestampableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write'])]
     private IdentifierType $type;
 
     #[ORM\Column(length: 255)]
     #[NotBlank]
-    #[Groups(['product:read', 'product:write', 'identifier:filter'])]
+    #[Groups(['product:read', 'product:write'])]
     private string $value;
 
     #[ORM\ManyToOne(inversedBy: 'identifiers')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['identifier:filter'])]
     private Product $product;
 
     public function getId(): Uuid
@@ -83,7 +82,7 @@ class Identifier extends RelatedTimestampableEntity
         ],
         types: ['integer', 'string']
     )]
-    #[Groups(['product:read', 'identifier:filter'])]
+    #[Groups(['product:read'])]
     public function getTypedValue(): string|int
     {
         if (true === isset($this->type) && DataType::Integer === $this->getType()->getDataType()) {

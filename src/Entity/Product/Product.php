@@ -18,10 +18,12 @@ use ApiPlatform\Metadata\QueryParameter;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Identifier\Identifier;
+use App\Entity\Product\Type\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -29,6 +31,7 @@ use Symfony\Component\Uid\Uuid;
 // TODO: add parent relation -> provide fieldTypes[] for distinction
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[Index(name: 'index_product_producttype', columns: ['product_type_id'])]
 #[Get(
     normalizationContext: ['groups' => ['product:read']]
 )]
@@ -105,6 +108,11 @@ class Product extends TimestampableEntity
     #[ApiProperty(identifier: true)]
     private Uuid $id;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['product:read', 'product:write'])]
+    private ProductType $productType;
+
     /**
      * @var Collection<int, Identifier>
      */
@@ -119,8 +127,6 @@ class Product extends TimestampableEntity
     #[Groups(['product:read', 'product:write'])]
     private Collection $fields;
 
-    // TODO: test section or fieldType deleted, but field assigned to product -> what happens?
-
     public function __construct()
     {
         $this->identifiers = new ArrayCollection();
@@ -132,6 +138,18 @@ class Product extends TimestampableEntity
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getProductType(): ProductType
+    {
+        return $this->productType;
+    }
+
+    public function setProductType(ProductType $productType): static
+    {
+        $this->productType = $productType;
+
+        return $this;
     }
 
     /**
