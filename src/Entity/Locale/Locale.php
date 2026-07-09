@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\LocaleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LocaleRepository::class)]
 #[ApiResource(operations: [
@@ -21,11 +22,16 @@ use Doctrine\ORM\Mapping as ORM;
 ])]
 class Locale
 {
-    public function __construct(
-        #[ORM\Id]
-        #[ORM\Column(length: 8)]
-        private string $id,
-    ) {
+    #[ORM\Id]
+    #[ORM\Column(length: 8)]
+    #[Assert\Length(max: 8)]
+    private string $id;
+
+    public function setId(string $id): Locale
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getId(): string
