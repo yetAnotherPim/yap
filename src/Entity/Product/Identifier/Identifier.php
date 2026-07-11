@@ -64,6 +64,12 @@ class Identifier extends RelatedTimestampableEntity
         return $this->id;
     }
 
+    public function setId(Uuid $id): Identifier
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getType(): IdentifierType
     {
         return $this->type;
@@ -97,9 +103,11 @@ class Identifier extends RelatedTimestampableEntity
         return $this->value;
     }
 
-    public function setValue(string $value): void
+    public function setValue(string $value): static
     {
         $this->value = $value;
+
+        return $this;
     }
 
     public function getProduct(): Product
@@ -112,5 +120,9 @@ class Identifier extends RelatedTimestampableEntity
         $this->product = $product;
 
         return $this;
+    }
+
+    public function __tooString(): string {
+        return 'test';
     }
 }

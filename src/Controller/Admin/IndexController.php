@@ -29,12 +29,17 @@ class IndexController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Home', 'fa fa-home');
 
+        yield MenuItem::section('Products', 'fa fa-industry');
+        yield MenuItem::linkTo(ProductCrudController::class, 'Products', 'fas fa-table-list');
+
+
+        yield MenuItem::section('Settings', 'fa fa-gear');
         yield MenuItem::linkTo(LocaleCrudController::class, 'Locales', 'fas fa-globe');
 
         yield MenuItem::subMenu('Types', 'fa fa-layer-group')->setSubItems(
             [
-                MenuItem::linkTo(FieldTypeCrudController::class, 'Field', 'fas fa-rectangle-list'),
                 MenuItem::linkTo(IdentifierTypeCrudController::class, 'Identifier', 'fas fa-fingerprint'),
+                MenuItem::linkTo(FieldTypeCrudController::class, 'Field', 'fas fa-rectangle-list'),
                 MenuItem::linkTo(ProductTypeCrudController::class, 'Product', 'fas fa-industry'),
             ]
         );
