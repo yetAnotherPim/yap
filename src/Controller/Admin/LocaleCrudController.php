@@ -8,6 +8,9 @@ use App\Entity\Locale\Locale;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
+/**
+ * @extends AbstractCrudController<Locale>
+ */
 class LocaleCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

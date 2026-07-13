@@ -32,7 +32,6 @@ class IndexController extends AbstractDashboardController
         yield MenuItem::section('Products', 'fa fa-industry');
         yield MenuItem::linkTo(ProductCrudController::class, 'Products', 'fas fa-table-list');
 
-
         yield MenuItem::section('Settings', 'fa fa-gear');
         yield MenuItem::linkTo(LocaleCrudController::class, 'Locales', 'fas fa-globe');
 

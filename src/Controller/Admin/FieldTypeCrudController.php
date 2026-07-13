@@ -11,6 +11,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
+/**
+ * @extends AbstractCrudController<FieldType>
+ */
 class FieldTypeCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

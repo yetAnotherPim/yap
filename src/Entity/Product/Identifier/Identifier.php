@@ -53,7 +53,7 @@ class Identifier extends RelatedTimestampableEntity
     #[ORM\Column(length: 255)]
     #[NotBlank]
     #[Groups(['product:read', 'product:write'])]
-    private string $value;
+    private string $value = '';
 
     #[ORM\ManyToOne(inversedBy: 'identifiers')]
     #[ORM\JoinColumn(nullable: false)]
@@ -67,6 +67,7 @@ class Identifier extends RelatedTimestampableEntity
     public function setId(Uuid $id): Identifier
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -120,9 +121,5 @@ class Identifier extends RelatedTimestampableEntity
         $this->product = $product;
 
         return $this;
-    }
-
-    public function __tooString(): string {
-        return 'test';
     }
 }

@@ -13,7 +13,8 @@ class LocaleTest extends MockeryTestCase
 {
     public function testGetId(): void
     {
-        $entity = new Locale('de_DE');
+        $entity = new Locale()
+            ->setId('de_DE');
 
         $this->assertEquals('de_DE', $entity->getId());
     }

@@ -8,6 +8,9 @@ use App\Entity\Product\Type\ProductType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
+/**
+ * @extends AbstractCrudController<ProductType>
+ */
 class ProductTypeCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

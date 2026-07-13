@@ -6,6 +6,12 @@ namespace App\Tests\functional\api\plugin\GET;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Controller\Admin\FieldTypeCrudController;
+use App\Controller\Admin\IdentifierCrudController;
+use App\Controller\Admin\IdentifierTypeCrudController;
+use App\Controller\Admin\LocaleCrudController;
+use App\Controller\Admin\ProductCrudController;
+use App\Controller\Admin\ProductTypeCrudController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
 use App\PluginManager\Cache\CacheClearer;
@@ -18,9 +24,11 @@ use App\plugins\SamplePlugin\Controller\SampleController;
 use App\plugins\SamplePlugin\Decoration\ServiceDecoration;
 use App\plugins\SamplePlugin\Entity\SampleEntity;
 use App\plugins\SamplePlugin\Repository\SampleRepository;
+use App\Repository\IdentifierTypeRepository;
 use App\Repository\PluginRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -38,6 +46,14 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[CoversClass(CacheClearerDecorator::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
 #[CoversMethod(Kernel::class, 'build')]
+// Deleting the cache is causing instantiation of following classes
+#[UsesClass(FieldTypeCrudController::class)]
+#[UsesClass(IdentifierCrudController::class)]
+#[UsesClass(IdentifierTypeCrudController::class)]
+#[UsesClass(IdentifierTypeRepository::class)]
+#[UsesClass(LocaleCrudController::class)]
+#[UsesClass(ProductTypeCrudController::class)]
+#[UsesClass(ProductCrudController::class)]
 class PluginTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;
