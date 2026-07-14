@@ -42,5 +42,7 @@ class IndexController extends AbstractDashboardController
                 MenuItem::linkTo(ProductTypeCrudController::class, 'Product', 'fas fa-industry'),
             ]
         );
+
+        yield MenuItem::linkTo(OrphanDashboardController::class, 'Orphaned Records', 'fas fa-trash-can');
     }
 }

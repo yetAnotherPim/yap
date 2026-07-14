@@ -64,13 +64,6 @@ class Identifier extends RelatedTimestampableEntity
         return $this->id;
     }
 
-    public function setId(Uuid $id): Identifier
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
     public function getType(): IdentifierType
     {
         return $this->type;
