@@ -38,6 +38,13 @@ class ProductCrudController extends AbstractCrudController
         return Product::class;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->hideNullValues()
+            ->setFormThemes(['easyadmin/fields/identifier/identifier_collection.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
+    }
+
     public function configureFields(string $pageName): iterable
     {
         // TODO: changing identifier not updating product updated at
@@ -79,7 +86,10 @@ class ProductCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->setEntryToStringMethod(
                     fn (Identifier $identifier): string => $identifier->getType()->getTitle() ?? ''
-                ),
+                )
+                ->setFormTypeOptions([
+                    'block_name' => 'identifier_collection',
+                ]),
             DateTimeField::new('createdAt')
                 ->setDisabled(),
             DateTimeField::new('updatedAt')
@@ -110,12 +120,6 @@ class ProductCrudController extends AbstractCrudController
         $this->initializeIdentifiers($product);
 
         return parent::createEditForm($entityDto, $formOptions, $context);
-    }
-
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud
-            ->hideNullValues();
     }
 
     /**

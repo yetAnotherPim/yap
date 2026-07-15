@@ -1,0 +1,20 @@
+{% extends '@!EasyAdmin/crud/form_theme.html.twig' %}
+
+{% block _Product_identifier_collection_entry_row %}
+    {% set to_string_method = form_parent(form).vars.ea_vars.field.customOptions.get('entryToStringMethod') ?? null %}
+
+    <div class="field-collection-item field-collection-item-complex {{ not form.vars.valid ? 'is-invalid' }}">
+        <div class="accordion-item">
+            <div id="{{ id }}-contents" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <div class="row">
+                        <p class="mb-0"><b>{{ value|ea_as_string(to_string_method) }}</b></p>
+                        {{ form_widget(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

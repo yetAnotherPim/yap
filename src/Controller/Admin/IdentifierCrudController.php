@@ -22,7 +22,7 @@ class IdentifierCrudController extends AbstractCrudController
     {
         return [
             TextField::new('value')
-                ->setEmptyData(''),
+                ->setEmptyData('')
         ];
     }
 }
