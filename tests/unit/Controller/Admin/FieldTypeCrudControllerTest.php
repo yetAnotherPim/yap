@@ -39,4 +39,17 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
         $this->assertInstanceOf(ChoiceField::class, $fields[4]);
         $this->assertEquals('inputType', $fields[4]->getAsDto()->getProperty());
     }
+
+    public function testConfigureCrudSetsAutocompleteCallback(): void
+    {
+        $controller = new FieldTypeCrudController();
+
+        $crud = Crud::new();
+
+        $configuredCrud = $controller->configureCrud($crud);
+
+        $this->assertIsCallable(
+            $configuredCrud->getAsDto()->getAutocompleteCallback()
+        );
+    }
 }

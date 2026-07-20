@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Abstract\TimestampableEntity;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
 use App\Repository\ProductTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -61,10 +62,17 @@ class ProductType extends TimestampableEntity
     #[Groups(['product_type:write', 'product_type:read'])]
     private Collection $translations;
 
+    /**
+     * @var Collection<int, ProductTypeFieldConfiguration>
+     */
+    #[ORM\OneToMany(targetEntity: ProductTypeFieldConfiguration::class, mappedBy: 'productType', cascade: ['all'], orphanRemoval: true)]
+    private Collection $productTypeFieldConfigurations;
+
     public function __construct()
     {
         parent::__construct();
         $this->translations = new ArrayCollection();
+        $this->productTypeFieldConfigurations = new ArrayCollection();
     }
 
     public function getId(): Uuid
@@ -117,6 +125,31 @@ class ProductType extends TimestampableEntity
     public function removeTranslation(ProductTypeTitleTranslation $translation): static
     {
         $this->translations->removeElement($translation);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductTypeFieldConfiguration>
+     */
+    public function getProductTypeFieldConfigurations(): Collection
+    {
+        return $this->productTypeFieldConfigurations;
+    }
+
+    public function addProductTypeFieldConfiguration(ProductTypeFieldConfiguration $productTypeFieldConfiguration): static
+    {
+        if (!$this->productTypeFieldConfigurations->contains($productTypeFieldConfiguration)) {
+            $this->productTypeFieldConfigurations->add($productTypeFieldConfiguration);
+            $productTypeFieldConfiguration->setProductType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductTypeFieldConfiguration(ProductTypeFieldConfiguration $productTypeFieldConfiguration): static
+    {
+        $this->productTypeFieldConfigurations->removeElement($productTypeFieldConfiguration);
 
         return $this;
     }

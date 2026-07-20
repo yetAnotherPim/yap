@@ -10,6 +10,7 @@ use App\Controller\Admin\IdentifierTypeCrudController;
 use App\Controller\Admin\LocaleCrudController;
 use App\Controller\Admin\ProductCrudController;
 use App\Controller\Admin\ProductTypeCrudController;
+use App\Controller\Admin\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Api\PluginWorkflowController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
@@ -64,9 +65,9 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(LocaleCrudController::class)]
 #[UsesClass(ProductTypeCrudController::class)]
 #[UsesClass(ProductCrudController::class)]
+#[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
 class PluginActivateCommandTest extends KernelTestCase
 {
-    use Factories;
     use DatabaseTrait;
     use PluginCommandTrait;
 
@@ -107,7 +108,7 @@ class PluginActivateCommandTest extends KernelTestCase
             ->shouldReceive('error')
             ->never();
 
-        $this->refreshPlugins();
+        $this->listPlugins();
         $this->activatePlugin('SamplePlugin', true);
 
         $this->assertTrue($this->tableExists('sample_plugin'));

@@ -36,6 +36,6 @@ class PluginsRefreshProviderTest extends MockeryTestCase
 
         $result = $provider->provide($operation);
 
-        self::assertSame($plugins, $result);
+        $this->assertSame($plugins, $result);
     }
 }

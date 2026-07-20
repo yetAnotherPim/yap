@@ -68,6 +68,6 @@ class CacheClearerTest extends MockeryTestCase
 
         new CacheClearer($kernel)->clear();
 
-        self::assertTrue($cacheClearWasRun);
+        $this->assertTrue($cacheClearWasRun);
     }
 }

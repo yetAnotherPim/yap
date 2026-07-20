@@ -17,14 +17,14 @@ class PluginTest extends MockeryTestCase
     {
         $plugin = new Plugin();
 
-        self::assertSame('SamplePlugin', $plugin->getName());
+        $this->assertSame('SamplePlugin', $plugin->getName());
     }
 
     public function testGetVersionReturnsPluginVersion(): void
     {
         $plugin = new Plugin();
 
-        self::assertSame('0.9.0', $plugin->getVersion());
+        $this->assertSame('0.9.0', $plugin->getVersion());
     }
 
     public function testActivateCreatesDatabaseSchemaAndReturnsSelf(): void
@@ -46,7 +46,7 @@ class PluginTest extends MockeryTestCase
 
         $plugin = new Plugin();
 
-        self::assertSame($plugin, $plugin->activate($entityManagerMock));
+        $this->assertSame($plugin, $plugin->activate($entityManagerMock));
     }
 
     public function testDeactivateReturnsSelfWithoutDatabaseInteraction(): void
@@ -57,7 +57,7 @@ class PluginTest extends MockeryTestCase
 
         $plugin = new Plugin();
 
-        self::assertSame($plugin, $plugin->deactivate($entityManagerMock));
+        $this->assertSame($plugin, $plugin->deactivate($entityManagerMock));
     }
 
     public function testUpdateAddsColumnWhenFromVersionIsLowerThanCurrentVersion(): void
@@ -76,7 +76,7 @@ class PluginTest extends MockeryTestCase
 
         $plugin = new Plugin();
 
-        self::assertSame($plugin, $plugin->update('0.8.0', $entityManagerMock));
+        $this->assertSame($plugin, $plugin->update('0.8.0', $entityManagerMock));
     }
 
     public function testUpdateDoesNothingWhenFromVersionIsCurrentVersion(): void
@@ -87,7 +87,7 @@ class PluginTest extends MockeryTestCase
 
         $plugin = new Plugin();
 
-        self::assertSame($plugin, $plugin->update('0.9.0', $entityManagerMock));
+        $this->assertSame($plugin, $plugin->update('0.9.0', $entityManagerMock));
     }
 
     public function testUpdateDoesNothingWhenFromVersionIsHigherThanCurrentVersion(): void
@@ -98,6 +98,6 @@ class PluginTest extends MockeryTestCase
 
         $plugin = new Plugin();
 
-        self::assertSame($plugin, $plugin->update('1.0.0', $entityManagerMock));
+        $this->assertSame($plugin, $plugin->update('1.0.0', $entityManagerMock));
     }
 }

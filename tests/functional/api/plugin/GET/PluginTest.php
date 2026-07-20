@@ -12,6 +12,7 @@ use App\Controller\Admin\IdentifierTypeCrudController;
 use App\Controller\Admin\LocaleCrudController;
 use App\Controller\Admin\ProductCrudController;
 use App\Controller\Admin\ProductTypeCrudController;
+use App\Controller\Admin\ProductTypeFieldConfigurationCrudController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
 use App\PluginManager\Cache\CacheClearer;
@@ -54,6 +55,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(LocaleCrudController::class)]
 #[UsesClass(ProductTypeCrudController::class)]
 #[UsesClass(ProductCrudController::class)]
+#[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
 class PluginTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

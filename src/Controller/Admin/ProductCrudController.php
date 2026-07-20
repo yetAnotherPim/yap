@@ -47,8 +47,6 @@ class ProductCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        // TODO: changing identifier not updating product updated at
-
         if (Crud::PAGE_INDEX === $pageName) {
             return [
                 CollectionField::new('identifiers')
@@ -138,6 +136,7 @@ class ProductCrudController extends AbstractCrudController
     public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
     {
         $this->clearUnsetIdentifiers($entityInstance);
+        $entityInstance->updateUpdatedAt();
 
         parent::updateEntity($entityManager, $entityInstance);
     }

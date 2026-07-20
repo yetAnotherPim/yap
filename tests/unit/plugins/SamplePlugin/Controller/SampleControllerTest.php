@@ -19,8 +19,8 @@ class SampleControllerTest extends TestCase
         $response = $controller->index();
 
         /* @phpstan-ignore-next-line */
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('[]', $response->getContent());
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('[]', $response->getContent());
     }
 }

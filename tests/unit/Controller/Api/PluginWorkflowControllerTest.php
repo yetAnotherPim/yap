@@ -34,8 +34,8 @@ class PluginWorkflowControllerTest extends MockeryTestCase
 
         $response = $controller->performWorkflow('activate', 'SamplePlugin');
 
-        self::assertSame(Response::HTTP_ACCEPTED, $response->getStatusCode());
-        self::assertSame(['success' => true], $this->decode($response->getContent()));
+        $this->assertSame(Response::HTTP_ACCEPTED, $response->getStatusCode());
+        $this->assertSame(['success' => true], $this->decode($response->getContent()));
     }
 
     /**
@@ -51,8 +51,8 @@ class PluginWorkflowControllerTest extends MockeryTestCase
 
         $response = $controller->performWorkflow('invalid', 'SamplePlugin');
 
-        self::assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        self::assertSame(
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertSame(
             [
                 'success' => false,
                 'errorMessage' => 'Invalid action given',
@@ -77,8 +77,8 @@ class PluginWorkflowControllerTest extends MockeryTestCase
 
         $response = $controller->performWorkflow('update', 'SamplePlugin');
 
-        self::assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
-        self::assertSame(
+        $this->assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
+        $this->assertSame(
             [
                 'success' => false,
                 'errorMessage' => 'Plugin cannot be updated',
@@ -103,8 +103,8 @@ class PluginWorkflowControllerTest extends MockeryTestCase
 
         $response = $controller->performWorkflow('deactivate', 'UnknownPlugin');
 
-        self::assertSame(Response::HTTP_PRECONDITION_FAILED, $response->getStatusCode());
-        self::assertSame(
+        $this->assertSame(Response::HTTP_PRECONDITION_FAILED, $response->getStatusCode());
+        $this->assertSame(
             [
                 'success' => false,
                 'errorMessage' => 'Plugin invalid or not found',
@@ -118,7 +118,7 @@ class PluginWorkflowControllerTest extends MockeryTestCase
      */
     private function decode(string|false $content): array
     {
-        self::assertIsString($content);
+        $this->assertIsString($content);
 
         /** @var array<string, mixed> $decoded */
         $decoded = json_decode($content, true, 512, JSON_THROW_ON_ERROR);

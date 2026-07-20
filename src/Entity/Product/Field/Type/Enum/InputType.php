@@ -6,6 +6,7 @@ namespace App\Entity\Product\Field\Type\Enum;
 
 enum InputType: string
 {
+    case Section = 'section';
     case Integer = 'integer';
     case String = 'string';
     case Text = 'text';

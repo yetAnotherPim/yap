@@ -39,7 +39,7 @@ class PluginUpdateCommandTest extends TestCase
 
         $result = $command($io, new NullOutput(), $pluginName);
 
-        self::assertSame(Command::SUCCESS, $result);
+        $this->assertSame(Command::SUCCESS, $result);
     }
 
     /**
@@ -66,6 +66,6 @@ class PluginUpdateCommandTest extends TestCase
 
         $result = $command($io, new NullOutput(), $pluginName);
 
-        self::assertSame(Command::FAILURE, $result);
+        $this->assertSame(Command::FAILURE, $result);
     }
 }

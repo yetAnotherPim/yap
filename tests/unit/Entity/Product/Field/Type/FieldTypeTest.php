@@ -7,6 +7,7 @@ namespace App\Tests\unit\Entity\Product\Field\Type;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Tests\helper\Trait\AssociationTrait;
 use App\Tests\helper\Trait\SetterGetterTrait;
 use App\Tests\helper\Trait\UpdatedAtTrait;
@@ -86,6 +87,7 @@ class FieldTypeTest extends MockeryTestCase
     {
         return [
             ['getTranslations', 'addTranslation', 'removeTranslation', FieldTypeTitleTranslation::class, 'setFieldType'],
+            ['getProductTypeFieldConfigurations', 'addProductTypeFieldConfiguration', 'removeProductTypeFieldConfiguration', ProductTypeFieldConfiguration::class, 'setFieldType'],
         ];
     }
 }

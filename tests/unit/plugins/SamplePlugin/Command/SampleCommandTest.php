@@ -20,6 +20,6 @@ class SampleCommandTest extends TestCase
 
         $commandTester->execute([]);
 
-        self::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
+        $this->assertSame(Command::SUCCESS, $commandTester->getStatusCode());
     }
 }

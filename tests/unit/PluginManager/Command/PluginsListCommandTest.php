@@ -66,7 +66,7 @@ class PluginsListCommandTest extends MockeryTestCase
 
         $result = $command($io, $output, $application, true);
 
-        self::assertSame(Command::SUCCESS, $result);
+        $this->assertSame(Command::SUCCESS, $result);
     }
 
     private function createPluginMock(

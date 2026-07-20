@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Entity\Product\Type;
 
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
 use App\Tests\helper\Trait\AssociationTrait;
@@ -79,6 +80,7 @@ class ProductTypeTest extends MockeryTestCase
     {
         return [
             ['getTranslations', 'addTranslation', 'removeTranslation', ProductTypeTitleTranslation::class, 'setProductType'],
+            ['getProductTypeFieldConfigurations', 'addProductTypeFieldConfiguration', 'removeProductTypeFieldConfiguration', ProductTypeFieldConfiguration::class, 'setProductType'],
         ];
     }
 }

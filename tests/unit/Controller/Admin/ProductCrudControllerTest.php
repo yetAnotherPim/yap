@@ -126,6 +126,10 @@ class ProductCrudControllerTest extends MockeryTestCase
             ->never()
             ->with($validIdentifier);
 
+        $product
+            ->shouldReceive('updateUpdatedAt')
+            ->once();
+
         $entityManager
             ->shouldReceive('persist')
             ->once()
@@ -286,6 +290,7 @@ class ProductCrudControllerTest extends MockeryTestCase
             [$repository]
         )->makePartial();
 
+        /** @phpstan-var AdminContext<Product> $context */
         $context = AdminContext::forTesting();
 
         $this->expectException(\Error::class);
@@ -324,10 +329,13 @@ class ProductCrudControllerTest extends MockeryTestCase
             'AbstractController::$container'
         );
 
+        /** @phpstan-var AdminContext<Product> $context */
+        $context = AdminContext::forTesting();
+
         $controller->createEditForm(
             $entityDto,
             KeyValueStore::new(),
-            AdminContext::forTesting()
+            $context
         );
     }
 
@@ -341,7 +349,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $configuredCrud = $controller->configureCrud($crud);
 
-        self::assertTrue(
+        $this->assertTrue(
             $configuredCrud->getAsDto()->areNullValuesHidden()
         );
     }

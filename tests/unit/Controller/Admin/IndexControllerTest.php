@@ -18,7 +18,7 @@ class IndexControllerTest extends MockeryTestCase
 
         $dashboard = $controller->configureDashboard();
 
-        self::assertSame(
+        $this->assertSame(
             'Yap',
             $dashboard->getAsDto()->getTitle()
         );
@@ -32,39 +32,39 @@ class IndexControllerTest extends MockeryTestCase
             $controller->configureMenuItems()
         );
 
-        self::assertCount(7, $items);
+        $this->assertCount(7, $items);
 
-        self::assertSame(
+        $this->assertSame(
             'Home',
             $items[0]->getAsDto()->getLabel()
         );
 
-        self::assertSame(
+        $this->assertSame(
             'Products',
             $items[1]->getAsDto()->getLabel()
         );
 
-        self::assertSame(
+        $this->assertSame(
             'Products',
             $items[2]->getAsDto()->getLabel()
         );
 
-        self::assertSame(
+        $this->assertSame(
             'Settings',
             $items[3]->getAsDto()->getLabel()
         );
 
-        self::assertSame(
+        $this->assertSame(
             'Locales',
             $items[4]->getAsDto()->getLabel()
         );
 
-        self::assertSame(
+        $this->assertSame(
             'Types',
             $items[5]->getAsDto()->getLabel()
         );
 
-        self::assertSame(
+        $this->assertSame(
             'Orphaned Records',
             $items[6]->getAsDto()->getLabel()
         );
@@ -84,19 +84,19 @@ class IndexControllerTest extends MockeryTestCase
             ->getAsDto()
             ->getSubItems();
 
-        self::assertCount(3, $subItems);
+        $this->assertCount(3, $subItems);
 
-        self::assertSame(
+        $this->assertSame(
             'Identifier',
             $subItems[0]->getLabel()
         );
 
-        self::assertSame(
+        $this->assertSame(
             'Field',
             $subItems[1]->getLabel()
         );
 
-        self::assertSame(
+        $this->assertSame(
             'Product',
             $subItems[2]->getLabel()
         );
@@ -121,7 +121,7 @@ class IndexControllerTest extends MockeryTestCase
 
         $response = $controller->index();
 
-        self::assertSame(
+        $this->assertSame(
             $expectedResponse,
             $response
         );

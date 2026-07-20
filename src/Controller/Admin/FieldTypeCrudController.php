@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -31,5 +32,12 @@ class FieldTypeCrudController extends AbstractCrudController
             ChoiceField::new('inputType')
                 ->setChoices(InputType::cases()),
         ];
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud->autocomplete(
+            callback: static fn (FieldType $fieldType) => $fieldType->getTitle()
+        );
     }
 }

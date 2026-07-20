@@ -71,7 +71,7 @@ class PluginManagerTest extends MockeryTestCase
             ->shouldReceive('error')
             ->never();
 
-        self::assertSame($activePlugins, $pluginManager->getActivePlugins());
+        $this->assertSame($activePlugins, $pluginManager->getActivePlugins());
     }
 
     public function testPerformWorkflowDispatchesEventAndReturnsTrue(): void
@@ -107,7 +107,7 @@ class PluginManagerTest extends MockeryTestCase
             ->shouldReceive('error')
             ->never();
 
-        self::assertTrue($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
+        $this->assertTrue($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
     }
 
     public function testPerformWorkflowReturnsFalseWhenPluginInstanceNotFound(): void
@@ -129,7 +129,7 @@ class PluginManagerTest extends MockeryTestCase
                 ]
             );
 
-        self::assertFalse($pluginManager->performWorkflow(Action::ACTIVATE, 'UnknownPlugin'));
+        $this->assertFalse($pluginManager->performWorkflow(Action::ACTIVATE, 'UnknownPlugin'));
     }
 
     /**
@@ -170,7 +170,7 @@ class PluginManagerTest extends MockeryTestCase
                 ]
             );
 
-        self::assertFalse($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
+        $this->assertFalse($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
     }
 
     public function testGetPluginsCreatesEntityForUnknownPlugin(): void
@@ -215,13 +215,13 @@ class PluginManagerTest extends MockeryTestCase
 
         $result = $pluginManager->getPlugins();
 
-        self::assertCount(1, $result);
+        $this->assertCount(1, $result);
 
         $plugin = $result->first();
-        self::assertInstanceOf(Plugin::class, $plugin);
-        self::assertSame('SamplePlugin', $plugin->getName());
-        self::assertSame('1.0.0', $plugin->getVersion());
-        self::assertSame($pluginInstance::class, $plugin->getNamespace());
+        $this->assertInstanceOf(Plugin::class, $plugin);
+        $this->assertSame('SamplePlugin', $plugin->getName());
+        $this->assertSame('1.0.0', $plugin->getVersion());
+        $this->assertSame($pluginInstance::class, $plugin->getNamespace());
     }
 
     public function testGetPluginsReusesExistingEntity(): void
@@ -267,9 +267,9 @@ class PluginManagerTest extends MockeryTestCase
 
         $result = $pluginManager->getPlugins();
 
-        self::assertSame($existingEntity, $result->first());
-        self::assertSame('SamplePlugin', $existingEntity->getName());
-        self::assertSame('2.0.0', $existingEntity->getVersion());
+        $this->assertSame($existingEntity, $result->first());
+        $this->assertSame('SamplePlugin', $existingEntity->getName());
+        $this->assertSame('2.0.0', $existingEntity->getVersion());
     }
 
     public function testGetPluginsSkipsNonPluginInstances(): void
@@ -307,7 +307,7 @@ class PluginManagerTest extends MockeryTestCase
                 ]
             );
 
-        self::assertCount(0, $pluginManager->getPlugins());
+        $this->assertCount(0, $pluginManager->getPlugins());
     }
 
     public function testDumpPluginConfigurationWritesActivePluginsWithServiceDefinition(): void
@@ -340,8 +340,8 @@ class PluginManagerTest extends MockeryTestCase
                 ]
             );
 
-        self::assertTrue($pluginManager->dumpPluginConfiguration());
-        self::assertStringEqualsFile(
+        $this->assertTrue($pluginManager->dumpPluginConfiguration());
+        $this->assertStringEqualsFile(
             $this->projectDir.'/test_plugin_configuration',
             'SamplePlugin'
         );
@@ -376,7 +376,7 @@ class PluginManagerTest extends MockeryTestCase
                 ]
             );
 
-        self::assertFalse($pluginManager->dumpPluginConfiguration());
+        $this->assertFalse($pluginManager->dumpPluginConfiguration());
     }
 
     public function testLoadActivePluginsDoesNothingWhenDumpfileIsMissing(): void
