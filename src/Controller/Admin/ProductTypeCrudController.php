@@ -38,7 +38,7 @@ class ProductTypeCrudController extends AbstractCrudController
             CollectionField::new('productTypeFieldConfigurations')
                 ->setEntryIsComplex()
                 ->setLabel(false)
-                ->setSortable(true)
+                ->addCssClass('sortableCollection')
                 ->setEntryToStringMethod(
                     fn (ProductTypeFieldConfiguration $productTypeFieldConfiguration): string => $productTypeFieldConfiguration->getFieldType()?->getTitle() ?? ''
                 ),

@@ -66,6 +66,7 @@ class ProductType extends TimestampableEntity
      * @var Collection<int, ProductTypeFieldConfiguration>
      */
     #[ORM\OneToMany(targetEntity: ProductTypeFieldConfiguration::class, mappedBy: 'productType', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OrderBy('position')]
     private Collection $productTypeFieldConfigurations;
 
     public function __construct()

@@ -8,6 +8,7 @@ use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 
 /**
  * @extends AbstractCrudController<ProductTypeFieldConfiguration>
@@ -26,6 +27,7 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
                 ->autocomplete(
                     callback: static fn (FieldType $fieldType): string => $fieldType->getTitle(),
                 ),
+            IntegerField::new('position'),
         ];
     }
 }
