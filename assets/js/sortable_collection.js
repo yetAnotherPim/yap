@@ -29,6 +29,11 @@ export default {
 
     updatePositions(event) {
         const { targetNode } = event.detail;
+
+        if(null === targetNode.closest(this.SELECTORS.COLLECTION)) {
+            return;
+        }
+
         const positionInputs = targetNode.querySelectorAll(this.SELECTORS.POSITION_INPUT);
 
         positionInputs.forEach((elt, index) => {
