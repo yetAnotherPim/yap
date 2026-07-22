@@ -12,6 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
 #[CoversClass(IndexController::class)]
 class IndexControllerTest extends MockeryTestCase
 {
+    public function testConfigureAssets(): void
+    {
+        $controller = new IndexController();
+        $assets = $controller->configureAssets();
+
+        $this->assertArrayHasKey('admin', $assets->getAsDto()->getAssetMapperAssets());
+    }
+
     public function testConfigureDashboardSetsTitle(): void
     {
         $controller = new IndexController();

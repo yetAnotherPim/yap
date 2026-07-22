@@ -27,6 +27,7 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
                 ->autocomplete(
                     callback: static fn (FieldType $fieldType): string => $fieldType->getTitle(),
                 ),
+            // TODO: hidden field
             IntegerField::new('position'),
         ];
     }

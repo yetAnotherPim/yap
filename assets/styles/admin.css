@@ -1,1 +1,25 @@
+div.sortable-collection {
+    cursor: grab;
+}
+
+.sortable-collection .field-collection-item:nth-child(odd) {
+
+}
+
+.sortable-collection .field-collection-item:nth-child(even){
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 5px,
+        light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 5px,
+        light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 10px
+    );
+}
+
+.field-collection-item::before {
+    content: "⋮⋮";
+    position: absolute;
+    transform: translateY(30%) translateX(25%);
+}
+
 

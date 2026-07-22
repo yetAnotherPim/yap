@@ -12,6 +12,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -31,6 +33,18 @@ class ProductCrudController extends AbstractCrudController
     public function __construct(
         private readonly IdentifierTypeRepository $identifierTypeRepository,
     ) {
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE)
+            ->update(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE,
+                static fn (Action $action) => $action->asPrimaryAction()
+            )
+            ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN,
+                static fn (Action $action) => $action->asDefaultAction()
+            );
     }
 
     public static function getEntityFqcn(): string
