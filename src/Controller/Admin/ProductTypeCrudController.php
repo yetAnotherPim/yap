@@ -36,6 +36,8 @@ class ProductTypeCrudController extends AbstractCrudController
             TextField::new('title'),
             FormField::addFieldset('Fields'),
             CollectionField::new('productTypeFieldConfigurations')
+                ->setHtmlAttribute('data-title-update-selector-prefix', 'ProductType_productTypeFieldConfigurations_')
+                ->setRequired(true)
                 ->setEntryIsComplex()
                 ->setLabel(false)
                 ->addCssClass('sortable-collection')

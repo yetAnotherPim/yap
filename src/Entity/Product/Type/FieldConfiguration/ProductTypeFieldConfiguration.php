@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\ProductType;
 use App\Repository\ProductTypeFieldConfigurationRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -43,8 +44,8 @@ class ProductTypeFieldConfiguration
     private ?FieldType $fieldType = null;
 
     /** @phpstan-var array<mixed>|null  */
-    #[ORM\Column(nullable: true)]
-    private ?array $defaultValue = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private string $defaultValue = '';
 
     public function getId(): Uuid
     {
@@ -87,14 +88,12 @@ class ProductTypeFieldConfiguration
         return $this;
     }
 
-    /** @phpstan-return array<mixed>|null */
-    public function getDefaultValue(): ?array
+    public function getDefaultValue(): string
     {
         return $this->defaultValue;
     }
 
-    /** @phpstan-param array<mixed>|null $defaultValue */
-    public function setDefaultValue(?array $defaultValue): static
+    public function setDefaultValue(string $defaultValue): static
     {
         $this->defaultValue = $defaultValue;
 

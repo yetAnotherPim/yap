@@ -22,4 +22,6 @@ div.sortable-collection {
     transform: translateY(30%) translateX(25%);
 }
 
-
+div.field-collection-item > div.accordion-item * .col-form-label.required:after {
+ display: none;
+}

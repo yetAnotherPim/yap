@@ -9,6 +9,7 @@ use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -25,13 +26,15 @@ class ProductTypeFieldConfigurationCrudControllerTest extends MockeryTestCase
         $controller = new ProductTypeFieldConfigurationCrudController();
         $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
 
-        $this->assertCount(2, $fields);
+        $this->assertCount(3, $fields);
 
         $this->assertInstanceOf(AssociationField::class, $fields[0]);
         $this->assertEquals('fieldType', $fields[0]->getAsDto()->getProperty());
 
-        // TODO: readd
-        // $this->assertInstanceOf(HiddenField::class, $fields[1]);
-        $this->assertEquals('position', $fields[1]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextareaField::class, $fields[1]);
+        $this->assertEquals('defaultValue', $fields[1]->getAsDto()->getProperty());
+
+        $this->assertInstanceOf(HiddenField::class, $fields[2]);
+        $this->assertEquals('position', $fields[2]->getAsDto()->getProperty());
     }
 }

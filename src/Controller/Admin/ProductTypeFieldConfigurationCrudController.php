@@ -8,7 +8,8 @@ use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 
 /**
  * @extends AbstractCrudController<ProductTypeFieldConfiguration>
@@ -24,11 +25,12 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
     {
         return [
             AssociationField::new('fieldType')
+                ->setRequired(true)
                 ->autocomplete(
                     callback: static fn (FieldType $fieldType): string => $fieldType->getTitle(),
                 ),
-            // TODO: hidden field
-            IntegerField::new('position'),
+            TextareaField::new('defaultValue'),
+            HiddenField::new('position'),
         ];
     }
 }
