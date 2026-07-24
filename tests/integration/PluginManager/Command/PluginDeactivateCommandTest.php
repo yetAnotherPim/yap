@@ -69,7 +69,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
 #[UsesClass(PluginCrudController::class)]
 #[RunTestsInSeparateProcesses]
-/** execute tests that clear the cache in a separate environment */
+/** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]
 class PluginDeactivateCommandTest extends KernelTestCase
 {
