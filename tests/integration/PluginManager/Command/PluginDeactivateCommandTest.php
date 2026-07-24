@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\PluginManager\Command;
 
+use App\Controller\Admin\FieldTypeCrudController;
+use App\Controller\Admin\IdentifierCrudController;
+use App\Controller\Admin\IdentifierTypeCrudController;
+use App\Controller\Admin\LocaleCrudController;
+use App\Controller\Admin\PluginCrudController;
+use App\Controller\Admin\ProductCrudController;
+use App\Controller\Admin\ProductTypeCrudController;
+use App\Controller\Admin\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Api\PluginWorkflowController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
@@ -18,6 +26,7 @@ use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
 use App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent;
 use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
+use App\Repository\IdentifierTypeRepository;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
@@ -49,7 +58,18 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(Kernel::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
+// Deleting the cache is causing instantiation of following classes
+#[UsesClass(FieldTypeCrudController::class)]
+#[UsesClass(IdentifierCrudController::class)]
+#[UsesClass(IdentifierTypeCrudController::class)]
+#[UsesClass(IdentifierTypeRepository::class)]
+#[UsesClass(LocaleCrudController::class)]
+#[UsesClass(ProductTypeCrudController::class)]
+#[UsesClass(ProductCrudController::class)]
+#[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
+#[UsesClass(PluginCrudController::class)]
 #[RunTestsInSeparateProcesses]
+/** execute tests that clear the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]
 class PluginDeactivateCommandTest extends KernelTestCase
 {
