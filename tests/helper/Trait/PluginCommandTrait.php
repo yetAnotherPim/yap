@@ -17,7 +17,7 @@ trait PluginCommandTrait
                 [
                     'command' => 'yap:plugins:list',
                     '--refresh' => true,
-                    '--env' => 'test'
+                    '--env' => 'test',
                 ]
             );
 
@@ -32,6 +32,7 @@ trait PluginCommandTrait
             ->run(
                 [
                     'command' => 'yap:plugins:list',
+                    '--env' => 'test',
                 ]
             );
 
@@ -47,6 +48,7 @@ trait PluginCommandTrait
                 [
                     'command' => 'yap:plugin:activate',
                     'plugin-name' => $pluginName,
+                    '--env' => 'test',
                 ]
             );
 
@@ -62,6 +64,7 @@ trait PluginCommandTrait
                 [
                     'command' => 'yap:plugin:deactivate',
                     'plugin-name' => $pluginName,
+                    '--env' => 'test',
                 ]
             );
 
@@ -77,6 +80,7 @@ trait PluginCommandTrait
                 [
                     'command' => 'yap:plugin:update',
                     'plugin-name' => $pluginName,
+                    '--env' => 'test',
                 ]
             );
 
