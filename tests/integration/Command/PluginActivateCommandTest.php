@@ -77,7 +77,7 @@ class PluginActivateCommandTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        self::bootKernel(['debug' => true]);
+        self::bootKernel();
         $kernel = self::$kernel;
         $this->assertInstanceOf(Kernel::class, $kernel);
         $application = new Application($kernel);

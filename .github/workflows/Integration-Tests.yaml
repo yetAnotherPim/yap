@@ -61,6 +61,4 @@ jobs:
               run: composer install --prefer-dist
 
             - name: run Tests
-              run: |
-                APP_ENV=test php bin/console cache:clear
-                vendor/bin/phpunit --testsuite integration
+              run: vendor/bin/phpunit --testsuite integration

@@ -17,6 +17,7 @@ trait PluginCommandTrait
                 [
                     'command' => 'yap:plugins:list',
                     '--refresh' => true,
+                    '--env' => 'test'
                 ]
             );
 
