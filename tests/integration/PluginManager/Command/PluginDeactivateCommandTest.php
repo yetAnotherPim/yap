@@ -23,7 +23,6 @@ use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Log\LoggerInterface;
