@@ -2,8 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\integration\Command;
+namespace App\Tests\integration\PluginManager\Command;
 
+use App\Controller\Admin\FieldTypeCrudController;
+use App\Controller\Admin\IdentifierCrudController;
+use App\Controller\Admin\IdentifierTypeCrudController;
+use App\Controller\Admin\LocaleCrudController;
+use App\Controller\Admin\PluginCrudController;
+use App\Controller\Admin\ProductCrudController;
+use App\Controller\Admin\ProductTypeCrudController;
+use App\Controller\Admin\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Api\PluginWorkflowController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
@@ -11,15 +19,14 @@ use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\Command\PluginActivateCommand;
 use App\PluginManager\Command\PluginsListCommand;
-use App\PluginManager\Command\PluginUpdateCommand;
 use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
 use App\PluginManager\Event\Enum\Action;
 use App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
 use App\PluginManager\Event\WorkflowEvent\PluginActivateEvent;
-use App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent;
 use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
+use App\Repository\IdentifierTypeRepository;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\DatabaseTrait;
 use App\Tests\helper\Trait\PluginCommandTrait;
@@ -33,15 +40,14 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
-use Zenstruck\Foundry\Test\Factories;
 
-#[CoversClass(PluginUpdateCommand::class)]
+#[CoversClass(PluginActivateCommand::class)]
 #[CoversClass(Plugin::class)]
 #[CoversClass(PluginWorkflowEventListener::class)]
 #[CoversClass(PluginWorkflowController::class)]
 #[CoversClass(PluginManager::class)]
 #[CoversClass(PluginLoader::class)]
-#[CoversClass(PluginUpdateEvent::class)]
+#[CoversClass(PluginActivateEvent::class)]
 #[CoversClass(PluginWorkflowException::class)]
 #[CoversClass(CacheClearer::class)]
 #[CoversClass(CacheClearerDecorator::class)]
@@ -51,11 +57,18 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(Kernel::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
-#[UsesClass(PluginActivateCommand::class)]
-#[UsesClass(PluginActivateEvent::class)]
-class PluginUpdateCommandTest extends KernelTestCase
+// Deleting the cache is causing instantiation of following classes
+#[UsesClass(FieldTypeCrudController::class)]
+#[UsesClass(IdentifierCrudController::class)]
+#[UsesClass(IdentifierTypeCrudController::class)]
+#[UsesClass(IdentifierTypeRepository::class)]
+#[UsesClass(LocaleCrudController::class)]
+#[UsesClass(ProductTypeCrudController::class)]
+#[UsesClass(ProductCrudController::class)]
+#[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
+#[UsesClass(PluginCrudController::class)]
+class PluginActivateCommandTest extends KernelTestCase
 {
-    use Factories;
     use DatabaseTrait;
     use PluginCommandTrait;
 
@@ -86,41 +99,37 @@ class PluginUpdateCommandTest extends KernelTestCase
     /**
      * @throws Exception
      */
-    public function testPluginUpdate(): void
+    public function testPluginActivate(): void
     {
-        $this->assertFalse($this->columnExists('sample_plugin', 'new_column'));
+        $dumpfilePath = __DIR__.'/../../../var/plugin_configuration/test_plugin_configuration';
+        file_put_contents($dumpfilePath, '');
+        $this->assertFalse($this->tableExists('sample_plugin'));
 
         $this->loggerMock
             ->shouldReceive('error')
             ->never();
 
-        $this->refreshPlugins();
+        $this->listPlugins();
         $this->activatePlugin('SamplePlugin', true);
-        $this->updatePlugin('SamplePlugin', true);
 
-        $this->assertFalse($this->columnExists('sample_plugin', 'new_column'));
+        $this->assertTrue($this->tableExists('sample_plugin'));
 
-        $repository = $this->entityManager->getRepository(Plugin::class);
-        $plugin = $repository->findOneBy(['name' => 'SamplePlugin']);
+        $this->listPlugins(true);
 
-        $this->assertInstanceOf(Plugin::class, $plugin);
-        $plugin->setInstalledVersion('0.8.0');
+        $this->assertFileExists($dumpfilePath);
+        /** @phpstan-var string $dumpFileContent */
+        $dumpFileContent = file_get_contents($dumpfilePath);
 
-        $this->entityManager->persist($plugin);
-        $this->entityManager->flush();
+        $this->assertStringContainsString('SamplePlugin', $dumpFileContent);
+        $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
 
-        $this->updatePlugin('SamplePlugin', true);
-
-        $this->assertTrue($this->columnExists('sample_plugin', 'new_column'));
-
-        $this->refreshPlugins(true);
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.9.0               x', $output);
         $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
     }
 
-    public function testPluginUpdateWithMissingEntity(): void
+    public function testPluginActivateWithMissingEntity(): void
     {
         $this->loggerMock
             ->shouldReceive('error')
@@ -129,19 +138,19 @@ class PluginUpdateCommandTest extends KernelTestCase
                 '{pluginName} not found',
                 [
                     'pluginName' => 'SamplePlugin',
-                    'action' => 'UPDATE',
+                    'action' => 'ACTIVATE',
                 ]
             );
 
-        $this->updatePlugin('SamplePlugin');
+        $this->activatePlugin('SamplePlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('[ERROR] Plugin cannot be updated!', $output);
+        $this->assertStringContainsString('[ERROR] Plugin cannot be activated!', $output);
     }
 
-    public function testPluginUpdateWithInvalidPlugin(): void
+    public function testPluginActivateWithInvalidPlugin(): void
     {
         PluginFactory::createOne([
             'name' => 'DeletedPlugin',
@@ -157,69 +166,34 @@ class PluginUpdateCommandTest extends KernelTestCase
                 'Instance of {pluginName} not found',
                 [
                     'pluginName' => 'DeletedPlugin',
-                    'action' => 'UPDATE',
+                    'action' => 'ACTIVATE',
                 ]
             );
 
-        $this->updatePlugin('DeletedPlugin');
+        $this->activatePlugin('DeletedPlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('[ERROR] Plugin cannot be updated!', $output);
+        $this->assertStringContainsString('[ERROR] Plugin cannot be activated!', $output);
     }
 
-    public function testPluginUpdateWithMissingInstalledVersion(): void
+    public function testPluginActivateCausingError(): void
     {
-        PluginFactory::createOne([
-            'name' => 'SamplePlugin',
-            'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
-            'active' => true,
-        ]);
-
         $this->loggerMock
             ->shouldReceive('error')
             ->once()
             ->with(
-                'Plugin {pluginInstance} is not installed',
-                [
-                    'pluginInstance' => \App\plugins\SamplePlugin\Plugin::class,
-                    'toVersion' => '0.9.0',
-                ]
-            );
-
-        $this->updatePlugin('SamplePlugin');
-
-        $this->applicationTester->assertCommandFailed();
-        $output = $this->applicationTester->getDisplay();
-
-        $this->assertStringContainsString('Plugin is not installed', $output);
-    }
-
-    public function testPluginAUpdateCausingError(): void
-    {
-        PluginFactory::createOne([
-            'name' => 'TestPlugin',
-            'installedVersion' => '0.8.0',
-            'namespace' => 'App\\Tests\\TestData\\plugins\\TestPlugin\\Plugin',
-            'active' => true,
-        ]);
-
-        $this->loggerMock
-            ->shouldReceive('error')
-            ->once()
-            ->with(
-                'An error occurred at {pluginInstance}::update()',
+                'An error occurred at {pluginInstance}::activate()',
                 [
                     'pluginInstance' => \App\Tests\TestData\plugins\TestPlugin\Plugin::class,
-                    'fromVersion' => '0.8.0',
-                    'toVersion' => '0.9.0',
-                    'message' => 'Error',
+                    'message' => 'Oops',
                     'exception' => \get_class(new \RuntimeException()),
                 ]
             );
 
-        $this->updatePlugin('TestPlugin');
+        $this->refreshPlugins();
+        $this->activatePlugin('TestPlugin');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
