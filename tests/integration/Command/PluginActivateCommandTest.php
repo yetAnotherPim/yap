@@ -8,6 +8,7 @@ use App\Controller\Admin\FieldTypeCrudController;
 use App\Controller\Admin\IdentifierCrudController;
 use App\Controller\Admin\IdentifierTypeCrudController;
 use App\Controller\Admin\LocaleCrudController;
+use App\Controller\Admin\PluginCrudController;
 use App\Controller\Admin\ProductCrudController;
 use App\Controller\Admin\ProductTypeCrudController;
 use App\Controller\Admin\ProductTypeFieldConfigurationCrudController;
@@ -65,6 +66,7 @@ use Symfony\Component\Console\Tester\ApplicationTester;
 #[UsesClass(ProductTypeCrudController::class)]
 #[UsesClass(ProductCrudController::class)]
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
+#[UsesClass(PluginCrudController::class)]
 class PluginActivateCommandTest extends KernelTestCase
 {
     use DatabaseTrait;

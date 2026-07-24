@@ -65,9 +65,9 @@ class ProductCrudControllerTest extends MockeryTestCase
         $result = $controller->configureActions($actions);
 
         $this->assertCount(3, $result->getAsDto(Crud::PAGE_NEW)->getActions());
-        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)->getVariant());
-        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)->getVariant());
-        $this->assertEquals(ButtonVariant::Primary, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE)->getVariant());
+        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)?->getVariant());
+        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)?->getVariant());
+        $this->assertEquals(ButtonVariant::Primary, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE)?->getVariant());
     }
 
     public function testCreateEntityInitializesIdentifiers(): void

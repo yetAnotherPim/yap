@@ -10,6 +10,7 @@ use App\Controller\Admin\FieldTypeCrudController;
 use App\Controller\Admin\IdentifierCrudController;
 use App\Controller\Admin\IdentifierTypeCrudController;
 use App\Controller\Admin\LocaleCrudController;
+use App\Controller\Admin\PluginCrudController;
 use App\Controller\Admin\ProductCrudController;
 use App\Controller\Admin\ProductTypeCrudController;
 use App\Controller\Admin\ProductTypeFieldConfigurationCrudController;
@@ -56,6 +57,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductTypeCrudController::class)]
 #[UsesClass(ProductCrudController::class)]
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
+#[UsesClass(PluginCrudController::class)]
 class PluginTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

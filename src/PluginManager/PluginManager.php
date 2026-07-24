@@ -205,7 +205,7 @@ class PluginManager
             try {
                 $loader->load(self::SERVICE_DEFINITION_FILE);
 
-                if (is_dir($twigFolder) && null !== $twigFilesystemLoaderDefinition) {
+                if (false !== $twigFolder && is_dir($twigFolder) && null !== $twigFilesystemLoaderDefinition) {
                     $twigFilesystemLoaderDefinition->addMethodCall('addPath', [$twigFolder]);
                 }
             } catch (\Exception $e) {

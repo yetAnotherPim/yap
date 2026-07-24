@@ -50,6 +50,8 @@ class IndexController extends AbstractDashboardController
             ]
         );
 
+        yield MenuItem::linkTo(PluginCrudController::class, 'Plugin Manager', 'fas fa-puzzle-piece');
+
         yield MenuItem::linkTo(OrphanDashboardController::class, 'Orphaned Records', 'fas fa-trash-can');
     }
 }

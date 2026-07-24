@@ -158,7 +158,8 @@ class Plugin
     private ?string $installedVersion = null;
 
     #[Groups(['plugin:refresh'])]
-    private string $version;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $version = '';
 
     public function getId(): Uuid
     {

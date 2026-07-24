@@ -43,9 +43,8 @@ class ProductTypeFieldConfiguration
     // @phpstan-ignore doctrine.associationType
     private ?FieldType $fieldType = null;
 
-    /** @phpstan-var array<mixed>|null  */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private string $defaultValue = '';
+    private ?string $defaultValue = null;
 
     public function getId(): Uuid
     {
@@ -88,12 +87,12 @@ class ProductTypeFieldConfiguration
         return $this;
     }
 
-    public function getDefaultValue(): string
+    public function getDefaultValue(): ?string
     {
         return $this->defaultValue;
     }
 
-    public function setDefaultValue(string $defaultValue): static
+    public function setDefaultValue(?string $defaultValue): static
     {
         $this->defaultValue = $defaultValue;
 
