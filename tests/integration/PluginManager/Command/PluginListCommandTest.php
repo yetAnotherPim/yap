@@ -28,6 +28,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(PluginsListCommand::class)]
@@ -51,21 +52,23 @@ class PluginListCommandTest extends KernelTestCase
     use Factories;
     use PluginCommandTrait;
 
-    private const string DUMPFILE_PATH = __DIR__.'/../../../var/plugin_configuration/ct_plugin_configuration';
+    private const string DUMPFILE_PATH = __DIR__.'/../../../../var/plugin_configuration/ct_plugin_configuration';
 
     /** @phpstan-var LoggerInterface|MockInterface  */
     private LoggerInterface $loggerMock;
 
+    private KernelInterface $kernelInstance;
+
     protected function setUp(): void
     {
-        // clearing cache during test execution is flaky
-        $this->markTestSkipped();
-
         new Filesystem()->remove(self::DUMPFILE_PATH);
 
-        self::bootKernel();
+        self::bootKernel(['debug' => true]);
         $kernel = self::$kernel;
+
         $this->assertInstanceOf(Kernel::class, $kernel);
+        $this->kernelInstance = $kernel;
+
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
@@ -110,7 +113,7 @@ class PluginListCommandTest extends KernelTestCase
         $this->assertStringContainsString('TestPlugin', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
 
-        $this->refreshPlugins(true);
+        $this->refreshPlugins($this->kernelInstance, true);
 
         $this->assertFileExists(self::DUMPFILE_PATH);
         /** @phpstan-var string $dumpFileContent */
@@ -122,7 +125,7 @@ class PluginListCommandTest extends KernelTestCase
 
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('[OK] Cache for the "test" environment (debug=true) was successfully cleared.', $output);
+        $this->assertStringContainsString('[OK] Cache for the "ct" environment (debug=true) was successfully cleared.', $output);
         $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.8.0               ✓', $output);
         $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
@@ -153,7 +156,7 @@ class PluginListCommandTest extends KernelTestCase
                 ]
             );
 
-        $this->refreshPlugins(true);
+        $this->refreshPlugins($this->kernelInstance, true);
 
         $output = $this->applicationTester->getDisplay();
 
@@ -161,7 +164,7 @@ class PluginListCommandTest extends KernelTestCase
         $this->assertStringContainsString('TestPlugin', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
 
-        $this->refreshPlugins(true);
+        $this->refreshPlugins($this->kernelInstance, true);
 
         $this->assertFileExists(self::DUMPFILE_PATH);
         /** @phpstan-var string $dumpFileContent */
@@ -173,13 +176,13 @@ class PluginListCommandTest extends KernelTestCase
 
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('[OK] Cache for the "test" environment (debug=true) was successfully cleared.', $output);
+        $this->assertStringContainsString('[OK] Cache for the "ct" environment (debug=true) was successfully cleared.', $output);
         $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.8.0               ✓', $output);
         $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
     }
 
-    public function testPluginRefresh2(): void
+    public function testPluginRefreshWithInvalidInstance(): void
     {
         self::getContainer()->set(\App\Tests\TestData\plugins\TestPlugin\Plugin::class, new \stdClass());
 
@@ -193,7 +196,7 @@ class PluginListCommandTest extends KernelTestCase
                 ]
             );
 
-        $this->refreshPlugins(true);
+        $this->refreshPlugins($this->kernelInstance, true);
 
         $output = $this->applicationTester->getDisplay();
         $this->assertStringContainsString('SamplePlugin', $output);

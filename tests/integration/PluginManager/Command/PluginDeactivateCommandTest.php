@@ -30,6 +30,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(PluginDeactivateCommand::class)]
@@ -58,14 +59,16 @@ class PluginDeactivateCommandTest extends KernelTestCase
     /** @phpstan-var LoggerInterface|MockInterface  */
     private LoggerInterface $loggerMock;
 
+    private KernelInterface $kernelInstance;
+
     protected function setUp(): void
     {
-        // clearing cache during test execution is flaky
-        $this->markTestSkipped();
-
-        self::bootKernel();
+        self::bootKernel(['debug' => true]);
         $kernel = self::$kernel;
+
         $this->assertInstanceOf(Kernel::class, $kernel);
+        $this->kernelInstance = $kernel;
+
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
@@ -79,7 +82,7 @@ class PluginDeactivateCommandTest extends KernelTestCase
 
     public function testPluginDeactivate(): void
     {
-        $dumpfilePath = __DIR__.'/../../../var/plugin_configuration/ct_plugin_configuration';
+        $dumpfilePath = __DIR__.'/../../../../var/plugin_configuration/ct_plugin_configuration';
 
         PluginFactory::createOne([
             'name' => 'SamplePlugin',
@@ -92,7 +95,7 @@ class PluginDeactivateCommandTest extends KernelTestCase
             ->shouldReceive('error')
             ->never();
 
-        $this->refreshPlugins(true);
+        $this->refreshPlugins($this->kernelInstance, true);
 
         $output = $this->applicationTester->getDisplay();
 
@@ -174,7 +177,7 @@ class PluginDeactivateCommandTest extends KernelTestCase
 
     public function testPluginDeactivateCausingError(): void
     {
-        $this->refreshPlugins();
+        $this->refreshPlugins($this->kernelInstance);
 
         $this->loggerMock
             ->shouldReceive('error')

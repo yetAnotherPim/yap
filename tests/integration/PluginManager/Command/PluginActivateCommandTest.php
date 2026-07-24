@@ -85,10 +85,10 @@ class PluginActivateCommandTest extends KernelTestCase
     {
         self::bootKernel(['debug' => true]);
         $kernel = self::$kernel;
-        /** @phpstan-var KernelInterface $kernel */
-        $this->kernelInstance = $kernel;
 
         $this->assertInstanceOf(Kernel::class, $kernel);
+        $this->kernelInstance = $kernel;
+
         $application = new Application($kernel);
         $application->setAutoExit(false);
 

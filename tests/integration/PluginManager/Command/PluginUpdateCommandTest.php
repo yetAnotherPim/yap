@@ -35,6 +35,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(PluginUpdateCommand::class)]
@@ -66,14 +67,16 @@ class PluginUpdateCommandTest extends KernelTestCase
     /** @phpstan-var LoggerInterface|MockInterface  */
     private LoggerInterface $loggerMock;
 
+    private KernelInterface $kernelInstance;
+
     protected function setUp(): void
     {
-        // clearing cache during test execution is flaky
-        $this->markTestSkipped();
-
-        self::bootKernel();
+        self::bootKernel(['debug' => true]);
         $kernel = self::$kernel;
+
         $this->assertInstanceOf(Kernel::class, $kernel);
+        $this->kernelInstance = $kernel;
+
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
@@ -102,7 +105,7 @@ class PluginUpdateCommandTest extends KernelTestCase
             ->shouldReceive('error')
             ->never();
 
-        $this->refreshPlugins();
+        $this->refreshPlugins($this->kernelInstance);
         $this->activatePlugin('SamplePlugin', true);
         $this->updatePlugin('SamplePlugin', true);
 
@@ -121,7 +124,7 @@ class PluginUpdateCommandTest extends KernelTestCase
 
         $this->assertTrue($this->columnExists('sample_plugin', 'new_column'));
 
-        $this->refreshPlugins(true);
+        $this->refreshPlugins($this->kernelInstance, true);
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.9.0               x', $output);
