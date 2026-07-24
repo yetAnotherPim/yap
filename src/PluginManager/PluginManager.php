@@ -17,11 +17,13 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PluginManager
 {
+    private const string TWIG_FOLDER = 'twig/';
     private const string SERVICE_DEFINITION_FILE = 'services.yaml';
     private const string PLUGIN_FOLDER = __DIR__.'/../plugins/';
 
@@ -181,8 +183,15 @@ class PluginManager
             // @codeCoverageIgnoreEnd
         }
 
+        try {
+            $twigFilesystemLoaderDefinition = $container->getDefinition('twig.loader.native_filesystem');
+        } catch (ServiceNotFoundException) {
+            $twigFilesystemLoaderDefinition = null;
+        }
+
         foreach ($activePlugins as $pluginName) {
             $serviceDefinitionFile = self::PLUGIN_FOLDER.trim($pluginName).'/'.self::SERVICE_DEFINITION_FILE;
+            $twigFolder = realpath(self::PLUGIN_FOLDER.trim($pluginName).'/'.self::TWIG_FOLDER);
 
             if (false === file_exists($serviceDefinitionFile)) {
                 continue;
@@ -190,11 +199,15 @@ class PluginManager
 
             $loader = new YamlFileLoader(
                 $container,
-                new FileLocator(self::PLUGIN_FOLDER.'/'.trim($pluginName))
+                new FileLocator(self::PLUGIN_FOLDER.trim($pluginName))
             );
 
             try {
                 $loader->load(self::SERVICE_DEFINITION_FILE);
+
+                if (is_dir($twigFolder) && null !== $twigFilesystemLoaderDefinition) {
+                    $twigFilesystemLoaderDefinition->addMethodCall('addPath', [$twigFolder]);
+                }
             } catch (\Exception $e) {
                 $successfullyLoaded = false;
             }

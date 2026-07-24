@@ -12,7 +12,6 @@ class PluginLoader implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        // TODO: load twig folder
         /** @phpstan-var string $appEnv */
         $appEnv = $container->getParameterBag()->get('kernel.environment');
 

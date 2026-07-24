@@ -13,7 +13,6 @@ final class SampleController extends AbstractController
     #[Route('/sample', name: 'plugin_sample')]
     public function index(): JsonResponse
     {
-        // TODO: implement twig folder for plugins
         return new JsonResponse([]);
     }
 }

@@ -1,7 +1,4 @@
 TODO:
--product.type -> product templates, assiciated with sections -> order for frontend (template)
-    -default valuies based on product.type
-
 -setup command
     after composer install
     set db config

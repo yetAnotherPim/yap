@@ -20,6 +20,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -385,6 +388,11 @@ class PluginManagerTest extends MockeryTestCase
         $container
             ->shouldNotReceive('setParameter');
 
+        $container
+            ->shouldReceive('getDefinition')
+            ->never()
+            ->with('twig.loader.native_filesystem');
+
         $this->loggerMock
             ->shouldReceive('error')
             ->never();
@@ -401,6 +409,13 @@ class PluginManagerTest extends MockeryTestCase
         );
 
         $container = $this->createContainerMock();
+
+        $container
+            ->shouldReceive('getDefinition')
+            ->once()
+            ->with('twig.loader.native_filesystem')
+            ->andReturn(\Mockery::mock(Definition::class));
+
         $container
             ->shouldReceive('setParameter')
             ->once()
@@ -422,10 +437,228 @@ class PluginManagerTest extends MockeryTestCase
         );
 
         $container = $this->createContainerMock();
+        $definitionMock = \Mockery::mock(Definition::class);
+
+        $definitionMock
+            ->shouldReceive('addMethodCall')
+            ->once()
+            ->with('addPath', \Mockery::type('array'))
+            ->andReturn($definitionMock);
+
+        $container
+            ->shouldReceive('getDefinition')
+            ->once()
+            ->with('twig.loader.native_filesystem')
+            ->andReturn($definitionMock);
+
+        $container
+            ->shouldReceive('fileExists')
+            ->once()
+            ->with(\Mockery::type('string'))
+            ->andReturn(true);
+
+        $parameterBagMock = \Mockery::mock(ParameterBagInterface::class);
+
+        $container
+            ->shouldReceive('getParameterBag')
+            ->once()
+            ->andReturn($parameterBagMock);
+
+        $parameterBagMock
+            ->shouldReceive('resolveValue')
+            ->with([0 => './Plugin.php'])
+            ->once()
+            ->andReturn('./Plugin.php');
+
+        $parameterBagMock
+            ->shouldReceive('unescapeValue')
+            ->with('./Plugin.php')
+            ->once()
+            ->andReturn('./Plugin.php');
+
+        $parameterBagMock
+            ->shouldReceive('resolveValue')
+            ->with('./')
+            ->once()
+            ->andReturn('./');
+
+        $parameterBagMock
+            ->shouldReceive('unescapeValue')
+            ->with('./')
+            ->once()
+            ->andReturn('./');
+
+        $reflectionClassMock = \Mockery::mock(\ReflectionClass::class);
+
+        $container
+            ->shouldReceive('getReflectionClass')
+            ->andReturn($reflectionClassMock);
+
+        $reflectionClassMock
+            ->shouldReceive('isTrait')
+            ->andReturn(false);
+
+        $reflectionClassMock
+            ->shouldReceive('isAbstract')
+            ->andReturn(false);
+
+        $reflectionClassMock
+            ->shouldReceive('isInterface')
+            ->andReturn(false);
+
+        $reflectionClassMock
+            ->shouldReceive('getAttributes')
+             ->andReturn([]);
+
+        $container
+            ->shouldReceive('addResource')
+            ->andReturn($container);
+
+        $container
+            ->shouldReceive('removeBindings')
+            ->andReturn($container);
+
+        $container
+            ->shouldReceive('setDefinition')
+            ->andReturn(\Mockery::mock(Definition::class));
+
+        $container
+            ->shouldReceive('setParameter')
+            ->once()
+            ->with('plugins_loaded_successfully', true);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
+
+        PluginManager::loadActivePlugins('test', $container);
+    }
+
+    public function testLoadActivePluginsWithExceptionOnLoad(): void
+    {
+        /* a configured plugin without a services.yaml is skipped, the run still counts as successful */
+        $this->filesystem->dumpFile(
+            $this->projectDir.'/test_plugin_configuration',
+            'SamplePlugin'
+        );
+
+        $container = $this->createContainerMock();
+
+        $container
+            ->shouldReceive('getDefinition')
+            ->once()
+            ->with('twig.loader.native_filesystem')
+            ->andReturn(\Mockery::mock(Definition::class));
+
         $container
             ->shouldReceive('setParameter')
             ->once()
             ->with('plugins_loaded_successfully', false);
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->never();
+
+        PluginManager::loadActivePlugins('test', $container);
+    }
+
+    public function testLoadActivePluginsWhenTwigLoaderIsNotAvailable(): void
+    {
+        /* a configured plugin without a services.yaml is skipped, the run still counts as successful */
+        $this->filesystem->dumpFile(
+            $this->projectDir.'/test_plugin_configuration',
+            'SamplePlugin'
+        );
+
+        $container = $this->createContainerMock();
+        $definitionMock = \Mockery::mock(Definition::class);
+
+        $definitionMock
+            ->shouldReceive('addMethodCall')
+            ->never()
+            ->andReturn($definitionMock);
+
+        $container
+            ->shouldReceive('getDefinition')
+            ->once()
+            ->with('twig.loader.native_filesystem')
+            ->andThrow(new ServiceNotFoundException('twig.loader.native_filesystem'));
+
+        $container
+            ->shouldReceive('fileExists')
+            ->once()
+            ->with(\Mockery::type('string'))
+            ->andReturn(true);
+
+        $parameterBagMock = \Mockery::mock(ParameterBagInterface::class);
+
+        $container
+            ->shouldReceive('getParameterBag')
+            ->once()
+            ->andReturn($parameterBagMock);
+
+        $parameterBagMock
+            ->shouldReceive('resolveValue')
+            ->with([0 => './Plugin.php'])
+            ->once()
+            ->andReturn('./Plugin.php');
+
+        $parameterBagMock
+            ->shouldReceive('unescapeValue')
+            ->with('./Plugin.php')
+            ->once()
+            ->andReturn('./Plugin.php');
+
+        $parameterBagMock
+            ->shouldReceive('resolveValue')
+            ->with('./')
+            ->once()
+            ->andReturn('./');
+
+        $parameterBagMock
+            ->shouldReceive('unescapeValue')
+            ->with('./')
+            ->once()
+            ->andReturn('./');
+
+        $reflectionClassMock = \Mockery::mock(\ReflectionClass::class);
+
+        $container
+            ->shouldReceive('getReflectionClass')
+            ->andReturn($reflectionClassMock);
+
+        $reflectionClassMock
+            ->shouldReceive('isTrait')
+            ->andReturn(false);
+
+        $reflectionClassMock
+            ->shouldReceive('isAbstract')
+            ->andReturn(false);
+
+        $reflectionClassMock
+            ->shouldReceive('isInterface')
+            ->andReturn(false);
+
+        $reflectionClassMock
+            ->shouldReceive('getAttributes')
+             ->andReturn([]);
+
+        $container
+            ->shouldReceive('addResource')
+            ->andReturn($container);
+
+        $container
+            ->shouldReceive('removeBindings')
+            ->andReturn($container);
+
+        $container
+            ->shouldReceive('setDefinition')
+            ->andReturn(\Mockery::mock(Definition::class));
+
+        $container
+            ->shouldReceive('setParameter')
+            ->once()
+            ->with('plugins_loaded_successfully', true);
 
         $this->loggerMock
             ->shouldReceive('error')
