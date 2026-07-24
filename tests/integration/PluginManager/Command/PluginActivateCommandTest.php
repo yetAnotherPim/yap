@@ -83,11 +83,9 @@ class PluginActivateCommandTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        // clearing cache during test execution is flaky
-        //$this->markTestSkipped();
-
         self::bootKernel(['debug' => true]);
         $kernel = self::$kernel;
+        /** @phpstan-var KernelInterface $kernel */
         $this->kernelInstance = $kernel;
 
         $this->assertInstanceOf(Kernel::class, $kernel);

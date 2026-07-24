@@ -1,16 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Property App\\Tests\\integration\\PluginManager\\Command\\PluginActivateCommandTest\:\:\$loggerMock is never written, only read\.$#'
-			identifier: property.onlyRead
+			message: '#^Method App\\Tests\\integration\\PluginManager\\Command\\PluginDeactivateCommandTest\:\:refreshPlugins\(\) invoked with 0 parameters, 1\-2 required\.$#'
+			identifier: arguments.count
 			count: 1
-			path: tests/integration/PluginManager/Command/PluginActivateCommandTest.php
+			path: tests/integration/PluginManager/Command/PluginDeactivateCommandTest.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
+			message: '#^Parameter \#1 \$kernel of method App\\Tests\\integration\\PluginManager\\Command\\PluginDeactivateCommandTest\:\:refreshPlugins\(\) expects Symfony\\Component\\HttpKernel\\KernelInterface, true given\.$#'
+			identifier: argument.type
 			count: 1
-			path: tests/integration/PluginManager/Command/PluginActivateCommandTest.php
+			path: tests/integration/PluginManager/Command/PluginDeactivateCommandTest.php
 
 		-
 			message: '#^Property App\\Tests\\integration\\PluginManager\\Command\\PluginDeactivateCommandTest\:\:\$loggerMock is never written, only read\.$#'
@@ -25,6 +25,12 @@ parameters:
 			path: tests/integration/PluginManager/Command/PluginDeactivateCommandTest.php
 
 		-
+			message: '#^Parameter \#1 \$kernel of method App\\Tests\\integration\\PluginManager\\Command\\PluginListCommandTest\:\:refreshPlugins\(\) expects Symfony\\Component\\HttpKernel\\KernelInterface, true given\.$#'
+			identifier: argument.type
+			count: 4
+			path: tests/integration/PluginManager/Command/PluginListCommandTest.php
+
+		-
 			message: '#^Property App\\Tests\\integration\\PluginManager\\Command\\PluginListCommandTest\:\:\$loggerMock is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
@@ -35,6 +41,18 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: tests/integration/PluginManager/Command/PluginListCommandTest.php
+
+		-
+			message: '#^Method App\\Tests\\integration\\PluginManager\\Command\\PluginUpdateCommandTest\:\:refreshPlugins\(\) invoked with 0 parameters, 1\-2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginUpdateCommandTest.php
+
+		-
+			message: '#^Parameter \#1 \$kernel of method App\\Tests\\integration\\PluginManager\\Command\\PluginUpdateCommandTest\:\:refreshPlugins\(\) expects Symfony\\Component\\HttpKernel\\KernelInterface, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginUpdateCommandTest.php
 
 		-
 			message: '#^Property App\\Tests\\integration\\PluginManager\\Command\\PluginUpdateCommandTest\:\:\$loggerMock is never written, only read\.$#'

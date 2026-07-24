@@ -22,6 +22,7 @@ trait PluginCommandTrait
                 ]
             );
 
+        // reload kernel cuz otherwise phpunit tries to access deleted cache files
         $kernel->shutdown();
         $kernel->boot();
 
