@@ -28,6 +28,7 @@ use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -53,6 +54,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(PluginsListCommand::class)]
 #[UsesClass(PluginActivateCommand::class)]
 #[UsesClass(PluginActivateEvent::class)]
+#[RunTestsInSeparateProcesses]
 class PluginUpdateCommandTest extends KernelTestCase
 {
     use Factories;

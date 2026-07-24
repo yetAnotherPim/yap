@@ -35,6 +35,8 @@ use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -67,6 +69,7 @@ use Symfony\Component\Console\Tester\ApplicationTester;
 #[UsesClass(ProductCrudController::class)]
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
 #[UsesClass(PluginCrudController::class)]
+#[RunTestsInSeparateProcesses]
 class PluginActivateCommandTest extends KernelTestCase
 {
     use DatabaseTrait;
@@ -77,7 +80,7 @@ class PluginActivateCommandTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        self::bootKernel();
+        self::bootKernel(['debug' => true]);
         $kernel = self::$kernel;
         $this->assertInstanceOf(Kernel::class, $kernel);
         $application = new Application($kernel);
@@ -109,7 +112,7 @@ class PluginActivateCommandTest extends KernelTestCase
             ->shouldReceive('error')
             ->never();
 
-        $this->listPlugins();
+        $this->refreshPlugins();
         $this->activatePlugin('SamplePlugin', true);
 
         $this->assertTrue($this->tableExists('sample_plugin'));

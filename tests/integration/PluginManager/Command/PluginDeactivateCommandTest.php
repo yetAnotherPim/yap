@@ -23,6 +23,8 @@ use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -46,6 +48,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(Kernel::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
+#[RunTestsInSeparateProcesses]
 class PluginDeactivateCommandTest extends KernelTestCase
 {
     use Factories;

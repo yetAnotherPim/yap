@@ -21,6 +21,7 @@ use App\Tests\helper\Trait\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -42,6 +43,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(Action::class)]
 #[CoversClass(Kernel::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
+#[RunTestsInSeparateProcesses]
 class PluginListCommandTest extends KernelTestCase
 {
     use Factories;
