@@ -313,7 +313,7 @@ class PluginManagerTest extends MockeryTestCase
         $this->assertCount(0, $pluginManager->getPlugins());
     }
 
-    public function testDumpPluginConfigurationWritesActivePluginsWithServiceDefinition(): void
+    public function testDumpPluginConfigurationCreatesConfigurationFolder(): void
     {
         $activePlugins = new ArrayCollection([
             new Plugin()->setName('SamplePlugin'),
@@ -346,6 +346,43 @@ class PluginManagerTest extends MockeryTestCase
         $this->assertTrue($pluginManager->dumpPluginConfiguration());
         $this->assertStringEqualsFile(
             $this->projectDir.'/test_plugin_configuration',
+            'SamplePlugin'
+        );
+    }
+
+    public function testDumpPluginConfigurationWritesActivePluginsWithServiceDefinition(): void
+    {
+        $activePlugins = new ArrayCollection([
+            new Plugin()->setName('SamplePlugin'),
+            new Plugin()->setName('NonExistentPlugin'),
+        ]);
+
+        $pluginRepository = \Mockery::mock(PluginRepository::class);
+        $pluginRepository
+            ->shouldReceive('getActivePlugins')
+            ->once()
+            ->andReturn($activePlugins);
+
+        $pluginManager = $this->createPluginManager(
+            pluginRepository: $pluginRepository,
+            appEnv: 'test',
+            projectDir: $this->projectDir,
+            pluginConfigurationFolder: '/folder/',
+        );
+
+        $this->loggerMock
+            ->shouldReceive('error')
+            ->once()
+            ->with(
+                'Service definition file for {pluginName} not found',
+                [
+                    'pluginName' => 'NonExistentPlugin',
+                ]
+            );
+
+        $this->assertTrue($pluginManager->dumpPluginConfiguration());
+        $this->assertStringEqualsFile(
+            $this->projectDir.'/folder/test_plugin_configuration',
             'SamplePlugin'
         );
     }
