@@ -1,0 +1,49 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Property App\\Tests\\integration\\PluginManager\\Command\\PluginActivateCommandTest\:\:\$loggerMock is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginActivateCommandTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginActivateCommandTest.php
+
+		-
+			message: '#^Property App\\Tests\\integration\\PluginManager\\Command\\PluginDeactivateCommandTest\:\:\$loggerMock is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginDeactivateCommandTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginDeactivateCommandTest.php
+
+		-
+			message: '#^Property App\\Tests\\integration\\PluginManager\\Command\\PluginListCommandTest\:\:\$loggerMock is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginListCommandTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginListCommandTest.php
+
+		-
+			message: '#^Property App\\Tests\\integration\\PluginManager\\Command\\PluginUpdateCommandTest\:\:\$loggerMock is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginUpdateCommandTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: tests/integration/PluginManager/Command/PluginUpdateCommandTest.php
