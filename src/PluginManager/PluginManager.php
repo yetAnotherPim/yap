@@ -155,6 +155,10 @@ class PluginManager
             $activePlugins[] = $plugin->getName();
         }
 
+        if (!is_dir($this->projectDir.$this->pluginConfigurationFolder)) {
+            mkdir($this->projectDir.$this->pluginConfigurationFolder);
+        }
+
         return (bool) file_put_contents(
             $this->projectDir.$this->pluginConfigurationFolder.$this->appEnv.'_plugin_configuration',
             implode(PHP_EOL, $activePlugins)
