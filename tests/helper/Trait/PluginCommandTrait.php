@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\helper\Trait;
 
 use Symfony\Component\Console\Tester\ApplicationTester;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 trait PluginCommandTrait
 {
     protected ApplicationTester $applicationTester;
 
-    protected function refreshPlugins(bool $expectSuccess = false): void
+    protected function refreshPlugins(KernelInterface $kernel, bool $expectSuccess = false): void
     {
         $this->applicationTester
             ->run(
@@ -20,6 +21,9 @@ trait PluginCommandTrait
                     '--env' => 'ct',
                 ]
             );
+
+        $kernel->shutdown();
+        $kernel->boot();
 
         if (true === $expectSuccess) {
             $this->applicationTester->assertCommandIsSuccessful();

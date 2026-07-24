@@ -16,7 +16,7 @@ services:
         resource: '../src/plugins/*/Plugin.php'
         tags: [ plugin ]
 
-when@test:
+when@test: &test
     services:
         _defaults:
             autowire: true
@@ -27,6 +27,8 @@ when@test:
             namespace: App\Tests\TestData\plugins\
             resource: '../tests/TestData/plugins/*/Plugin.php'
             tags: [ plugin ]
+
+when@ct: *test
 
 when@prod:
     parameters:

@@ -42,6 +42,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 #[CoversClass(PluginActivateCommand::class)]
 #[CoversClass(Plugin::class)]
@@ -78,14 +79,17 @@ class PluginActivateCommandTest extends KernelTestCase
 
     /** @phpstan-var LoggerInterface|MockInterface  */
     private LoggerInterface $loggerMock;
+    private KernelInterface $kernelInstance;
 
     protected function setUp(): void
     {
         // clearing cache during test execution is flaky
-        $this->markTestSkipped();
+        //$this->markTestSkipped();
 
         self::bootKernel(['debug' => true]);
         $kernel = self::$kernel;
+        $this->kernelInstance = $kernel;
+
         $this->assertInstanceOf(Kernel::class, $kernel);
         $application = new Application($kernel);
         $application->setAutoExit(false);
@@ -108,7 +112,7 @@ class PluginActivateCommandTest extends KernelTestCase
      */
     public function testPluginActivate(): void
     {
-        $dumpfilePath = __DIR__.'/../../../var/plugin_configuration/ct_plugin_configuration';
+        $dumpfilePath = __DIR__.'/../../../../var/plugin_configuration/ct_plugin_configuration';
         file_put_contents($dumpfilePath, '');
         $this->assertFalse($this->tableExists('sample_plugin'));
 
@@ -116,7 +120,7 @@ class PluginActivateCommandTest extends KernelTestCase
             ->shouldReceive('error')
             ->never();
 
-        $this->refreshPlugins();
+        $this->refreshPlugins($this->kernelInstance);
         $this->activatePlugin('SamplePlugin', true);
 
         $this->assertTrue($this->tableExists('sample_plugin'));
@@ -199,7 +203,7 @@ class PluginActivateCommandTest extends KernelTestCase
                 ]
             );
 
-        $this->refreshPlugins();
+        $this->refreshPlugins($this->kernelInstance);
         $this->activatePlugin('TestPlugin');
 
         $this->applicationTester->assertCommandFailed();
