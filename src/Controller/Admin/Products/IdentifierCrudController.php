@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace App\Controller\Admin\Products;
 
-use App\Entity\Locale\Locale;
+use App\Entity\Product\Identifier\Identifier;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 /**
- * @extends AbstractCrudController<Locale>
+ * @extends AbstractCrudController<Identifier>
  */
-class LocaleCrudController extends AbstractCrudController
+class IdentifierCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Locale::class;
+        return Identifier::class;
     }
 
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('id')
-                ->setMaxLength(8),
+            TextField::new('value')
+                ->setEmptyData(''),
         ];
     }
 }

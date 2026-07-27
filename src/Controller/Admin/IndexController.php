@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Controller\Admin\Products\ProductCrudController;
+use App\Controller\Admin\Settings\FieldTypeCrudController;
+use App\Controller\Admin\Settings\IdentifierTypeCrudController;
+use App\Controller\Admin\Settings\LocaleCrudController;
+use App\Controller\Admin\Settings\PluginCrudController;
+use App\Controller\Admin\Settings\ProductTypeCrudController;
+use App\Controller\Admin\Settings\UserCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -51,7 +58,8 @@ class IndexController extends AbstractDashboardController
         );
 
         yield MenuItem::linkTo(PluginCrudController::class, 'Plugin Manager', 'fas fa-puzzle-piece');
-
-        yield MenuItem::linkTo(OrphanDashboardController::class, 'Orphaned Records', 'fas fa-trash-can');
+        yield MenuItem::linkTo(UserCrudController::class, 'User', 'fas fa-users');
+        // TODO: add route
+        yield MenuItem::linkTo(PluginCrudController::class, 'Orphaned Records', 'fas fa-trash-can');
     }
 }

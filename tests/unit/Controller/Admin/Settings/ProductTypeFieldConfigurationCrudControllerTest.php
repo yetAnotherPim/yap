@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Controller\Admin;
+namespace App\Tests\unit\Controller\Admin\Settings;
 
-use App\Controller\Admin\ProductTypeFieldConfigurationCrudController;
+use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;

@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\Entity(repositoryClass: FieldTypeRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\UniqueConstraint(name: 'index_product_field_type_code', fields: ['code'])]
+#[ORM\UniqueConstraint(name: 'unique_product_field_type_code', fields: ['code'])]
 #[Patch(
     denormalizationContext: ['groups' => ['field_type:write']],
     normalizationContext: ['groups' => ['field_type:read']]

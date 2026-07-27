@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace App\Controller\Admin\Settings;
 
 use App\Entity\Plugin\Plugin;
 use App\PluginManager\Cache\CacheClearer;

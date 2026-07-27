@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\PluginManager\Command;
 
-use App\Controller\Admin\FieldTypeCrudController;
-use App\Controller\Admin\IdentifierCrudController;
-use App\Controller\Admin\IdentifierTypeCrudController;
-use App\Controller\Admin\LocaleCrudController;
-use App\Controller\Admin\PluginCrudController;
-use App\Controller\Admin\ProductCrudController;
-use App\Controller\Admin\ProductTypeCrudController;
-use App\Controller\Admin\ProductTypeFieldConfigurationCrudController;
+use App\Controller\Admin\Products\IdentifierCrudController;
+use App\Controller\Admin\Products\ProductCrudController;
+use App\Controller\Admin\Settings\FieldTypeCrudController;
+use App\Controller\Admin\Settings\IdentifierTypeCrudController;
+use App\Controller\Admin\Settings\LocaleCrudController;
+use App\Controller\Admin\Settings\PluginCrudController;
+use App\Controller\Admin\Settings\ProductTypeCrudController;
+use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Api\PluginWorkflowController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;

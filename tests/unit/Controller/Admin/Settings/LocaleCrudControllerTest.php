@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Controller\Admin;
+namespace App\Tests\unit\Controller\Admin\Settings;
 
-use App\Controller\Admin\IdentifierCrudController;
-use App\Entity\Product\Identifier\Identifier;
+use App\Controller\Admin\Settings\LocaleCrudController;
+use App\Entity\Locale\Locale;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(IdentifierCrudController::class)]
-class IdentifierCrudControllerTest extends MockeryTestCase
+#[CoversClass(LocaleCrudController::class)]
+class LocaleCrudControllerTest extends MockeryTestCase
 {
     public function testGetEntityFqcn(): void
     {
-        $this->assertEquals(Identifier::class, IdentifierCrudController::getEntityFqcn());
+        $this->assertEquals(Locale::class, LocaleCrudController::getEntityFqcn());
     }
 
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
-        $controller = new IdentifierCrudController();
+        $controller = new LocaleCrudController();
         $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
 
         $this->assertCount(1, $fields);
 
         $this->assertInstanceOf(TextField::class, $fields[0]);
-        $this->assertEquals('value', $fields[0]->getAsDto()->getProperty());
+        $this->assertEquals('id', $fields[0]->getAsDto()->getProperty());
     }
 }

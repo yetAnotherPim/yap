@@ -20,7 +20,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: FieldValueTranslationRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\UniqueConstraint(name: 'index_product_field_translation_locale_field', fields: ['locale', 'field'])]
+#[ORM\UniqueConstraint(name: 'unique_product_field_translation_locale_field', fields: ['locale', 'field'])]
 #[Index(name: 'index_product_field_translation_value', fields: ['value'])]
 #[Index(name: 'index_product_field_translation_locale', columns: ['locale_id'])]
 #[Index(name: 'index_product_field_translation_field', columns: ['field_id'])]

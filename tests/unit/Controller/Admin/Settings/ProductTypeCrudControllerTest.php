@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Controller\Admin;
+namespace App\Tests\unit\Controller\Admin\Settings;
 
-use App\Controller\Admin\ProductTypeCrudController;
+use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Entity\Product\Type\ProductType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;

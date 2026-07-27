@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Controller\Admin;
+namespace App\Tests\unit\Controller\Admin\Settings;
 
-use App\Controller\Admin\FieldTypeCrudController;
+use App\Controller\Admin\Settings\FieldTypeCrudController;
 use App\Entity\Product\Field\Type\FieldType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;

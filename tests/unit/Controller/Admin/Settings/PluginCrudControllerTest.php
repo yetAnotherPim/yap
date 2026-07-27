@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Controller\Admin;
+namespace App\Tests\unit\Controller\Admin\Settings;
 
-use App\Controller\Admin\PluginCrudController;
+use App\Controller\Admin\Settings\PluginCrudController;
 use App\Entity\Plugin\Plugin;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;

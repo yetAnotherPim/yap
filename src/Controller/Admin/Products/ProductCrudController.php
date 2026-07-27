@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace App\Controller\Admin\Products;
 
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Controller\Admin;
+namespace App\Tests\unit\Controller\Admin\Products;
 
-use App\Controller\Admin\ProductCrudController;
+use App\Controller\Admin\Products\ProductCrudController;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;

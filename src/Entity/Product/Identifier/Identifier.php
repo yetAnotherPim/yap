@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\Entity(repositoryClass: IdentifierRepository::class)]
 #[Index(name: 'index_product_identifier_type', fields: ['type'])]
 #[Index(name: 'index_product_intendifier_product', fields: ['product'])]
-#[ORM\UniqueConstraint(name: 'index_product_identifier_product_type', fields: ['type', 'product'])]
+#[ORM\UniqueConstraint(name: 'unique_product_identifier_product_type', fields: ['type', 'product'])]
 #[Get]
 #[GetCollection]
 #[Post]
