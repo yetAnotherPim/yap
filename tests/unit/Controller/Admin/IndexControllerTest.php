@@ -40,7 +40,7 @@ class IndexControllerTest extends MockeryTestCase
             $controller->configureMenuItems()
         );
 
-        $this->assertCount(8, $items);
+        $this->assertCount(9, $items);
 
         $this->assertSame(
             'Home',
@@ -78,8 +78,13 @@ class IndexControllerTest extends MockeryTestCase
         );
 
         $this->assertSame(
-            'Orphaned Records',
+            'User',
             $items[7]->getAsDto()->getLabel()
+        );
+
+        $this->assertSame(
+            'Orphaned Records',
+            $items[8]->getAsDto()->getLabel()
         );
     }
 

@@ -14,6 +14,7 @@ use App\Controller\Admin\Settings\LocaleCrudController;
 use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
+use App\Controller\Admin\Settings\UserCrudController;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
@@ -54,6 +55,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(PluginCrudController::class)]
 #[UsesClass(PluginRepository::class)]
 #[UsesClass(PluginManager::class)]
+#[UsesClass(UserCrudController::class)]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

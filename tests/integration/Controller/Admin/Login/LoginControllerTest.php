@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Controller\Admin\Login;
 
+use App\Controller\Admin\IndexController;
 use App\Controller\Admin\Login\LoginController;
 use App\Controller\Admin\Products\IdentifierCrudController;
 use App\Controller\Admin\Products\ProductCrudController;
@@ -13,6 +14,7 @@ use App\Controller\Admin\Settings\LocaleCrudController;
 use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
+use App\Controller\Admin\Settings\UserCrudController;
 use App\Entity\User\User;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\PluginManager;
@@ -41,6 +43,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 #[UsesClass(ProductCrudController::class)]
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
 #[UsesClass(PluginCrudController::class)]
+#[UsesClass(UserCrudController::class)]
+#[UsesClass(IndexController::class)]
 class LoginControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
@@ -63,7 +67,11 @@ class LoginControllerTest extends WebTestCase
         /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = $container->get('security.user_password_hasher');
 
-        $user = new User()->setEmail('email@example.com');
+        $user = new User()
+            ->setUsername('username')
+            ->setFirstName('first name')
+            ->setLastName('last name')
+            ->setEmail('email@example.com');
         $user->setPassword($passwordHasher->hashPassword($user, 'password'));
 
         $em->persist($user);
@@ -89,7 +97,7 @@ class LoginControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Sign in', [
-            '_username' => 'email@example.com',
+            '_username' => 'username',
             '_password' => 'bad-password',
         ]);
 
@@ -99,11 +107,11 @@ class LoginControllerTest extends WebTestCase
         self::assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
 
         $this->client->submitForm('Sign in', [
-            '_username' => 'email@example.com',
+            '_username' => 'username',
             '_password' => 'password',
         ]);
 
-        self::assertResponseRedirects('/');
+        self::assertResponseRedirects('/admin');
         $this->client->followRedirect();
 
         self::assertSelectorNotExists('.alert-danger');

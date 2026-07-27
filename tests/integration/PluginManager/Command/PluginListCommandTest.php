@@ -12,6 +12,7 @@ use App\Controller\Admin\Settings\LocaleCrudController;
 use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
+use App\Controller\Admin\Settings\UserCrudController;
 use App\Controller\Api\PluginWorkflowController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
@@ -65,6 +66,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(ProductCrudController::class)]
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
 #[UsesClass(PluginCrudController::class)]
+#[UsesClass(UserCrudController::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]
