@@ -27,8 +27,8 @@ class Locale
     #[Assert\Length(max: 8)]
     private string $id;
 
-    #[ORM\Column(options: ['default' => 0])]
-    private bool $isDefault = false;
+    #[ORM\Column(name: 'is_default', options: ['default' => 0])]
+    private bool $default = false;
 
     public function setId(string $id): Locale
     {
@@ -44,13 +44,12 @@ class Locale
 
     public function isDefault(): bool
     {
-        return $this->isDefault;
+        return $this->default;
     }
 
-    public function setIsDefault(bool $isDefault): Locale
+    public function setDefault(bool $default): Locale
     {
-        $this->isDefault = $isDefault;
-
+        $this->default = $default;
         return $this;
     }
 

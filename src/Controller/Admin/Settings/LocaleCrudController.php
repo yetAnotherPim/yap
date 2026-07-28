@@ -51,7 +51,7 @@ class LocaleCrudController extends AbstractCrudController
         return [
             TextField::new('id')
                 ->setMaxLength(8),
-            BooleanField::new('isDefault')
+            BooleanField::new('default')
                 ->onlyOnIndex()
                 ->setDisabled(),
         ];

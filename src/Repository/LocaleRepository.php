@@ -26,7 +26,7 @@ class LocaleRepository extends ServiceEntityRepository
      */
     public function getAvailableLocales(): Collection
     {
-        return new ArrayCollection($this->findBy([], ['isDefault' => 'DESC']));
+        return new ArrayCollection($this->findBy([], ['default' => 'DESC']));
     }
 
     /**
@@ -34,7 +34,7 @@ class LocaleRepository extends ServiceEntityRepository
      */
     public function getDefaultLocale(): Locale
     {
-        $defaultLocale = $this->findOneBy(['isDefault' => true]);
+        $defaultLocale = $this->findOneBy(['default' => true]);
 
         if (null !== $defaultLocale) {
             return $defaultLocale;
@@ -48,17 +48,17 @@ class LocaleRepository extends ServiceEntityRepository
         $this->getEntityManager()
             ->createQueryBuilder()
             ->update(Locale::class, 'locale')
-            ->set('locale.isDefault', ':isDefaultFalse')
-            ->setParameter('isDefaultFalse', false)
+            ->set('locale.default', ':isDefault')
+            ->setParameter('isDefault', false)
             ->getQuery()
             ->execute();
 
         $this->getEntityManager()
             ->createQueryBuilder()
             ->update(Locale::class, 'locale')
-            ->set('locale.isDefault', ':isDefaultTrue')
+            ->set('locale.default', ':isDefault')
             ->where('locale.id = :id')
-            ->setParameter('isDefaultTrue', true)
+            ->setParameter('isDefault', true)
             ->setParameter('id', $id)
             ->getQuery()
             ->execute();

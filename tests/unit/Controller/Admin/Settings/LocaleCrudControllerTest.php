@@ -41,6 +41,6 @@ class LocaleCrudControllerTest extends MockeryTestCase
         $this->assertInstanceOf(TextField::class, $fields[0]);
         $this->assertEquals('id', $fields[0]->getAsDto()->getProperty());
         $this->assertInstanceOf(BooleanField::class, $fields[1]);
-        $this->assertEquals('isDefault', $fields[1]->getAsDto()->getProperty());
+        $this->assertEquals('default', $fields[1]->getAsDto()->getProperty());
     }
 }

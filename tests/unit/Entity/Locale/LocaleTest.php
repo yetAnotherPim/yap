@@ -18,4 +18,20 @@ class LocaleTest extends MockeryTestCase
 
         $this->assertEquals('de_DE', $entity->getId());
     }
+
+    protected function getTargetClass(): string
+    {
+        return Locale::class;
+    }
+
+    /**
+     * @return array{array{0:string, 1:string, 2:mixed, 3?:class-string}}
+     */
+    public static function setterGetterProvider(): array
+    {
+        return [
+            ['setDefault', 'isDefault', true],
+            ['setDefault', 'isDefault', null, \TypeError::class],
+        ];
+    }
 }
