@@ -5,18 +5,31 @@ declare(strict_types=1);
 namespace App\Tests\unit\Entity\Locale;
 
 use App\Entity\Locale\Locale;
+use App\Tests\helper\Trait\SetterGetterTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Locale::class)]
 class LocaleTest extends MockeryTestCase
 {
+    use SetterGetterTrait;
+
     public function testGetId(): void
     {
         $entity = new Locale()
             ->setId('de_DE');
 
         $this->assertEquals('de_DE', $entity->getId());
+    }
+
+    /**
+     * @param ?class-string $expectedException
+     */
+    #[DataProvider('setterGetterProvider')]
+    public function testSetterGetter(string $setter, string $getter, mixed $value, ?string $expectedException = null): void
+    {
+        $this->performSetterGetterTesting($setter, $getter, $value, $expectedException);
     }
 
     protected function getTargetClass(): string

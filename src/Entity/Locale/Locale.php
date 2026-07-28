@@ -50,6 +50,7 @@ class Locale
     public function setDefault(bool $default): Locale
     {
         $this->default = $default;
+
         return $this;
     }
 
