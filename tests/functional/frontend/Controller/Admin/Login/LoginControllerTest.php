@@ -88,7 +88,7 @@ class LoginControllerTest extends WebTestCase
     public function testLogin(): void
     {
         LocaleFactory::createOne(
-            ['id' => 'en_GB', 'isDefault' => true]
+            ['id' => 'en_GB', 'default' => true]
         );
 
         $this->client->request('GET', '/admin/login');
