@@ -109,6 +109,9 @@
         "test-integration": [
             "APP_ENV=test XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite integration --coverage-html coverage_integration"
         ],
+        "test-frontend": [
+            "APP_ENV=test XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite frontend --coverage-html coverage_frontend"
+        ],
         "test-api": [
             "APP_ENV=test XDEBUG_MODE=coverage php vendor/bin/phpunit --testsuite api --coverage-html coverage_api"
         ]

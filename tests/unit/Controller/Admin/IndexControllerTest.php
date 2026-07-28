@@ -5,26 +5,40 @@ declare(strict_types=1);
 namespace App\Tests\unit\Controller\Admin;
 
 use App\Controller\Admin\IndexController;
+use App\Repository\LocaleRepository;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 #[CoversClass(IndexController::class)]
 class IndexControllerTest extends MockeryTestCase
 {
+    private LocaleRepository $localeRepository;
+    private RequestStack $requestStack;
+
+    private IndexController $controller;
+
+    public function setUp(): void
+    {
+        $this->localeRepository = \Mockery::mock(LocaleRepository::class);
+        $this->requestStack = \Mockery::mock(RequestStack::class);
+
+        $this->controller = new IndexController($this->localeRepository, $this->requestStack);
+
+        parent::setUp();
+    }
+
     public function testConfigureAssets(): void
     {
-        $controller = new IndexController();
-        $assets = $controller->configureAssets();
+        $assets = $this->controller->configureAssets();
 
         $this->assertArrayHasKey('admin', $assets->getAsDto()->getAssetMapperAssets());
     }
 
     public function testConfigureDashboardSetsTitle(): void
     {
-        $controller = new IndexController();
-
-        $dashboard = $controller->configureDashboard();
+        $dashboard = $this->controller->configureDashboard();
 
         $this->assertSame(
             'Yap',
@@ -34,10 +48,8 @@ class IndexControllerTest extends MockeryTestCase
 
     public function testConfigureMenuItemsReturnsExpectedMenuItems(): void
     {
-        $controller = new IndexController();
-
         $items = iterator_to_array(
-            $controller->configureMenuItems()
+            $this->controller->configureMenuItems()
         );
 
         $this->assertCount(9, $items);
@@ -90,10 +102,8 @@ class IndexControllerTest extends MockeryTestCase
 
     public function testConfigureMenuItemsContainsTypeSubmenuEntries(): void
     {
-        $controller = new IndexController();
-
         $items = iterator_to_array(
-            $controller->configureMenuItems()
+            $this->controller->configureMenuItems()
         );
 
         $submenu = $items[5];

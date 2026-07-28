@@ -10,7 +10,9 @@ use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Localisation\Event\EventListener\LocaleListener;
 use App\Repository\IdentifierRepository;
+use App\Repository\LocaleRepository;
 use App\Tests\TestData\Factory\Product\Identifier\IdentifierFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -25,6 +27,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(Product::class)]
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(ProductType::class)]
+#[UsesClass(LocaleListener::class)]
+#[UsesClass(LocaleRepository::class)]
 class IdentifierApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

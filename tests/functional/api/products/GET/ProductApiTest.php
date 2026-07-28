@@ -14,6 +14,8 @@ use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Localisation\Event\EventListener\LocaleListener;
+use App\Repository\LocaleRepository;
 use App\Repository\ProductRepository;
 use App\Tests\TestData\Factory\Product\ProductFactory;
 use App\Tests\TestData\Story\MultipleProductsStory;
@@ -38,6 +40,8 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(Locale::class)]
 #[UsesClass(FieldValueTranslation::class)]
 #[UsesClass(ProductType::class)]
+#[UsesClass(LocaleListener::class)]
+#[UsesClass(LocaleRepository::class)]
 class ProductApiTest extends ApiTestCase
 {
     use Factories;

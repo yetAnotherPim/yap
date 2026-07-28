@@ -9,6 +9,7 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Controller\Api\PluginWorkflowController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
+use App\Localisation\Event\EventListener\LocaleListener;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
@@ -20,6 +21,7 @@ use App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent;
 use App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent;
 use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
+use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\DatabaseTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
@@ -27,6 +29,7 @@ use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -48,6 +51,8 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
+#[UsesClass(LocaleListener::class)]
+#[UsesClass(LocaleRepository::class)]
 #[CoversMethod(Kernel::class, 'build')]
 #[CoversClass(PluginLoader::class)]
 class PluginTest extends ApiTestCase

@@ -18,6 +18,7 @@ use App\Controller\Admin\Settings\UserCrudController;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
+use App\Localisation\Event\EventListener\LocaleListener;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\PluginManager;
 use App\Repository\FieldTypeRepository;
@@ -56,6 +57,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(PluginRepository::class)]
 #[UsesClass(PluginManager::class)]
 #[UsesClass(UserCrudController::class)]
+#[UsesClass(LocaleListener::class)]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

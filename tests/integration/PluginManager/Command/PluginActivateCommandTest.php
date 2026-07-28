@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\PluginManager\Command;
 
+use App\Controller\Admin\IndexController;
 use App\Controller\Admin\Products\IdentifierCrudController;
 use App\Controller\Admin\Products\ProductCrudController;
 use App\Controller\Admin\Settings\FieldTypeCrudController;
@@ -28,6 +29,7 @@ use App\PluginManager\Event\WorkflowEvent\PluginActivateEvent;
 use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\IdentifierTypeRepository;
+use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\DatabaseTrait;
 use App\Tests\helper\Trait\PluginCommandTrait;
@@ -72,6 +74,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
 #[UsesClass(PluginCrudController::class)]
 #[UsesClass(UserCrudController::class)]
+#[UsesClass(IndexController::class)]
+#[UsesClass(LocaleRepository::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]

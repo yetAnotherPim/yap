@@ -27,6 +27,9 @@
         <testsuite name="integration">
             <directory>tests/integration</directory>
         </testsuite>
+        <testsuite name="frontend">
+            <directory>tests/functional/frontend</directory>
+        </testsuite>
         <testsuite name="api">
             <directory>tests/functional/api</directory>
         </testsuite>

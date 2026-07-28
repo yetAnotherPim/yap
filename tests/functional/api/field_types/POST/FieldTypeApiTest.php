@@ -10,6 +10,7 @@ use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
+use App\Localisation\Event\EventListener\LocaleListener;
 use App\Repository\FieldTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
@@ -27,6 +28,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(FieldTypeTitleTranslation::class)]
 #[UsesClass(RelatedTimestampableEntity::class)]
+#[UsesClass(LocaleListener::class)]
 class FieldTypeApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

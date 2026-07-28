@@ -9,8 +9,10 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
+use App\Localisation\Event\EventListener\LocaleListener;
 use App\Repository\FieldTypeRepository;
 use App\Repository\FieldTypeTitleTranslationRepository;
+use App\Repository\LocaleRepository;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
 use App\Tests\TestData\Factory\Product\Field\Type\Translation\FieldTypeTitleTranslationFactory;
@@ -27,6 +29,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(Locale::class)]
 #[UsesClass(FieldTypeTitleTranslation::class)]
 #[UsesClass(FieldTypeTitleTranslationRepository::class)]
+#[UsesClass(LocaleListener::class)]
+#[UsesClass(LocaleRepository::class)]
 class FieldTypeApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

@@ -7,8 +7,11 @@ namespace App\Tests\functional\api\identifier_types\POST;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Product\Identifier\Type\IdentifierType;
+use App\Localisation\Event\EventListener\LocaleListener;
 use App\Repository\IdentifierTypeRepository;
+use App\Repository\LocaleRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -17,6 +20,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[CoversClass(IdentifierType::class)]
 #[CoversClass(IdentifierTypeRepository::class)]
+#[UsesClass(LocaleListener::class)]
+#[UsesClass(LocaleRepository::class)]
 class IdentifierTypeApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

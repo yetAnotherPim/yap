@@ -27,6 +27,9 @@ class Locale
     #[Assert\Length(max: 8)]
     private string $id;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private bool $isDefault = false;
+
     public function setId(string $id): Locale
     {
         $this->id = $id;
@@ -37,6 +40,18 @@ class Locale
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function isDefault(): bool
+    {
+        return $this->isDefault;
+    }
+
+    public function setIsDefault(bool $isDefault): Locale
+    {
+        $this->isDefault = $isDefault;
+
+        return $this;
     }
 
     // TODO: remove translations on deletion -> api-test + integration test

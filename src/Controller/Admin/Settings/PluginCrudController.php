@@ -75,11 +75,7 @@ class PluginCrudController extends AbstractCrudController
         $this->cacheClearer->clear();
         $this->pluginManager->getPlugins();
 
-        /** @phpstan-ignore-next-line */
-        $url = $this->container->get(AdminUrlGeneratorInterface::class)->setAction(Action::INDEX)->generateUrl();
-
-        /** @phpstan-var string $url */
-        return $this->redirect($url);
+        return $this->redirectToIndex();
     }
 
     /**

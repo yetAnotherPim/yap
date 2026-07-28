@@ -9,6 +9,8 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
+use App\Localisation\Event\EventListener\LocaleListener;
+use App\Repository\LocaleRepository;
 use App\Repository\ProductTypeRepository;
 use App\Repository\ProductTypeTitleTranslationRepository;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
@@ -27,6 +29,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(Locale::class)]
 #[UsesClass(ProductTypeTitleTranslation::class)]
 #[UsesClass(ProductTypeTitleTranslationRepository::class)]
+#[UsesClass(LocaleListener::class)]
+#[UsesClass(LocaleRepository::class)]
 class ProductTypeApiTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;

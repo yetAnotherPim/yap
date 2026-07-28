@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\plugin\GET;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Controller\Admin\IndexController;
 use App\Controller\Admin\Products\IdentifierCrudController;
 use App\Controller\Admin\Products\ProductCrudController;
 use App\Controller\Admin\Settings\FieldTypeCrudController;
@@ -17,6 +18,7 @@ use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
+use App\Localisation\Event\EventListener\LocaleListener;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
@@ -28,6 +30,7 @@ use App\plugins\SamplePlugin\Decoration\ServiceDecoration;
 use App\plugins\SamplePlugin\Entity\SampleEntity;
 use App\plugins\SamplePlugin\Repository\SampleRepository;
 use App\Repository\IdentifierTypeRepository;
+use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
@@ -60,6 +63,9 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
 #[UsesClass(PluginCrudController::class)]
 #[UsesClass(UserCrudController::class)]
+#[UsesClass(LocaleListener::class)]
+#[UsesClass(LocaleRepository::class)]
+#[UsesClass(IndexController::class)]
 class PluginTest extends ApiTestCase
 {
     protected static ?bool $alwaysBootKernel = true;
