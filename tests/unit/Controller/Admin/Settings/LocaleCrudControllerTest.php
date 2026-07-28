@@ -8,6 +8,7 @@ use App\Controller\Admin\Settings\LocaleCrudController;
 use App\Entity\Locale\Locale;
 use App\Repository\LocaleRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -35,9 +36,11 @@ class LocaleCrudControllerTest extends MockeryTestCase
     {
         $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
 
-        $this->assertCount(1, $fields);
+        $this->assertCount(2, $fields);
 
         $this->assertInstanceOf(TextField::class, $fields[0]);
         $this->assertEquals('id', $fields[0]->getAsDto()->getProperty());
+        $this->assertInstanceOf(BooleanField::class, $fields[1]);
+        $this->assertEquals('isDefault', $fields[1]->getAsDto()->getProperty());
     }
 }
