@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\helper\Trait;
+namespace App\Tests\helper\Trait\Integration;
 
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\HttpKernel\KernelInterface;

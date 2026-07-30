@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\unit\Entity\Plugin;
 
 use App\Entity\Plugin\Plugin;
-use App\Tests\helper\Trait\SetterGetterTrait;
+use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

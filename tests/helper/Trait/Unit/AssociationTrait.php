@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\helper\Trait;
+namespace App\Tests\helper\Trait\Unit;
 
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\Assert;

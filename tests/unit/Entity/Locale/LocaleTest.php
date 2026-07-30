@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\unit\Entity\Locale;
 
 use App\Entity\Locale\Locale;
-use App\Tests\helper\Trait\SetterGetterTrait;
+use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

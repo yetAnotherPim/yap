@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\unit\Entity\User;
 
 use App\Entity\User\User;
-use App\Tests\helper\Trait\SetterGetterTrait;
+use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -34,6 +34,17 @@ class UserTest extends MockeryTestCase
         $entity = new User()->setEmail('');
         $this->expectException(InvalidArgumentException::class);
         $entity->getUserIdentifier();
+    }
+
+    public function testSerialize(): void
+    {
+        $entity = new User()
+            ->setEmail('test@test.de')
+            ->setPassword('test');
+
+        /** @phpstan-var User $result */
+        $result = unserialize(serialize($entity));
+        $this->assertNotEquals('test', $result->getPassword());
     }
 
     /**

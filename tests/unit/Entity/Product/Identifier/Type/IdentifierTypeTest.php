@@ -6,8 +6,8 @@ namespace App\Tests\unit\Entity\Product\Identifier\Type;
 
 use App\Entity\Product\Identifier\Type\Enum\DataType;
 use App\Entity\Product\Identifier\Type\IdentifierType;
-use App\Tests\helper\Trait\SetterGetterTrait;
-use App\Tests\helper\Trait\UpdatedAtTrait;
+use App\Tests\helper\Trait\Unit\SetterGetterTrait;
+use App\Tests\helper\Trait\Unit\UpdatedAtTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

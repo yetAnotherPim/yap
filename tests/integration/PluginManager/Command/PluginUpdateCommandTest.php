@@ -34,7 +34,7 @@ use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
 use App\Tests\helper\Trait\DatabaseTrait;
-use App\Tests\helper\Trait\PluginCommandTrait;
+use App\Tests\helper\Trait\Integration\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;

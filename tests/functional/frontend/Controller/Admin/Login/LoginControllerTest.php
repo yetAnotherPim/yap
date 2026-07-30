@@ -28,7 +28,6 @@ use App\Repository\PluginRepository;
 use App\Repository\UserRepository;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\User\UserFactory;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -44,9 +43,9 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(DefaultLocaleIsNotDefinedException::class)]
 #[CoversClass(Locale::class)]
 #[CoversClass(LocaleRepository::class)]
-#[UsesClass(PluginManager::class)]
-#[UsesClass(PluginRepository::class)]
-#[UsesClass(CacheClearer::class)]
+#[CoversClass(PluginManager::class)]
+#[CoversClass(PluginRepository::class)]
+#[CoversClass(CacheClearer::class)]
 #[UsesClass(FieldTypeCrudController::class)]
 #[UsesClass(IdentifierCrudController::class)]
 #[UsesClass(IdentifierTypeCrudController::class)]
@@ -68,8 +67,6 @@ class LoginControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $container = static::getContainer();
-        $em = $container->get('doctrine.orm.entity_manager');
-        $this->assertInstanceOf(EntityManagerInterface::class, $em);
 
         $passwordHasher = $container->get('security.user_password_hasher');
         $this->assertInstanceOf(UserPasswordHasherInterface::class, $passwordHasher);
@@ -92,40 +89,40 @@ class LoginControllerTest extends WebTestCase
         );
 
         $this->client->request('GET', '/admin/login');
-        self::assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
 
         $this->client->submitForm('Sign in', [
             '_username' => 'doesNotExist@example.com',
             '_password' => 'password',
         ]);
 
-        self::assertResponseRedirects('/admin/login');
+        $this->assertResponseRedirects('/admin/login');
         $this->client->followRedirect();
 
-        self::assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
+        $this->assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
 
         $this->client->request('GET', '/admin/login');
-        self::assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
 
         $this->client->submitForm('Sign in', [
             '_username' => 'username',
             '_password' => 'bad-password',
         ]);
 
-        self::assertResponseRedirects('/admin/login');
+        $this->assertResponseRedirects('/admin/login');
         $this->client->followRedirect();
 
-        self::assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
+        $this->assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
 
         $this->client->submitForm('Sign in', [
             '_username' => 'username',
             '_password' => 'password',
         ]);
 
-        self::assertResponseRedirects('/admin');
+        $this->assertResponseRedirects('/admin');
         $this->client->followRedirect();
 
-        self::assertSelectorNotExists('.alert-danger');
+        $this->assertSelectorNotExists('.alert-danger');
     }
 
     public function testLoginWorksIfDefaultLocaleIsNotConfiguredAndErrorIsShown(): void
@@ -137,9 +134,9 @@ class LoginControllerTest extends WebTestCase
             '_password' => 'password',
         ]);
 
-        self::assertResponseRedirects('/admin');
+        $this->assertResponseRedirects('/admin');
         $this->client->followRedirect();
 
-        self::assertSelectorTextContains('.alert-danger', 'Default locale is not configured!');
+        $this->assertSelectorTextContains('.alert-danger', 'Default locale is not configured!');
     }
 }

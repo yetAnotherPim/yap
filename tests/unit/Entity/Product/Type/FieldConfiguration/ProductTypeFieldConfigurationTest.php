@@ -8,7 +8,7 @@ use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
-use App\Tests\helper\Trait\SetterGetterTrait;
+use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

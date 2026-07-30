@@ -29,7 +29,7 @@ use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
-use App\Tests\helper\Trait\PluginCommandTrait;
+use App\Tests\helper\Trait\Integration\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;

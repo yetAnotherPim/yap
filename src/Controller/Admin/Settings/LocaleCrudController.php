@@ -41,6 +41,7 @@ class LocaleCrudController extends AbstractCrudController
                     ->linkToCrudAction('setLocaleAsDefault')
                     ->displayIf(fn (Locale $locale) => !$locale->isDefault())
             )
+            ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->update(Crud::PAGE_INDEX, Action::DELETE,
                 static fn (Action $action) => $action->displayIf(fn (Locale $locale) => !$locale->isDefault())
             );

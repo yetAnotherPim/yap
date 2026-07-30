@@ -44,7 +44,7 @@ class UserCrudController extends AbstractCrudController
                 ->setRequired(true),
             TextField::new('firstName')
                 ->setRequired(true),
-            TextField::new('LastName')
+            TextField::new('lastName')
                 ->setRequired(true),
             FormField::addTab('Password'),
         ];
@@ -95,6 +95,9 @@ class UserCrudController extends AbstractCrudController
         return $formBuilder->addEventListener(FormEvents::POST_SUBMIT, $this->hashPassword());
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function hashPassword(): \Closure
     {
         return function (PostSubmitEvent $event): void {
