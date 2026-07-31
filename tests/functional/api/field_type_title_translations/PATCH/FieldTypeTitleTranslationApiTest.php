@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\field_type_title_translations\PATCH;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Controller\Admin\IndexController;
 use App\Controller\Admin\Products\IdentifierCrudController;
 use App\Controller\Admin\Products\ProductCrudController;
 use App\Controller\Admin\Settings\FieldTypeCrudController;
@@ -53,6 +54,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductTypeCrudController::class)]
 #[UsesClass(ProductCrudController::class)]
 #[UsesClass(ProductTypeFieldConfigurationCrudController::class)]
+#[UsesClass(IndexController::class)]
 #[UsesClass(PluginCrudController::class)]
 #[UsesClass(PluginRepository::class)]
 #[UsesClass(PluginManager::class)]

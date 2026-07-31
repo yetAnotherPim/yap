@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Settings;
 
+use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -40,6 +42,10 @@ class UserCrudController extends AbstractCrudController
             FormField::addTab('Master Data'),
             TextField::new('username')
                 ->setRequired(true),
+
+            ChoiceField::new('role')
+                ->setChoices(Roles::cases()),
+
             EmailField::new('email')
                 ->setRequired(true),
             TextField::new('firstName')

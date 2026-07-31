@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FormFactory;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -43,20 +44,22 @@ class UserCrudControllerTest extends MockeryTestCase
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
         $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
-        $this->assertCount(7, $fields);
+        $this->assertCount(8, $fields);
 
         $this->assertInstanceOf(FormField::class, $fields[0]);
         $this->assertInstanceOf(TextField::class, $fields[1]);
         $this->assertEquals('username', $fields[1]->getAsDto()->getProperty());
-        $this->assertInstanceOf(EmailField::class, $fields[2]);
-        $this->assertEquals('email', $fields[2]->getAsDto()->getProperty());
-        $this->assertInstanceOf(TextField::class, $fields[3]);
-        $this->assertEquals('firstName', $fields[3]->getAsDto()->getProperty());
+        $this->assertInstanceOf(ChoiceField::class, $fields[2]);
+        $this->assertEquals('role', $fields[2]->getAsDto()->getProperty());
+        $this->assertInstanceOf(EmailField::class, $fields[3]);
+        $this->assertEquals('email', $fields[3]->getAsDto()->getProperty());
         $this->assertInstanceOf(TextField::class, $fields[4]);
-        $this->assertEquals('lastName', $fields[4]->getAsDto()->getProperty());
-        $this->assertInstanceOf(FormField::class, $fields[5]);
-        $this->assertInstanceOf(TextField::class, $fields[6]);
-        $this->assertEquals('password', $fields[6]->getAsDto()->getProperty());
+        $this->assertEquals('firstName', $fields[4]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[5]);
+        $this->assertEquals('lastName', $fields[5]->getAsDto()->getProperty());
+        $this->assertInstanceOf(FormField::class, $fields[6]);
+        $this->assertInstanceOf(TextField::class, $fields[7]);
+        $this->assertEquals('password', $fields[7]->getAsDto()->getProperty());
     }
 
     public function testGetEntityFqcn(): void

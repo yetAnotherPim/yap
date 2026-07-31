@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Entity\User;
 
+use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
 use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -24,6 +25,15 @@ class UserTest extends MockeryTestCase
         $this->setByReflection($entity, 'id', Uuid::v7());
 
         $this->assertInstanceOf(UuidV7::class, $entity->getId());
+    }
+
+    public function testGetRoles(): void
+    {
+        $user = new User();
+        $this->assertEquals([Roles::INACTIVE->name], $user->getRoles());
+
+        $user->setRole(Roles::ROLE_SUPER_ADMIN);
+        $this->assertEquals([Roles::ROLE_SUPER_ADMIN->name], $user->getRoles());
     }
 
     public function testGetUserIdentifier(): void
@@ -77,8 +87,8 @@ class UserTest extends MockeryTestCase
             ['setEmail', 'getEmail', null, \TypeError::class],
             ['setPassword', 'getPassword', 'Password'],
             ['setPassword', 'getPassword', null, \TypeError::class],
-            ['setRoles', 'getRoles', ['ROLE_1', 'ROLE_2']],
-            ['setRoles', 'getRoles', null, \TypeError::class],
+            ['setRole', 'getRole', Roles::ROLE_SUPER_ADMIN],
+            ['setRole', 'getRole', null, \TypeError::class],
         ];
     }
 }

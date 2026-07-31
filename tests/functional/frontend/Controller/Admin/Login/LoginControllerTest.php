@@ -16,6 +16,7 @@ use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
 use App\Entity\Locale\Locale;
+use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
@@ -63,6 +64,8 @@ class LoginControllerTest extends WebTestCase
 
     private KernelBrowser $client;
 
+    private UserPasswordHasherInterface $passwordHasher;
+
     protected function setUp(): void
     {
         $this->client = static::createClient();
@@ -71,21 +74,23 @@ class LoginControllerTest extends WebTestCase
         $passwordHasher = $container->get('security.user_password_hasher');
         $this->assertInstanceOf(UserPasswordHasherInterface::class, $passwordHasher);
 
-        UserFactory::createOne(
-            [
-                'username' => 'username',
-                'firstName' => 'first name',
-                'lastName' => 'last name',
-                'email' => 'email@example.com',
-                'password' => $passwordHasher->hashPassword(new User(), 'password'),
-            ]
-        );
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function testLogin(): void
     {
         LocaleFactory::createOne(
             ['id' => 'en_GB', 'default' => true]
+        );
+
+        UserFactory::createOne(
+            [
+                'username' => 'username',
+                'firstName' => 'first name',
+                'lastName' => 'last name',
+                'email' => 'email@example.com',
+                'password' => $this->passwordHasher->hashPassword(new User(), 'password'),
+            ]
         );
 
         $this->client->request('GET', '/admin/login');
@@ -123,10 +128,23 @@ class LoginControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         $this->assertSelectorNotExists('.alert-danger');
+
+        $this->client->request('GET', '/admin');
+        $this->assertResponseIsSuccessful();
     }
 
     public function testLoginWorksIfDefaultLocaleIsNotConfiguredAndErrorIsShown(): void
     {
+        UserFactory::createOne(
+            [
+                'username' => 'username',
+                'firstName' => 'first name',
+                'lastName' => 'last name',
+                'email' => 'email@example.com',
+                'password' => $this->passwordHasher->hashPassword(new User(), 'password'),
+            ]
+        );
+
         $this->client->request('GET', '/admin/login');
 
         $this->client->submitForm('Sign in', [
@@ -138,5 +156,29 @@ class LoginControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         $this->assertSelectorTextContains('.alert-danger', 'Default locale is not configured!');
+    }
+
+    public function testLoginWithInsufficientPermissionsWillNotGrantAccessToAdmin(): void
+    {
+        UserFactory::createOne(
+            [
+                'username' => 'username',
+                'role' => Roles::INACTIVE,
+                'firstName' => 'first name',
+                'lastName' => 'last name',
+                'email' => 'email@example.com',
+                'password' => $this->passwordHasher->hashPassword(new User(), 'password'),
+            ]
+        );
+
+        $this->client->request('GET', '/admin/login');
+
+        $this->client->submitForm('Sign in', [
+            '_username' => 'username',
+            '_password' => 'password',
+        ]);
+
+        $this->client->request('GET', '/admin');
+        $this->assertResponseStatusCodeSame(403);
     }
 }

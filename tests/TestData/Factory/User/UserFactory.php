@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\TestData\Factory\User;
 
+use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
@@ -26,7 +27,7 @@ final class UserFactory extends PersistentObjectFactory
             'firstName' => self::faker()->text(255),
             'lastName' => self::faker()->text(255),
             'password' => self::faker()->text(),
-            'roles' => [],
+            'role' => Roles::ROLE_SUPER_ADMIN,
             'username' => self::faker()->text(180),
         ];
     }
