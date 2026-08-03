@@ -68,7 +68,7 @@ jobs:
         - name: Run migrations
           run: bin/console doctrine:migrations:migrate
 
-        - name: run Tests
+        - name: Generate Keys
           run: php bin/console lexik:jwt:generate-keypair
 
         - name: run Tests
