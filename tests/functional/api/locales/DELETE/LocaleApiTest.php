@@ -106,4 +106,14 @@ class LocaleApiTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['id' => 'en_GB']);
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('DELETE', '/api/locales/1');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

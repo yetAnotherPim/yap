@@ -96,4 +96,14 @@ class LocaleApiTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(500);
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('POST', '/api/locales');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

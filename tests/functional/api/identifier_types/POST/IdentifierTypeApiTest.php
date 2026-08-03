@@ -73,4 +73,14 @@ class IdentifierTypeApiTest extends ApiTestCase
         $this->assertStringContainsString('"createdAt":', $response->getContent());
         $this->assertStringNotContainsString('"updatedAt":', $response->getContent());
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('POST', '/api/identifier_types');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

@@ -145,4 +145,14 @@ class ProductTypeApiTest extends ApiTestCase
         $this->assertStringContainsString('"createdAt":', $response->getContent());
         $this->assertStringContainsString('"updatedAt":', $response->getContent());
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('PATCH', '/api/product_types/1');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

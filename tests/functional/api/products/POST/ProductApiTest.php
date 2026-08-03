@@ -143,4 +143,14 @@ class ProductApiTest extends ApiTestCase
         $this->assertInstanceOf(Field::class, $field);
         $this->assertEquals('123456', $field->getValue());
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('POST', '/api/products');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

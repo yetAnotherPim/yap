@@ -514,4 +514,14 @@ class PluginTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(202);
         $this->assertJsonContains(['success' => true]);
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('POST', '/api/plugin/activate/SamplePlugin');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

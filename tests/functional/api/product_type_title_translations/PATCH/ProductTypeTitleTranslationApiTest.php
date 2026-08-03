@@ -92,4 +92,14 @@ class ProductTypeTitleTranslationApiTest extends ApiTestCase
         $this->assertStringContainsString('"createdAt":', $response->getContent());
         $this->assertStringContainsString('"updatedAt":', $response->getContent());
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('PATCH', '/api/product_type_title_translations/1');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

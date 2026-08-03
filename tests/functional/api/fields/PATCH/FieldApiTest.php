@@ -184,4 +184,14 @@ class FieldApiTest extends ApiTestCase
 
         $this->assertCount(0, $this->fieldValueTranslationRepository->findAll());
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('PATCH', '/api/fields/1');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

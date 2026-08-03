@@ -96,4 +96,14 @@ class FieldTypeApiTest extends ApiTestCase
         $this->assertStringContainsString('"\/api\/field_type_title_translations\/', $response->getContent());
         $this->assertStringContainsString('"createdAt":', $response->getContent());
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('POST', '/api/field_types');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

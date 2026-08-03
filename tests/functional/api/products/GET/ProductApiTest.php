@@ -623,6 +623,6 @@ class ProductApiTest extends ApiTestCase
     {
         $this->client->request('GET', '/api/products');
 
-        $this->assertResponseStatusCodeSame(403);
+        $this->assertResponseStatusCodeSame(401);
     }
 }

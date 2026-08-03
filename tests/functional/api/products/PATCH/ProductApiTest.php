@@ -164,4 +164,14 @@ class ProductApiTest extends ApiTestCase
 
         $this->assertCount(0, $this->identifierRepository->findAll());
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('PATCH', '/api/products/1');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

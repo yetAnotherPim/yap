@@ -114,4 +114,14 @@ class FieldApiTest extends ApiTestCase
         $this->assertStringContainsString($id, $response->getContent());
         $this->assertStringContainsString('"updatedAt":"', $response->getContent());
     }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('POST', '/api/fields');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

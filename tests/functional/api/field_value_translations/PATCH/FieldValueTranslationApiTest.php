@@ -119,6 +119,16 @@ class FieldValueTranslationApiTest extends ApiTestCase
         $this->assertStringContainsString($id, $response->getContent());
         $this->assertStringContainsString('"locale":"\/api\/locales\/en_GB","value":"Something else"', $response->getContent());
 
-        //TODO: test updating product.updated_at
+        // TODO: test updating product.updated_at
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('PATCH', '/api/field_value_translations/1');
+
+        $this->assertResponseStatusCodeSame(401);
     }
 }
