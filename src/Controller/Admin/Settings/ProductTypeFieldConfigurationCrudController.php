@@ -10,10 +10,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @extends AbstractCrudController<ProductTypeFieldConfiguration>
  */
+#[IsGranted('ROLE_ADMIN')]
 class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

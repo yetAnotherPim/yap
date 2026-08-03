@@ -34,3 +34,7 @@ phpstan.neon
 ###< friendsofphp/php-cs-fixer ###
 
 docker/
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

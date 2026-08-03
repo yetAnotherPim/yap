@@ -21,6 +21,15 @@ class LoginSuccessListener
     public function onLoginSuccess(LoginSuccessEvent $event): void
     {
         $request = $event->getRequest();
+
+        if ($request->attributes->get('_stateless', false)) {
+            return;
+        }
+
+        if (false === $request->hasSession()) {
+            return;
+        }
+
         /** @phpstan-var Session $session */
         $session = $request->getSession();
         $chosenLocale = $request->request->get('_locale');

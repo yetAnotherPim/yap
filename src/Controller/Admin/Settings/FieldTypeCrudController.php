@@ -11,10 +11,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @extends AbstractCrudController<FieldType>
  */
+#[IsGranted('ROLE_ADMIN')]
 class FieldTypeCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

@@ -96,23 +96,33 @@ class IndexController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Home', 'fa fa-home');
 
-        yield MenuItem::section('Products', 'fa fa-industry');
-        yield MenuItem::linkTo(ProductCrudController::class, 'Products', 'fas fa-table-list');
+        yield MenuItem::section('Products', 'fa fa-industry')
+            ->setPermission('ROLE_EDITOR');
+        yield MenuItem::linkTo(ProductCrudController::class, 'Products', 'fas fa-table-list')
+            ->setPermission('ROLE_EDITOR');
 
-        yield MenuItem::section('Settings', 'fa fa-gear');
-        yield MenuItem::linkTo(LocaleCrudController::class, 'Locales', 'fas fa-globe');
+        yield MenuItem::section('Settings', 'fa fa-gear')
+            ->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkTo(LocaleCrudController::class, 'Locales', 'fas fa-globe')
+            ->setPermission('ROLE_ADMIN');
 
         yield MenuItem::subMenu('Types', 'fa fa-layer-group')->setSubItems(
             [
-                MenuItem::linkTo(IdentifierTypeCrudController::class, 'Identifier', 'fas fa-fingerprint'),
-                MenuItem::linkTo(FieldTypeCrudController::class, 'Field', 'fas fa-rectangle-list'),
-                MenuItem::linkTo(ProductTypeCrudController::class, 'Product', 'fas fa-industry'),
+                MenuItem::linkTo(IdentifierTypeCrudController::class, 'Identifier', 'fas fa-fingerprint')
+                    ->setPermission('ROLE_ADMIN'),
+                MenuItem::linkTo(FieldTypeCrudController::class, 'Field', 'fas fa-rectangle-list')
+                    ->setPermission('ROLE_ADMIN'),
+                MenuItem::linkTo(ProductTypeCrudController::class, 'Product', 'fas fa-industry')
+                    ->setPermission('ROLE_ADMIN'),
             ]
-        );
+        )->setPermission('ROLE_ADMIN');
 
-        yield MenuItem::linkTo(PluginCrudController::class, 'Plugin Manager', 'fas fa-puzzle-piece');
-        yield MenuItem::linkTo(UserCrudController::class, 'User', 'fas fa-users');
+        yield MenuItem::linkTo(PluginCrudController::class, 'Plugin Manager', 'fas fa-puzzle-piece')
+            ->setPermission('ROLE_SUPER_ADMIN');
+        yield MenuItem::linkTo(UserCrudController::class, 'User', 'fas fa-users')
+            ->setPermission('ROLE_SUPER_ADMIN');
         // TODO: add route
-        yield MenuItem::linkTo(PluginCrudController::class, 'Orphaned Records', 'fas fa-trash-can');
+        yield MenuItem::linkTo(PluginCrudController::class, 'Orphaned Records', 'fas fa-trash-can')
+            ->setPermission('ROLE_SUPER_ADMIN');
     }
 }

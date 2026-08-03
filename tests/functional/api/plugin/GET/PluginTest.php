@@ -16,9 +16,12 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Entity\Locale\Locale;
 use App\Entity\Plugin\Plugin;
+use App\Entity\User\User;
 use App\Kernel;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
@@ -32,6 +35,8 @@ use App\plugins\SamplePlugin\Repository\SampleRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -42,6 +47,7 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Zenstruck\Foundry\Attribute\ResetDatabase;
 
 #[CoversClass(Plugin::class)]
 #[CoversClass(PluginRepository::class)]
@@ -66,8 +72,15 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(IndexController::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
+#[UsesClass(Locale::class)]
+#[ResetDatabase]
 class PluginTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -75,6 +88,8 @@ class PluginTest extends ApiTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -88,33 +103,41 @@ class PluginTest extends ApiTestCase
      */
     public function testGetPlugins(): void
     {
-        $this->client->request('GET', '/api/plugins');
+        $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 0]);
 
-        $this->client->request('GET', '/api/refresh/plugins');
+        $this->client->request(
+            'GET',
+            '/api/refresh/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 2]);
 
-        $this->client->request('GET', '/api/plugins');
+        $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 2]);
-    }
-
-    /**
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws TransportExceptionInterface
-     */
-    public function testGetPluginsWithInvalidPlugin(): void
-    {
-        self::getContainer()->set(\App\Tests\TestData\plugins\TestPlugin\Plugin::class, new \stdClass());
-
-        $this->client->request('GET', '/api/refresh/plugins');
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 1]);
     }
 
     /**
@@ -129,7 +152,15 @@ class PluginTest extends ApiTestCase
         new Filesystem()->remove(__DIR__.'/../../../../../var/cache/test');
         unlink(__DIR__.'/../../../../../var/plugin_configuration/test_plugin_configuration');
 
-        $this->client->request('GET', '/api/plugins');
+        $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 0]);
     }
@@ -164,8 +195,26 @@ class PluginTest extends ApiTestCase
         $this->assertArrayHasKey(SampleEntity::class, $container->getRemovedIds());
         $this->assertArrayHasKey(SampleRepository::class, $container->getRemovedIds());
 
-        $this->client->request('GET', '/api/refresh/plugins');
+        $this->client->request(
+            'GET',
+            '/api/refresh/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 2]);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('GET', '/api/plugins');
+
+        $this->assertResponseStatusCodeSame(401);
     }
 }

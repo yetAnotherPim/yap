@@ -9,10 +9,14 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\LocaleRepository;
 use App\Repository\ProductTypeRepository;
 use App\Repository\ProductTypeTitleTranslationRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Type\ProductTypeFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -30,8 +34,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductType::class)]
 #[UsesClass(ProductTypeRepository::class)]
 #[UsesClass(LocaleListener::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
 class ProductTypeTitleTranslationApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -39,6 +48,8 @@ class ProductTypeTitleTranslationApiTest extends ApiTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -53,12 +64,15 @@ class ProductTypeTitleTranslationApiTest extends ApiTestCase
     public function testPost(): void
     {
         $productType = ProductTypeFactory::createOne();
-        $locale = LocaleFactory::createOne(['id' => 'en_GB']);
+        $locale = LocaleFactory::findOrCreate(['id' => 'en_GB']);
 
         $response = $this->client->request(
             'POST',
             '/api/product_type_title_translations',
             [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "value":"123456",
                                 "productType":"/api/product_types/'.$productType->getId().'",

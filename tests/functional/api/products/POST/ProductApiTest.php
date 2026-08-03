@@ -6,13 +6,16 @@ namespace App\Tests\functional\api\products\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\FieldRepository;
 use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierRepository;
@@ -20,6 +23,8 @@ use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductTypeRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
 use App\Tests\TestData\Factory\Product\Identifier\Type\IdentifierTypeFactory;
 use App\Tests\TestData\Factory\Product\Type\ProductTypeFactory;
@@ -46,8 +51,14 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductTypeRepository::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
+#[UsesClass(Locale::class)]
 class ProductApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -64,6 +75,8 @@ class ProductApiTest extends ApiTestCase
         $this->assertInstanceOf(ProductRepository::class, $productRepository);
 
         $this->productRepository = $productRepository;
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -90,6 +103,9 @@ class ProductApiTest extends ApiTestCase
             'POST',
             '/api/products',
             [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "productType":"/api/product_types/'.$productType->getId().'",
                                 "identifiers":[

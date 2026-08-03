@@ -23,7 +23,11 @@ class LocaleListener
     {
         $request = $event->getRequest();
 
-        if (!$request->hasPreviousSession()) {
+        if ($request->attributes->get('_stateless', false)) {
+            return;
+        }
+
+        if (false === $request->hasPreviousSession()) {
             return;
         }
 

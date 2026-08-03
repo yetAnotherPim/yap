@@ -10,9 +10,13 @@ use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\LocaleRepository;
 use App\Repository\ProductTypeRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -29,8 +33,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductTypeTitleTranslation::class)]
 #[UsesClass(RelatedTimestampableEntity::class)]
 #[UsesClass(LocaleListener::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
 class ProductTypeApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -38,6 +47,8 @@ class ProductTypeApiTest extends ApiTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -51,12 +62,15 @@ class ProductTypeApiTest extends ApiTestCase
      */
     public function testPost(): void
     {
-        $locale = LocaleFactory::createOne(['id' => 'de_DE']);
+        $locale = LocaleFactory::findOrCreate(['id' => 'de_DE']);
 
         $response = $this->client->request(
             'POST',
             '/api/product_types',
             [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "title":"Generic Product",
                                 "code":"generic_product",

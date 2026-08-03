@@ -3,7 +3,7 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'bcrypt'
 
     providers:
-        app_user_provider:
+        user_provider:
             entity:
                 class: App\Entity\User\User
                 property: username
@@ -13,14 +13,26 @@ security:
             # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: user_provider
+            json_login:
+                check_path: /api/auth
+                username_path: username
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            jwt: ~
         main:
             lazy: true
-            provider: app_user_provider
+            provider: user_provider
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: admin
+
             logout:
                 path: app_logout
                 target: app_login
@@ -31,12 +43,13 @@ security:
 
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS }
-        - { path: ^/docs, roles: PUBLIC_ACCESS }
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         - { path: ^/contexts, roles: PUBLIC_ACCESS }
-        - { path: ^/auth, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth, roles: PUBLIC_ACCESS }
         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/logout, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: [ROLE_EDITOR] }
-        #- { path: ^/api, roles: ROLE_API_USER }
+        - { path: ^/api, roles: ROLE_API_USER }
         #TODO: settings for Admin only, edit user for super admin only
 
 when@test:

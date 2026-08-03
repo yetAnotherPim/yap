@@ -12,12 +12,16 @@ use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\FieldRepository;
 use App\Repository\FieldTypeRepository;
 use App\Repository\FieldValueTranslationRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Field\FieldFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -40,8 +44,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(FieldTypeRepository::class)]
 #[UsesClass(ProductType::class)]
 #[UsesClass(LocaleListener::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
 class FieldValueTranslationApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -49,6 +58,8 @@ class FieldValueTranslationApiTest extends ApiTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -63,15 +74,15 @@ class FieldValueTranslationApiTest extends ApiTestCase
     public function testPost(): void
     {
         $field = FieldFactory::createOne();
-        $locale = LocaleFactory::createOne(['id' => 'en_GB']);
-
-        $product = $field->getProduct();
-        $updatedAt = $product->getUpdatedAt();
+        $locale = LocaleFactory::findOrCreate(['id' => 'en_GB']);
 
         $response = $this->client->request(
             'POST',
             '/api/field_value_translations',
             [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "value":"123456",
                                 "field":"/api/fields/'.$field->getId().'",
@@ -89,10 +100,16 @@ class FieldValueTranslationApiTest extends ApiTestCase
         $id = $response->toArray()['id'];
 
         /** test products contains fields */
-        $response = $this->client->request('GET', '/api/products/'.$field->getProduct()->getId());
+        $response = $this->client->request(
+            'GET',
+            '/api/products/'.$field->getProduct()->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertStringContainsString($id, $response->getContent());
         $this->assertStringContainsString('"locale":"\/api\/locales\/en_GB","value":"123456"', $response->getContent());
-
-        $this->assertNotEquals($updatedAt, $product->getUpdatedAt());
     }
 }

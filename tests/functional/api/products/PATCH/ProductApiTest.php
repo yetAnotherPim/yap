@@ -6,19 +6,24 @@ namespace App\Tests\functional\api\products\PATCH;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\FieldRepository;
 use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Story\SimpleProductStory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -41,8 +46,14 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductType::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
+#[UsesClass(Locale::class)]
 class ProductApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -72,6 +83,8 @@ class ProductApiTest extends ApiTestCase
         $this->identifierRepository = $identifierRepository;
         $this->fieldRepository = $fieldRepository;
 
+        $this->auth();
+
         parent::setUp();
     }
 
@@ -93,7 +106,10 @@ class ProductApiTest extends ApiTestCase
             'PATCH',
             '/api/products/'.$product->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "fields":[]
                             }',
@@ -129,7 +145,10 @@ class ProductApiTest extends ApiTestCase
             'PATCH',
             '/api/products/'.$product->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "identifiers":[]
                             }',

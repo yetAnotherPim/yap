@@ -9,3 +9,8 @@
 
 controllers:
     resource: routing.controllers
+
+auth:
+    path: /api/auth
+    methods: ["POST"]
+    controller: App\Controller\Api\Auth\LoginController::login

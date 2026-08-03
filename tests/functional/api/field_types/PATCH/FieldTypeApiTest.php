@@ -9,10 +9,14 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\FieldTypeRepository;
 use App\Repository\FieldTypeTitleTranslationRepository;
 use App\Repository\LocaleRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
 use App\Tests\TestData\Factory\Product\Field\Type\Translation\FieldTypeTitleTranslationFactory;
@@ -31,8 +35,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(FieldTypeTitleTranslationRepository::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
 class FieldTypeApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -49,6 +58,8 @@ class FieldTypeApiTest extends ApiTestCase
         $this->assertInstanceOf(FieldTypeTitleTranslationRepository::class, $fieldTypeTitleTranslationRepository);
 
         $this->fieldTypeTitleTranslationRepository = $fieldTypeTitleTranslationRepository;
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -68,7 +79,10 @@ class FieldTypeApiTest extends ApiTestCase
             'PATCH',
             '/api/field_types/'.$fieldType->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "title":"Product name"
                             }',
@@ -95,10 +109,10 @@ class FieldTypeApiTest extends ApiTestCase
                 'title' => 'Something',
                 'translations' => [
                     FieldTypeTitleTranslationFactory::new([
-                        'locale' => LocaleFactory::new(['id' => 'en_GB']),
+                        'locale' => LocaleFactory::findOrCreate(['id' => 'en_GB']),
                     ]),
                     FieldTypeTitleTranslationFactory::new([
-                        'locale' => LocaleFactory::new(['id' => 'de_DE']),
+                        'locale' => LocaleFactory::findOrCreate(['id' => 'de_DE']),
                     ]),
                 ],
             ]
@@ -110,7 +124,10 @@ class FieldTypeApiTest extends ApiTestCase
             'PATCH',
             '/api/field_types/'.$fieldType->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "translations":[]
                             }',

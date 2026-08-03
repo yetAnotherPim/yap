@@ -19,7 +19,9 @@ use App\Controller\Admin\Settings\UserCrudController;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\PluginManager;
 use App\Repository\FieldTypeRepository;
@@ -27,6 +29,8 @@ use App\Repository\FieldTypeTitleTranslationRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
 use App\Tests\TestData\Factory\Product\Field\Type\Translation\FieldTypeTitleTranslationFactory;
@@ -37,6 +41,7 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Zenstruck\Foundry\Attribute\ResetDatabase;
 
 #[CoversClass(FieldTypeTitleTranslation::class)]
 #[CoversClass(FieldTypeTitleTranslationRepository::class)]
@@ -60,8 +65,14 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(PluginManager::class)]
 #[UsesClass(UserCrudController::class)]
 #[UsesClass(LocaleListener::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
+#[ResetDatabase]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -69,6 +80,7 @@ class FieldTypeTitleTranslationApiTest extends ApiTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+        $this->auth();
 
         parent::setUp();
     }
@@ -83,7 +95,7 @@ class FieldTypeTitleTranslationApiTest extends ApiTestCase
     public function testPatch(): void
     {
         $fieldType = FieldTypeFactory::createOne();
-        $locale = LocaleFactory::createOne(['id' => 'en_GB']);
+        $locale = LocaleFactory::findOrCreate(['id' => 'en_GB']);
 
         $translation = FieldTypeTitleTranslationFactory::createOne([
             'locale' => $locale,
@@ -95,7 +107,10 @@ class FieldTypeTitleTranslationApiTest extends ApiTestCase
             'PATCH',
             '/api/field_type_title_translations/'.$translation->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "value":"Something else"
                             }',

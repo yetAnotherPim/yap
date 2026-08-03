@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\functional\api\field\PATCH;
+namespace App\Tests\functional\api\fields\PATCH;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
@@ -12,10 +12,14 @@ use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\FieldRepository;
 use App\Repository\FieldValueTranslationRepository;
 use App\Repository\LocaleRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Field\FieldFactory;
 use App\Tests\TestData\Factory\Product\Field\Translation\FieldValueTranslationFactory;
@@ -37,8 +41,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(Product::class)]
 #[UsesClass(ProductType::class)]
 #[UsesClass(LocaleListener::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
 class FieldApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -55,6 +64,8 @@ class FieldApiTest extends ApiTestCase
         $this->assertInstanceOf(FieldValueTranslationRepository::class, $fieldValueTranslationRepository);
 
         $this->fieldValueTranslationRepository = $fieldValueTranslationRepository;
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -75,7 +86,10 @@ class FieldApiTest extends ApiTestCase
             'PATCH',
             '/api/fields/'.$field->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "value":"123456"
                             }',
@@ -99,13 +113,16 @@ class FieldApiTest extends ApiTestCase
     {
         /** @phpstan-var Field $field */
         $field = FieldFactory::createOne();
-        $locale = LocaleFactory::createOne(['id' => 'en_GB']);
+        $locale = LocaleFactory::findOrCreate(['id' => 'en_GB']);
 
         $response = $this->client->request(
             'PATCH',
             '/api/fields/'.$field->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "value":"Katalog",
                                 "translations": [
@@ -147,7 +164,10 @@ class FieldApiTest extends ApiTestCase
             'PATCH',
             '/api/fields/'.$field->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "value":"Katalog",
                                 "translations": [

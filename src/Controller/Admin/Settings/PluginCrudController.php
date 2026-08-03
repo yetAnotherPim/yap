@@ -20,10 +20,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @extends AbstractCrudController<Plugin>
  */
+#[IsGranted('ROLE_SUPER_ADMIN')]
 class PluginCrudController extends AbstractCrudController
 {
     public function __construct(

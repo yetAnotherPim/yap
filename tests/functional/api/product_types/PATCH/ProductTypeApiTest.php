@@ -9,10 +9,14 @@ use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\LocaleRepository;
 use App\Repository\ProductTypeRepository;
 use App\Repository\ProductTypeTitleTranslationRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Type\ProductTypeFactory;
 use App\Tests\TestData\Factory\Product\Type\Translation\ProductTypeTitleTranslationFactory;
@@ -31,8 +35,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductTypeTitleTranslationRepository::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
 class ProductTypeApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -49,6 +58,8 @@ class ProductTypeApiTest extends ApiTestCase
         $this->assertInstanceOf(ProductTypeTitleTranslationRepository::class, $productTypeTitleTranslationRepository);
 
         $this->productTypeTitleTranslationRepository = $productTypeTitleTranslationRepository;
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -68,7 +79,10 @@ class ProductTypeApiTest extends ApiTestCase
             'PATCH',
             '/api/product_types/'.$productType->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "title":"Awesome product",
                                 "code":"awesome_product"
@@ -98,10 +112,10 @@ class ProductTypeApiTest extends ApiTestCase
                 'code' => 'something',
                 'translations' => [
                     ProductTypeTitleTranslationFactory::new([
-                        'locale' => LocaleFactory::new(['id' => 'en_GB']),
+                        'locale' => LocaleFactory::findOrCreate(['id' => 'en_GB']),
                     ]),
                     ProductTypeTitleTranslationFactory::new([
-                        'locale' => LocaleFactory::new(['id' => 'de_DE']),
+                        'locale' => LocaleFactory::findOrCreate(['id' => 'de_DE']),
                     ]),
                 ],
             ]
@@ -113,7 +127,10 @@ class ProductTypeApiTest extends ApiTestCase
             'PATCH',
             '/api/product_types/'.$productType->getId(),
             [
-                'headers' => ['Content-Type' => 'application/merge-patch+json'],
+                'headers' => [
+                    'Content-Type' => 'application/merge-patch+json',
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "translations":[]
                             }',

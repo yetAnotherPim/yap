@@ -2,19 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\functional\api\field\POST;
+namespace App\Tests\functional\api\fields\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\FieldRepository;
 use App\Repository\FieldTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Product\Field\Type\FieldTypeFactory;
 use App\Tests\TestData\Factory\Product\ProductFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -34,8 +39,14 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(ProductType::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
+#[UsesClass(Locale::class)]
 class FieldApiTest extends ApiTestCase
 {
+    use AuthTrait;
+
     protected static ?bool $alwaysBootKernel = true;
 
     private Client $client;
@@ -43,6 +54,8 @@ class FieldApiTest extends ApiTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -68,6 +81,9 @@ class FieldApiTest extends ApiTestCase
             'POST',
             '/api/fields',
             [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
                 'body' => '{
                                 "value":"123456",
                                 "type":"/api/field_types/'.$fieldType->getId().'",
@@ -85,8 +101,17 @@ class FieldApiTest extends ApiTestCase
         $id = $response->toArray()['id'];
 
         /** test products contains fields */
-        $response = $this->client->request('GET', '/api/products/'.$product->getId());
+        $response = $this->client->request(
+            'GET',
+            '/api/products/'.$product->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+
         $this->assertStringContainsString($id, $response->getContent());
-        $this->assertNotNull($product->getUpdatedAt());
+        $this->assertStringContainsString('"updatedAt":"', $response->getContent());
     }
 }

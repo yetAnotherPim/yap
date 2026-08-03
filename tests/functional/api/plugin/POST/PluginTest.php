@@ -7,9 +7,12 @@ namespace App\Tests\functional\api\plugin\POST;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Controller\Api\PluginWorkflowController;
+use App\Entity\Locale\Locale;
 use App\Entity\Plugin\Plugin;
+use App\Entity\User\User;
 use App\Kernel;
 use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
@@ -23,6 +26,8 @@ use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\helper\Trait\DatabaseTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Doctrine\DBAL\Exception;
@@ -35,7 +40,6 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(Plugin::class)]
 #[CoversClass(PluginWorkflowEventListener::class)]
@@ -55,10 +59,14 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(LocaleRepository::class)]
 #[CoversMethod(Kernel::class, 'build')]
 #[CoversClass(PluginLoader::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
+#[UsesClass(Locale::class)]
 class PluginTest extends ApiTestCase
 {
     use DatabaseTrait;
-    use Factories;
+    use AuthTrait;
 
     protected static ?bool $alwaysBootKernel = true;
 
@@ -72,6 +80,8 @@ class PluginTest extends ApiTestCase
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
 
         $this->entityManager = $entityManager;
+
+        $this->auth();
 
         parent::setUp();
     }
@@ -116,7 +126,15 @@ class PluginTest extends ApiTestCase
      */
     public function testPluginActivationWithMissingEntity(): void
     {
-        $this->client->request('POST', '/api/plugin/activate/SamplePlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/activate/SamplePlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(412);
         $this->assertJsonContains(['success' => false, 'errorMessage' => 'Plugin invalid or not found']);
     }
@@ -138,13 +156,29 @@ class PluginTest extends ApiTestCase
             'active' => true,
         ]);
 
-        $this->client->request('GET', '/api/plugins');
+        $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 1]);
 
         $this->refreshPlugins();
 
-        $this->client->request('GET', '/api/plugins');
+        $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 2]);
 
@@ -167,7 +201,15 @@ class PluginTest extends ApiTestCase
             'active' => false,
         ]);
 
-        $response = $this->client->request('GET', '/api/refresh/plugins');
+        $response = $this->client->request(
+            'GET',
+            '/api/refresh/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
 
         $content = $response->getContent();
@@ -214,7 +256,15 @@ class PluginTest extends ApiTestCase
      */
     public function testInvalidAction(): void
     {
-        $this->client->request('POST', '/api/plugin/something/SamplePlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/something/SamplePlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(400);
         $this->assertJsonContains(['success' => false, 'errorMessage' => 'Invalid action given']);
     }
@@ -228,7 +278,15 @@ class PluginTest extends ApiTestCase
      */
     public function testInvalidPlugin(): void
     {
-        $this->client->request('POST', '/api/plugin/activate/Test');
+        $this->client->request(
+            'POST',
+            '/api/plugin/activate/Test',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(412);
         $this->assertJsonContains(['success' => false, 'errorMessage' => 'Plugin invalid or not found']);
     }
@@ -244,7 +302,15 @@ class PluginTest extends ApiTestCase
     {
         $this->refreshPlugins();
 
-        $this->client->request('POST', '/api/plugin/update/SamplePlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/update/SamplePlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(422);
         $this->assertJsonContains(['success' => false, 'errorMessage' => 'Plugin is not installed']);
     }
@@ -260,11 +326,27 @@ class PluginTest extends ApiTestCase
     {
         $this->refreshPlugins();
 
-        $this->client->request('POST', '/api/plugin/activate/TestPlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/activate/TestPlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(422);
         $this->assertJsonContains(['success' => false, 'errorMessage' => 'Oops']);
 
-        $this->client->request('POST', '/api/plugin/deactivate/TestPlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/deactivate/TestPlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(422);
         $this->assertJsonContains(['success' => false, 'errorMessage' => 'Oops']);
 
@@ -278,7 +360,15 @@ class PluginTest extends ApiTestCase
         $this->entityManager->persist($plugin);
         $this->entityManager->flush();
 
-        $this->client->request('POST', '/api/plugin/update/TestPlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/update/TestPlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(422);
         $this->assertJsonContains(['success' => false, 'errorMessage' => 'Oops']);
     }
@@ -292,17 +382,41 @@ class PluginTest extends ApiTestCase
      */
     private function refreshPlugins(): void
     {
-        $this->client->request('GET', '/api/plugins');
+        $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
 
-        $response = $this->client->request('GET', '/api/refresh/plugins');
+        $response = $this->client->request(
+            'GET',
+            '/api/refresh/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 2]);
         $content = $response->getContent();
         $this->assertStringContainsString('"active":false,"version":"0.9.0","updatable":false', $content);
         $this->assertStringNotContainsString('"installedVersion', $content);
 
-        $response = $this->client->request('GET', '/api/plugins');
+        $response = $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains(['totalItems' => 2]);
         $this->assertStringContainsString('"active":false', $response->getContent());
@@ -319,11 +433,27 @@ class PluginTest extends ApiTestCase
      */
     private function activatePlugin(): void
     {
-        $this->client->request('POST', '/api/plugin/activate/SamplePlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/activate/SamplePlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(202);
         $this->assertJsonContains(['success' => true]);
 
-        $response = $this->client->request('GET', '/api/plugins');
+        $response = $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertStringContainsString('"active":true,"installedVersion":"0.9.0"', $response->getContent());
     }
@@ -338,11 +468,27 @@ class PluginTest extends ApiTestCase
      */
     private function deactivatePlugin(): void
     {
-        $this->client->request('POST', '/api/plugin/deactivate/SamplePlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/deactivate/SamplePlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(202);
         $this->assertJsonContains(['success' => true]);
 
-        $response = $this->client->request('GET', '/api/plugins');
+        $response = $this->client->request(
+            'GET',
+            '/api/plugins',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(200);
         $this->assertStringContainsString('"active":false,"installedVersion":"0.9.0"', $response->getContent());
     }
@@ -356,7 +502,15 @@ class PluginTest extends ApiTestCase
      */
     private function updatePlugin(): void
     {
-        $this->client->request('POST', '/api/plugin/update/SamplePlugin');
+        $this->client->request(
+            'POST',
+            '/api/plugin/update/SamplePlugin',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
         $this->assertResponseStatusCodeSame(202);
         $this->assertJsonContains(['success' => true]);
     }

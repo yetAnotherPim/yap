@@ -11,10 +11,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @extends AbstractCrudController<ProductType>
  */
+#[IsGranted('ROLE_ADMIN')]
 class ProductTypeCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

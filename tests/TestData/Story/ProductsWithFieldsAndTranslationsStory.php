@@ -15,8 +15,8 @@ final class ProductsWithFieldsAndTranslationsStory extends Story
 {
     public function build(): void
     {
-        $localeDE = LocaleFactory::createOne(['id' => 'de_DE']);
-        $localeES = LocaleFactory::createOne(['id' => 'es_ES']);
+        $localeDE = LocaleFactory::find(['id' => 'de_DE']);
+        $localeES = LocaleFactory::find(['id' => 'es_ES']);
 
         $fieldType = FieldTypeFactory::createOne([
             'code' => 'product_name',
