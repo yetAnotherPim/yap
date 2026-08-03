@@ -69,4 +69,7 @@ jobs:
           run: bin/console doctrine:migrations:migrate
 
         - name: run Tests
+          run: php bin/console lexik:jwt:generate-keypair
+
+        - name: run Tests
           run: vendor/bin/phpunit --testsuite api
