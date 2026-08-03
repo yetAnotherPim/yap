@@ -37,11 +37,8 @@ class LocaleListenerTest extends MockeryTestCase
 
     public function testOnKernelRequestReturnsWhenNoPreviousSession(): void
     {
-        $request = \Mockery::mock(Request::class);
-
-        $request->shouldReceive('hasPreviousSession')
-            ->once()
-            ->andReturnFalse();
+        $request = Request::create('/');
+        // No session is set, so hasPreviousSession() will return false
 
         $event = \Mockery::mock(RequestEvent::class);
         $event->shouldReceive('getRequest')
@@ -57,25 +54,18 @@ class LocaleListenerTest extends MockeryTestCase
     public function testOnKernelRequestUsesLocaleFromSession(): void
     {
         $session = \Mockery::mock(Session::class);
+        $session
+            ->shouldReceive('getName')
+            ->andReturn('MOCK_SESSION');
 
         $session->shouldReceive('get')
             ->once()
             ->with('_locale')
             ->andReturn('de_DE');
 
-        $request = \Mockery::mock(Request::class);
-
-        $request->shouldReceive('hasPreviousSession')
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getSession')
-            ->twice()
-            ->andReturn($session);
-
-        $request->shouldReceive('setLocale')
-            ->once()
-            ->with('de_DE');
+        $request = Request::create('/');
+        $request->cookies->set('MOCK_SESSION', 'session_id');
+        $request->setSession($session);
 
         $event = \Mockery::mock(RequestEvent::class);
         $event->shouldReceive('getRequest')
@@ -86,6 +76,8 @@ class LocaleListenerTest extends MockeryTestCase
             ->shouldNotReceive('getDefaultLocale');
 
         $this->listener->onKernelRequest($event);
+
+        $this->assertEquals('de_DE', $request->getLocale());
     }
 
     public function testOnKernelRequestUsesDefaultLocale(): void
@@ -101,25 +93,16 @@ class LocaleListenerTest extends MockeryTestCase
             ->andReturn($locale);
 
         $session = \Mockery::mock(Session::class);
+        $session->shouldReceive('getName')->andReturn('MOCK_SESSION');
 
         $session->shouldReceive('get')
             ->once()
             ->with('_locale')
             ->andReturnNull();
 
-        $request = \Mockery::mock(Request::class);
-
-        $request->shouldReceive('hasPreviousSession')
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getSession')
-            ->twice()
-            ->andReturn($session);
-
-        $request->shouldReceive('setLocale')
-            ->once()
-            ->with('en');
+        $request = Request::create('/');
+        $request->cookies->set('MOCK_SESSION', 'session_id');
+        $request->setSession($session);
 
         $event = \Mockery::mock(RequestEvent::class);
         $event->shouldReceive('getRequest')
@@ -127,6 +110,27 @@ class LocaleListenerTest extends MockeryTestCase
             ->andReturn($request);
 
         $this->listener->onKernelRequest($event);
+
+        $this->assertEquals('en', $request->getLocale());
+    }
+
+    public function testOnKernelRequestReturnsWhenStateless(): void
+    {
+        $request = Request::create('/');
+        $request->attributes->set('_stateless', true);
+
+        $event = \Mockery::mock(RequestEvent::class);
+        $event->shouldReceive('getRequest')
+            ->once()
+            ->andReturn($request);
+
+        $this->localeRepositoryMock
+            ->shouldNotReceive('getDefaultLocale');
+
+        $this->listener->onKernelRequest($event);
+
+        // Locale should remain default 'en'
+        $this->assertEquals('en', $request->getLocale());
     }
 
     public function testOnKernelRequestAddsFlashMessageWhenNoDefaultLocaleExists(): void
@@ -140,6 +144,7 @@ class LocaleListenerTest extends MockeryTestCase
             ->with('error', $exception->getMessage());
 
         $session = \Mockery::mock(Session::class);
+        $session->shouldReceive('getName')->andReturn('MOCK_SESSION');
 
         $session->shouldReceive('get')
             ->once()
@@ -150,17 +155,9 @@ class LocaleListenerTest extends MockeryTestCase
             ->once()
             ->andReturn($flashBag);
 
-        $request = \Mockery::mock(Request::class);
-
-        $request->shouldReceive('hasPreviousSession')
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getSession')
-            ->times(2)
-            ->andReturn($session);
-
-        $request->shouldNotReceive('setLocale');
+        $request = Request::create('/');
+        $request->cookies->set('MOCK_SESSION', 'session_id');
+        $request->setSession($session);
 
         $event = \Mockery::mock(RequestEvent::class);
         $event->shouldReceive('getRequest')

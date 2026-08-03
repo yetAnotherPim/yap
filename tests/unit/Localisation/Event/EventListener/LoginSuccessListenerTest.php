@@ -160,4 +160,40 @@ class LoginSuccessListenerTest extends MockeryTestCase
 
         $this->assertSame('fr', $request->getLocale());
     }
+
+    public function testOnLoginSuccessReturnsWhenStateless(): void
+    {
+        $request = Request::create('/login', 'POST');
+        $request->attributes->set('_stateless', true);
+
+        $event = \Mockery::mock(LoginSuccessEvent::class);
+        $event->shouldReceive('getRequest')
+            ->once()
+            ->andReturn($request);
+
+        $this->localeRepositoryMock
+            ->shouldNotReceive('getDefaultLocale');
+
+        $this->listener->onLoginSuccess($event);
+
+        $this->assertSame('en', $request->getLocale());
+    }
+
+    public function testOnLoginSuccessReturnsWhenNoSession(): void
+    {
+        $request = Request::create('/login', 'POST');
+        // No session is set, so hasSession() will return false
+
+        $event = \Mockery::mock(LoginSuccessEvent::class);
+        $event->shouldReceive('getRequest')
+            ->once()
+            ->andReturn($request);
+
+        $this->localeRepositoryMock
+            ->shouldNotReceive('getDefaultLocale');
+
+        $this->listener->onLoginSuccess($event);
+
+        $this->assertSame('en', $request->getLocale());
+    }
 }
