@@ -16,7 +16,8 @@ use Webmozart\Assert\Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
+#[ORM\UniqueConstraint(name: 'uniq_user_username', fields: ['username'])]
+#[ORM\UniqueConstraint(name: 'uniq_user_email', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     // TODO: On insufficient permissions, redirect to login and display flash message21

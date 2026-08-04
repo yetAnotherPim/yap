@@ -34,7 +34,6 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(LoginController::class)]
 #[CoversClass(User::class)]
@@ -60,8 +59,6 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(IndexController::class)]
 class LoginControllerTest extends WebTestCase
 {
-    use Factories;
-
     private KernelBrowser $client;
 
     private UserPasswordHasherInterface $passwordHasher;

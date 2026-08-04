@@ -26,7 +26,7 @@ class RolesTest extends MockeryTestCase
             ->with($translationKey, [], null, 'de_DE')
             ->andReturn('translated-'.$translationKey);
 
-        self::assertSame(
+        $this->assertSame(
             'translated-'.$translationKey,
             $role->trans($translator, 'de_DE')
         );
