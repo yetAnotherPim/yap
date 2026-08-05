@@ -31,6 +31,12 @@ class ProductTypeTitleTranslationTest extends MockeryTestCase
         $this->assertInstanceOf(UuidV7::class, $entity->getId());
     }
 
+    public function testGetUpdatableRelations(): void
+    {
+        $entity = new ProductTypeTitleTranslation();
+        $this->assertEquals([ProductType::class => 'productType'], $entity->getUpdatableRelations());
+    }
+
     /**
      * @param ?class-string $expectedException
      */

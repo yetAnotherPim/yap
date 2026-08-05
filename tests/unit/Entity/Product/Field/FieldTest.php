@@ -11,7 +11,6 @@ use App\Entity\Product\Product;
 use App\Tests\helper\Trait\Unit\AssociationTrait;
 use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use App\Tests\helper\Trait\Unit\UpdatedAtTrait;
-use App\Tests\helper\Trait\Unit\UpdateRelatedTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -23,7 +22,6 @@ class FieldTest extends MockeryTestCase
 {
     use SetterGetterTrait;
     use UpdatedAtTrait;
-    use UpdateRelatedTrait;
     use AssociationTrait;
 
     public function testGetId(): void
@@ -32,6 +30,12 @@ class FieldTest extends MockeryTestCase
         $this->setByReflection($entity, 'id', Uuid::v7());
 
         $this->assertInstanceOf(UuidV7::class, $entity->getId());
+    }
+
+    public function testGetUpdatableRelations(): void
+    {
+        $entity = new Field();
+        $this->assertEquals([Product::class => 'product'], $entity->getUpdatableRelations());
     }
 
     /**

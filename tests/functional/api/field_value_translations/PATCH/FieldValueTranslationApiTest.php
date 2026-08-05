@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\field_value_translation\PATCH;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
@@ -33,6 +34,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(FieldValueTranslation::class)]
 #[CoversClass(FieldValueTranslationRepository::class)]
 #[UsesClass(Field::class)]
@@ -84,6 +86,21 @@ class FieldValueTranslationApiTest extends ApiTestCase
         ]);
 
         $response = $this->client->request(
+            'GET',
+            '/api/products/'.$field->getProduct()->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $productData = $response->toArray();
+        $oldUpdatedAt = $productData['updatedAt'] ?? null;
+
+        // Wait a moment to ensure system clock moves forward
+        sleep(1);
+
+        $response = $this->client->request(
             'PATCH',
             '/api/field_value_translations/'.$translation->getId(),
             [
@@ -119,7 +136,9 @@ class FieldValueTranslationApiTest extends ApiTestCase
         $this->assertStringContainsString($id, $response->getContent());
         $this->assertStringContainsString('"locale":"\/api\/locales\/en_GB","value":"Something else"', $response->getContent());
 
-        // TODO: test updating product.updated_at
+        $productData = $response->toArray();
+        $this->assertArrayHasKey('updatedAt', $productData);
+        $this->assertNotEquals($oldUpdatedAt, $productData['updatedAt'], 'Product updatedAt should have changed');
     }
 
     /**

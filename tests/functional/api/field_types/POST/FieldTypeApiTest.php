@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\field_types\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
@@ -26,6 +27,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(FieldType::class)]
 #[CoversClass(FieldTypeRepository::class)]
 #[UsesClass(Locale::class)]

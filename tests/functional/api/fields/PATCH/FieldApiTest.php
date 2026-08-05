@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\fields\PATCH;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
@@ -18,6 +19,7 @@ use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\FieldRepository;
 use App\Repository\FieldValueTranslationRepository;
 use App\Repository\LocaleRepository;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
@@ -31,6 +33,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(Field::class)]
 #[CoversClass(FieldRepository::class)]
 #[UsesClass(Locale::class)]
@@ -39,6 +42,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(FieldValueTranslationRepository::class)]
 #[UsesClass(FieldType::class)]
 #[UsesClass(Product::class)]
+#[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductType::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(User::class)]
@@ -83,6 +87,21 @@ class FieldApiTest extends ApiTestCase
         $field = FieldFactory::createOne();
 
         $response = $this->client->request(
+            'GET',
+            '/api/products/'.$field->getProduct()->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $productData = $response->toArray();
+        $oldUpdatedAt = $productData['updatedAt'] ?? null;
+
+        // Wait a moment to ensure system clock moves forward
+        sleep(1);
+
+        $response = $this->client->request(
             'PATCH',
             '/api/fields/'.$field->getId(),
             [
@@ -100,6 +119,19 @@ class FieldApiTest extends ApiTestCase
         $this->assertJsonContains(['value' => '123456']);
         $this->assertStringContainsString('"createdAt":', $response->getContent());
         $this->assertStringContainsString('"updatedAt":', $response->getContent());
+
+        $response = $this->client->request(
+            'GET',
+            '/api/products/'.$field->getProduct()->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $productData = $response->toArray();
+        $this->assertArrayHasKey('updatedAt', $productData);
+        $this->assertNotEquals($oldUpdatedAt, $productData['updatedAt'], 'Product updatedAt should have changed');
     }
 
     /**

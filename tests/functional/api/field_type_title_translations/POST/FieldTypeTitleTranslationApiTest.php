@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\field_type_title_translations\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
@@ -27,6 +28,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(FieldTypeTitleTranslation::class)]
 #[CoversClass(FieldTypeTitleTranslationRepository::class)]
 #[UsesClass(Locale::class)]

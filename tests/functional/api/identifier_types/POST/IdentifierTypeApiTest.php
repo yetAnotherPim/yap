@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\identifier_types\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\User\User;
@@ -23,6 +24,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(IdentifierType::class)]
 #[CoversClass(IdentifierTypeRepository::class)]
 #[UsesClass(LocaleListener::class)]

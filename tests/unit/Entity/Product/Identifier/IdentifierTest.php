@@ -10,7 +10,6 @@ use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use App\Tests\helper\Trait\Unit\UpdatedAtTrait;
-use App\Tests\helper\Trait\Unit\UpdateRelatedTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -22,7 +21,6 @@ class IdentifierTest extends MockeryTestCase
 {
     use SetterGetterTrait;
     use UpdatedAtTrait;
-    use UpdateRelatedTrait;
 
     public function testGetId(): void
     {
@@ -30,6 +28,12 @@ class IdentifierTest extends MockeryTestCase
         $this->setByReflection($entity, 'id', Uuid::v7());
 
         $this->assertInstanceOf(UuidV7::class, $entity->getId());
+    }
+
+    public function testGetUpdatableRelations(): void
+    {
+        $entity = new Identifier();
+        $this->assertEquals([Product::class => 'product'], $entity->getUpdatableRelations());
     }
 
     public function testGetTypedValue(): void

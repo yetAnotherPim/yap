@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\identifiers\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
@@ -30,6 +31,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(Identifier::class)]
 #[CoversClass(IdentifierRepository::class)]
 #[UsesClass(Product::class)]
@@ -76,6 +78,21 @@ class IdentifierApiTest extends ApiTestCase
         $product = ProductFactory::createOne();
 
         $response = $this->client->request(
+            'GET',
+            '/api/products/'.$product->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $productData = $response->toArray();
+        $oldUpdatedAt = $productData['updatedAt'] ?? null;
+
+        // Wait a moment to ensure system clock moves forward
+        sleep(1);
+
+        $response = $this->client->request(
             'POST',
             '/api/identifiers',
             [
@@ -109,6 +126,10 @@ class IdentifierApiTest extends ApiTestCase
             ]
         );
         $this->assertStringContainsString($id, $response->getContent());
+
+        $productData = $response->toArray();
+        $this->assertArrayHasKey('updatedAt', $productData);
+        $this->assertNotEquals($oldUpdatedAt, $productData['updatedAt'], 'Product updatedAt should have changed');
     }
 
     /**

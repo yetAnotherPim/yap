@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\product_types\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\ProductType;
@@ -26,6 +27,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(ProductType::class)]
 #[CoversClass(ProductTypeRepository::class)]
 #[UsesClass(Locale::class)]

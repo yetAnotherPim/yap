@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\fields\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
@@ -30,6 +31,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(Field::class)]
 #[CoversClass(FieldRepository::class)]
 #[UsesClass(FieldType::class)]
@@ -75,7 +77,20 @@ class FieldApiTest extends ApiTestCase
         /** @phpstan-var Product $product */
         $product = ProductFactory::createOne();
 
-        $this->assertNull($product->getUpdatedAt());
+        $response = $this->client->request(
+            'GET',
+            '/api/products/'.$product->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $productData = $response->toArray();
+        $oldUpdatedAt = $productData['updatedAt'] ?? null;
+
+        // Wait a moment to ensure system clock moves forward
+        sleep(1);
 
         $response = $this->client->request(
             'POST',
@@ -112,7 +127,10 @@ class FieldApiTest extends ApiTestCase
         );
 
         $this->assertStringContainsString($id, $response->getContent());
-        $this->assertStringContainsString('"updatedAt":"', $response->getContent());
+
+        $productData = $response->toArray();
+        $this->assertArrayHasKey('updatedAt', $productData);
+        $this->assertNotEquals($oldUpdatedAt, $productData['updatedAt'], 'Product updatedAt should have changed');
     }
 
     /**

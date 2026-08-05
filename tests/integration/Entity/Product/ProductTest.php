@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Entity\Product;
 
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
@@ -20,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(Product::class)]
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[UsesClass(Identifier::class)]
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(IdentifierRepository::class)]

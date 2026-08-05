@@ -15,6 +15,7 @@ use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
 use App\Controller\Api\PluginWorkflowController;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Plugin\Plugin;
 use App\Kernel;
 use App\PluginManager\Cache\CacheClearer;
@@ -76,6 +77,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[UsesClass(UserCrudController::class)]
 #[UsesClass(IndexController::class)]
 #[UsesClass(LocaleRepository::class)]
+#[UsesClass(RelatedTimestampUpdater::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]

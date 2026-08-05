@@ -9,7 +9,6 @@ use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use App\Tests\helper\Trait\Unit\UpdatedAtTrait;
-use App\Tests\helper\Trait\Unit\UpdateRelatedTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -21,7 +20,6 @@ class FieldTypeTitleTranslationTest extends MockeryTestCase
 {
     use SetterGetterTrait;
     use UpdatedAtTrait;
-    use UpdateRelatedTrait;
 
     public function testGetId(): void
     {
@@ -29,6 +27,12 @@ class FieldTypeTitleTranslationTest extends MockeryTestCase
         $this->setByReflection($entity, 'id', Uuid::v7());
 
         $this->assertInstanceOf(UuidV7::class, $entity->getId());
+    }
+
+    public function testGetUpdatableRelations(): void
+    {
+        $entity = new FieldTypeTitleTranslation();
+        $this->assertEquals([FieldType::class => 'fieldType'], $entity->getUpdatableRelations());
     }
 
     /**

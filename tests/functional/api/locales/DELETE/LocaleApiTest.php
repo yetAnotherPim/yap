@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\locales\DELETE;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
@@ -22,6 +23,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(Locale::class)]
 #[CoversClass(LocaleRepository::class)]
 #[UsesClass(LocaleListener::class)]

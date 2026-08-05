@@ -16,6 +16,7 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
@@ -43,6 +44,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Zenstruck\Foundry\Attribute\ResetDatabase;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(FieldTypeTitleTranslation::class)]
 #[CoversClass(FieldTypeTitleTranslationRepository::class)]
 #[UsesClass(Locale::class)]

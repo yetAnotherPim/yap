@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\product_type_title_translations\POST;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
@@ -27,6 +28,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(ProductTypeTitleTranslation::class)]
 #[CoversClass(ProductTypeTitleTranslationRepository::class)]
 #[UsesClass(Locale::class)]

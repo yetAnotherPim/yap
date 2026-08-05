@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Entity\Product\Identifier;
 
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
@@ -20,10 +21,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Zenstruck\Foundry\Test\Factories;
 
 #[CoversClass(Product::class)]
-#[UsesClass(Identifier::class)]
+#[CoversClass(Identifier::class)]
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(IdentifierRepository::class)]
 #[UsesClass(Field::class)]
@@ -32,7 +33,6 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(ProductType::class)]
 class IdentifierTest extends KernelTestCase
 {
-    use Factories;
     private EntityManagerInterface $entityManager;
 
     public function setUp(): void

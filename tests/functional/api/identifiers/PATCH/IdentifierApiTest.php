@@ -6,6 +6,7 @@ namespace App\Tests\functional\api\identifiers\PATCH;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
@@ -16,6 +17,7 @@ use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Repository\IdentifierRepository;
 use App\Repository\LocaleRepository;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Product\Identifier\IdentifierFactory;
@@ -27,11 +29,13 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+#[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(Identifier::class)]
 #[CoversClass(IdentifierRepository::class)]
 #[UsesClass(Product::class)]
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(ProductType::class)]
+#[UsesClass(ProductRepository::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(User::class)]
@@ -68,6 +72,21 @@ class IdentifierApiTest extends ApiTestCase
         $identifier = IdentifierFactory::createOne();
 
         $response = $this->client->request(
+            'GET',
+            '/api/products/'.$identifier->getProduct()->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $productData = $response->toArray();
+        $oldUpdatedAt = $productData['updatedAt'] ?? null;
+
+        // Wait a moment to ensure system clock moves forward
+        sleep(1);
+
+        $response = $this->client->request(
             'PATCH',
             '/api/identifiers/'.$identifier->getId(),
             [
@@ -85,6 +104,19 @@ class IdentifierApiTest extends ApiTestCase
         $this->assertJsonContains(['value' => '123456']);
         $this->assertStringContainsString('"createdAt":', $response->getContent());
         $this->assertStringContainsString('"updatedAt":', $response->getContent());
+
+        $response = $this->client->request(
+            'GET',
+            '/api/products/'.$identifier->getProduct()->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $productData = $response->toArray();
+        $this->assertArrayHasKey('updatedAt', $productData);
+        $this->assertNotEquals($oldUpdatedAt, $productData['updatedAt'], 'Product updatedAt should have changed');
     }
 
     /**

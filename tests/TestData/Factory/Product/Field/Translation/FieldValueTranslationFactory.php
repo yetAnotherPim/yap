@@ -26,7 +26,7 @@ final class FieldValueTranslationFactory extends PersistentObjectFactory
         return [
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'field' => FieldFactory::new(),
-            'locale' => LocaleFactory::new(['id' => self::faker()->locale()]),
+            'locale' => LocaleFactory::findOrCreate(['id' => self::faker()->locale()]),
         ];
     }
 }
