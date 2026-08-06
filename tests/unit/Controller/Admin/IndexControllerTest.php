@@ -12,6 +12,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,14 +30,18 @@ class IndexControllerTest extends MockeryTestCase
     /** @var RequestStack|MockInterface */
     private RequestStack $requestStack;
 
+    /** @var Packages|MockInterface */
+    private Packages $assets;
+
     private IndexController $controller;
 
     public function setUp(): void
     {
         $this->localeRepository = \Mockery::mock(LocaleRepository::class);
         $this->requestStack = \Mockery::mock(RequestStack::class);
+        $this->assets = \Mockery::mock(Packages::class);
 
-        $this->controller = new IndexController($this->localeRepository, $this->requestStack);
+        $this->controller = new IndexController($this->localeRepository, $this->requestStack, $this->assets);
 
         parent::setUp();
     }
@@ -152,13 +157,30 @@ class IndexControllerTest extends MockeryTestCase
         $this->assertArrayHasKey('admin', $assets->getAsDto()->getAssetMapperAssets());
     }
 
-    public function testConfigureDashboardSetsTitle(): void
+    public function testConfigureDashboard(): void
     {
+        $this->assets
+            ->shouldReceive('getUrl')
+            ->once()
+            ->with('images/logo/yap-logo-header.webp')
+            ->andReturn('assets/images/favicon/yap-logo-header.webp');
+
+        $this->assets
+            ->shouldReceive('getUrl')
+            ->once()
+            ->with('images/favicon/favicon.svg')
+            ->andReturn('assets/images/favicon/favicon.svg');
+
         $dashboard = $this->controller->configureDashboard();
 
         $this->assertSame(
-            'Yap',
+            '<img src="assets/images/favicon/yap-logo-header.webp" alt="YAP" class="yap-admin-logo">',
             $dashboard->getAsDto()->getTitle()
+        );
+
+        $this->assertSame(
+            'assets/images/favicon/favicon.svg',
+            $dashboard->getAsDto()->getFaviconPath()
         );
     }
 

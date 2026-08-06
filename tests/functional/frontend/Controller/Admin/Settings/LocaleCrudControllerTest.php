@@ -15,6 +15,7 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
@@ -55,6 +56,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(UserCrudController::class)]
 #[UsesClass(IndexController::class)]
 #[UsesClass(LoginController::class)]
+#[UsesClass(RelatedTimestampUpdater::class)]
 class LocaleCrudControllerTest extends WebTestCase
 {
     use Factories;

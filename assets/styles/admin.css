@@ -25,3 +25,10 @@ div.sortable-collection {
 div.field-collection-item > div.accordion-item * .col-form-label.required:after {
  display: none;
 }
+
+.yap-admin-logo {
+    display: block;
+    width: auto;
+    height: 32px;
+    max-width: 140px;
+}

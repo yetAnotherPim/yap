@@ -19,6 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +32,7 @@ class IndexController extends AbstractDashboardController
     public function __construct(
         private readonly LocaleRepository $localeRepository,
         private readonly RequestStack $requestStack,
+        private readonly Packages $assets,
     ) {
     }
 
@@ -88,8 +90,20 @@ class IndexController extends AbstractDashboardController
 
     public function configureDashboard(): Dashboard
     {
+        $logoUrl = $this->assets->getUrl(
+            'images/logo/yap-logo-header.webp'
+        );
+
+        $faviconUrl = $this->assets->getUrl(
+            'images/favicon/favicon.svg'
+        );
+
         return Dashboard::new()
-            ->setTitle('Yap');
+            ->setTitle(\sprintf(
+                '<img src="%s" alt="YAP" class="yap-admin-logo">',
+                htmlspecialchars($logoUrl, ENT_QUOTES),
+            ))
+            ->setFaviconPath($faviconUrl);
     }
 
     public function configureMenuItems(): iterable

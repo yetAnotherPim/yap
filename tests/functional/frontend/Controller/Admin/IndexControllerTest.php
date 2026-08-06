@@ -15,6 +15,7 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
@@ -57,6 +58,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[UsesClass(UserCrudController::class)]
 #[UsesClass(IndexController::class)]
 #[UsesClass(Roles::class)]
+#[UsesClass(RelatedTimestampUpdater::class)]
 class IndexControllerTest extends WebTestCase
 {
     use LoginTrait;
