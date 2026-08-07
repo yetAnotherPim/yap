@@ -44,7 +44,9 @@ class ProductTypeCrudController extends AbstractCrudController
                 ->setLabel(false)
                 ->addCssClass('sortable-collection')
                 ->setEntryToStringMethod(
-                    fn (ProductTypeFieldConfiguration $productTypeFieldConfiguration): string => $productTypeFieldConfiguration->getFieldType()?->getTitle() ?? ''
+                    fn (ProductTypeFieldConfiguration $productTypeFieldConfiguration): string => (null !== $productTypeFieldConfiguration->getFieldType())
+                        ? $productTypeFieldConfiguration->getFieldType()->getTitle().' ('.$productTypeFieldConfiguration->getFieldType()->getCode().' - '.$productTypeFieldConfiguration->getFieldType()->getInputType()->name.')'
+                        : ''
                 ),
         ];
     }

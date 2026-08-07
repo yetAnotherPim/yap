@@ -40,7 +40,7 @@ class FieldTypeCrudController extends AbstractCrudController
     {
         return $crud
             ->autocomplete(
-                callback: static fn (FieldType $fieldType) => $fieldType->getTitle()
+                callback: static fn (FieldType $fieldType) => $fieldType->getTitle().' ('.$fieldType->getCode().' - '.$fieldType->getInputType()->name.')',
             )
         ;
     }

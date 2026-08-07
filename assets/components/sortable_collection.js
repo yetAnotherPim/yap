@@ -4,7 +4,6 @@ export default {
     SELECTORS: {
         COLLECTION: 'div.sortable-collection',
         COLLECTION_ITEM: '.field-collection-item',
-        TARGET_NODE: ':scope > div.form-widget > div.ea-form-collection-items > div.accordion > div.form-widget-compound > div',
         POSITION_INPUT: 'input[name*="[position]"]',
         TITLE_UPDATE_PREFIX: '[data-title-update-selector-prefix]',
         HAS_ERROR: '.has-error',
@@ -22,12 +21,19 @@ export default {
             this.updatePositions(event);
         });
         document.addEventListener('ea.collection.item-added', (event) => {
+            this.applySortable();
+
             const {newElement} = event.detail;
             this.dispatchUpdateEvent(newElement.parentNode);
         });
         document.addEventListener('ea.collection.item-removed', (event) => {
             const {collection} = event.detail;
-            this.dispatchUpdateEvent(collection.querySelector(this.SELECTORS.TARGET_NODE));
+
+            const targetNode = collection.querySelector(
+                this.SELECTORS.COLLECTION_ITEM
+            )?.parentElement;
+
+            this.dispatchUpdateEvent(targetNode);
         });
 
         document.addEventListener('change', (event) => {
@@ -135,20 +141,18 @@ export default {
     },
 
     applySortable() {
-        const collections = document.querySelectorAll(this.SELECTORS.COLLECTION);
+        document.querySelectorAll(this.SELECTORS.COLLECTION).forEach(collection => {
+            const targetNode = collection.querySelector(
+                this.SELECTORS.COLLECTION_ITEM
+            )?.parentElement;
 
-        collections.forEach((collection) => {
-            const targetNode = collection.querySelector(this.SELECTORS.TARGET_NODE);
-
-            if (!targetNode) {
+            if (!targetNode || Sortable.get(targetNode)) {
                 return;
             }
 
             Sortable.create(targetNode, {
                 animation: 150,
-                onEnd: () => {
-                    this.dispatchUpdateEvent(targetNode);
-                }
+                onEnd: () => this.dispatchUpdateEvent(targetNode),
             });
         });
     },
