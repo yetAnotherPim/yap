@@ -27,6 +27,7 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
     {
         return [
             AssociationField::new('fieldType')
+                ->setHtmlAttribute('data-title-field', 'true')
                 ->setRequired(true)
                 ->autocomplete(
                     callback: static fn (FieldType $fieldType): string => $fieldType->getTitle(),

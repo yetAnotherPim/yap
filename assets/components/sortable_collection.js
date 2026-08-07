@@ -5,7 +5,7 @@ export default {
         COLLECTION: 'div.sortable-collection',
         COLLECTION_ITEM: '.field-collection-item',
         POSITION_INPUT: 'input[name*="[position]"]',
-        TITLE_UPDATE_PREFIX: '[data-title-update-selector-prefix]',
+        TITLE_FIELD: '[data-title-field]',
         HAS_ERROR: '.has-error',
         TITLE_ELEMENT: '.accordion-button'
     },
@@ -20,36 +20,27 @@ export default {
         document.addEventListener('position:updated', (event) => {
             this.updatePositions(event);
         });
-        document.addEventListener('ea.collection.item-added', (event) => {
-            this.applySortable();
 
-            const {newElement} = event.detail;
+        document.addEventListener('ea.collection.item-added', (event) => {
+            const { collection, newElement } = event.detail;
+
+            this.applySortable(collection);
             this.dispatchUpdateEvent(newElement.parentNode);
         });
+
         document.addEventListener('ea.collection.item-removed', (event) => {
             const {collection} = event.detail;
-
-            const targetNode = collection.querySelector(
-                this.SELECTORS.COLLECTION_ITEM
-            )?.parentElement;
+            const targetNode = this.getSortableContainer(collection);
 
             this.dispatchUpdateEvent(targetNode);
         });
 
         document.addEventListener('change', (event) => {
-            const collection = event.target.closest(this.SELECTORS.TITLE_UPDATE_PREFIX);
-
-            if (!collection) {
+            if (!event.target.matches(this.SELECTORS.TITLE_FIELD)) {
                 return;
             }
 
-            const prefix = collection.dataset.titleUpdateSelectorPrefix;
-
-             if (!event.target.matches(`[id^="${prefix}"][id$="_autocomplete"]`)) {
-                return;
-            }
-
-             this.updateTitle(event.target);
+            this.updateTitle(event.target);
         });
     },
 
@@ -133,6 +124,10 @@ export default {
     },
 
     dispatchUpdateEvent(targetNode) {
+        if (!targetNode) {
+            return;
+        }
+
         const event = new CustomEvent('position:updated', {
             bubbles: true,
             detail: { targetNode }
@@ -140,11 +135,13 @@ export default {
         targetNode.dispatchEvent(event);
     },
 
-    applySortable() {
-        document.querySelectorAll(this.SELECTORS.COLLECTION).forEach(collection => {
-            const targetNode = collection.querySelector(
-                this.SELECTORS.COLLECTION_ITEM
-            )?.parentElement;
+    applySortable(collection = null) {
+        const collections = collection
+            ? [collection]
+            : document.querySelectorAll(this.SELECTORS.COLLECTION);
+
+        collections.forEach((collection) => {
+            const targetNode = this.getSortableContainer(collection);
 
             if (!targetNode || Sortable.get(targetNode)) {
                 return;
@@ -156,6 +153,12 @@ export default {
             });
         });
     },
+
+    getSortableContainer(collection) {
+        return collection.querySelector(
+            this.SELECTORS.COLLECTION_ITEM
+        )?.parentElement;
+    }
 };
 
 
