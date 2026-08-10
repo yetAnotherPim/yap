@@ -7,6 +7,7 @@ namespace App\Controller\Admin\Products;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Repository\IdentifierTypeRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -17,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -34,6 +36,7 @@ class ProductCrudController extends AbstractCrudController
 {
     public function __construct(
         private readonly IdentifierTypeRepository $identifierTypeRepository,
+        private readonly ProductFieldsRenderer $productFieldsRenderer,
     ) {
     }
 
@@ -87,12 +90,14 @@ class ProductCrudController extends AbstractCrudController
             ];
         }
 
-        return [
+        /** @var array<FieldInterface> $fields */
+        $fields = [
             FormField::addTab('Master Data'),
             AssociationField::new('productType')
                 ->autocomplete(
                     callback: static fn (ProductType $productType): string => $productType->getTitle()
-                ),
+                )
+                ->setDisabled(Crud::PAGE_EDIT === $pageName),
             CollectionField::new('identifiers')
                 ->allowAdd(false)
                 ->allowDelete(false)
@@ -109,6 +114,20 @@ class ProductCrudController extends AbstractCrudController
             DateTimeField::new('updatedAt')
                 ->setDisabled(),
         ];
+
+        if (Crud::PAGE_EDIT === $pageName) {
+            $product = $this->getContext()
+                ?->getEntity()
+                ->getInstance();
+
+            if (!$product instanceof Product) {
+                return $fields;
+            }
+
+            $fields = array_merge($fields, $this->productFieldsRenderer->render($product));
+        }
+
+        return $fields;
     }
 
     public function createEntity(string $entityFqcn): object

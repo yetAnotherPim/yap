@@ -9,6 +9,7 @@ use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Repository\IdentifierTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,12 +19,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Option\ButtonVariant;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Component\Uid\Uuid;
@@ -34,6 +37,22 @@ use Symfony\Component\Uid\Uuid;
 #[UsesClass(TimestampableEntity::class)]
 class ProductCrudControllerTest extends MockeryTestCase
 {
+    /** @var ProductFieldsRenderer&MockInterface */
+    private ProductFieldsRenderer $productFieldsRenderer;
+    /** @var IdentifierTypeRepository&MockInterface */
+    private IdentifierTypeRepository $identifierTypeRepository;
+    private ProductCrudController $controller;
+
+    public function setUp(): void
+    {
+        $this->productFieldsRenderer = \Mockery::mock(ProductFieldsRenderer::class);
+        $this->identifierTypeRepository = \Mockery::mock(IdentifierTypeRepository::class);
+
+        $this->controller = new ProductCrudController($this->identifierTypeRepository, $this->productFieldsRenderer);
+
+        parent::setUp();
+    }
+
     public function testGetEntityFqcn(): void
     {
         $this->assertEquals(Product::class, ProductCrudController::getEntityFqcn());
@@ -41,28 +60,23 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testCreateEntityCreatesProduct(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-        $repository
+        $this->identifierTypeRepository
             ->shouldReceive('findAll')
             ->once()
             ->andReturn([]);
 
-        $controller = new ProductCrudController($repository);
-
-        $product = $controller->createEntity(Product::class);
+        $product = $this->controller->createEntity(Product::class);
 
         $this->assertInstanceOf(Product::class, $product);
     }
 
     public function testConfigureActions(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-        $controller = new ProductCrudController($repository);
         $actions = Actions::new()
             ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
             ->add(Crud::PAGE_NEW, Action::SAVE_AND_RETURN);
 
-        $result = $controller->configureActions($actions);
+        $result = $this->controller->configureActions($actions);
 
         $this->assertCount(3, $result->getAsDto(Crud::PAGE_NEW)->getActions());
         $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)?->getVariant());
@@ -80,30 +94,24 @@ class ProductCrudControllerTest extends MockeryTestCase
         $type2->shouldReceive('getId')
             ->andReturn(Uuid::v7());
 
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-        $repository
+        $this->identifierTypeRepository
             ->shouldReceive('findAll')
             ->once()
             ->andReturn([$type1, $type2]);
 
-        $controller = new ProductCrudController($repository);
-
-        $product = $controller->createEntity(Product::class);
+        $product = $this->controller->createEntity(Product::class);
 
         $this->assertCount(2, $product->getIdentifiers());
     }
 
     public function testCreateEntityDoesNotCreateIdentifiersWhenNoIdentifierTypesExist(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-        $repository
+        $this->identifierTypeRepository
             ->shouldReceive('findAll')
             ->once()
             ->andReturn([]);
 
-        $controller = new ProductCrudController($repository);
-
-        $product = $controller->createEntity(Product::class);
+        $product = $this->controller->createEntity(Product::class);
 
         $this->assertCount(
             0,
@@ -113,7 +121,6 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testUpdateEntityRemovesEmptyIdentifiers(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
         $entityManager = \Mockery::mock(EntityManagerInterface::class);
 
         $emptyIdentifier = \Mockery::mock(Identifier::class);
@@ -158,13 +165,11 @@ class ProductCrudControllerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->once();
 
-        $controller = new ProductCrudController($repository);
-        $controller->updateEntity($entityManager, $product);
+        $this->controller->updateEntity($entityManager, $product);
     }
 
     public function testPersistEntityRemovesEmptyIdentifiers(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
         $entityManager = \Mockery::mock(EntityManagerInterface::class);
 
         $emptyIdentifier = \Mockery::mock(Identifier::class);
@@ -205,17 +210,12 @@ class ProductCrudControllerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->once();
 
-        $controller = new ProductCrudController($repository);
-        $controller->persistEntity($entityManager, $product);
+        $this->controller->persistEntity($entityManager, $product);
     }
 
     public function testConfigureFieldsForIndexPageReturnsExpectedFields(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-
-        $controller = new ProductCrudController($repository);
-
-        $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
 
         $this->assertCount(4, $fields);
 
@@ -231,11 +231,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForFormPageReturnsExpectedFields(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-
-        $controller = new ProductCrudController($repository);
-
-        $fields = iterator_to_array($controller->configureFields(Crud::PAGE_NEW));
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_NEW));
 
         $this->assertCount(5, $fields);
 
@@ -259,15 +255,13 @@ class ProductCrudControllerTest extends MockeryTestCase
         $existingTypeId = Uuid::v7();
         $missingTypeId = Uuid::v7();
 
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-
         $identifierType1 = \Mockery::mock(IdentifierType::class);
         $identifierType1->shouldReceive('getId')->andReturn($existingTypeId);
 
         $identifierType2 = \Mockery::mock(IdentifierType::class);
         $identifierType2->shouldReceive('getId')->andReturn($missingTypeId);
 
-        $repository
+        $this->identifierTypeRepository
             ->shouldReceive('findAll')
             ->once()
             ->andReturn([$identifierType1, $identifierType2]);
@@ -306,7 +300,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$repository]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer]
         )->makePartial();
 
         /** @phpstan-var AdminContext<Product> $context */
@@ -326,9 +320,8 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testCreateEditFormSkipsInitializationForNonProductInstance(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-
-        $repository->shouldNotReceive('findAll');
+        $this->identifierTypeRepository
+            ->shouldNotReceive('findAll');
 
         /** @var EntityDto<Product> $entityDto */
         $entityDto = new EntityDto(
@@ -340,7 +333,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$repository]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer]
         )->makePartial();
 
         $this->expectException(\Error::class);
@@ -358,15 +351,93 @@ class ProductCrudControllerTest extends MockeryTestCase
         );
     }
 
+    public function testConfigureFieldsForEditPageRendersProductFields(): void
+    {
+        $product = \Mockery::mock(Product::class);
+
+        $this->productFieldsRenderer
+            ->shouldReceive('render')
+            ->once()
+            ->with($product)
+            ->andReturn([]);
+
+        $entityDto = new EntityDto(
+            Product::class,
+            \Mockery::mock(ClassMetadata::class),
+            null,
+            $product
+        );
+
+        $crudContext = CrudContext::forTesting(
+            entityDto: $entityDto,
+        );
+
+        $context = AdminContext::forTesting(
+            crudContext: $crudContext,
+        );
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [$this->identifierTypeRepository, $this->productFieldsRenderer]
+        )->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn($context);
+
+        $fields = iterator_to_array(
+            $controller->configureFields(Crud::PAGE_EDIT)
+        );
+
+        $this->assertCount(5, $fields);
+    }
+
+    public function testConfigureFieldsForEditPageSkipsProductFieldsForNonProductEntity(): void
+    {
+        $entityDto = new EntityDto(
+            \stdClass::class,
+            \Mockery::mock(ClassMetadata::class),
+            null,
+            new \stdClass()
+        );
+
+        $crudContext = CrudContext::forTesting(
+            entityDto: $entityDto,
+        );
+
+        $context = AdminContext::forTesting(
+            crudContext: $crudContext,
+        );
+
+        $this->productFieldsRenderer
+            ->shouldNotReceive('render');
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [$this->identifierTypeRepository, $this->productFieldsRenderer]
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn($context);
+
+        $fields = iterator_to_array(
+            $controller->configureFields(Crud::PAGE_EDIT)
+        );
+
+        $this->assertCount(5, $fields);
+    }
+
     public function testConfigureCrudHidesNullValues(): void
     {
-        $repository = \Mockery::mock(IdentifierTypeRepository::class);
-
-        $controller = new ProductCrudController($repository);
-
         $crud = Crud::new();
 
-        $configuredCrud = $controller->configureCrud($crud);
+        $configuredCrud = $this->controller->configureCrud($crud);
 
         $this->assertTrue(
             $configuredCrud->getAsDto()->areNullValuesHidden()
