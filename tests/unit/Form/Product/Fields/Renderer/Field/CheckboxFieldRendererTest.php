@@ -110,7 +110,7 @@ class CheckboxFieldRendererTest extends MockeryTestCase
         $this->assertInstanceOf(BooleanField::class, $result);
 
         $this->assertSame(
-            'is_active',
+            'field_is_active',
             $result->getAsDto()->getProperty()
         );
 

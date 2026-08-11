@@ -20,10 +20,10 @@ final class CheckboxFieldRenderer implements FieldRendererInterface
 
     public function render(Field $field): FieldInterface
     {
-        return BooleanField::new($field->getType()->getCode())
+        return BooleanField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => (bool) $field->getValue(),
                 'mapped' => false,
             ]);
     }

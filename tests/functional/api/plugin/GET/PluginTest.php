@@ -20,6 +20,9 @@ use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Plugin\Plugin;
 use App\Entity\User\User;
+use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
+use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
+use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Kernel;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
@@ -78,6 +81,9 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
 #[UsesClass(Locale::class)]
+#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(RendererRegistry::class)]
+#[UsesClass(FieldSynchronizer::class)]
 #[ResetDatabase]
 class PluginTest extends ApiTestCase
 {

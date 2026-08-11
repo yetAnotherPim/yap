@@ -8,6 +8,7 @@ use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
+use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Repository\IdentifierTypeRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -37,6 +38,7 @@ class ProductCrudController extends AbstractCrudController
     public function __construct(
         private readonly IdentifierTypeRepository $identifierTypeRepository,
         private readonly ProductFieldsRenderer $productFieldsRenderer,
+        private readonly FieldSynchronizer $fieldSynchronizer,
     ) {
     }
 
@@ -162,7 +164,9 @@ class ProductCrudController extends AbstractCrudController
     {
         $this->clearUnsetIdentifiers($entityInstance);
 
-        parent::updateEntity($entityManager, $entityInstance);
+        $this->fieldSynchronizer->synchronizeFields($entityInstance);
+
+        parent::persistEntity($entityManager, $entityInstance);
     }
 
     /**
@@ -172,6 +176,19 @@ class ProductCrudController extends AbstractCrudController
     {
         $this->clearUnsetIdentifiers($entityInstance);
         $entityInstance->updateUpdatedAt();
+
+        $requestData = $this->getContext()
+            ?->getRequest()
+            ->request
+            ->all('Product');
+
+        if (null === $requestData) {
+            parent::updateEntity($entityManager, $entityInstance);
+
+            return;
+        }
+
+        $this->fieldSynchronizer->synchronizeFields($entityInstance, $requestData);
 
         parent::updateEntity($entityManager, $entityInstance);
     }

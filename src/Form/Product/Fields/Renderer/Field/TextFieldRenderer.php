@@ -20,7 +20,7 @@ final class TextFieldRenderer implements FieldRendererInterface
 
     public function render(Field $field): FieldInterface
     {
-        return TextField::new($field->getType()->getCode())
+        return TextField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
                 'data' => $field->getValue(),

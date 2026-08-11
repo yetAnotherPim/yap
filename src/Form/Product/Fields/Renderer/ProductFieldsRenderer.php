@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Form\Product\Fields\Renderer;
 
-use App\Entity\Product\Field\Field;
 use App\Entity\Product\Product;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
+use App\Form\Product\Fields\Resolver\FieldResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
 class ProductFieldsRenderer
 {
-    public function __construct(private readonly RendererRegistry $rendererRegistry)
-    {
+    public function __construct(
+        private readonly RendererRegistry $rendererRegistry,
+        private readonly FieldResolver $fieldResolver,
+    ) {
     }
 
     /**
@@ -30,16 +32,16 @@ class ProductFieldsRenderer
                 continue;
             }
 
-            // TODO: get field from product, if null create with default value
-            $field = new Field()
-                ->setType($productTypeFieldConfiguration->getFieldType());
+            $field = $this->fieldResolver->resolve(
+                $product,
+                $productTypeFieldConfiguration->getFieldType(),
+                $productTypeFieldConfiguration->getDefaultValue()
+            );
 
             $fields[] = $this->rendererRegistry
                 ->getRenderer($field)
                 ->render($field);
         }
-
-        //TODO: save
 
         return $fields;
     }

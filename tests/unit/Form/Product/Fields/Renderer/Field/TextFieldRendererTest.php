@@ -66,12 +66,12 @@ class TextFieldRendererTest extends MockeryTestCase
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
-            ->andReturn('is_active');
+            ->andReturn('title');
 
         $this->fieldType
             ->shouldReceive('getTitle')
             ->once()
-            ->andReturn('Active');
+            ->andReturn('Title');
 
         $this->field
             ->shouldReceive('getValue')
@@ -93,12 +93,12 @@ class TextFieldRendererTest extends MockeryTestCase
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
-            ->andReturn('is_active');
+            ->andReturn('title');
 
         $this->fieldType
             ->shouldReceive('getTitle')
             ->once()
-            ->andReturn('Active');
+            ->andReturn('Title');
 
         $this->field
             ->shouldReceive('getValue')
@@ -110,13 +110,13 @@ class TextFieldRendererTest extends MockeryTestCase
         $this->assertInstanceOf(TextField::class, $result);
 
         $this->assertSame(
-            'is_active',
+            'field_title',
             $result->getAsDto()->getProperty()
         );
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
-        $this->assertSame('Active', $formTypeOptions['label']);
+        $this->assertSame('Title', $formTypeOptions['label']);
         $this->assertEquals('test', $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
     }

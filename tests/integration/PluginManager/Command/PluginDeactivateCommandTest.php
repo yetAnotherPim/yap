@@ -17,6 +17,9 @@ use App\Controller\Admin\Settings\UserCrudController;
 use App\Controller\Api\PluginWorkflowController;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Plugin\Plugin;
+use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
+use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
+use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Kernel;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
@@ -76,6 +79,9 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(IndexController::class)]
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
+#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(RendererRegistry::class)]
+#[UsesClass(FieldSynchronizer::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]

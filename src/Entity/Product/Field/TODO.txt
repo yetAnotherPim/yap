@@ -4,6 +4,7 @@ TODO:
     set db config
     dump env for prod
     create keys
+    assets compile
     -> test via pipeline (supported php versions) with fixture for api user and check api is available
 
 

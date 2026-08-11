@@ -66,17 +66,17 @@ class TextAreaFieldRendererTest extends MockeryTestCase
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
-            ->andReturn('is_active');
+            ->andReturn('description');
 
         $this->fieldType
             ->shouldReceive('getTitle')
             ->once()
-            ->andReturn('Active');
+            ->andReturn('description');
 
         $this->field
             ->shouldReceive('getValue')
             ->once()
-            ->andReturn(true);
+            ->andReturn('title');
 
         $result = $this->renderer->render($this->field);
 
@@ -93,12 +93,12 @@ class TextAreaFieldRendererTest extends MockeryTestCase
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
-            ->andReturn('is_active');
+            ->andReturn('description');
 
         $this->fieldType
             ->shouldReceive('getTitle')
             ->once()
-            ->andReturn('Active');
+            ->andReturn('Description');
 
         $this->field
             ->shouldReceive('getValue')
@@ -110,13 +110,13 @@ class TextAreaFieldRendererTest extends MockeryTestCase
         $this->assertInstanceOf(TextareaField::class, $result);
 
         $this->assertSame(
-            'is_active',
+            'field_description',
             $result->getAsDto()->getProperty()
         );
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
-        $this->assertSame('Active', $formTypeOptions['label']);
+        $this->assertSame('Description', $formTypeOptions['label']);
         $this->assertEquals('test', $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
     }

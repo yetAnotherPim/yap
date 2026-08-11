@@ -13,6 +13,7 @@ use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
+use App\Form\Product\Fields\Resolver\FieldResolver;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -34,6 +35,11 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
     /** @var RendererRegistry&Mockery\MockInterface */
     private RendererRegistry $rendererRegistry;
 
+    /** @var FieldResolver&Mockery\MockInterface */
+    private FieldResolver $fieldResolver;
+
+    private ProductFieldsRenderer $renderer;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,6 +47,9 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->product = \Mockery::mock(Product::class);
         $this->productType = \Mockery::mock(ProductType::class);
         $this->rendererRegistry = \Mockery::mock(RendererRegistry::class);
+        $this->fieldResolver = \Mockery::mock(FieldResolver::class);
+
+        $this->renderer = new ProductFieldsRenderer($this->rendererRegistry, $this->fieldResolver);
     }
 
     public function testRenderAddsFieldsTab(): void
@@ -55,9 +64,7 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ->once()
             ->andReturn(new ArrayCollection());
 
-        $renderer = new ProductFieldsRenderer($this->rendererRegistry);
-
-        $result = $renderer->render($this->product);
+        $result = $this->renderer->render($this->product);
 
         $this->assertCount(1, $result);
         $this->assertInstanceOf(FormField::class, $result[0]);
@@ -87,9 +94,7 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->rendererRegistry
             ->shouldNotReceive('getRenderer');
 
-        $renderer = new ProductFieldsRenderer($this->rendererRegistry);
-
-        $result = $renderer->render($this->product);
+        $result = $this->renderer->render($this->product);
 
         $this->assertCount(1, $result);
         $this->assertInstanceOf(FormField::class, $result[0]);
@@ -120,29 +125,32 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ->twice()
             ->andReturn($fieldType);
 
+        $configuration
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn('default value');
+
+        $field = \Mockery::mock(Field::class);
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->product, $fieldType, 'default value')
+            ->andReturn($field);
+
         $this->rendererRegistry
             ->shouldReceive('getRenderer')
             ->once()
-            ->with(\Mockery::on(
-                static function (Field $field) use ($fieldType): bool {
-                    return $field->getType() === $fieldType;
-                }
-            ))
+            ->with($field)
             ->andReturn($fieldRenderer);
 
         $fieldRenderer
             ->shouldReceive('render')
             ->once()
-            ->with(\Mockery::on(
-                static function (Field $field) use ($fieldType): bool {
-                    return $field->getType() === $fieldType;
-                }
-            ))
+            ->with($field)
             ->andReturn($renderedField);
 
-        $renderer = new ProductFieldsRenderer($this->rendererRegistry);
-
-        $result = $renderer->render($this->product);
+        $result = $this->renderer->render($this->product);
 
         $this->assertCount(2, $result);
         $this->assertInstanceOf(FormField::class, $result[0]);
@@ -162,6 +170,9 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $configurationTwo = \Mockery::mock(
             ProductTypeFieldConfiguration::class
         );
+
+        $fieldOne = \Mockery::mock(Field::class);
+        $fieldTwo = \Mockery::mock(Field::class);
 
         $fieldTypeOne = \Mockery::mock(FieldType::class);
         $fieldTypeTwo = \Mockery::mock(FieldType::class);
@@ -201,44 +212,53 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ->twice()
             ->andReturn($fieldTypeTwo);
 
+        $configurationOne
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn('default value');
+
+        $configurationTwo
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn(null);
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->product, $fieldTypeOne, 'default value')
+            ->andReturn($fieldOne);
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->product, $fieldTypeTwo, null)
+            ->andReturn($fieldTwo);
+
         $this->rendererRegistry
             ->shouldReceive('getRenderer')
-            ->twice()
-            ->with(\Mockery::type(Field::class))
-            ->andReturnUsing(
-                static function (Field $field) use (
-                    $fieldTypeOne,
-                    $fieldTypeTwo,
-                    $fieldRendererOne,
-                    $fieldRendererTwo
-                ) {
-                    return match ($field->getType()) {
-                        $fieldTypeOne => $fieldRendererOne,
-                        $fieldTypeTwo => $fieldRendererTwo,
-                        default => throw new \LogicException('Unexpected field type.'),
-                    };
-                }
-            );
+            ->once()
+            ->with($fieldOne)
+            ->andReturn($fieldRendererOne);
+
+        $this->rendererRegistry
+            ->shouldReceive('getRenderer')
+            ->once()
+            ->with($fieldTwo)
+            ->andReturn($fieldRendererTwo);
 
         $fieldRendererOne
             ->shouldReceive('render')
             ->once()
-            ->with(\Mockery::on(
-                static fn (Field $field): bool => $field->getType() === $fieldTypeOne
-            ))
+            ->with($fieldOne)
             ->andReturn($renderedFieldOne);
 
         $fieldRendererTwo
             ->shouldReceive('render')
             ->once()
-            ->with(\Mockery::on(
-                static fn (Field $field): bool => $field->getType() === $fieldTypeTwo
-            ))
+            ->with($fieldTwo)
             ->andReturn($renderedFieldTwo);
 
-        $renderer = new ProductFieldsRenderer($this->rendererRegistry);
-
-        $result = $renderer->render($this->product);
+        $result = $this->renderer->render($this->product);
 
         $this->assertCount(3, $result);
         $this->assertInstanceOf(FormField::class, $result[0]);

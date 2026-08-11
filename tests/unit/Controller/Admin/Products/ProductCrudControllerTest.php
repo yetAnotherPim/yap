@@ -10,6 +10,7 @@ use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
+use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Repository\IdentifierTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,6 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
+use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -29,6 +31,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Uuid;
 
 #[CoversClass(ProductCrudController::class)]
@@ -41,14 +44,18 @@ class ProductCrudControllerTest extends MockeryTestCase
     private ProductFieldsRenderer $productFieldsRenderer;
     /** @var IdentifierTypeRepository&MockInterface */
     private IdentifierTypeRepository $identifierTypeRepository;
+
+    /** @var FieldSynchronizer&MockInterface */
+    private FieldSynchronizer $fieldSynchronizer;
     private ProductCrudController $controller;
 
     public function setUp(): void
     {
         $this->productFieldsRenderer = \Mockery::mock(ProductFieldsRenderer::class);
         $this->identifierTypeRepository = \Mockery::mock(IdentifierTypeRepository::class);
+        $this->fieldSynchronizer = \Mockery::mock(FieldSynchronizer::class);
 
-        $this->controller = new ProductCrudController($this->identifierTypeRepository, $this->productFieldsRenderer);
+        $this->controller = new ProductCrudController($this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer = \Mockery::mock(FieldSynchronizer::class));
 
         parent::setUp();
     }
@@ -165,7 +172,106 @@ class ProductCrudControllerTest extends MockeryTestCase
             ->shouldReceive('flush')
             ->once();
 
-        $this->controller->updateEntity($entityManager, $product);
+        $this->fieldSynchronizer
+            ->shouldReceive('synchronizeFields')
+            ->once()
+            ->with($product, []);
+
+        $request = new Request(
+            [],
+            ['Product' => []],
+        );
+
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+        );
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [
+                $this->identifierTypeRepository,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn($context);
+
+        $controller->updateEntity($entityManager, $product);
+    }
+
+    public function testUpdateEntityRemovesEmptyIdentifiersIfRequestDataIsNotAvailable(): void
+    {
+        $entityManager = \Mockery::mock(EntityManagerInterface::class);
+
+        $emptyIdentifier = \Mockery::mock(Identifier::class);
+        $emptyIdentifier
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('');
+
+        $validIdentifier = \Mockery::mock(Identifier::class);
+        $validIdentifier
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('ABC123');
+
+        $product = \Mockery::mock(Product::class);
+
+        $product
+            ->shouldReceive('getIdentifiers')
+            ->once()
+            ->andReturn(new ArrayCollection([$emptyIdentifier, $validIdentifier]));
+
+        $product
+            ->shouldReceive('removeIdentifier')
+            ->once()
+            ->with($emptyIdentifier);
+
+        $product
+            ->shouldReceive('removeIdentifier')
+            ->never()
+            ->with($validIdentifier);
+
+        $product
+            ->shouldReceive('updateUpdatedAt')
+            ->once();
+
+        $entityManager
+            ->shouldReceive('persist')
+            ->once()
+            ->with($product);
+
+        $entityManager
+            ->shouldReceive('flush')
+            ->once();
+
+        $this->fieldSynchronizer
+            ->shouldReceive('synchronizeFields')
+            ->never();
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [
+                $this->identifierTypeRepository,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn(null);
+
+        $controller->updateEntity($entityManager, $product);
     }
 
     public function testPersistEntityRemovesEmptyIdentifiers(): void
@@ -209,6 +315,11 @@ class ProductCrudControllerTest extends MockeryTestCase
         $entityManager
             ->shouldReceive('flush')
             ->once();
+
+        $this->fieldSynchronizer
+            ->shouldReceive('synchronizeFields')
+            ->once()
+            ->with($product);
 
         $this->controller->persistEntity($entityManager, $product);
     }
@@ -300,7 +411,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer]
         )->makePartial();
 
         /** @phpstan-var AdminContext<Product> $context */
@@ -333,7 +444,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer]
         )->makePartial();
 
         $this->expectException(\Error::class);
@@ -378,7 +489,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer]
         )->makePartial()
         ->shouldAllowMockingProtectedMethods();
 
@@ -416,7 +527,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
