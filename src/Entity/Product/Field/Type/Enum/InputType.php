@@ -27,8 +27,11 @@ enum InputType: string
 
 /*
 ChoiceField
-    -> configure available options via config as with fieldType
-    -> implement configuration for multiselect
+    -> configure available options via config as with fieldType - Type Select
+    -> implement configuration for multiselect -> convert values on save - Type Multiselect
+
 FileField
+    -> setUploadedFileNamePattern
 ImageField
+    -> setUploadedFileNamePattern
 */
