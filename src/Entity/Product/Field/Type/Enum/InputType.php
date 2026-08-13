@@ -19,11 +19,8 @@ enum InputType: string
     case Country = 'country';
     case Telephone = 'telephone';
     case Email = 'email';
-
     case Language = 'language';
     case Locale = 'locale';
-    case Percent = 'percent';
-
     case TextEditor = 'texteditor';
     case Url = 'url';
 }

@@ -19,6 +19,9 @@ use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
+use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
+use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
+use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Localisation\Exception\DefaultLocaleIsNotDefinedException;
@@ -59,6 +62,9 @@ use Symfony\Component\HttpFoundation\Response;
 #[UsesClass(IndexController::class)]
 #[UsesClass(Roles::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
+#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(RendererRegistry::class)]
+#[UsesClass(FieldSynchronizer::class)]
 class IndexControllerTest extends WebTestCase
 {
     use LoginTrait;
@@ -155,7 +161,7 @@ class IndexControllerTest extends WebTestCase
         $menu = $crawler->filter('#main-menu');
         $this->assertCount(1, $menu);
 
-        $menuItems = $crawler->filter('#main-menu li.menu-item:not(.has-submenu)');
+        $menuItems = $crawler->filter('#main-menu li.ea-sidebar-item:not(.has-submenu)');
         $this->assertCount(\count($expectedMenuItems), $menuItems);
 
         foreach ($expectedMenuItems as $label => $path) {
