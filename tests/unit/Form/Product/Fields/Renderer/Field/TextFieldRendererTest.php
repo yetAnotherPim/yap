@@ -7,6 +7,7 @@ namespace App\Tests\unit\Form\Product\Fields\Renderer\Field;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\TextFieldRenderer;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -20,6 +21,8 @@ class TextFieldRendererTest extends MockeryTestCase
 
     private FieldType&MockInterface $fieldType;
 
+    private ProductTypeFieldConfiguration&MockInterface $configuration;
+
     private TextFieldRenderer $renderer;
 
     protected function setUp(): void
@@ -28,6 +31,7 @@ class TextFieldRendererTest extends MockeryTestCase
 
         $this->field = \Mockery::mock(Field::class);
         $this->fieldType = \Mockery::mock(FieldType::class);
+        $this->configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
 
         $this->renderer = new TextFieldRenderer();
     }
@@ -76,9 +80,14 @@ class TextFieldRendererTest extends MockeryTestCase
         $this->field
             ->shouldReceive('getValue')
             ->once()
+            ->andReturn('test');
+
+        $this->configuration
+            ->shouldReceive('isRequired')
+            ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field);
+        $result = $this->renderer->render($this->field, $this->configuration);
 
         $this->assertInstanceOf(TextField::class, $result);
     }
@@ -105,7 +114,12 @@ class TextFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('test');
 
-        $result = $this->renderer->render($this->field);
+        $this->configuration
+            ->shouldReceive('isRequired')
+            ->once()
+            ->andReturn(false);
+
+        $result = $this->renderer->render($this->field, $this->configuration);
 
         $this->assertInstanceOf(TextField::class, $result);
 
@@ -119,5 +133,6 @@ class TextFieldRendererTest extends MockeryTestCase
         $this->assertSame('Title', $formTypeOptions['label']);
         $this->assertEquals('test', $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
+        $this->assertFalse($formTypeOptions['required']);
     }
 }

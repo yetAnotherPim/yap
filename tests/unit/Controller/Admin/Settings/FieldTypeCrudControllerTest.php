@@ -26,7 +26,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
         $controller = new FieldTypeCrudController();
         $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
 
-        $this->assertCount(5, $fields);
+        $this->assertCount(6, $fields);
 
         $this->assertInstanceOf(TextField::class, $fields[0]);
         $this->assertEquals('code', $fields[0]->getAsDto()->getProperty());
@@ -38,6 +38,8 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
         $this->assertEquals('filterable', $fields[3]->getAsDto()->getProperty());
         $this->assertInstanceOf(ChoiceField::class, $fields[4]);
         $this->assertEquals('inputType', $fields[4]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[5]);
+        $this->assertEquals('decimalSeparator', $fields[5]->getAsDto()->getProperty());
     }
 
     public function testConfigureCrudSetsAutocompleteCallback(): void

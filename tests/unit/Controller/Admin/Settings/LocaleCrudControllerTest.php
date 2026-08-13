@@ -12,7 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\ActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -48,7 +48,7 @@ class LocaleCrudControllerTest extends MockeryTestCase
 
         $this->assertCount(2, $fields);
 
-        $this->assertInstanceOf(TextField::class, $fields[0]);
+        $this->assertInstanceOf(LocaleField::class, $fields[0]);
         $this->assertEquals('id', $fields[0]->getAsDto()->getProperty());
         $this->assertInstanceOf(BooleanField::class, $fields[1]);
         $this->assertEquals('default', $fields[1]->getAsDto()->getProperty());

@@ -1,0 +1,138 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\unit\Form\Product\Fields\Renderer\Field;
+
+use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Type\Enum\InputType;
+use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
+use App\Form\Product\Fields\Renderer\Field\CountryFieldRenderer;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(CountryFieldRenderer::class)]
+class CountryFieldRendererTest extends MockeryTestCase
+{
+    private Field&MockInterface $field;
+
+    private FieldType&MockInterface $fieldType;
+
+    private ProductTypeFieldConfiguration&MockInterface $configuration;
+
+    private CountryFieldRenderer $renderer;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->field = \Mockery::mock(Field::class);
+        $this->fieldType = \Mockery::mock(FieldType::class);
+        $this->configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+
+        $this->renderer = new CountryFieldRenderer();
+    }
+
+    public function testSupportsReturnsTrueForCountryInputType(): void
+    {
+        $this->fieldType
+            ->shouldReceive('getInputType')
+            ->once()
+            ->andReturn(InputType::Country);
+
+        $this->assertTrue(
+            $this->renderer->supports($this->fieldType)
+        );
+    }
+
+    public function testSupportsReturnsFalseForNonCountryInputType(): void
+    {
+        $this->fieldType
+            ->shouldReceive('getInputType')
+            ->once()
+            ->andReturn(InputType::Text);
+
+        $this->assertFalse(
+            $this->renderer->supports($this->fieldType)
+        );
+    }
+
+    public function testRenderReturnsCountryField(): void
+    {
+        $this->field
+            ->shouldReceive('getType')
+            ->twice()
+            ->andReturn($this->fieldType);
+
+        $this->fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('country');
+
+        $this->fieldType
+            ->shouldReceive('getTitle')
+            ->once()
+            ->andReturn('Country');
+
+        $this->field
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('DE');
+
+        $this->configuration
+            ->shouldReceive('isRequired')
+            ->once()
+            ->andReturn(false);
+
+        $result = $this->renderer->render($this->field, $this->configuration);
+
+        $this->assertInstanceOf(CountryField::class, $result);
+    }
+
+    public function testRenderConfiguresCountryFieldCorrectly(): void
+    {
+        $this->field
+            ->shouldReceive('getType')
+            ->twice()
+            ->andReturn($this->fieldType);
+
+        $this->fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('country');
+
+        $this->fieldType
+            ->shouldReceive('getTitle')
+            ->once()
+            ->andReturn('Country');
+
+        $this->field
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('DE');
+
+        $this->configuration
+            ->shouldReceive('isRequired')
+            ->once()
+            ->andReturn(false);
+
+        $result = $this->renderer->render($this->field, $this->configuration);
+
+        $this->assertInstanceOf(CountryField::class, $result);
+
+        $this->assertSame(
+            'field_country',
+            $result->getAsDto()->getProperty()
+        );
+
+        $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
+
+        $this->assertSame('Country', $formTypeOptions['label']);
+        $this->assertSame('DE', $formTypeOptions['data']);
+        $this->assertFalse($formTypeOptions['mapped']);
+        $this->assertFalse($formTypeOptions['required']);
+    }
+}

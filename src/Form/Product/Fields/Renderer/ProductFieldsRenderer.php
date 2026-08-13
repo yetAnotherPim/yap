@@ -40,7 +40,7 @@ class ProductFieldsRenderer
 
             $fields[] = $this->rendererRegistry
                 ->getRenderer($field)
-                ->render($field);
+                ->render($field, $productTypeFieldConfiguration);
         }
 
         return $fields;

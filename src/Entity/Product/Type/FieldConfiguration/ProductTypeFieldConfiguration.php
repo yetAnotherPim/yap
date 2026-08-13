@@ -46,6 +46,9 @@ class ProductTypeFieldConfiguration
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $defaultValue = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private bool $required = false;
+
     public function getId(): Uuid
     {
         return $this->id;
@@ -95,6 +98,18 @@ class ProductTypeFieldConfiguration
     public function setDefaultValue(?string $defaultValue): static
     {
         $this->defaultValue = $defaultValue;
+
+        return $this;
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->required;
+    }
+
+    public function setRequired(bool $isRequired): ProductTypeFieldConfiguration
+    {
+        $this->required = $isRequired;
 
         return $this;
     }

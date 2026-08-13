@@ -147,7 +147,7 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $fieldRenderer
             ->shouldReceive('render')
             ->once()
-            ->with($field)
+            ->with($field, $configuration)
             ->andReturn($renderedField);
 
         $result = $this->renderer->render($this->product);
@@ -249,13 +249,13 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $fieldRendererOne
             ->shouldReceive('render')
             ->once()
-            ->with($fieldOne)
+            ->with($fieldOne, $configurationOne)
             ->andReturn($renderedFieldOne);
 
         $fieldRendererTwo
             ->shouldReceive('render')
             ->once()
-            ->with($fieldTwo)
+            ->with($fieldTwo, $configurationTwo)
             ->andReturn($renderedFieldTwo);
 
         $result = $this->renderer->render($this->product);

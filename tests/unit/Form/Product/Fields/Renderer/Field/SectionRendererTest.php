@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Form\Product\Fields\Renderer\Field;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\SectionRenderer;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -68,7 +69,7 @@ class SectionRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('General');
 
-        $result = $this->renderer->render($this->field);
+        $result = $this->renderer->render($this->field, \Mockery::mock(ProductTypeFieldConfiguration::class));
 
         $this->assertInstanceOf(FormField::class, $result);
     }
@@ -85,7 +86,7 @@ class SectionRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('General');
 
-        $result = $this->renderer->render($this->field);
+        $result = $this->renderer->render($this->field, \Mockery::mock(ProductTypeFieldConfiguration::class));
 
         $this->assertSame(
             'General',

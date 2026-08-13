@@ -32,7 +32,14 @@ class FieldTypeCrudController extends AbstractCrudController
             BooleanField::new('translatable'),
             BooleanField::new('filterable'),
             ChoiceField::new('inputType')
-                ->setChoices(InputType::cases()),
+                ->setChoices(InputType::cases())
+                ->setFormTypeOption('attr', [
+                    'data-controller' => 'field-type-input-type',
+                    'data-action' => 'change->field-type-input-type#update',
+                    'data-field-type-input-type-number-value' => InputType::Number->value,
+                ]),
+            TextField::new('decimalSeparator')
+                ->setMaxLength(1),
         ];
     }
 

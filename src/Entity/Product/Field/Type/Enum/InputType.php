@@ -7,15 +7,31 @@ namespace App\Entity\Product\Field\Type\Enum;
 enum InputType: string
 {
     case Section = 'section';
-    case Integer = 'integer';
+    case Boolean = 'boolean';
     case String = 'string';
     case Text = 'text';
-    case Boolean = 'boolean';
-    case MultiSelect = 'multiselect';
-    case Select = 'select';
+    case Integer = 'integer';
     case Date = 'date';
+    case DateTime = 'datetime';
     case Time = 'time';
-    case Tree = 'tree';
-    case FileUpload = 'file-upload';
-    case Filepath = 'filepath';
+    case Number = 'number';
+    case Color = 'color';
+    case Country = 'country';
+    case Telephone = 'telephone';
+    case Email = 'email';
+
+    case Language = 'language';
+    case Locale = 'locale';
+    case Percent = 'percent';
+
+    case TextEditor = 'texteditor';
+    case Url = 'url';
 }
+
+/*
+ChoiceField
+    -> configure available options via config as with fieldType
+    -> implement configuration for multiselect
+FileField
+ImageField
+*/
