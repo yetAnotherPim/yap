@@ -68,7 +68,7 @@ class FieldTypeTest extends MockeryTestCase
             ['setTranslatable', 'isTranslatable', true],
             ['setTranslatable', 'isTranslatable', null, \TypeError::class],
             ['setDecimalSeparator', 'getDecimalSeparator', '.'],
-            ['setDecimalSeparator', 'getDecimalSeparator', null, \TypeError::class],
+            ['setDecimalSeparator', 'getDecimalSeparator', null],
             ['setFilterable', 'isFilterable', true],
             ['setFilterable', 'isFilterable', null, \TypeError::class],
             ['setInputType', 'getInputType', InputType::String],

@@ -39,7 +39,9 @@ class FieldTypeCrudController extends AbstractCrudController
                     'data-field-type-input-type-number-value' => InputType::Number->value,
                 ]),
             TextField::new('decimalSeparator')
-                ->setMaxLength(1),
+                ->setEmptyData()
+                ->setMaxLength(1)
+                ->onlyOnForms(),
         ];
     }
 

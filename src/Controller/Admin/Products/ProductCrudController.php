@@ -26,6 +26,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -35,10 +37,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_EDITOR')]
 class ProductCrudController extends AbstractCrudController
 {
+    private array $uploadedFilePaths = [];
+
     public function __construct(
         private readonly IdentifierTypeRepository $identifierTypeRepository,
         private readonly ProductFieldsRenderer $productFieldsRenderer,
         private readonly FieldSynchronizer $fieldSynchronizer,
+        private readonly string $projectDir,
     ) {
     }
 
@@ -188,9 +193,52 @@ class ProductCrudController extends AbstractCrudController
             return;
         }
 
+        //TODO: synchronize uploads -> $this->uploadedFilePaths
         $this->fieldSynchronizer->synchronizeFields($entityInstance, $requestData);
 
         parent::updateEntity($entityManager, $entityInstance);
+
+        
+    }
+
+    protected function processUploadedFiles(FormInterface $form): void
+    {
+        $this->collectUploadedFilePaths($form);
+
+        parent::processUploadedFiles($form);
+    }
+
+    private function collectUploadedFilePaths(
+        FormInterface $form,
+        string $parentPath = '',
+    ): void {
+        foreach ($form as $child) {
+            $path = $parentPath
+                ? $parentPath.'['.$child->getName().']'
+                : $child->getName();
+
+            $config = $child->getConfig();
+
+            if ($config->getType()->getInnerType() instanceof FileUploadType) {
+                $relativePath = $child->getData();
+
+                if (\is_string($relativePath) && '' !== $relativePath) {
+                    $uploadDir = Path::makeRelative(
+                        $config->getOption('upload_dir'),
+                        $this->projectDir,
+                    );
+
+                    $this->uploadedFilePaths[$path] =
+                        $uploadDir.'/'.$relativePath;
+                }
+
+                continue;
+            }
+
+            if ($config->getCompound()) {
+                $this->collectUploadedFilePaths($child, $path);
+            }
+        }
     }
 
     private function clearUnsetIdentifiers(Product $product): void

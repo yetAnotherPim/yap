@@ -61,6 +61,8 @@ class ProductTypeFieldConfigurationTest extends MockeryTestCase
             ['setFieldType', 'getFieldType', null, \TypeError::class],
             ['setProductType', 'getProductType', \Mockery::mock(ProductType::class)],
             ['setProductType', 'getProductType', null, \TypeError::class],
+            ['setOptions', 'getOptions', []],
+            ['setOptions', 'getOptions', null, \TypeError::class],
         ];
     }
 }

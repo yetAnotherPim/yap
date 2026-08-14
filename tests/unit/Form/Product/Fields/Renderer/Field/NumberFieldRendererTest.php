@@ -146,6 +146,55 @@ class NumberFieldRendererTest extends MockeryTestCase
         $this->assertTrue($formTypeOptions['required']);
     }
 
+    public function testRenderConfiguresNumberFieldCorrectlyWithDecimalSeparatorIsNull(): void
+    {
+        $this->field
+            ->shouldReceive('getType')
+            ->times(4)
+            ->andReturn($this->fieldType);
+
+        $this->fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('price');
+
+        $this->fieldType
+            ->shouldReceive('getTitle')
+            ->once()
+            ->andReturn('Price');
+
+        $this->fieldType
+            ->shouldReceive('getDecimalSeparator')
+            ->twice()
+            ->andReturn(null);
+
+        $this->field
+            ->shouldReceive('getValue')
+            ->twice()
+            ->andReturn('12.34');
+
+        $this->configuration
+            ->shouldReceive('isRequired')
+            ->once()
+            ->andReturn(true);
+
+        $result = $this->renderer->render($this->field, $this->configuration);
+
+        $this->assertInstanceOf(NumberField::class, $result);
+
+        $this->assertSame(
+            'field_price',
+            $result->getAsDto()->getProperty()
+        );
+
+        $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
+
+        $this->assertSame('Price', $formTypeOptions['label']);
+        $this->assertSame(12.34, $formTypeOptions['data']);
+        $this->assertFalse($formTypeOptions['mapped']);
+        $this->assertTrue($formTypeOptions['required']);
+    }
+
     public function testRenderHandlesNullValue(): void
     {
         $this->field

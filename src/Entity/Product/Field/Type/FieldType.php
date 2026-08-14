@@ -66,9 +66,9 @@ class FieldType extends TimestampableEntity
     #[Groups(['field_type:write', 'field_type:read'])]
     private Enum\InputType $inputType;
 
-    #[ORM\Column(options: ['default' => ','])]
+    #[ORM\Column(nullable: true)]
     #[Groups(['field_type:write', 'field_type:read'])]
-    private string $decimalSeparator = '.';
+    private ?string $decimalSeparator = null;
 
     /**
      * @var Collection<int, FieldTypeTitleTranslation>
@@ -153,12 +153,12 @@ class FieldType extends TimestampableEntity
         $this->inputType = $inputType;
     }
 
-    public function getDecimalSeparator(): string
+    public function getDecimalSeparator(): ?string
     {
         return $this->decimalSeparator;
     }
 
-    public function setDecimalSeparator(string $decimalSeparator): FieldType
+    public function setDecimalSeparator(?string $decimalSeparator): FieldType
     {
         $this->decimalSeparator = $decimalSeparator;
 

@@ -22,7 +22,7 @@ final class NumberFieldRenderer implements FieldRendererInterface
     public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
     {
         return NumberField::new('field_'.$field->getType()->getCode())
-            ->setDecimalSeparator($field->getType()->getDecimalSeparator())
+            ->setDecimalSeparator($field->getType()->getDecimalSeparator() ?? '.')
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
                 'data' => (null !== $field->getValue()) ? $this->parseDecimalValue($field->getValue(), $field->getType()->getDecimalSeparator()) : null,
@@ -31,8 +31,12 @@ final class NumberFieldRenderer implements FieldRendererInterface
             ]);
     }
 
-    private function parseDecimalValue(string $value, string $decimalSeparator): float
+    private function parseDecimalValue(string $value, ?string $decimalSeparator): float
     {
+        if (null === $decimalSeparator || true === empty($decimalSeparator)) {
+            return (float) $value;
+        }
+
         return (float) str_replace($decimalSeparator, '.', $value);
     }
 }

@@ -40,6 +40,10 @@ class FieldSynchronizer
                 continue;
             }
 
+            if (InputType::File === $fieldType->getInputType()) {
+                continue;
+            }
+
             $field = $this->fieldResolver->resolve(
                 $product,
                 $fieldType,
@@ -64,15 +68,19 @@ class FieldSynchronizer
      */
     private function getFieldValue(FieldType $fieldType, array $requestData): ?string
     {
-        // TODO: handle uploads
         $formFieldName = 'field_'.$fieldType->getCode();
 
         if (InputType::Boolean === $fieldType->getInputType()) {
             return (string) \array_key_exists($formFieldName, $requestData);
         }
 
-        /** @var string|int|bool|float|null $value */
+        /** @phpstan-var string|int|bool|float|null $value */
         $value = $requestData[$formFieldName] ?? null;
+
+        if (InputType::MultiSelect === $fieldType->getInputType()) {
+            /** @phpstan-var array<int,string>|null $value */
+            return (null !== $value) ? implode(',', $value) : null;
+        }
 
         return '' === $value ? null : (string) $value;
     }

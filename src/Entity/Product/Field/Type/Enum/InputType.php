@@ -23,13 +23,13 @@ enum InputType: string
     case Locale = 'locale';
     case TextEditor = 'texteditor';
     case Url = 'url';
+    case Select = 'select';
+    case MultiSelect = 'multiselect';
+    case File = 'file';
+    case Image = 'image';
 }
 
 /*
-ChoiceField
-    -> configure available options via config as with fieldType - Type Select
-    -> implement configuration for multiselect -> convert values on save - Type Multiselect
-
 FileField
     -> setUploadedFileNamePattern
 ImageField

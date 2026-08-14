@@ -16,7 +16,7 @@ div.sortable-collection {
     );
 }
 
-.sortable-collection .field-collection-item::before {
+.sortable-collection .field-collection-item-complex::before {
     content: "⋮⋮";
     position: absolute;
     transform: translateY(30%) translateX(25%);

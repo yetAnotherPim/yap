@@ -174,7 +174,7 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->twice()
+            ->times(3)
             ->andReturn(InputType::Text);
 
         $configuration
@@ -232,7 +232,7 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->twice()
+            ->times(3)
             ->andReturn(InputType::Text);
 
         $configuration
@@ -377,6 +377,167 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->synchronizer->synchronizeFields(
             $this->product,
             []
+        );
+    }
+
+    public function testSynchronizeFieldsSetsMultiSelectValueWhenRequestContainsArray(): void
+    {
+        $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $fieldType = \Mockery::mock(FieldType::class);
+        $field = \Mockery::mock(Field::class);
+
+        $this->product
+            ->shouldReceive('getProductType')
+            ->once()
+            ->andReturn($this->productType);
+
+        $this->productType
+            ->shouldReceive('getProductTypeFieldConfigurations')
+            ->once()
+            ->andReturn(new ArrayCollection([$configuration]));
+
+        $configuration
+            ->shouldReceive('getFieldType')
+            ->once()
+            ->andReturn($fieldType);
+
+        $fieldType
+            ->shouldReceive('getInputType')
+            ->times(3)
+            ->andReturn(InputType::MultiSelect);
+
+        $configuration
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn(null);
+
+        $fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('tags');
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->andReturn($field);
+
+        $field
+            ->shouldReceive('setValue')
+            ->once()
+            ->with('tag1,tag2');
+
+        $this->product
+            ->shouldReceive('addField')
+            ->once()
+            ->with($field);
+
+        $this->synchronizer->synchronizeFields(
+            $this->product,
+            ['field_tags' => ['tag1', 'tag2']]
+        );
+    }
+
+    public function testSynchronizeFieldsSetsNullForMultiSelectWhenRequestValueIsNull(): void
+    {
+        $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $fieldType = \Mockery::mock(FieldType::class);
+        $field = \Mockery::mock(Field::class);
+
+        $this->product
+            ->shouldReceive('getProductType')
+            ->once()
+            ->andReturn($this->productType);
+
+        $this->productType
+            ->shouldReceive('getProductTypeFieldConfigurations')
+            ->once()
+            ->andReturn(new ArrayCollection([$configuration]));
+
+        $configuration
+            ->shouldReceive('getFieldType')
+            ->once()
+            ->andReturn($fieldType);
+
+        $fieldType
+            ->shouldReceive('getInputType')
+            ->times(3)
+            ->andReturn(InputType::MultiSelect);
+
+        $configuration
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn(null);
+
+        $fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('tags');
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->andReturn($field);
+
+        $field
+            ->shouldReceive('setValue')
+            ->once()
+            ->with(null);
+
+        $this->product
+            ->shouldReceive('addField')
+            ->once()
+            ->with($field);
+
+        $this->synchronizer->synchronizeFields(
+            $this->product,
+            ['field_tags' => null]
+        );
+    }
+
+    public function testSynchronizeFieldsHandlesMultipleFieldsInRequestData(): void
+    {
+        $config1 = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $fieldType1 = \Mockery::mock(FieldType::class);
+        $field1 = \Mockery::mock(Field::class);
+
+        $config2 = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $fieldType2 = \Mockery::mock(FieldType::class);
+        $field2 = \Mockery::mock(Field::class);
+
+        $this->product
+            ->shouldReceive('getProductType')
+            ->once()
+            ->andReturn($this->productType);
+
+        $this->productType
+            ->shouldReceive('getProductTypeFieldConfigurations')
+            ->once()
+            ->andReturn(new ArrayCollection([$config1, $config2]));
+
+        $config1->shouldReceive('getFieldType')->once()->andReturn($fieldType1);
+        $fieldType1->shouldReceive('getInputType')->times(3)->andReturn(InputType::Text);
+        $fieldType1->shouldReceive('getCode')->once()->andReturn('title');
+        $config1->shouldReceive('getDefaultValue')->once()->andReturn(null);
+
+        $config2->shouldReceive('getFieldType')->once()->andReturn($fieldType2);
+        $fieldType2->shouldReceive('getInputType')->twice()->andReturn(InputType::Boolean);
+        $fieldType2->shouldReceive('getCode')->once()->andReturn('active');
+        $config2->shouldReceive('getDefaultValue')->once()->andReturn(null);
+
+        $this->fieldResolver->shouldReceive('resolve')->twice()->andReturn($field1, $field2);
+
+        $field1->shouldReceive('setValue')->once()->with('New Title');
+        $field2->shouldReceive('setValue')->once()->with('1');
+
+        $this->product->shouldReceive('addField')->once()->with($field1);
+        $this->product->shouldReceive('addField')->once()->with($field2);
+
+        $this->synchronizer->synchronizeFields(
+            $this->product,
+            [
+                'field_title' => 'New Title',
+                'field_active' => '1',
+            ]
         );
     }
 }

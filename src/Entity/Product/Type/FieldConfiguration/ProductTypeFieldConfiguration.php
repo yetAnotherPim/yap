@@ -49,6 +49,12 @@ class ProductTypeFieldConfiguration
     #[ORM\Column(options: ['default' => 0])]
     private bool $required = false;
 
+    /**
+     * @phpstan-var string[]
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private array $options = [];
+
     public function getId(): Uuid
     {
         return $this->id;
@@ -110,6 +116,24 @@ class ProductTypeFieldConfiguration
     public function setRequired(bool $isRequired): ProductTypeFieldConfiguration
     {
         $this->required = $isRequired;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param string[] $options
+     */
+    public function setOptions(array $options): ProductTypeFieldConfiguration
+    {
+        $this->options = $options;
 
         return $this;
     }
