@@ -9,12 +9,18 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
+use App\Form\Product\Fields\Resolver\Enum\FileType;
+use App\Form\Product\Fields\Resolver\FileResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FileField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
 
 final class FileFieldRenderer implements FieldRendererInterface
 {
+    public function __construct(
+        private readonly FileResolver $fileResolver,
+    ) {
+    }
+
     public function supports(FieldType $type): bool
     {
         return InputType::File === $type->getInputType();
@@ -23,11 +29,11 @@ final class FileFieldRenderer implements FieldRendererInterface
     public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
     {
         return FileField::new('field_'.$field->getType()->getCode())
-            ->setUploadDir('public/uploads/files')
+            ->setUploadDir($this->fileResolver->getUploadDirectory(FileType::FILE))
             ->setUploadedFileNamePattern('[YYYY]/[MM]/[DD]/[slug]-[contenthash].[extension]')
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => $this->fileResolver->resolve($field->getValue(), FileType::FILE),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

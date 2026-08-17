@@ -41,7 +41,7 @@ class TextFieldRendererTest extends MockeryTestCase
         $this->fieldType
             ->shouldReceive('getInputType')
             ->once()
-            ->andReturn(InputType::Boolean);
+            ->andReturn(InputType::CheckBox);
 
         $this->assertFalse(
             $this->renderer->supports($this->fieldType)

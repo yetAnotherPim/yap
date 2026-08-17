@@ -102,7 +102,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
         $fieldType
             ->shouldReceive('getInputType')
             ->once()
-            ->andReturn(InputType::Boolean);
+            ->andReturn(InputType::CheckBox);
 
         $controller = new ProductTypeCrudController();
         $fields = iterator_to_array(
@@ -118,7 +118,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
 
         $this->assertIsCallable($entryToStringMethod);
         $this->assertSame(
-            'Boolean field (is_active - Boolean)',
+            'Boolean field (is_active - CheckBox)',
             $entryToStringMethod($configuration)
         );
     }

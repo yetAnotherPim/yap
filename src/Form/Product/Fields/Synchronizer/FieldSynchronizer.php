@@ -17,9 +17,10 @@ class FieldSynchronizer
     }
 
     /**
-     * @param array<mixed>|null $requestData
+     * @param array<mixed>|null    $requestData
+     * @param array<string, mixed> $uploadedFilePaths
      */
-    public function synchronizeFields(Product $product, ?array $requestData = null): void
+    public function synchronizeFields(Product $product, ?array $requestData = null, array $uploadedFilePaths = []): void
     {
         // TODO: frontend test
         // -> 1.fields are created on creation with default value
@@ -40,10 +41,6 @@ class FieldSynchronizer
                 continue;
             }
 
-            if (InputType::File === $fieldType->getInputType()) {
-                continue;
-            }
-
             $field = $this->fieldResolver->resolve(
                 $product,
                 $fieldType,
@@ -55,6 +52,7 @@ class FieldSynchronizer
                     $this->getFieldValue(
                         $fieldType,
                         $requestData,
+                        $uploadedFilePaths,
                     ),
                 );
             }
@@ -64,22 +62,34 @@ class FieldSynchronizer
     }
 
     /**
-     * @param array<mixed> $requestData
+     * @param array<mixed>         $requestData
+     * @param array<string, mixed> $uploadedFilePaths
      */
-    private function getFieldValue(FieldType $fieldType, array $requestData): ?string
+    private function getFieldValue(FieldType $fieldType, array $requestData, array $uploadedFilePaths = []): ?string
     {
         $formFieldName = 'field_'.$fieldType->getCode();
 
-        if (InputType::Boolean === $fieldType->getInputType()) {
+        if (InputType::CheckBox === $fieldType->getInputType()) {
             return (string) \array_key_exists($formFieldName, $requestData);
         }
 
-        /** @phpstan-var string|int|bool|float|null $value */
+        if (InputType::File === $fieldType->getInputType() || InputType::Image === $fieldType->getInputType()) {
+            return isset($uploadedFilePaths[$formFieldName])
+                // @phpstan-ignore-next-line
+                ? (string) $uploadedFilePaths[$formFieldName]
+                : null;
+        }
+
+        /** @phpstan-var array<int,string>|string|int|bool|float|null $value */
         $value = $requestData[$formFieldName] ?? null;
 
         if (InputType::MultiSelect === $fieldType->getInputType()) {
             /** @phpstan-var array<int,string>|null $value */
             return (null !== $value) ? implode(',', $value) : null;
+        }
+
+        if (true === \is_array($value)) {
+            return '';
         }
 
         return '' === $value ? null : (string) $value;

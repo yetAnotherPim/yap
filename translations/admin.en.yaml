@@ -1,0 +1,10 @@
+product_type_field_configuration:
+    default_value:
+        help: |
+            Default values are applied on product creation.<br/><br/>
+
+            Possible values are:<br/>
+            'Some text'<br/>
+            '17.06'<br/>
+            '1' - Will be interpreted as active on Checkboxes<br/>
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'

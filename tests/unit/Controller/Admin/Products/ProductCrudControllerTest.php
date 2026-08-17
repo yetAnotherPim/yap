@@ -26,11 +26,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
+use EasyCorp\Bundle\EasyAdminBundle\Form\Type\Model\FileUploadState;
 use EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Option\ButtonVariant;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Form\FormConfigInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Uuid;
 
@@ -175,7 +181,7 @@ class ProductCrudControllerTest extends MockeryTestCase
         $this->fieldSynchronizer
             ->shouldReceive('synchronizeFields')
             ->once()
-            ->with($product, []);
+            ->with($product, [], []);
 
         $request = new Request(
             [],
@@ -553,5 +559,267 @@ class ProductCrudControllerTest extends MockeryTestCase
         $this->assertTrue(
             $configuredCrud->getAsDto()->areNullValuesHidden()
         );
+    }
+
+    public function testProcessUploadedFilesCollectsUploadedFilePaths(): void
+    {
+        $file = $this->createFileUploadFormMock(
+            name: 'field_file',
+            data: '2026/08/14/indexcontroller-file.pdf',
+        );
+
+        $form = $this->createFormMock([$file]);
+
+        $method = new \ReflectionMethod(
+            ProductCrudController::class,
+            'processUploadedFiles',
+        );
+
+        $method->invoke($this->controller, $form);
+
+        $this->assertSame(
+            [
+                'field_file' => '2026/08/14/indexcontroller-file.pdf',
+            ],
+            $this->getUploadedFilePaths(),
+        );
+    }
+
+    public function testCollectUploadedFilePathsCollectsFilePath(): void
+    {
+        $file = $this->createFileUploadFormMock(
+            name: 'field_file',
+            data: '2026/08/14/indexcontroller-file.pdf',
+        );
+
+        $form = $this->createFormMock([$file]);
+
+        $this->invokeCollectUploadedFilePaths($form);
+
+        $this->assertSame(
+            [
+                'field_file' => '2026/08/14/indexcontroller-file.pdf',
+            ],
+            $this->getUploadedFilePaths(),
+        );
+    }
+
+    public function testCollectUploadedFilePathsCollectsNestedFilePath(): void
+    {
+        $file = $this->createFileUploadFormMock(
+            name: 'field_file',
+            data: '2026/08/14/indexcontroller-file.pdf',
+        );
+
+        $configuration = $this->createFormMock(
+            [$file],
+            name: '1',
+            compound: true,
+        );
+
+        $form = $this->createFormMock([$configuration]);
+
+        $this->invokeCollectUploadedFilePaths($form);
+
+        $this->assertSame(
+            [
+                '1[field_file]' => '2026/08/14/indexcontroller-file.pdf',
+            ],
+            $this->getUploadedFilePaths(),
+        );
+    }
+
+    public function testCollectUploadedFilePathsIgnoresNonFileUploadFields(): void
+    {
+        $field = $this->createNonFileFormMock('field_title');
+
+        $form = $this->createFormMock([$field]);
+
+        $this->invokeCollectUploadedFilePaths($form);
+
+        $this->assertSame([], $this->getUploadedFilePaths());
+    }
+
+    public function testCollectUploadedFilePathsIgnoresEmptyFilePath(): void
+    {
+        $file = $this->createFileUploadFormMock(
+            name: 'field_file',
+            data: '',
+        );
+
+        $form = $this->createFormMock([$file]);
+
+        $this->invokeCollectUploadedFilePaths($form);
+
+        $this->assertSame(['field_file' => ''], $this->getUploadedFilePaths());
+    }
+
+    /**
+     * @param FormInterface<Product> $form
+     */
+    private function invokeCollectUploadedFilePaths(FormInterface $form): void
+    {
+        $method = new \ReflectionMethod(
+            ProductCrudController::class,
+            'collectUploadedFilePaths',
+        );
+
+        $method->invoke($this->controller, $form);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getUploadedFilePaths(): array
+    {
+        $property = new \ReflectionProperty(
+            ProductCrudController::class,
+            'uploadedFilePaths',
+        );
+
+        /** @var array<string,string> $value */
+        $value = $property->getValue($this->controller);
+
+        return $value;
+    }
+
+    /**
+     * @return FormInterface<Product>
+     */
+    private function createFileUploadFormMock(
+        string $name,
+        string $data,
+    ): FormInterface {
+        $form = \Mockery::mock(FormInterface::class);
+
+        $form
+            ->shouldReceive('getName')
+            ->andReturn($name);
+
+        $form
+            ->shouldReceive('getData')
+            ->andReturn($data);
+
+        $fileUploadType = \Mockery::mock(FileUploadType::class);
+
+        $resolvedType = \Mockery::mock(ResolvedFormTypeInterface::class);
+
+        $resolvedType
+            ->shouldReceive('getInnerType')
+            ->andReturn($fileUploadType);
+
+        $state = \Mockery::mock(FileUploadState::class);
+
+        $state
+            ->shouldReceive('isModified')
+            ->andReturn(false);
+
+        $config = \Mockery::mock(FormConfigInterface::class);
+
+        $config
+            ->shouldReceive('getType')
+            ->andReturn($resolvedType);
+
+        $config
+            ->shouldReceive('getCompound')
+            ->andReturn(false);
+
+        $config
+            ->shouldReceive('getAttribute')
+            ->with('state')
+            ->andReturn($state);
+
+        $config
+            ->shouldReceive('getOption')
+            ->with('upload_dir')
+            ->andReturn('');
+
+        $form
+            ->shouldReceive('getConfig')
+            ->andReturn($config);
+
+        return $form;
+    }
+
+    /**
+     * @param array<int, FormInterface<Product>> $children
+     *
+     * @return FormInterface<Product>
+     */
+    private function createFormMock(
+        array $children,
+        string $name = 'root',
+        bool $compound = false,
+    ): FormInterface {
+        $form = \Mockery::mock(FormInterface::class);
+
+        $form
+            ->shouldReceive('getIterator')
+            ->andReturn(new \ArrayIterator($children));
+
+        $form
+            ->shouldReceive('getName')
+            ->andReturn($name);
+
+        $formType = \Mockery::mock(FormTypeInterface::class);
+
+        $resolvedType = \Mockery::mock(ResolvedFormTypeInterface::class);
+
+        $resolvedType
+            ->shouldReceive('getInnerType')
+            ->andReturn($formType);
+
+        $config = \Mockery::mock(FormConfigInterface::class);
+
+        $config
+            ->shouldReceive('getType')
+            ->andReturn($resolvedType);
+
+        $config
+            ->shouldReceive('getCompound')
+            ->andReturn($compound);
+
+        $form
+            ->shouldReceive('getConfig')
+            ->andReturn($config);
+
+        return $form;
+    }
+
+    /**
+     * @return FormInterface<Product>
+     */
+    private function createNonFileFormMock(
+        string $name,
+    ): FormInterface {
+        $form = \Mockery::mock(FormInterface::class);
+
+        $form
+            ->shouldReceive('getName')
+            ->andReturn($name);
+
+        $formType = \Mockery::mock(FormTypeInterface::class);
+
+        $resolvedType = \Mockery::mock(ResolvedFormTypeInterface::class);
+
+        $resolvedType
+            ->shouldReceive('getInnerType')
+            ->andReturn($formType);
+
+        $config = \Mockery::mock(FormConfigInterface::class);
+
+        $config
+            ->shouldReceive('getType')
+            ->andReturn($resolvedType);
+
+        $config
+            ->shouldReceive('getCompound')
+            ->andReturn(false);
+
+        $form
+            ->shouldReceive('getConfig')
+            ->andReturn($config);
+
+        return $form;
     }
 }

@@ -21,7 +21,6 @@ use Symfony\Component\Uid\Uuid;
 #[ApiResource]
 class ProductTypeFieldConfiguration
 {
-    // TODO: avoid duplicates
     // TODO: add default translation
 
     #[ORM\Id]

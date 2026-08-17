@@ -174,7 +174,7 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(3)
+            ->times(5)
             ->andReturn(InputType::Text);
 
         $configuration
@@ -232,7 +232,7 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(3)
+            ->times(5)
             ->andReturn(InputType::Text);
 
         $configuration
@@ -290,7 +290,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $fieldType
             ->shouldReceive('getInputType')
             ->twice()
-            ->andReturn(InputType::Boolean);
+            ->andReturn(InputType::CheckBox);
 
         $configuration
             ->shouldReceive('getDefaultValue')
@@ -347,7 +347,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $fieldType
             ->shouldReceive('getInputType')
             ->twice()
-            ->andReturn(InputType::Boolean);
+            ->andReturn(InputType::CheckBox);
 
         $configuration
             ->shouldReceive('getDefaultValue')
@@ -403,7 +403,7 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(3)
+            ->times(5)
             ->andReturn(InputType::MultiSelect);
 
         $configuration
@@ -460,7 +460,7 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(3)
+            ->times(5)
             ->andReturn(InputType::MultiSelect);
 
         $configuration
@@ -515,12 +515,12 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->andReturn(new ArrayCollection([$config1, $config2]));
 
         $config1->shouldReceive('getFieldType')->once()->andReturn($fieldType1);
-        $fieldType1->shouldReceive('getInputType')->times(3)->andReturn(InputType::Text);
+        $fieldType1->shouldReceive('getInputType')->times(5)->andReturn(InputType::Text);
         $fieldType1->shouldReceive('getCode')->once()->andReturn('title');
         $config1->shouldReceive('getDefaultValue')->once()->andReturn(null);
 
         $config2->shouldReceive('getFieldType')->once()->andReturn($fieldType2);
-        $fieldType2->shouldReceive('getInputType')->twice()->andReturn(InputType::Boolean);
+        $fieldType2->shouldReceive('getInputType')->twice()->andReturn(InputType::CheckBox);
         $fieldType2->shouldReceive('getCode')->once()->andReturn('active');
         $config2->shouldReceive('getDefaultValue')->once()->andReturn(null);
 
@@ -538,6 +538,245 @@ class FieldSynchronizerTest extends MockeryTestCase
                 'field_title' => 'New Title',
                 'field_active' => '1',
             ]
+        );
+    }
+
+    public function testSynchronizeFieldsSetsUploadedFilePath(): void
+    {
+        $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $fieldType = \Mockery::mock(FieldType::class);
+        $field = \Mockery::mock(Field::class);
+
+        $this->product
+            ->shouldReceive('getProductType')
+            ->once()
+            ->andReturn($this->productType);
+
+        $this->productType
+            ->shouldReceive('getProductTypeFieldConfigurations')
+            ->once()
+            ->andReturn(new ArrayCollection([$configuration]));
+
+        $configuration
+            ->shouldReceive('getFieldType')
+            ->once()
+            ->andReturn($fieldType);
+
+        $configuration
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn(null);
+
+        $fieldType
+            ->shouldReceive('getInputType')
+            ->times(3)
+            ->andReturn(InputType::File);
+
+        $fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('file');
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->product, $fieldType, null)
+            ->andReturn($field);
+
+        $field
+            ->shouldReceive('setValue')
+            ->once()
+            ->with('2026/08/14/indexcontroller-file.pdf');
+
+        $this->product
+            ->shouldReceive('addField')
+            ->once()
+            ->with($field);
+
+        $this->synchronizer->synchronizeFields(
+            $this->product,
+            ['field_file' => ['deleted_files' => '']],
+            [
+                'field_file' => '2026/08/14/indexcontroller-file.pdf',
+            ],
+        );
+    }
+
+    public function testSynchronizeFieldsSetsNullForFileWithoutUploadedFilePath(): void
+    {
+        $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $fieldType = \Mockery::mock(FieldType::class);
+        $field = \Mockery::mock(Field::class);
+
+        $this->product
+            ->shouldReceive('getProductType')
+            ->once()
+            ->andReturn($this->productType);
+
+        $this->productType
+            ->shouldReceive('getProductTypeFieldConfigurations')
+            ->once()
+            ->andReturn(new ArrayCollection([$configuration]));
+
+        $configuration
+            ->shouldReceive('getFieldType')
+            ->once()
+            ->andReturn($fieldType);
+
+        $configuration
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn(null);
+
+        $fieldType
+            ->shouldReceive('getInputType')
+            ->times(3)
+            ->andReturn(InputType::File);
+
+        $fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('file');
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->product, $fieldType, null)
+            ->andReturn($field);
+
+        $field
+            ->shouldReceive('setValue')
+            ->once()
+            ->with(null);
+
+        $this->product
+            ->shouldReceive('addField')
+            ->once()
+            ->with($field);
+
+        $this->synchronizer->synchronizeFields(
+            $this->product,
+            ['field_file' => ['deleted_files' => '']],
+            [],
+        );
+    }
+
+    public function testSynchronizeFieldsSetsUploadedImagePath(): void
+    {
+        $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $fieldType = \Mockery::mock(FieldType::class);
+        $field = \Mockery::mock(Field::class);
+
+        $this->product
+            ->shouldReceive('getProductType')
+            ->once()
+            ->andReturn($this->productType);
+
+        $this->productType
+            ->shouldReceive('getProductTypeFieldConfigurations')
+            ->once()
+            ->andReturn(new ArrayCollection([$configuration]));
+
+        $configuration
+            ->shouldReceive('getFieldType')
+            ->once()
+            ->andReturn($fieldType);
+
+        $configuration
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn(null);
+
+        $fieldType
+            ->shouldReceive('getInputType')
+            ->times(4)
+            ->andReturn(InputType::Image);
+
+        $fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('image');
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->product, $fieldType, null)
+            ->andReturn($field);
+
+        $field
+            ->shouldReceive('setValue')
+            ->once()
+            ->with('2026/08/14/product-image.jpg');
+
+        $this->product
+            ->shouldReceive('addField')
+            ->once()
+            ->with($field);
+
+        $this->synchronizer->synchronizeFields(
+            $this->product,
+            ['field_image' => ['deleted_files' => '']],
+            [
+                'field_image' => '2026/08/14/product-image.jpg',
+            ],
+        );
+    }
+
+    public function testSynchronizeFieldsConvertsArrayValueToEmptyStringForRegularField(): void
+    {
+        $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $fieldType = \Mockery::mock(FieldType::class);
+        $field = \Mockery::mock(Field::class);
+
+        $this->product
+            ->shouldReceive('getProductType')
+            ->once()
+            ->andReturn($this->productType);
+
+        $this->productType
+            ->shouldReceive('getProductTypeFieldConfigurations')
+            ->once()
+            ->andReturn(new ArrayCollection([$configuration]));
+
+        $configuration
+            ->shouldReceive('getFieldType')
+            ->once()
+            ->andReturn($fieldType);
+
+        $configuration
+            ->shouldReceive('getDefaultValue')
+            ->once()
+            ->andReturn(null);
+
+        $fieldType
+            ->shouldReceive('getInputType')
+            ->times(5)
+            ->andReturn(InputType::Text);
+
+        $fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('title');
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->product, $fieldType, null)
+            ->andReturn($field);
+
+        $field
+            ->shouldReceive('setValue')
+            ->once()
+            ->with('');
+
+        $this->product
+            ->shouldReceive('addField')
+            ->once()
+            ->with($field);
+
+        $this->synchronizer->synchronizeFields(
+            $this->product,
+            ['field_title' => ['unexpected', 'array']],
         );
     }
 }

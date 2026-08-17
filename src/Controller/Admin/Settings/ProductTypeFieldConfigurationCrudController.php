@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
 /**
  * @extends AbstractCrudController<ProductTypeFieldConfiguration>
@@ -72,7 +73,15 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
                 ->setFormTypeOption('row_attr', [
                     'data-field-type-options-field' => 'true',
                 ]),
-            TextareaField::new('defaultValue'),
+            TextareaField::new('defaultValue')
+                // TODO: render as tooltip
+                ->setHelp(
+                    new TranslatableMessage(
+                        'product_type_field_configuration.default_value.help',
+                        [],
+                        'admin'
+                    )
+                ),
             BooleanField::new('required'),
             HiddenField::new('position'),
         ];

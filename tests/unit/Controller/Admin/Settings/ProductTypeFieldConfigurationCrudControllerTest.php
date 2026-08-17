@@ -14,11 +14,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -58,7 +56,7 @@ class ProductTypeFieldConfigurationCrudControllerTest extends MockeryTestCase
     public function testAjaxGetInputTypeReturnsExpectedResponse(): void
     {
         $controller = new ProductTypeFieldConfigurationCrudController();
-        $fieldType = Mockery::mock(FieldType::class);
+        $fieldType = \Mockery::mock(FieldType::class);
 
         $fieldType
             ->shouldReceive('getInputType')
@@ -77,12 +75,13 @@ class ProductTypeFieldConfigurationCrudControllerTest extends MockeryTestCase
         $controller->setContainer($container);
 
         $response = $controller->ajaxGetInputType($fieldType);
+        /** @var string $content */
+        $content = $response->getContent();
 
-        $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame(
             ['inputType' => InputType::Select->value],
-            json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR),
+            json_decode($content, true, 512, JSON_THROW_ON_ERROR),
         );
     }
 }

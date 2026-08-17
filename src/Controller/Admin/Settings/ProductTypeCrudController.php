@@ -37,6 +37,7 @@ class ProductTypeCrudController extends AbstractCrudController
             TextField::new('code'),
             TextField::new('title'),
             FormField::addFieldset('Fields'),
+            // TODO: avoid duplicates
             CollectionField::new('productTypeFieldConfigurations')
                 ->setRequired(true)
                 ->setEntryIsComplex()

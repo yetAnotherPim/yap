@@ -7,7 +7,7 @@ namespace App\Entity\Product\Field\Type\Enum;
 enum InputType: string
 {
     case Section = 'section';
-    case Boolean = 'boolean';
+    case CheckBox = 'checkbox';
     case String = 'string';
     case Text = 'text';
     case Integer = 'integer';

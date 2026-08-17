@@ -27,7 +27,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -37,13 +36,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_EDITOR')]
 class ProductCrudController extends AbstractCrudController
 {
+    /**
+     * @var array<string, mixed>
+     */
     private array $uploadedFilePaths = [];
 
     public function __construct(
         private readonly IdentifierTypeRepository $identifierTypeRepository,
         private readonly ProductFieldsRenderer $productFieldsRenderer,
         private readonly FieldSynchronizer $fieldSynchronizer,
-        private readonly string $projectDir,
     ) {
     }
 
@@ -193,14 +194,14 @@ class ProductCrudController extends AbstractCrudController
             return;
         }
 
-        //TODO: synchronize uploads -> $this->uploadedFilePaths
-        $this->fieldSynchronizer->synchronizeFields($entityInstance, $requestData);
+        $this->fieldSynchronizer->synchronizeFields($entityInstance, $requestData, $this->uploadedFilePaths);
 
         parent::updateEntity($entityManager, $entityInstance);
-
-        
     }
 
+    /**
+     * @param FormInterface<Product> $form
+     */
     protected function processUploadedFiles(FormInterface $form): void
     {
         $this->collectUploadedFilePaths($form);
@@ -208,6 +209,9 @@ class ProductCrudController extends AbstractCrudController
         parent::processUploadedFiles($form);
     }
 
+    /**
+     * @param FormInterface<Product> $form
+     */
     private function collectUploadedFilePaths(
         FormInterface $form,
         string $parentPath = '',
@@ -220,22 +224,13 @@ class ProductCrudController extends AbstractCrudController
             $config = $child->getConfig();
 
             if ($config->getType()->getInnerType() instanceof FileUploadType) {
-                $relativePath = $child->getData();
-
-                if (\is_string($relativePath) && '' !== $relativePath) {
-                    $uploadDir = Path::makeRelative(
-                        $config->getOption('upload_dir'),
-                        $this->projectDir,
-                    );
-
-                    $this->uploadedFilePaths[$path] =
-                        $uploadDir.'/'.$relativePath;
-                }
+                $this->uploadedFilePaths[$path] = $child->getData();
 
                 continue;
             }
 
             if ($config->getCompound()) {
+                /** @phpstan-var FormInterface<Product> $child */
                 $this->collectUploadedFilePaths($child, $path);
             }
         }

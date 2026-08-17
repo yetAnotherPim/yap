@@ -16,7 +16,7 @@ final class CheckboxFieldRenderer implements FieldRendererInterface
 {
     public function supports(FieldType $type): bool
     {
-        return InputType::Boolean === $type->getInputType();
+        return InputType::CheckBox === $type->getInputType();
     }
 
     public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
