@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
+use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
 use App\Repository\FieldRepository;
@@ -22,7 +23,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: FieldRepository::class)]
@@ -65,6 +68,9 @@ class Field extends RelatedTimestampableEntity
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
+    #[Context([
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
+    ])]
     private ?string $value = null;
 
     /**
@@ -119,6 +125,34 @@ class Field extends RelatedTimestampableEntity
         $this->value = $value;
 
         return $this;
+    }
+
+    #[ApiProperty(
+        types: ['integer', 'float', 'boolean', 'string']
+    )]
+    #[Context([
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
+    ])]
+    #[Groups(['product:read', 'field:read'])]
+    public function getTypedValue(): string|int|bool|float|null
+    {
+        if (false === isset($this->value)) {
+            return null;
+        }
+
+        if (true === \is_string($this->value) && InputType::CheckBox === $this->getType()->getInputType()) {
+            return (bool) $this->value;
+        }
+
+        if (true === \is_string($this->value) && InputType::Number === $this->getType()->getInputType()) {
+            return (float) $this->value;
+        }
+
+        if (true === \is_string($this->value) && InputType::Integer === $this->getType()->getInputType()) {
+            return (int) $this->value;
+        }
+
+        return $this->value;
     }
 
     /**

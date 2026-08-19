@@ -6,6 +6,7 @@ namespace App\Tests\unit\Entity\Product\Field;
 
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
+use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
 use App\Tests\helper\Trait\Unit\AssociationTrait;
@@ -52,6 +53,25 @@ class FieldTest extends MockeryTestCase
         return Field::class;
     }
 
+    #[DataProvider('provideTypedValue')]
+    public function testGetTypedValue(
+        ?string $value,
+        InputType $inputType,
+        string|int|bool|float|null $expected,
+    ): void {
+        $field = new Field();
+        $field->setValue($value);
+
+        $fieldType = \Mockery::mock(FieldType::class);
+        $fieldType
+            ->shouldReceive('getInputType')
+            ->andReturn($inputType);
+
+        $field->setType($fieldType);
+
+        self::assertSame($expected, $field->getTypedValue());
+    }
+
     /**
      * @param class-string $targetValue
      */
@@ -83,6 +103,54 @@ class FieldTest extends MockeryTestCase
     {
         return [
             ['getTranslations', 'addTranslation', 'removeTranslation', FieldValueTranslation::class, 'setField'],
+        ];
+    }
+
+    /**
+     * @return iterable<string, array{value: string|null, inputType: InputType, expected: string|int|bool|float|null}>
+     */
+    public static function provideTypedValue(): iterable
+    {
+        yield 'null' => [
+            'value' => null,
+            'inputType' => InputType::Text,
+            'expected' => null,
+        ];
+
+        yield 'checkbox true' => [
+            'value' => '1',
+            'inputType' => InputType::CheckBox,
+            'expected' => true,
+        ];
+
+        yield 'checkbox false' => [
+            'value' => '0',
+            'inputType' => InputType::CheckBox,
+            'expected' => false,
+        ];
+
+        yield 'number' => [
+            'value' => '3.14159265359',
+            'inputType' => InputType::Number,
+            'expected' => 3.14159265359,
+        ];
+
+        yield 'integer' => [
+            'value' => '42',
+            'inputType' => InputType::Integer,
+            'expected' => 42,
+        ];
+
+        yield 'string' => [
+            'value' => 'Something',
+            'inputType' => InputType::Text,
+            'expected' => 'Something',
+        ];
+
+        yield 'empty string' => [
+            'value' => '',
+            'inputType' => InputType::Text,
+            'expected' => '',
         ];
     }
 }

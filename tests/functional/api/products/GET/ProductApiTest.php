@@ -26,6 +26,7 @@ use App\Tests\TestData\Factory\Product\ProductFactory;
 use App\Tests\TestData\Story\MultipleProductsStory;
 use App\Tests\TestData\Story\ProductsSharingIdentifierStory;
 use App\Tests\TestData\Story\ProductsWithFieldsAndTranslationsStory;
+use App\Tests\TestData\Story\ProductsWithFieldsOfDifferentTypeStory;
 use App\Tests\TestData\Story\SimpleProductStory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -139,7 +140,7 @@ class ProductApiTest extends ApiTestCase
         ProductFactory::createOne(['createdAt' => new \DateTimeImmutable('2022-02-21'), 'updatedAt' => new \DateTimeImmutable('2022-02-21')]);
         ProductFactory::createOne(['createdAt' => new \DateTimeImmutable('2022-02-21 12:00:00'), 'updatedAt' => new \DateTimeImmutable('2022-02-21 12:00:00')]);
 
-        $response = $this->client->request(
+        $this->client->request(
             'GET',
             '/api/products',
             [
@@ -626,5 +627,67 @@ class ProductApiTest extends ApiTestCase
         $this->client->request('GET', '/api/products');
 
         $this->assertResponseStatusCodeSame(401);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testTypedValueIsConvertedCorrectly(): void
+    {
+        ProductsWithFieldsOfDifferentTypeStory::load();
+        /** @phpstan-var Product $product */
+        $product = ProductsWithFieldsOfDifferentTypeStory::get('product');
+
+        $response = $this->client->request(
+            'GET',
+            '/api/products/'.$product->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+
+        /** @var list<array{
+         *     type: array{code: string},
+         *     typedValue: string|int|float|bool|null
+         * }> $fieldsResponse
+         */
+        $fieldsResponse = $response = $response->toArray()['fields'];
+
+        $fields = array_combine(
+            array_map(
+                static fn (array $field): string => $field['type']['code'],
+                $fieldsResponse,
+            ),
+            $fieldsResponse,
+        );
+
+        $this->assertNull($fields['null_value']['typedValue']);
+        $this->assertSame('', $fields['empty_string']['typedValue']);
+        $this->assertSame('Something', $fields['string']['typedValue']);
+
+        $this->assertTrue($fields['checkbox_true']['typedValue']);
+        $this->assertFalse($fields['checkbox_false']['typedValue']);
+        $this->assertNull($fields['checkbox_null']['typedValue']);
+        $this->assertTrue($fields['checkbox_unexpected']['typedValue']);
+
+        $this->assertSame(1, $fields['number_1']['typedValue']);
+        $this->assertSame(3.14159265359, $fields['number_float']['typedValue']);
+        $this->assertSame(0, $fields['number_empty_string']['typedValue']);
+        $this->assertNull($fields['number_null']['typedValue']);
+        $this->assertSame(0, $fields['number_unexpected']['typedValue']);
+
+        $this->assertSame(1, $fields['integer_1']['typedValue']);
+        $this->assertSame(3, $fields['integer_float']['typedValue']);
+        $this->assertSame(0, $fields['integer_empty_string']['typedValue']);
+        $this->assertNull($fields['integer_null']['typedValue']);
+        $this->assertSame(0, $fields['integer_unexpected']['typedValue']);
+
+        $this->assertResponseStatusCodeSame(200);
     }
 }

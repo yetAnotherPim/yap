@@ -30,6 +30,22 @@ class LocaleRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return string[]
+     */
+    public function getAvailableLocaleIds(): array
+    {
+        /** @var string[] $localeIds */
+        $localeIds = $this->createQueryBuilder('locale')
+            ->select('locale.id')
+            ->where('locale.default = :default')
+            ->setParameter('default', false)
+            ->getQuery()
+            ->getSingleColumnResult();
+
+        return $localeIds;
+    }
+
+    /**
      * @throws DefaultLocaleIsNotDefinedException
      */
     public function getDefaultLocale(): Locale

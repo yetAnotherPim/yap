@@ -9,6 +9,7 @@ use App\Localisation\Exception\DefaultLocaleIsNotDefinedException;
 use App\Repository\LocaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -51,6 +52,79 @@ class LocaleRepositoryTest extends MockeryTestCase
         $this->assertCount(2, $result);
         $this->assertSame($locale1, $result->first());
         $this->assertSame($locale2, $result->last());
+    }
+
+    public function testGetAvailableLocaleIds(): void
+    {
+        $entityManagerMock = \Mockery::mock(EntityManagerInterface::class);
+        $registryMock = \Mockery::mock(ManagerRegistry::class);
+        $classMetadata = new ClassMetadata(Locale::class);
+        $queryBuilderMock = \Mockery::mock(QueryBuilder::class);
+
+        $repository = \Mockery::mock(LocaleRepository::class, [$registryMock])
+            ->makePartial();
+
+        $registryMock
+            ->shouldReceive('getManagerForClass')
+            ->once()
+            ->andReturn($entityManagerMock);
+
+        $entityManagerMock
+            ->shouldReceive('getClassMetadata')
+            ->once()
+            ->andReturn($classMetadata);
+
+        $entityManagerMock
+            ->shouldReceive('createQueryBuilder')
+            ->once()
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('select')
+            ->once()
+            ->with('locale')
+            ->andReturnSelf();
+
+        $queryBuilderMock
+            ->shouldReceive('from')
+            ->once()
+            ->with(Locale::class, 'locale', null)
+            ->andReturnSelf();
+
+        $queryBuilderMock
+            ->shouldReceive('select')
+            ->once()
+            ->with('locale.id')
+            ->andReturnSelf();
+
+        $queryBuilderMock
+            ->shouldReceive('where')
+            ->once()
+            ->with('locale.default = :default')
+            ->andReturnSelf();
+
+        $queryBuilderMock
+            ->shouldReceive('setParameter')
+            ->once()
+            ->with('default', false)
+            ->andReturnSelf();
+
+        $queryMock = \Mockery::mock(Query::class);
+
+        $queryBuilderMock
+            ->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($queryMock);
+
+        $queryMock
+            ->shouldReceive('getSingleColumnResult')
+            ->once()
+            ->andReturn(['de_DE', 'en_GB']);
+
+        $result = $repository->getAvailableLocaleIds();
+
+        $this->assertIsArray($result);
+        $this->assertCount(2, $result);
     }
 
     public function testGetDefaultLocale(): void
