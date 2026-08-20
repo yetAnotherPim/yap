@@ -66,7 +66,9 @@ jobs:
               bin/console doctrine:database:create
 
         - name: Run migrations
-          run: bin/console doctrine:migrations:migrate
+          run: |
+            bin/console doctrine:migrations:migrate
+            bin/console doctrine:migrations:migrate --configuration=migrations-data.config.yaml
 
         - name: Generate Keys
           run: php bin/console lexik:jwt:generate-keypair
