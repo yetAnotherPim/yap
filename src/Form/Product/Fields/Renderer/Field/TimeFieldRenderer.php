@@ -27,7 +27,7 @@ final class TimeFieldRenderer implements FieldRendererInterface
         return TimeField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => (false === empty($field->getValue())) ? new \DateTime($field->getValue()) : null,
+                'data' => InputType::castValue($field->getValue(), InputType::Time),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

@@ -24,7 +24,7 @@ final class EmailFieldRenderer implements FieldRendererInterface
         return EmailField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Email),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

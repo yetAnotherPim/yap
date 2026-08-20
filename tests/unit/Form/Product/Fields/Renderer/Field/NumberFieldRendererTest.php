@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(NumberFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class NumberFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;
@@ -84,7 +86,7 @@ class NumberFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getValue')
-            ->twice()
+            ->once()
             ->andReturn('12,34');
 
         $this->configuration
@@ -121,7 +123,7 @@ class NumberFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getValue')
-            ->twice()
+            ->once()
             ->andReturn('12,34');
 
         $this->configuration
@@ -170,7 +172,7 @@ class NumberFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getValue')
-            ->twice()
+            ->once()
             ->andReturn('12.34');
 
         $this->configuration
@@ -199,7 +201,7 @@ class NumberFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->times(3)
+            ->times(4)
             ->andReturn($this->fieldType);
 
         $this->fieldType
@@ -214,7 +216,7 @@ class NumberFieldRendererTest extends MockeryTestCase
 
         $this->fieldType
             ->shouldReceive('getDecimalSeparator')
-            ->once()
+            ->twice()
             ->andReturn(',');
 
         $this->field

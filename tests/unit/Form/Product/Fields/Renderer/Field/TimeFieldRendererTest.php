@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(TimeFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class TimeFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;
@@ -79,7 +81,7 @@ class TimeFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getValue')
-            ->twice()
+            ->once()
             ->andReturn('08:00:00');
 
         $this->configuration
@@ -111,7 +113,7 @@ class TimeFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getValue')
-            ->twice()
+            ->once()
             ->andReturn('08:00:00');
 
         $this->configuration

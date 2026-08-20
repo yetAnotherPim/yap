@@ -27,7 +27,7 @@ final class DateFieldRenderer implements FieldRendererInterface
         return DateField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => (false === empty($field->getValue())) ? new \DateTime($field->getValue()) : null,
+                'data' => InputType::castValue($field->getValue(), InputType::Date),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

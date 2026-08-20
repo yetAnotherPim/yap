@@ -24,7 +24,7 @@ final class CheckboxFieldRenderer implements FieldRendererInterface
         return BooleanField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => (bool) $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::CheckBox),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

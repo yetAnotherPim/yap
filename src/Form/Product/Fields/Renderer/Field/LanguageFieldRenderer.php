@@ -24,7 +24,7 @@ final class LanguageFieldRenderer implements FieldRendererInterface
         return LanguageField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Language),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

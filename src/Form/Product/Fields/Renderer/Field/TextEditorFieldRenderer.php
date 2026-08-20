@@ -24,7 +24,7 @@ final class TextEditorFieldRenderer implements FieldRendererInterface
         return TextEditorField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::TextEditor),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

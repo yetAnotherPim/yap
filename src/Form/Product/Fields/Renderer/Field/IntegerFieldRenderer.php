@@ -24,7 +24,7 @@ final class IntegerFieldRenderer implements FieldRendererInterface
         return IntegerField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Integer),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

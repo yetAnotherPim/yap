@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(DateFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class DateFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;
@@ -79,7 +81,7 @@ class DateFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getValue')
-            ->twice()
+            ->once()
             ->andReturn('2023-10-27');
 
         $this->configuration
@@ -111,7 +113,7 @@ class DateFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getValue')
-            ->twice()
+            ->once()
             ->andReturn('2023-10-27');
 
         $this->configuration

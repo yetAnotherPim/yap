@@ -25,7 +25,7 @@ final class ColorFieldRenderer implements FieldRendererInterface
             ->showValue()
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Color),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

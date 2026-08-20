@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Form\Product\Fields\Renderer\Field;
+namespace App\Tests\unit\Form\Product\Fields\Renderer\Field;
 
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;

@@ -25,18 +25,9 @@ final class NumberFieldRenderer implements FieldRendererInterface
             ->setDecimalSeparator($field->getType()->getDecimalSeparator() ?? '.')
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => (null !== $field->getValue()) ? $this->parseDecimalValue($field->getValue(), $field->getType()->getDecimalSeparator()) : null,
+                'data' => InputType::castValue($field->getValue(), InputType::Number, $field->getType()->getDecimalSeparator()),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);
-    }
-
-    private function parseDecimalValue(string $value, ?string $decimalSeparator): float
-    {
-        if (null === $decimalSeparator || true === empty($decimalSeparator)) {
-            return (float) $value;
-        }
-
-        return (float) str_replace($decimalSeparator, '.', $value);
     }
 }

@@ -24,7 +24,7 @@ final class TelephoneFieldRenderer implements FieldRendererInterface
         return TelephoneField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Telephone),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

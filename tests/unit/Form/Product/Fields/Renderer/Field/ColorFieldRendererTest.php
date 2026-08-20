@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ColorField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(ColorFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class ColorFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;

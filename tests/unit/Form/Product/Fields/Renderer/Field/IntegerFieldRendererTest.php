@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(IntegerFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class IntegerFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;

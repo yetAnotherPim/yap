@@ -12,13 +12,17 @@ use App\Entity\Product\Product;
 use App\Tests\helper\Trait\Unit\AssociationTrait;
 use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use App\Tests\helper\Trait\Unit\UpdatedAtTrait;
+use App\Tests\unit\Entity\Product\Field\Type\Enum\InputTypeTest;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(Field::class)]
+#[UsesClass(InputType::class)]
 class FieldTest extends MockeryTestCase
 {
     use SetterGetterTrait;
@@ -53,7 +57,7 @@ class FieldTest extends MockeryTestCase
         return Field::class;
     }
 
-    #[DataProvider('provideTypedValue')]
+    #[DataProviderExternal(InputTypeTest::class, 'provideTypedValue')]
     public function testGetTypedValue(
         ?string $value,
         InputType $inputType,
@@ -103,54 +107,6 @@ class FieldTest extends MockeryTestCase
     {
         return [
             ['getTranslations', 'addTranslation', 'removeTranslation', FieldValueTranslation::class, 'setField'],
-        ];
-    }
-
-    /**
-     * @return iterable<string, array{value: string|null, inputType: InputType, expected: string|int|bool|float|null}>
-     */
-    public static function provideTypedValue(): iterable
-    {
-        yield 'null' => [
-            'value' => null,
-            'inputType' => InputType::Text,
-            'expected' => null,
-        ];
-
-        yield 'checkbox true' => [
-            'value' => '1',
-            'inputType' => InputType::CheckBox,
-            'expected' => true,
-        ];
-
-        yield 'checkbox false' => [
-            'value' => '0',
-            'inputType' => InputType::CheckBox,
-            'expected' => false,
-        ];
-
-        yield 'number' => [
-            'value' => '3.14159265359',
-            'inputType' => InputType::Number,
-            'expected' => 3.14159265359,
-        ];
-
-        yield 'integer' => [
-            'value' => '42',
-            'inputType' => InputType::Integer,
-            'expected' => 42,
-        ];
-
-        yield 'string' => [
-            'value' => 'Something',
-            'inputType' => InputType::Text,
-            'expected' => 'Something',
-        ];
-
-        yield 'empty string' => [
-            'value' => '',
-            'inputType' => InputType::Text,
-            'expected' => '',
         ];
     }
 }

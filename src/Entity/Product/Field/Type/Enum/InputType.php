@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Product\Field\Type\Enum;
 
+use DateTime;
+
 enum InputType: string
 {
     case Section = 'section';
@@ -27,11 +29,57 @@ enum InputType: string
     case MultiSelect = 'multiselect';
     case File = 'file';
     case Image = 'image';
-}
 
-/*
-FileField
-    -> setUploadedFileNamePattern
-ImageField
-    -> setUploadedFileNamePattern
-*/
+    public static function getTypedValue(?string $value, InputType $inputType): string|int|bool|float|null
+    {
+        if (true === \is_string($value) && InputType::CheckBox === $inputType) {
+            return (bool) $value;
+        }
+
+        if (true === \is_string($value) && InputType::Number === $inputType) {
+            return (float) $value;
+        }
+
+        if (true === \is_string($value) && InputType::Integer === $inputType) {
+            return (int) $value;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @return \DateTime|string[]|string|bool|float|null
+     *
+     * @throws \DateMalformedStringException
+     */
+    public static function castValue(?string $value, InputType $inputType, ?string $separator = ','): \DateTime|array|string|bool|float|null
+    {
+        if (InputType::CheckBox === $inputType) {
+            return (bool) $value;
+        }
+
+        if (InputType::Date === $inputType || InputType::DateTime === $inputType || InputType::Time === $inputType) {
+            return (false === empty($value)) ? new \DateTime($value) : null;
+        }
+
+        if (InputType::MultiSelect === $inputType) {
+            /** @phpstan-var non-empty-string $separator */
+            return (null !== $value && false === empty($separator)) ? explode($separator, $value) : [];
+        }
+
+        if (InputType::Number === $inputType) {
+            return (null !== $value) ? self::parseDecimalValue($value, $separator) : null;
+        }
+
+        return $value;
+    }
+
+    private static function parseDecimalValue(string $value, ?string $decimalSeparator): float
+    {
+        if (null === $decimalSeparator || true === empty($decimalSeparator)) {
+            return (float) $value;
+        }
+
+        return (float) str_replace($decimalSeparator, '.', $value);
+    }
+}

@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(UrlFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class UrlFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;

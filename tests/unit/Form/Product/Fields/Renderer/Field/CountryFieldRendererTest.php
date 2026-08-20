@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(CountryFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class CountryFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;

@@ -24,7 +24,7 @@ final class UrlFieldRenderer implements FieldRendererInterface
         return UrlField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Url),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

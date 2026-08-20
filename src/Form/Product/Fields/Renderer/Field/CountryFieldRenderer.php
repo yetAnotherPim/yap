@@ -24,7 +24,7 @@ final class CountryFieldRenderer implements FieldRendererInterface
         return CountryField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Country),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);

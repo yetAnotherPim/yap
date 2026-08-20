@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(TextEditorFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class TextEditorFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;

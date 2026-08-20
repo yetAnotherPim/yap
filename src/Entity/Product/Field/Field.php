@@ -140,19 +140,7 @@ class Field extends RelatedTimestampableEntity
             return null;
         }
 
-        if (true === \is_string($this->value) && InputType::CheckBox === $this->getType()->getInputType()) {
-            return (bool) $this->value;
-        }
-
-        if (true === \is_string($this->value) && InputType::Number === $this->getType()->getInputType()) {
-            return (float) $this->value;
-        }
-
-        if (true === \is_string($this->value) && InputType::Integer === $this->getType()->getInputType()) {
-            return (int) $this->value;
-        }
-
-        return $this->value;
+        return InputType::getTypedValue($this->value, $this->getType()->getInputType());
     }
 
     /**

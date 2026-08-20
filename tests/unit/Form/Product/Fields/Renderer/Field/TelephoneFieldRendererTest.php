@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(TelephoneFieldRenderer::class)]
+#[UsesClass(InputType::class)]
 class TelephoneFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;

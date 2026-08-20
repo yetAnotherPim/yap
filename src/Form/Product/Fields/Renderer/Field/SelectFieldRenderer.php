@@ -24,7 +24,7 @@ final class SelectFieldRenderer implements FieldRendererInterface
         return ChoiceField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Select),
                 'choices' => array_combine($configuration->getOptions(), $configuration->getOptions()),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

@@ -24,7 +24,7 @@ final class TextAreaFieldRenderer implements FieldRendererInterface
         return TextareaField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'label' => $field->getType()->getTitle(),
-                'data' => $field->getValue(),
+                'data' => InputType::castValue($field->getValue(), InputType::Text),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);
