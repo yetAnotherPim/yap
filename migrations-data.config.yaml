@@ -1,2 +1,2 @@
 migrations_paths:
-    'DoctrineMigrations\Data': '%kernel.project_dir%/migrations/data'
+    'DoctrineMigrations\Data': './migrations/data'
