@@ -38,6 +38,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Component\Uid\Uuid;
 
 #[CoversClass(ProductCrudController::class)]
@@ -555,6 +556,18 @@ class ProductCrudControllerTest extends MockeryTestCase
         $crud = Crud::new();
 
         $configuredCrud = $this->controller->configureCrud($crud);
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInPlural());
+        $this->assertEquals(
+            'product.entity.title_plural',
+            $configuredCrud->getAsDto()->getEntityLabelInPlural()->getMessage()
+        );
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInSingular());
+        $this->assertEquals(
+            'product.entity.title',
+            $configuredCrud->getAsDto()->getEntityLabelInSingular()->getMessage()
+        );
 
         $this->assertTrue(
             $configuredCrud->getAsDto()->areNullValuesHidden()
