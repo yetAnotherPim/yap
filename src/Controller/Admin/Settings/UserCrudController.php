@@ -22,6 +22,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
 /**
  * @extends AbstractCrudController<User>
@@ -38,31 +39,36 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular(new TranslatableMessage('user.entity.title', [], 'admin'))
+            ->setEntityLabelInPlural(new TranslatableMessage('user.entity.title_plural', [], 'admin'));
+    }
+
     public function configureFields(string $pageName): iterable
     {
         $fields = [
-            FormField::addTab('Master Data'),
-            TextField::new('username')
+            FormField::addTab(new TranslatableMessage('user.labels.master_data', [], 'admin')),
+            TextField::new('username', new TranslatableMessage('user.labels.username', [], 'admin'))
                 ->setRequired(true),
-
-            ChoiceField::new('role')
+            ChoiceField::new('role', new TranslatableMessage('user.labels.role', [], 'admin'))
                 ->setChoices(Roles::cases()),
-
-            EmailField::new('email')
+            EmailField::new('email', new TranslatableMessage('user.labels.email', [], 'admin'))
                 ->setRequired(true),
-            TextField::new('firstName')
+            TextField::new('firstName', new TranslatableMessage('user.labels.first_name', [], 'admin'))
                 ->setRequired(true),
-            TextField::new('lastName')
+            TextField::new('lastName', new TranslatableMessage('user.labels.last_name', [], 'admin'))
                 ->setRequired(true),
             FormField::addTab('Password'),
         ];
 
-        $password = TextField::new('password')
+        $password = TextField::new('password', new TranslatableMessage('user.labels.password', [], 'admin'))
             ->setFormType(RepeatedType::class)
             ->setFormTypeOptions([
                 'type' => PasswordType::class,
-                'first_options' => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeat password'],
+                'first_options' => ['label' => new TranslatableMessage('user.labels.password', [], 'admin')],
+                'second_options' => ['label' => new TranslatableMessage('user.labels.repeat_password', [], 'admin')],
                 'mapped' => false,
             ])
             ->setRequired(Crud::PAGE_NEW === $pageName)

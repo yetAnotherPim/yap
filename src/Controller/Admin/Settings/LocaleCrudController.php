@@ -18,6 +18,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
 /**
  * @extends AbstractCrudController<Locale>
@@ -49,12 +50,19 @@ class LocaleCrudController extends AbstractCrudController
             );
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular(new TranslatableMessage('locale.entity.title', [], 'admin'))
+            ->setEntityLabelInPlural(new TranslatableMessage('locale.entity.title_plural', [], 'admin'));
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
-            LocaleField::new('id')
+            LocaleField::new('id', new TranslatableMessage('locale.entity.title', [], 'admin'))
                 ->showCode(),
-            BooleanField::new('default')
+            BooleanField::new('default', new TranslatableMessage('locale.labels.default', [], 'admin'))
                 ->onlyOnIndex()
                 ->setDisabled(),
         ];

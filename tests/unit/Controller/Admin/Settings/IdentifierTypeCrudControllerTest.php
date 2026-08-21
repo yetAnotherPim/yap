@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Symfony\Component\Translation\TranslatableMessage;
 
 #[CoversClass(IdentifierTypeCrudController::class)]
 class IdentifierTypeCrudControllerTest extends MockeryTestCase
@@ -31,5 +32,26 @@ class IdentifierTypeCrudControllerTest extends MockeryTestCase
         $this->assertEquals('title', $fields[0]->getAsDto()->getProperty());
         $this->assertInstanceOf(ChoiceField::class, $fields[1]);
         $this->assertEquals('dataType', $fields[1]->getAsDto()->getProperty());
+    }
+
+    public function testConfigureCrud(): void
+    {
+        $controller = new IdentifierTypeCrudController();
+
+        $crud = Crud::new();
+
+        $configuredCrud = $controller->configureCrud($crud);
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInPlural());
+        $this->assertEquals(
+            'identifier_type.entity.title_plural',
+            $configuredCrud->getAsDto()->getEntityLabelInPlural()->getMessage()
+        );
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInSingular());
+        $this->assertEquals(
+            'identifier_type.entity.title',
+            $configuredCrud->getAsDto()->getEntityLabelInSingular()->getMessage()
+        );
     }
 }

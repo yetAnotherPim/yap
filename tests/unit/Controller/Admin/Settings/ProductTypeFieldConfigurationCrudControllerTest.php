@@ -15,16 +15,31 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(ProductTypeFieldConfigurationCrudController::class)]
 class ProductTypeFieldConfigurationCrudControllerTest extends MockeryTestCase
 {
+    private ProductTypeFieldConfigurationCrudController $controller;
+
+    /** @var TranslatorInterface|MockInterface */
+    private TranslatorInterface $translator;
+
+    public function setUp(): void
+    {
+        $this->translator = \Mockery::mock(TranslatorInterface::class);
+        $this->controller = new ProductTypeFieldConfigurationCrudController($this->translator);
+
+        parent::setUp();
+    }
+
     public function testGetEntityFqcn(): void
     {
         $this->assertEquals(ProductTypeFieldConfiguration::class, ProductTypeFieldConfigurationCrudController::getEntityFqcn());
@@ -32,8 +47,7 @@ class ProductTypeFieldConfigurationCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
-        $controller = new ProductTypeFieldConfigurationCrudController();
-        $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
 
         $this->assertCount(5, $fields);
 
@@ -55,7 +69,6 @@ class ProductTypeFieldConfigurationCrudControllerTest extends MockeryTestCase
 
     public function testAjaxGetInputTypeReturnsExpectedResponse(): void
     {
-        $controller = new ProductTypeFieldConfigurationCrudController();
         $fieldType = \Mockery::mock(FieldType::class);
 
         $fieldType
@@ -72,9 +85,9 @@ class ProductTypeFieldConfigurationCrudControllerTest extends MockeryTestCase
             ),
         );
 
-        $controller->setContainer($container);
+        $this->controller->setContainer($container);
 
-        $response = $controller->ajaxGetInputType($fieldType);
+        $response = $this->controller->ajaxGetInputType($fieldType);
         /** @var string $content */
         $content = $response->getContent();
 

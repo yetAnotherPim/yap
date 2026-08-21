@@ -15,11 +15,29 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\Layout\EaFormFieldsetOpenType;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(ProductTypeCrudController::class)]
+#[UsesClass(InputType::class)]
 class ProductTypeCrudControllerTest extends MockeryTestCase
 {
+    private ProductTypeCrudController $controller;
+
+    /** @var TranslatorInterface|MockInterface */
+    private TranslatorInterface $translatorMock;
+
+    public function setUp(): void
+    {
+        $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
+        $this->controller = new ProductTypeCrudController($this->translatorMock);
+
+        parent::setUp();
+    }
+
     public function testGetEntityFqcn(): void
     {
         $this->assertEquals(ProductType::class, ProductTypeCrudController::getEntityFqcn());
@@ -27,8 +45,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
-        $controller = new ProductTypeCrudController();
-        $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
 
         $this->assertCount(2, $fields);
 
@@ -40,8 +57,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForReturnsExpectedFieldsOnFormPage(): void
     {
-        $controller = new ProductTypeCrudController();
-        $fields = iterator_to_array($controller->configureFields(Crud::PAGE_NEW));
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_NEW));
 
         $this->assertCount(4, $fields);
 
@@ -64,9 +80,8 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->once()
             ->andReturnNull();
 
-        $controller = new ProductTypeCrudController();
         $fields = iterator_to_array(
-            $controller->configureFields(Crud::PAGE_NEW)
+            $this->controller->configureFields(Crud::PAGE_NEW)
         );
 
         /** @var CollectionField $collectionField */
@@ -104,9 +119,8 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->once()
             ->andReturn(InputType::CheckBox);
 
-        $controller = new ProductTypeCrudController();
         $fields = iterator_to_array(
-            $controller->configureFields(Crud::PAGE_NEW)
+            $this->controller->configureFields(Crud::PAGE_NEW)
         );
 
         /** @var CollectionField $collectionField */
@@ -116,10 +130,35 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->getAsDto()
             ->getCustomOption('entryToStringMethod');
 
+        $this->translatorMock
+            ->shouldReceive('trans')
+            ->once()
+            ->with('field_type.input_type.checkbox', [], 'admin', null)
+            ->andReturn('CheckBox');
+
         $this->assertIsCallable($entryToStringMethod);
         $this->assertSame(
             'Boolean field (is_active - CheckBox)',
             $entryToStringMethod($configuration)
+        );
+    }
+
+    public function testConfigureCrud(): void
+    {
+        $crud = Crud::new();
+
+        $configuredCrud = $this->controller->configureCrud($crud);
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInPlural());
+        $this->assertEquals(
+            'product_type.entity.title_plural',
+            $configuredCrud->getAsDto()->getEntityLabelInPlural()->getMessage()
+        );
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInSingular());
+        $this->assertEquals(
+            'product_type.entity.title',
+            $configuredCrud->getAsDto()->getEntityLabelInSingular()->getMessage()
         );
     }
 }

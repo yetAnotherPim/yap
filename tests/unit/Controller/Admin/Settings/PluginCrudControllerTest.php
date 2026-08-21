@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Translation\TranslatableMessage;
 
 #[CoversClass(PluginCrudController::class)]
 #[UsesClass(PluginWorkflowException::class)]
@@ -472,5 +473,18 @@ class PluginCrudControllerTest extends MockeryTestCase
     public function testGetEntityFqcn(): void
     {
         $this->assertEquals(Plugin::class, PluginCrudController::getEntityFqcn());
+    }
+
+    public function testConfigureCrud(): void
+    {
+        $crud = Crud::new();
+
+        $configuredCrud = $this->controller->configureCrud($crud);
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getCustomPageTitle(Crud::PAGE_INDEX));
+        $this->assertEquals(
+            'plugin_manager.title',
+            $configuredCrud->getAsDto()->getCustomPageTitle(Crud::PAGE_INDEX)->getMessage()
+        );
     }
 }

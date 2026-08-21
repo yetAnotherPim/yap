@@ -27,6 +27,20 @@ class InputTypeTest extends TestCase
         $this->assertEquals($expected, InputType::castValue($value, $inputType, $separator));
     }
 
+    public function testTrans(): void
+    {
+        $dataType = InputType::String;
+        $translatorMock = \Mockery::mock(\Symfony\Contracts\Translation\TranslatorInterface::class);
+
+        $translatorMock
+            ->shouldReceive('trans')
+            ->once()
+            ->with('field_type.input_type.string', [], 'admin', 'de_DE')
+            ->andReturn('Zeichenkette');
+
+        $this->assertEquals('Zeichenkette', $dataType->trans($translatorMock, 'de_DE'));
+    }
+
     /**
      * @return iterable<string, array{0: string|null, 1: InputType, 2:string|null, 3: \DateTime|string[]|string|int|bool|float|null}>
      */

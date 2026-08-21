@@ -43,7 +43,7 @@ class LocaleRepositoryTest extends MockeryTestCase
 
         $repository->shouldReceive('findBy')
             ->once()
-            ->with([], ['default' => 'DESC'])
+            ->with([], ['default' => 'DESC', 'id' => 'ASC'])
             ->andReturn([$locale1, $locale2]);
 
         $result = $repository->getAvailableLocales();

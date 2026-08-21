@@ -9,6 +9,7 @@ use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use App\Form\Product\Fields\Resolver\FieldResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use Symfony\Component\Translation\TranslatableMessage;
 
 class ProductFieldsRenderer
 {
@@ -25,7 +26,7 @@ class ProductFieldsRenderer
     {
         $fields = [];
 
-        $fields[] = FormField::addTab('Fields');
+        $fields[] = FormField::addTab(new TranslatableMessage('product.labels.fields', [], 'admin'));
 
         foreach ($product->getProductType()->getProductTypeFieldConfigurations() as $productTypeFieldConfiguration) {
             if (null === $productTypeFieldConfiguration->getFieldType()) {

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Product\Field\Type\Enum;
 
 use DateTime;
+use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-enum InputType: string
+enum InputType: string implements TranslatableInterface
 {
     case Section = 'section';
     case CheckBox = 'checkbox';
@@ -29,6 +31,18 @@ enum InputType: string
     case MultiSelect = 'multiselect';
     case File = 'file';
     case Image = 'image';
+
+    public function trans(
+        TranslatorInterface $translator,
+        ?string $locale = null,
+    ): string {
+        return $translator->trans(
+            'field_type.input_type.'.$this->value,
+            [],
+            'admin',
+            $locale,
+        );
+    }
 
     public static function getTypedValue(?string $value, InputType $inputType): string|int|bool|float|null
     {

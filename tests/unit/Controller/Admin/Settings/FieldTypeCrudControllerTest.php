@@ -16,6 +16,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(FieldTypeCrudController::class)]
 class FieldTypeCrudControllerTest extends MockeryTestCase
@@ -23,9 +25,13 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
     /** @var LocaleRepository|MockInterface */
     private LocaleRepository $localeRepositoryMock;
 
+    /** @var TranslatorInterface|MockInterface */
+    private TranslatorInterface $translatorMock;
+
     public function setUp(): void
     {
         $this->localeRepositoryMock = \Mockery::mock(LocaleRepository::class);
+        $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
 
         parent::setUp();
     }
@@ -37,7 +43,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
-        $controller = new FieldTypeCrudController($this->localeRepositoryMock);
+        $controller = new FieldTypeCrudController($this->localeRepositoryMock, $this->translatorMock);
 
         $this->localeRepositoryMock
             ->shouldReceive('getAvailableLocaleIds')
@@ -71,11 +77,23 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
 
     public function testConfigureCrudSetsAutocompleteCallback(): void
     {
-        $controller = new FieldTypeCrudController($this->localeRepositoryMock);
+        $controller = new FieldTypeCrudController($this->localeRepositoryMock, $this->translatorMock);
 
         $crud = Crud::new();
 
         $configuredCrud = $controller->configureCrud($crud);
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInPlural());
+        $this->assertEquals(
+            'field_type.entity.title_plural',
+            $configuredCrud->getAsDto()->getEntityLabelInPlural()->getMessage()
+        );
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInSingular());
+        $this->assertEquals(
+            'field_type.entity.title',
+            $configuredCrud->getAsDto()->getEntityLabelInSingular()->getMessage()
+        );
 
         $this->assertIsCallable(
             $configuredCrud->getAsDto()->getAutocompleteCallback()

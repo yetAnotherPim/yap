@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Translation\TranslatableMessage;
 
 #[CoversClass(IndexController::class)]
 class IndexControllerTest extends MockeryTestCase
@@ -112,7 +113,7 @@ class IndexControllerTest extends MockeryTestCase
 
         $items = iterator_to_array($menu->getAsDto()->getItems());
 
-        $this->assertSame('Language', $items[0]->getLabel());
+        $this->assertInstanceOf(TranslatableMessage::class, $items[0]->getLabel());
         $this->assertSame('de_DE (default)', $items[1]->getLabel());
         $this->assertSame('fa fa-check text-success', $items[1]->getIcon());
         $this->assertSame('en_GB', $items[2]->getLabel());
@@ -190,51 +191,53 @@ class IndexControllerTest extends MockeryTestCase
             $this->controller->configureMenuItems()
         );
 
-        $this->assertCount(9, $items);
+        $this->assertCount(8, $items);
 
         $this->assertSame(
             'Home',
             $items[0]->getAsDto()->getLabel()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $items[1]->getAsDto()->getLabel());
         $this->assertSame(
-            'Products',
-            $items[1]->getAsDto()->getLabel()
+            'product.title',
+            $items[1]->getAsDto()->getLabel()->getMessage()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $items[2]->getAsDto()->getLabel());
         $this->assertSame(
-            'Products',
-            $items[2]->getAsDto()->getLabel()
+            'product.title',
+            $items[2]->getAsDto()->getLabel()->getMessage()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $items[3]->getAsDto()->getLabel());
         $this->assertSame(
-            'Settings',
-            $items[3]->getAsDto()->getLabel()
+            'settings.title',
+            $items[3]->getAsDto()->getLabel()->getMessage()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $items[4]->getAsDto()->getLabel());
         $this->assertSame(
-            'Locales',
-            $items[4]->getAsDto()->getLabel()
+            'locale.title',
+            $items[4]->getAsDto()->getLabel()->getMessage()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $items[5]->getAsDto()->getLabel());
         $this->assertSame(
-            'Types',
-            $items[5]->getAsDto()->getLabel()
+            'types.title',
+            $items[5]->getAsDto()->getLabel()->getMessage()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $items[6]->getAsDto()->getLabel());
         $this->assertSame(
-            'Plugin Manager',
-            $items[6]->getAsDto()->getLabel()
+            'plugin_manager.title',
+            $items[6]->getAsDto()->getLabel()->getMessage()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $items[7]->getAsDto()->getLabel());
         $this->assertSame(
-            'User',
-            $items[7]->getAsDto()->getLabel()
-        );
-
-        $this->assertSame(
-            'Orphaned Records',
-            $items[8]->getAsDto()->getLabel()
+            'user.title',
+            $items[7]->getAsDto()->getLabel()->getMessage()
         );
     }
 
@@ -252,19 +255,22 @@ class IndexControllerTest extends MockeryTestCase
 
         $this->assertCount(3, $subItems);
 
+        $this->assertInstanceof(TranslatableMessage::class, $subItems[0]->getLabel());
         $this->assertSame(
-            'Identifier',
-            $subItems[0]->getLabel()
+            'types.label.identifier',
+            $subItems[0]->getLabel()->getMessage()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $subItems[1]->getLabel());
         $this->assertSame(
-            'Field',
-            $subItems[1]->getLabel()
+            'types.label.field',
+            $subItems[1]->getLabel()->getMessage()
         );
 
+        $this->assertInstanceof(TranslatableMessage::class, $subItems[2]->getLabel());
         $this->assertSame(
-            'Product',
-            $subItems[2]->getLabel()
+            'types.label.product',
+            $subItems[2]->getLabel()->getMessage()
         );
     }
 

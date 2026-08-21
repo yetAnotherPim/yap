@@ -21,6 +21,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Translation\TranslatableMessage;
 
 #[CoversClass(LocaleCrudController::class)]
 class LocaleCrudControllerTest extends MockeryTestCase
@@ -116,5 +117,26 @@ class LocaleCrudControllerTest extends MockeryTestCase
         $this->assertSame('Set as Default', $asDefault->getLabel());
         $this->assertSame('fa fa-check', $asDefault->getIcon());
         $this->assertSame('setLocaleAsDefault', $asDefault->getCrudActionName());
+    }
+
+    public function testConfigureCrud(): void
+    {
+        $controller = new LocaleCrudController(\Mockery::mock(LocaleRepository::class));
+
+        $crud = Crud::new();
+
+        $configuredCrud = $controller->configureCrud($crud);
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInPlural());
+        $this->assertEquals(
+            'locale.entity.title_plural',
+            $configuredCrud->getAsDto()->getEntityLabelInPlural()->getMessage()
+        );
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInSingular());
+        $this->assertEquals(
+            'locale.entity.title',
+            $configuredCrud->getAsDto()->getEntityLabelInSingular()->getMessage()
+        );
     }
 }

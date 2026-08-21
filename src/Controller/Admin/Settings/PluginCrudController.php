@@ -21,6 +21,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
 /**
  * @extends AbstractCrudController<Plugin>
@@ -39,28 +40,34 @@ class PluginCrudController extends AbstractCrudController
         return Plugin::class;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setPageTitle(Crud::PAGE_INDEX, new TranslatableMessage('plugin_manager.title', [], 'admin'));
+    }
+
     public function configureActions(Actions $actions): Actions
     {
         return $actions
             ->disable(Action::DELETE, Action::NEW, Action::EDIT)
             ->add(Crud::PAGE_INDEX,
-                Action::new('refresh', 'Reload', 'fa fa-arrows-rotate')
+                Action::new('refresh', new TranslatableMessage('plugin_manager.labels.actions.reload', [], 'admin'), 'fa fa-arrows-rotate')
                     ->createAsGlobalAction()
                     ->asPrimaryAction()
                     ->linkToCrudAction('refreshPlugins')
             )
             ->add(Crud::PAGE_INDEX,
-                Action::new('activate', 'Activate', 'fa fa-check')
+                Action::new('activate', new TranslatableMessage('plugin_manager.labels.actions.activate', [], 'admin'), 'fa fa-check')
                     ->linkToCrudAction('activatePlugin')
                     ->displayIf(fn (Plugin $plugin) => !$plugin->isActive())
             )
             ->add(Crud::PAGE_INDEX,
-                Action::new('deactivate', 'Deactivate', 'fa fa-ban')
+                Action::new('deactivate', new TranslatableMessage('plugin_manager.labels.actions.deactivate', [], 'admin'), 'fa fa-ban')
                     ->linkToCrudAction('deactivatePlugin')
                     ->displayIf(fn (Plugin $plugin) => $plugin->isActive())
             )
             ->add(Crud::PAGE_INDEX,
-                Action::new('update', 'Update', 'fa fa-wrench')
+                Action::new('update', new TranslatableMessage('plugin_manager.labels.actions.update', [], 'admin'), 'fa fa-wrench')
                     ->linkToCrudAction('updatePlugin')
                     ->displayIf(fn (Plugin $plugin) => $plugin->isUpdatable())
             );
@@ -132,11 +139,11 @@ class PluginCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('name'),
-            TextField::new('namespace'),
-            TextField::new('version'),
-            TextField::new('installedVersion'),
-            BooleanField::new('active'),
+            TextField::new('name', new TranslatableMessage('plugin_manager.labels.name', [], 'admin')),
+            TextField::new('namespace', new TranslatableMessage('plugin_manager.labels.namespace', [], 'admin')),
+            TextField::new('version', new TranslatableMessage('plugin_manager.labels.version', [], 'admin')),
+            TextField::new('installedVersion', new TranslatableMessage('plugin_manager.labels.installed_version', [], 'admin')),
+            BooleanField::new('active', new TranslatableMessage('plugin_manager.labels.active', [], 'admin')),
         ];
     }
 

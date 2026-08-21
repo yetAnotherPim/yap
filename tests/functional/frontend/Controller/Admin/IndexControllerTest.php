@@ -96,8 +96,7 @@ class IndexControllerTest extends WebTestCase
             'Field' => '/admin/field-type',
             'Product' => '/admin/product-type',
             'Plugin Manager' => '/admin/plugin',
-            'User' => '/admin/user',
-            'Orphaned Records' => '/admin/plugin',
+            'Users' => '/admin/user',
         ];
 
         $this->login();

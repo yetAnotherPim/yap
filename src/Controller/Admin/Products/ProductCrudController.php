@@ -29,6 +29,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
 /**
  * @extends AbstractCrudController<Product>
@@ -68,6 +69,8 @@ class ProductCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setEntityLabelInSingular(new TranslatableMessage('product.entity.title', [], 'admin'))
+            ->setEntityLabelInPlural(new TranslatableMessage('product.entity.title_plural', [], 'admin'))
             ->hideNullValues()
             ->setFormThemes(['easyadmin/fields/identifier/identifier_collection.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
     }
@@ -76,7 +79,7 @@ class ProductCrudController extends AbstractCrudController
     {
         if (Crud::PAGE_INDEX === $pageName) {
             return [
-                CollectionField::new('identifiers')
+                CollectionField::new('identifiers', new TranslatableMessage('product.labels.identifiers', [], 'admin'))
                     ->formatValue(
                         fn (Collection $identifiers): string => $identifiers
                                 ->matching(
@@ -89,24 +92,24 @@ class ProductCrudController extends AbstractCrudController
                                     ''
                                 )
                     ),
-                AssociationField::new('productType')
+                AssociationField::new('productType', new TranslatableMessage('product.labels.product_type', [], 'admin'))
                     ->formatValue(
                         static fn (ProductType $productType): string => $productType->getTitle()
                     ),
-                DateTimeField::new('createdAt'),
-                DateTimeField::new('updatedAt'),
+                DateTimeField::new('createdAt', new TranslatableMessage('product.labels.created_at', [], 'admin')),
+                DateTimeField::new('updatedAt', new TranslatableMessage('product.labels.updated_at', [], 'admin')),
             ];
         }
 
         /** @var array<FieldInterface> $fields */
         $fields = [
-            FormField::addTab('Master Data'),
-            AssociationField::new('productType')
+            FormField::addTab(new TranslatableMessage('product.labels.master_data', [], 'admin')),
+            AssociationField::new('productType', new TranslatableMessage('product.labels.product_type', [], 'admin'))
                 ->autocomplete(
                     callback: static fn (ProductType $productType): string => $productType->getTitle()
                 )
                 ->setDisabled(Crud::PAGE_EDIT === $pageName),
-            CollectionField::new('identifiers')
+            CollectionField::new('identifiers', new TranslatableMessage('product.labels.identifiers', [], 'admin'))
                 ->allowAdd(false)
                 ->allowDelete(false)
                 ->setEntryIsComplex()
@@ -117,9 +120,9 @@ class ProductCrudController extends AbstractCrudController
                 ->setFormTypeOptions([
                     'block_name' => 'identifier_collection',
                 ]),
-            DateTimeField::new('createdAt')
+            DateTimeField::new('createdAt', new TranslatableMessage('product.labels.created_at', [], 'admin'))
                 ->setDisabled(),
-            DateTimeField::new('updatedAt')
+            DateTimeField::new('updatedAt', new TranslatableMessage('product.labels.updated_at', [], 'admin'))
                 ->setDisabled(),
         ];
 

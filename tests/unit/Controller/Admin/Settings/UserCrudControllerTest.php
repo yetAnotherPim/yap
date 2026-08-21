@@ -23,6 +23,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Translation\TranslatableMessage;
 
 #[CoversClass(UserCrudController::class)]
 class UserCrudControllerTest extends MockeryTestCase
@@ -157,5 +158,24 @@ class UserCrudControllerTest extends MockeryTestCase
         );
 
         $this->assertSame($builder, $result);
+    }
+
+    public function testConfigureCrud(): void
+    {
+        $crud = Crud::new();
+
+        $configuredCrud = $this->controller->configureCrud($crud);
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInPlural());
+        $this->assertEquals(
+            'user.entity.title_plural',
+            $configuredCrud->getAsDto()->getEntityLabelInPlural()->getMessage()
+        );
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getEntityLabelInSingular());
+        $this->assertEquals(
+            'user.entity.title',
+            $configuredCrud->getAsDto()->getEntityLabelInSingular()->getMessage()
+        );
     }
 }

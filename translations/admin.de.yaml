@@ -1,4 +1,8 @@
 product_type_field_configuration:
+    labels:
+        field_type: 'Feld-Typ'
+        default_value: 'Standardwert'
+        required: 'Pflichtfeld'
     default_value:
         help: |
             Standardwerte werden beim Erstellen eines Produktes gesetzt.<br/><br/>
@@ -8,3 +12,131 @@ product_type_field_configuration:
             '17.06'<br/>
             '1' - Wird bei Feldern vom Typ "CheckBox" als aktiv interpretiert.<br/>
             '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+
+plugin_manager:
+    title: 'Plugin Manager'
+    labels:
+        name: 'Name'
+        namespace: 'Namespace'
+        version: 'Version'
+        installed_version: 'installierte Version'
+        active: 'Aktiv'
+        actions:
+            reload: 'Neu laden'
+            activate: 'Aktivieren'
+            deactivate: 'Deaktivieren'
+            update: 'Update'
+
+user:
+    title: 'Benutzer'
+    entity:
+        title: 'Benutzer'
+        title_plural: 'Benutzer'
+    labels:
+        master_data: 'Benutzerdaten'
+        password: 'Passwort'
+        repeat_password: 'Passwort wiederholen'
+        username: 'Benutzername'
+        role: 'Rolle'
+        email: 'Email'
+        first_name: 'Vorname'
+        last_name: 'Nachname'
+
+types:
+    title: 'Typen'
+    label:
+        identifier: 'Identifier'
+        field: 'Feld'
+        product: 'Produkt'
+
+identifier_type:
+    title: 'Identifier-Typ'
+    data_type:
+        string: 'Zeichenkette'
+        integer: 'Ganzzahl'
+    entity:
+        title: 'Identifier-Typ'
+        title_plural: 'Identifier-Typen'
+    labels:
+        title: 'Name'
+        data_tape: 'Datentyp'
+
+product_type:
+    title: 'Product-Typ'
+    entity:
+        title: 'Product-Typ'
+        title_plural: 'Product-Typen'
+    labels:
+        title: 'Name'
+        code: 'Code'
+        fields: 'Felder'
+
+field_type:
+    title: 'Feld-Typ'
+    input_type:
+        string: 'Zeichenkette'
+        integer: 'Ganzzahl'
+        checkbox: 'CheckBox'
+        date: 'Datum'
+        file: 'Datei'
+        section: 'Trenner'
+        text: 'Text'
+        textarea: 'Textfeld'
+        datetime: 'Datum & Zeit'
+        time: 'Zeit'
+        number: 'Zahl'
+        color: 'Farbe'
+        country: 'Land'
+        telephone: 'Telefon'
+        email: 'Email'
+        language: 'Sprache'
+        locale: 'Locale'
+        texteditor: 'Text-Editor'
+        url: 'URL'
+        select: 'Auswahl'
+        multiselect: 'Mehrfachauswahl'
+        image: 'Bild'
+    entity:
+        title: 'Feld-Typ'
+        title_plural: 'Feld-Typen'
+    labels:
+        title: 'Name'
+        code: 'Code'
+        translatable: 'Übersetzbar'
+        filterable: 'Filterbar'
+        input_type: 'Eingabetyp'
+        decimal_separator: 'Dezimaltrennzeichen'
+
+locale:
+    title: 'Sprachen'
+    entity:
+        title: 'Sprache'
+        title_plural: 'Sprachen'
+    labels:
+        default: 'Standard'
+    actions:
+        set_as_default: 'Als Standard setzen'
+
+settings:
+    title: 'Einstellungen'
+
+product:
+    title: 'Produkte'
+    entity:
+        title: 'Produkt'
+        title_plural: 'Produkte'
+    labels:
+        identifiers: 'Identifier'
+        product_type: 'Produkt-Typ'
+        created_at: 'Erstellt'
+        updated_at: 'Aktualisiert'
+        master_data: 'Stammdaten'
+        fields: 'Felder'
+
+general:
+    labels:
+        translation: 'Übersetzung'
+        locale: 'Sprache'
+        language: 'Sprache'
+
+

@@ -1,4 +1,8 @@
 product_type_field_configuration:
+    labels:
+        field_type: 'Field type'
+        default_value: 'Default value'
+        required: 'Required'
     default_value:
         help: |
             Default values are applied on product creation.<br/><br/>
@@ -8,3 +12,133 @@ product_type_field_configuration:
             '17.06'<br/>
             '1' - Will be interpreted as active on Checkboxes<br/>
             '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+
+plugin_manager:
+    title: 'Plugin Manager'
+    labels:
+        name: 'Name'
+        namespace: 'Namespace'
+        version: 'Version'
+        installed_version: 'Installed version'
+        active: 'Active'
+        actions:
+            reload: 'Reload'
+            activate: 'Activate'
+            deactivate: 'Deactivate'
+            update: 'Update'
+
+user:
+    title: 'Users'
+    entity:
+        title: 'User'
+        title_plural: 'Users'
+    labels:
+        master_data: 'Master data'
+        password: 'Password'
+        repeat_password: 'Repeat password'
+        username: 'Username'
+        role: 'Role'
+        email: 'Email'
+        first_name: 'First name'
+        last_name: 'Last name'
+
+types:
+    title: 'Types'
+    label:
+        identifier: 'Identifier'
+        field: 'Field'
+        product: 'Product'
+
+identifier_type:
+    title: 'Identifier type'
+    data_type:
+        string: 'String'
+        integer: 'Integer'
+    entity:
+        title: 'Identifier type'
+        title_plural: 'Identifier types'
+    labels:
+        title: 'Title'
+        data_type: 'Data type'
+
+product_type:
+    title: 'Product type'
+    entity:
+        title: 'Product type'
+        title_plural: 'Product types'
+    labels:
+        title: 'Title'
+        code: 'Code'
+        fields: 'Fields'
+
+field_type:
+    title: 'Field type'
+    input_type:
+        string: 'String'
+        integer: 'Integer'
+        checkbox: 'CheckBox'
+        date: 'Date'
+        file: 'File'
+        section: 'Section'
+        text: 'Text'
+        textarea: 'Textarea'
+        datetime: 'Date & Time'
+        time: 'Time'
+        number: 'Number'
+        color: 'Color'
+        country: 'Country'
+        telephone: 'Telephone'
+        email: 'Email'
+        language: 'Language'
+        locale: 'Locale'
+        texteditor: 'Text Editor'
+        url: 'URL'
+        select: 'Select'
+        multiselect: 'Multi Select'
+        image: 'Image'
+    entity:
+        title: 'Field type'
+        title_plural: 'Field types'
+    labels:
+        title: 'Title'
+        code: 'Code'
+        translatable: 'Translatable'
+        filterable: 'Filterable'
+        input_type: 'Input type'
+        decimal_separator: 'Decimal separator'
+
+locale:
+    title: 'Locales'
+    entity:
+        title: 'Locale'
+        title_plural: 'Locales'
+    labels:
+        default: 'Default'
+    actions:
+        set_as_default: 'Set as default'
+
+settings:
+    title: 'Settings'
+
+product:
+    title: 'Products'
+    entity:
+        title: 'Product'
+        title_plural: 'Products'
+    labels:
+        identifiers: 'Identifiers'
+        product_type: 'Product type'
+        created_at: 'Created at'
+        updated_at: 'Updated at'
+        master_data: 'Master data'
+        fields: 'Fields'
+
+
+general:
+    labels:
+        translation: 'Translation'
+        locale: 'Locale'
+        language: 'Language'
+
+
+

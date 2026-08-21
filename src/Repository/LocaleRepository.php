@@ -26,7 +26,7 @@ class LocaleRepository extends ServiceEntityRepository
      */
     public function getAvailableLocales(): Collection
     {
-        return new ArrayCollection($this->findBy([], ['default' => 'DESC']));
+        return new ArrayCollection($this->findBy([], ['default' => 'DESC', 'id' => 'ASC']));
     }
 
     /**

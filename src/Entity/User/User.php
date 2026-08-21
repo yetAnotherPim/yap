@@ -20,7 +20,11 @@ use Webmozart\Assert\Assert;
 #[ORM\UniqueConstraint(name: 'uniq_user_email', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    // TODO: On insufficient permissions, redirect to login and display flash message21
+    // TODO: On insufficient permissions, redirect to login and display flash message
+    // TODO: as api resource
+    // -> hide password hash in response
+    // -> hash password on PATCH
+    // -> api tests
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
