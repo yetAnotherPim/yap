@@ -1,0 +1,132 @@
+product_type_field_configuration:
+  labels:
+    field_type: Tipo de campo
+    default_value: Valor predefinido
+    required: Obrigatório
+  alert:
+    duplicate_field_type: 'Este tipo de campo já está a ser utilizado.'
+  default_value:
+    help: |-
+      Os valores predefinidos são aplicados ao criar um produto.
+
+      Os valores possíveis são:
+      'Some text'
+      '17.06'
+      '1' - É interpretado como ativo nas caixas de seleção
+      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+  title: Gestor de plugins
+  labels:
+    name: Nome
+    namespace: Espaço de nomes
+    version: Versão
+    installed_version: Versão instalada
+    active: Ativo
+    actions:
+      reload: Recarregar
+      activate: Ativar
+      deactivate: Desativar
+      update: Atualizar
+user:
+  title: Utilizadores
+  entity:
+    title: Utilizador
+    title_plural: Utilizadores
+  labels:
+    master_data: Dados mestre
+    password: Palavra-passe
+    repeat_password: Repetir palavra-passe
+    username: Nome de utilizador
+    role: Função
+    email: E-mail
+    first_name: Nome próprio
+    last_name: Apelido
+types:
+  title: Tipos
+  label:
+    identifier: Identificador
+    field: Campo
+    product: Produto
+identifier_type:
+  title: Tipo de identificador
+  data_type:
+    string: Cadeia
+    integer: Inteiro
+  entity:
+    title: Tipo de identificador
+    title_plural: Tipos de identificador
+  labels:
+    title: Título
+    data_type: Tipo de dados
+product_type:
+  title: Tipo de produto
+  entity:
+    title: Tipo de produto
+    title_plural: Tipos de produto
+  labels:
+    title: Título
+    code: Código
+    fields: Campos
+field_type:
+  title: Tipo de campo
+  input_type:
+    string: Cadeia
+    integer: Inteiro
+    checkbox: Caixa de seleção
+    date: Data
+    file: Ficheiro
+    section: Secção
+    text: Texto
+    textarea: Área de texto
+    datetime: Data e hora
+    time: Hora
+    number: Número
+    color: Cor
+    country: País
+    telephone: Telefone
+    email: E-mail
+    language: Idioma
+    locale: Configuração regional
+    texteditor: Editor de texto
+    url: URL
+    select: Seleção
+    multiselect: Seleção múltipla
+    image: Imagem
+  entity:
+    title: Tipo de campo
+    title_plural: Tipos de campo
+  labels:
+    title: Título
+    code: Código
+    translatable: Traduzível
+    filterable: Filtrável
+    input_type: Tipo de entrada
+    decimal_separator: Separador decimal
+locale:
+  title: Configurações regionais
+  entity:
+    title: Configuração regional
+    title_plural: Configurações regionais
+  labels:
+    default: Predefinido
+  actions:
+    set_as_default: Definir como predefinido
+settings:
+  title: Definições
+product:
+  title: Produtos
+  entity:
+    title: Produto
+    title_plural: Produtos
+  labels:
+    identifiers: Identificadores
+    product_type: Tipo de produto
+    created_at: Criado em
+    updated_at: Atualizado em
+    master_data: Dados mestre
+    fields: Campos
+general:
+  labels:
+    translation: Tradução
+    locale: Configuração regional
+    language: Idioma

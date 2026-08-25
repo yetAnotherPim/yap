@@ -3,6 +3,8 @@ product_type_field_configuration:
         field_type: 'Field type'
         default_value: 'Default value'
         required: 'Required'
+    alert:
+        duplicate_field_type: 'This field type is already used.'
     default_value:
         help: |
             Default values are applied on product creation.<br/><br/>

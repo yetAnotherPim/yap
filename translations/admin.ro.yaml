@@ -1,0 +1,132 @@
+product_type_field_configuration:
+  labels:
+    field_type: Tip de câmp
+    default_value: Valoare implicită
+    required: Obligatoriu
+  alert:
+    duplicate_field_type: 'Acest tip de câmp este deja utilizat.'
+  default_value:
+    help: |-
+      Valoare implicită: Produs.
+
+      Tipuri:
+      'Some text'
+      '17.06'
+      '1' - Activ (Casetă de selectare)
+      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+  title: Manager de pluginuri
+  labels:
+    name: Nume
+    namespace: Spațiu de nume
+    version: Versiune
+    installed_version: Versiune instalată
+    active: Activ
+    actions:
+      reload: Reîncarcă
+      activate: Activează
+      deactivate: Dezactivează
+      update: Actualizează
+user:
+  title: Utilizatori
+  entity:
+    title: Utilizator
+    title_plural: Utilizatori
+  labels:
+    master_data: Date de bază
+    password: Parolă
+    repeat_password: Repetă parola
+    username: Nume de utilizator
+    role: Rol
+    email: E-mail
+    first_name: Prenume
+    last_name: Nume de familie
+types:
+  title: Tipuri
+  label:
+    identifier: Identificator
+    field: Câmp
+    product: Produs
+identifier_type:
+  title: Tip de identificator
+  data_type:
+    string: Șir
+    integer: Număr întreg
+  entity:
+    title: Tip de identificator
+    title_plural: Tipuri de identificatori
+  labels:
+    title: Titlu
+    data_type: Tip de date
+product_type:
+  title: Tip de produs
+  entity:
+    title: Tip de produs
+    title_plural: Tipuri de produse
+  labels:
+    title: Titlu
+    code: Cod
+    fields: Câmpuri
+field_type:
+  title: Tip de câmp
+  input_type:
+    string: Șir
+    integer: Număr întreg
+    checkbox: Casetă de selectare
+    date: Dată
+    file: Fișier
+    section: Secțiune
+    text: Text
+    textarea: Zonă de text
+    datetime: Dată și oră
+    time: Oră
+    number: Număr
+    color: Culoare
+    country: Țară
+    telephone: Telefon
+    email: E-mail
+    language: Limbă
+    locale: Setări regionale
+    texteditor: Editor de text
+    url: URL
+    select: Selectare
+    multiselect: Selectare multiplă
+    image: Imagine
+  entity:
+    title: Tip de câmp
+    title_plural: Tipuri de câmpuri
+  labels:
+    title: Titlu
+    code: Cod
+    translatable: Traductibil
+    filterable: Filtrabil
+    input_type: Tip de intrare
+    decimal_separator: Separator zecimal
+locale:
+  title: Setări regionale
+  entity:
+    title: Setări regionale
+    title_plural: Setări regionale
+  labels:
+    default: Implicit
+  actions:
+    set_as_default: Setează ca implicit
+settings:
+  title: Setări
+product:
+  title: Produse
+  entity:
+    title: Produs
+    title_plural: Produse
+  labels:
+    identifiers: Identificatori
+    product_type: Tip de produs
+    created_at: Creat la
+    updated_at: Actualizat la
+    master_data: Date de bază
+    fields: Câmpuri
+general:
+  labels:
+    translation: Traducere
+    locale: Setări regionale
+    language: Limbă

@@ -1,0 +1,132 @@
+product_type_field_configuration:
+  labels:
+    field_type: 字段类型
+    default_value: 默认值
+    required: 必填
+  alert:
+    duplicate_field_type: '此字段类型已被使用。'
+  default_value:
+    help: |-
+      默认值会在创建产品时应用。
+
+      可用值包括：
+      'Some text'
+      '17.06'
+      '1' - 在复选框字段中解释为启用
+      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+  title: 插件管理器
+  labels:
+    name: 名称
+    namespace: 命名空间
+    version: 版本
+    installed_version: 已安装版本
+    active: 启用
+    actions:
+      reload: 重新加载
+      activate: 启用
+      deactivate: 停用
+      update: 更新
+user:
+  title: 用户
+  entity:
+    title: 用户
+    title_plural: 用户
+  labels:
+    master_data: 主数据
+    password: 密码
+    repeat_password: 重复密码
+    username: 用户名
+    role: 角色
+    email: 电子邮件
+    first_name: 名
+    last_name: 姓
+types:
+  title: 类型
+  label:
+    identifier: 标识符
+    field: 字段
+    product: 产品
+identifier_type:
+  title: 标识符类型
+  data_type:
+    string: 字符串
+    integer: 整数
+  entity:
+    title: 标识符类型
+    title_plural: 标识符类型
+  labels:
+    title: 标题
+    data_type: 数据类型
+product_type:
+  title: 产品类型
+  entity:
+    title: 产品类型
+    title_plural: 产品类型
+  labels:
+    title: 标题
+    code: 代码
+    fields: 字段
+field_type:
+  title: 字段类型
+  input_type:
+    string: 字符串
+    integer: 整数
+    checkbox: 复选框
+    date: 日期
+    file: 文件
+    section: 分区
+    text: 文本
+    textarea: 文本区域
+    datetime: 日期和时间
+    time: 时间
+    number: 数字
+    color: 颜色
+    country: 国家
+    telephone: 电话
+    email: 电子邮件
+    language: 语言
+    locale: 区域设置
+    texteditor: 文本编辑器
+    url: URL
+    select: 选择
+    multiselect: 多选
+    image: 图像
+  entity:
+    title: 字段类型
+    title_plural: 字段类型
+  labels:
+    title: 标题
+    code: 代码
+    translatable: 可翻译
+    filterable: 可筛选
+    input_type: 输入类型
+    decimal_separator: 小数分隔符
+locale:
+  title: 区域设置
+  entity:
+    title: 区域设置
+    title_plural: 区域设置
+  labels:
+    default: 默认
+  actions:
+    set_as_default: 设为默认
+settings:
+  title: 设置
+product:
+  title: 产品
+  entity:
+    title: 产品
+    title_plural: 产品
+  labels:
+    identifiers: 标识符
+    product_type: 产品类型
+    created_at: 创建时间
+    updated_at: 更新时间
+    master_data: 主数据
+    fields: 字段
+general:
+  labels:
+    translation: 翻译
+    locale: 区域设置
+    language: 语言

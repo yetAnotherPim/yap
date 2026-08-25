@@ -1,0 +1,132 @@
+product_type_field_configuration:
+  labels:
+    field_type: Tipo de campo
+    default_value: Valor predeterminado
+    required: Obrigatorio
+  alert:
+    duplicate_field_type: 'Este tipo de campo xa está en uso.'
+  default_value:
+    help: |-
+      Valor predeterminado: Produto.
+
+      Tipos:
+      'Some text'
+      '17.06'
+      '1' - Activo (Caixa de verificación)
+      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+  title: Xestor de complementos
+  labels:
+    name: Nome
+    namespace: Espazo de nomes
+    version: Versión
+    installed_version: Versión instalada
+    active: Activo
+    actions:
+      reload: Recargar
+      activate: Activar
+      deactivate: Desactivar
+      update: Actualizar
+user:
+  title: Usuarios
+  entity:
+    title: Usuario
+    title_plural: Usuarios
+  labels:
+    master_data: Datos mestres
+    password: Contrasinal
+    repeat_password: Repetir contrasinal
+    username: Nome de usuario
+    role: Rol
+    email: Correo electrónico
+    first_name: Nome
+    last_name: Apelidos
+types:
+  title: Tipos
+  label:
+    identifier: Identificador
+    field: Campo
+    product: Produto
+identifier_type:
+  title: Tipo de identificador
+  data_type:
+    string: Cadea
+    integer: Enteiro
+  entity:
+    title: Tipo de identificador
+    title_plural: Tipos de identificador
+  labels:
+    title: Título
+    data_type: Tipo de datos
+product_type:
+  title: Tipo de produto
+  entity:
+    title: Tipo de produto
+    title_plural: Tipos de produto
+  labels:
+    title: Título
+    code: Código
+    fields: Campos
+field_type:
+  title: Tipo de campo
+  input_type:
+    string: Cadea
+    integer: Enteiro
+    checkbox: Caixa de verificación
+    date: Data
+    file: Ficheiro
+    section: Sección
+    text: Texto
+    textarea: Área de texto
+    datetime: Data e hora
+    time: Hora
+    number: Número
+    color: Cor
+    country: País
+    telephone: Teléfono
+    email: Correo electrónico
+    language: Idioma
+    locale: Configuración rexional
+    texteditor: Editor de texto
+    url: URL
+    select: Selección
+    multiselect: Selección múltiple
+    image: Imaxe
+  entity:
+    title: Tipo de campo
+    title_plural: Tipos de campo
+  labels:
+    title: Título
+    code: Código
+    translatable: Traducible
+    filterable: Filtrable
+    input_type: Tipo de entrada
+    decimal_separator: Separador decimal
+locale:
+  title: Configuracións rexionais
+  entity:
+    title: Configuración rexional
+    title_plural: Configuracións rexionais
+  labels:
+    default: Predeterminado
+  actions:
+    set_as_default: Establecer como predeterminado
+settings:
+  title: Configuración
+product:
+  title: Produtos
+  entity:
+    title: Produto
+    title_plural: Produtos
+  labels:
+    identifiers: Identificadores
+    product_type: Tipo de produto
+    created_at: Creado o
+    updated_at: Actualizado o
+    master_data: Datos mestres
+    fields: Campos
+general:
+  labels:
+    translation: Tradución
+    locale: Configuración rexional
+    language: Idioma

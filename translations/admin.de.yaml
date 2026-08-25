@@ -3,9 +3,11 @@ product_type_field_configuration:
         field_type: 'Feld-Typ'
         default_value: 'Standardwert'
         required: 'Pflichtfeld'
+    alert:
+        duplicate_field_type: 'Dieser Feld-Typ wird in der aktuellen Konfiguration bereits verwendet.'
     default_value:
         help: |
-            Standardwerte werden beim Erstellen eines Produktes gesetzt.<br/><br/>
+            Standardwerte werden beim Erstellen eines Produktes gesetzt.
 
             Mögliche Werte sind:<br/>
             'Some text'<br/>

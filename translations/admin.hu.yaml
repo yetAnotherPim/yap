@@ -1,0 +1,132 @@
+product_type_field_configuration:
+  labels:
+    field_type: Mezőtípus
+    default_value: Alapértelmezett érték
+    required: Kötelező
+  alert:
+    duplicate_field_type: 'Ez a mezőtípus már használatban van.'
+  default_value:
+    help: |-
+      Alapértelmezett érték: Termék.
+
+      Típusok:
+      'Some text'
+      '17.06'
+      '1' - Aktív (Jelölőnégyzet)
+      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+  title: Bővítménykezelő
+  labels:
+    name: Név
+    namespace: Névtér
+    version: Verzió
+    installed_version: Telepített verzió
+    active: Aktív
+    actions:
+      reload: Újratöltés
+      activate: Aktiválás
+      deactivate: Deaktiválás
+      update: Frissítés
+user:
+  title: Felhasználók
+  entity:
+    title: Felhasználó
+    title_plural: Felhasználók
+  labels:
+    master_data: Törzsadatok
+    password: Jelszó
+    repeat_password: Jelszó megismétlése
+    username: Felhasználónév
+    role: Szerepkör
+    email: E-mail
+    first_name: Keresztnév
+    last_name: Vezetéknév
+types:
+  title: Típusok
+  label:
+    identifier: Azonosító
+    field: Mező
+    product: Termék
+identifier_type:
+  title: Azonosítótípus
+  data_type:
+    string: Karakterlánc
+    integer: Egész szám
+  entity:
+    title: Azonosítótípus
+    title_plural: Azonosítótípusok
+  labels:
+    title: Cím
+    data_type: Adattípus
+product_type:
+  title: Terméktípus
+  entity:
+    title: Terméktípus
+    title_plural: Terméktípusok
+  labels:
+    title: Cím
+    code: Kód
+    fields: Mezők
+field_type:
+  title: Mezőtípus
+  input_type:
+    string: Karakterlánc
+    integer: Egész szám
+    checkbox: Jelölőnégyzet
+    date: Dátum
+    file: Fájl
+    section: Szakasz
+    text: Szöveg
+    textarea: Szövegterület
+    datetime: Dátum és idő
+    time: Idő
+    number: Szám
+    color: Szín
+    country: Ország
+    telephone: Telefon
+    email: E-mail
+    language: Nyelv
+    locale: Területi beállítás
+    texteditor: Szövegszerkesztő
+    url: URL
+    select: Kiválasztás
+    multiselect: Többszörös kiválasztás
+    image: Kép
+  entity:
+    title: Mezőtípus
+    title_plural: Mezőtípusok
+  labels:
+    title: Cím
+    code: Kód
+    translatable: Fordítható
+    filterable: Szűrhető
+    input_type: Beviteli típus
+    decimal_separator: Tizedesjel
+locale:
+  title: Területi beállítások
+  entity:
+    title: Területi beállítás
+    title_plural: Területi beállítások
+  labels:
+    default: Alapértelmezett
+  actions:
+    set_as_default: Beállítás alapértelmezettként
+settings:
+  title: Beállítások
+product:
+  title: Termékek
+  entity:
+    title: Termék
+    title_plural: Termékek
+  labels:
+    identifiers: Azonosítók
+    product_type: Terméktípus
+    created_at: Létrehozva
+    updated_at: Frissítve
+    master_data: Törzsadatok
+    fields: Mezők
+general:
+  labels:
+    translation: Fordítás
+    locale: Területi beállítás
+    language: Nyelv

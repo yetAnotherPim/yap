@@ -71,6 +71,13 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
                         InputType::MultiSelect->value,
                     ], JSON_THROW_ON_ERROR),
                 )
+                ->setHtmlAttribute(
+                    'data-product-type-field-configuration-options-duplicate-message-value',
+                    $this->translator->trans(
+                        'product_type_field_configuration.alert.duplicate_field_type',
+                        domain: 'admin',
+                    )
+                )
                 ->setRequired(true)
                 ->autocomplete(
                     // TODO: translate title
@@ -81,14 +88,16 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
                     'data-field-type-options-field' => 'true',
                 ]),
             TextareaField::new('defaultValue', new TranslatableMessage('product_type_field_configuration.labels.default_value', [], 'admin'))
-                // TODO: render as tooltip
                 ->setHelp(
                     new TranslatableMessage(
                         'product_type_field_configuration.default_value.help',
                         [],
                         'admin'
                     )
-                ),
+                )
+                ->setFormTypeOption('row_attr', [
+                    'data-controller' => 'help-tooltip',
+                ]),
             BooleanField::new('required', new TranslatableMessage('product_type_field_configuration.labels.required', [], 'admin')),
             HiddenField::new('position'),
         ];

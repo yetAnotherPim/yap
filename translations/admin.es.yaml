@@ -1,0 +1,132 @@
+product_type_field_configuration:
+  labels:
+    field_type: Tipo de campo
+    default_value: Valor predeterminado
+    required: Obligatorio
+  alert:
+      duplicate_field_type: 'Este tipo de campo ya está en uso.'
+  default_value:
+    help: |-
+      Los valores predeterminados se aplican al crear un producto.
+
+      Los valores posibles son:
+      'Some text'
+      '17.06'
+      '1' - Se interpreta como activo en las casillas de verificación
+      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+  title: Gestor de plugins
+  labels:
+    name: Nombre
+    namespace: Espacio de nombres
+    version: Versión
+    installed_version: Versión instalada
+    active: Activo
+    actions:
+      reload: Recargar
+      activate: Activar
+      deactivate: Desactivar
+      update: Actualizar
+user:
+  title: Usuarios
+  entity:
+    title: Usuario
+    title_plural: Usuarios
+  labels:
+    master_data: Datos maestros
+    password: Contraseña
+    repeat_password: Repetir contraseña
+    username: Nombre de usuario
+    role: Rol
+    email: Correo electrónico
+    first_name: Nombre
+    last_name: Apellidos
+types:
+  title: Tipos
+  label:
+    identifier: Identificador
+    field: Campo
+    product: Producto
+identifier_type:
+  title: Tipo de identificador
+  data_type:
+    string: Cadena
+    integer: Entero
+  entity:
+    title: Tipo de identificador
+    title_plural: Tipos de identificador
+  labels:
+    title: Título
+    data_type: Tipo de datos
+product_type:
+  title: Tipo de producto
+  entity:
+    title: Tipo de producto
+    title_plural: Tipos de producto
+  labels:
+    title: Título
+    code: Código
+    fields: Campos
+field_type:
+  title: Tipo de campo
+  input_type:
+    string: Cadena
+    integer: Entero
+    checkbox: Casilla de verificación
+    date: Fecha
+    file: Archivo
+    section: Sección
+    text: Texto
+    textarea: Área de texto
+    datetime: Fecha y hora
+    time: Hora
+    number: Número
+    color: Color
+    country: País
+    telephone: Teléfono
+    email: Correo electrónico
+    language: Idioma
+    locale: Configuración regional
+    texteditor: Editor de texto
+    url: URL
+    select: Selección
+    multiselect: Selección múltiple
+    image: Imagen
+  entity:
+    title: Tipo de campo
+    title_plural: Tipos de campo
+  labels:
+    title: Título
+    code: Código
+    translatable: Traducible
+    filterable: Filtrable
+    input_type: Tipo de entrada
+    decimal_separator: Separador decimal
+locale:
+  title: Configuraciones regionales
+  entity:
+    title: Configuración regional
+    title_plural: Configuraciones regionales
+  labels:
+    default: Predeterminado
+  actions:
+    set_as_default: Establecer como predeterminado
+settings:
+  title: Configuración
+product:
+  title: Productos
+  entity:
+    title: Producto
+    title_plural: Productos
+  labels:
+    identifiers: Identificadores
+    product_type: Tipo de producto
+    created_at: Creado el
+    updated_at: Actualizado el
+    master_data: Datos maestros
+    fields: Campos
+general:
+  labels:
+    translation: Traducción
+    locale: Configuración regional
+    language: Idioma

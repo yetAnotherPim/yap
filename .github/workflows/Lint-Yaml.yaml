@@ -35,4 +35,4 @@ jobs:
 
             - name: Lint Yaml files
               run: |
-                  bin/console lint:yaml --parse-tags config/ src/
+                  bin/console lint:yaml --parse-tags config/ src/ translations/

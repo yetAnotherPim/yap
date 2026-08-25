@@ -1,0 +1,132 @@
+product_type_field_configuration:
+  labels:
+    field_type: Feldtyp
+    default_value: Standardwäert
+    required: Obligatoresch
+  alert:
+    duplicate_field_type: 'Dëse Feldtyp gëtt scho benotzt.'
+  default_value:
+    help: |-
+      Standardwäert: Produkt.
+
+      Typen:
+      'Some text'
+      '17.06'
+      '1' - Aktiv (Kontrollkëscht)
+      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+  title: Plugin-Manager
+  labels:
+    name: Numm
+    namespace: Nummraum
+    version: Versioun
+    installed_version: Installéiert Versioun
+    active: Aktiv
+    actions:
+      reload: Nei lueden
+      activate: Aktivéieren
+      deactivate: Desaktivéieren
+      update: Aktualiséieren
+user:
+  title: Benotzer
+  entity:
+    title: Benotzer
+    title_plural: Benotzer
+  labels:
+    master_data: Stammdaten
+    password: Passwuert
+    repeat_password: Passwuert widderhuelen
+    username: Benotzernumm
+    role: Roll
+    email: E-Mail
+    first_name: Virnumm
+    last_name: Familljennumm
+types:
+  title: Typen
+  label:
+    identifier: Identifikator
+    field: Feld
+    product: Produkt
+identifier_type:
+  title: Identifikatortyp
+  data_type:
+    string: Zeecheketten
+    integer: Ganz Zuel
+  entity:
+    title: Identifikatortyp
+    title_plural: Identifikatortypen
+  labels:
+    title: Titel
+    data_type: Datentyp
+product_type:
+  title: Produkttyp
+  entity:
+    title: Produkttyp
+    title_plural: Produkttypen
+  labels:
+    title: Titel
+    code: Code
+    fields: Felder
+field_type:
+  title: Feldtyp
+  input_type:
+    string: Zeecheketten
+    integer: Ganz Zuel
+    checkbox: Kontrollkëscht
+    date: Datum
+    file: Fichier
+    section: Sektioun
+    text: Text
+    textarea: Textberäich
+    datetime: Datum & Zäit
+    time: Zäit
+    number: Zuel
+    color: Faarf
+    country: Land
+    telephone: Telefon
+    email: E-Mail
+    language: Sprooch
+    locale: Locale
+    texteditor: Texteditor
+    url: URL
+    select: Auswiel
+    multiselect: Méi-Auswiel
+    image: Bild
+  entity:
+    title: Feldtyp
+    title_plural: Feldtypen
+  labels:
+    title: Titel
+    code: Code
+    translatable: Iwwersetzbar
+    filterable: Filterbar
+    input_type: Inputtyp
+    decimal_separator: Dezimaltrennzeechen
+locale:
+  title: Locales
+  entity:
+    title: Locale
+    title_plural: Locales
+  labels:
+    default: Standard
+  actions:
+    set_as_default: Als Standard setzen
+settings:
+  title: Astellungen
+product:
+  title: Produkter
+  entity:
+    title: Produkt
+    title_plural: Produkter
+  labels:
+    identifiers: Identifikatoren
+    product_type: Produkttyp
+    created_at: Erstallt
+    updated_at: Aktualiséiert
+    master_data: Stammdaten
+    fields: Felder
+general:
+  labels:
+    translation: Iwwersetzung
+    locale: Locale
+    language: Sprooch

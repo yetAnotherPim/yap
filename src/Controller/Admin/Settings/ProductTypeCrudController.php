@@ -50,7 +50,6 @@ class ProductTypeCrudController extends AbstractCrudController
             TextField::new('code', new TranslatableMessage('product_type.labels.code', [], 'admin')),
             TextField::new('title', new TranslatableMessage('product_type.labels.title', [], 'admin')),
             FormField::addFieldset(new TranslatableMessage('product_type.labels.fields', [], 'admin')),
-            // TODO: avoid duplicates
             CollectionField::new('productTypeFieldConfigurations')
                 ->setRequired(true)
                 ->setEntryIsComplex()

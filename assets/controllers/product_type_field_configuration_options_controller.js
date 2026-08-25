@@ -4,13 +4,19 @@ export default class extends Controller {
     static values = {
         url: String,
         visibleInputTypes: Array,
+        duplicateMessage: String,
     };
 
     connect() {
-        this.update();
+        this.updateOptions();
     }
 
     async update() {
+        this.showDuplicateWarning();
+        await this.updateOptions();
+    }
+
+    async updateOptions() {
         const optionsRow = this.findOptionsRow();
 
         if (!optionsRow) {
@@ -20,6 +26,45 @@ export default class extends Controller {
         const inputType = await this.fetchInputType();
 
         this.updateVisibility(optionsRow, inputType);
+    }
+
+    showDuplicateWarning() {
+        this.element
+            .closest('.form-widget')
+            ?.querySelector('[data-duplicate-warning]')
+            ?.remove();
+
+        const value = this.element.value;
+
+        if (!value) {
+            return;
+        }
+
+        const form = this.element.closest('form');
+
+        if (!form) {
+            return;
+        }
+
+        const isDuplicate = [...form.querySelectorAll(
+            '[data-controller~="product-type-field-configuration-options"]',
+        )].some(
+            (element) =>
+                element !== this.element
+                && element.value === value,
+        );
+
+        if (!isDuplicate) {
+            return;
+        }
+
+        const warning = document.createElement('div');
+
+        warning.dataset.duplicateWarning = '';
+        warning.classList.add('form-text', 'text-warning');
+        warning.textContent = this.duplicateMessageValue;
+
+        this.element.closest('.form-widget')?.append(warning);
     }
 
     async fetchInputType() {

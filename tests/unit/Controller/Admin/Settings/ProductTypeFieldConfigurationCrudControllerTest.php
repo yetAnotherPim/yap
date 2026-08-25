@@ -47,6 +47,12 @@ class ProductTypeFieldConfigurationCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
+        $this->translator
+            ->shouldReceive('trans')
+            ->once()
+            ->with('product_type_field_configuration.alert.duplicate_field_type', [], 'admin')
+            ->andReturn('This field type is already used.');
+
         $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
 
         $this->assertCount(5, $fields);

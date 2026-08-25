@@ -1,0 +1,132 @@
+product_type_field_configuration:
+  labels:
+    field_type: סוג שדה
+    default_value: ערך ברירת מחדל
+    required: נדרש
+  alert:
+    duplicate_field_type: 'סוג שדה זה כבר נמצא בשימוש.'
+  default_value:
+    help: |-
+      ערך ברירת מחדל: מוצר.
+
+      סוגים:
+      'Some text'
+      '17.06'
+      '1' - פעיל (תיבת סימון)
+      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+  title: מנהל תוספים
+  labels:
+    name: שם
+    namespace: מרחב שמות
+    version: גרסה
+    installed_version: גרסה מותקנת
+    active: פעיל
+    actions:
+      reload: טען מחדש
+      activate: הפעל
+      deactivate: השבת
+      update: עדכן
+user:
+  title: משתמשים
+  entity:
+    title: משתמש
+    title_plural: משתמשים
+  labels:
+    master_data: נתוני אב
+    password: סיסמה
+    repeat_password: חזור על הסיסמה
+    username: שם משתמש
+    role: תפקיד
+    email: דוא״ל
+    first_name: שם פרטי
+    last_name: שם משפחה
+types:
+  title: סוגים
+  label:
+    identifier: מזהה
+    field: שדה
+    product: מוצר
+identifier_type:
+  title: סוג מזהה
+  data_type:
+    string: מחרוזת
+    integer: מספר שלם
+  entity:
+    title: סוג מזהה
+    title_plural: סוגי מזהים
+  labels:
+    title: כותרת
+    data_type: סוג נתונים
+product_type:
+  title: סוג מוצר
+  entity:
+    title: סוג מוצר
+    title_plural: סוגי מוצרים
+  labels:
+    title: כותרת
+    code: קוד
+    fields: שדות
+field_type:
+  title: סוג שדה
+  input_type:
+    string: מחרוזת
+    integer: מספר שלם
+    checkbox: תיבת סימון
+    date: תאריך
+    file: קובץ
+    section: מקטע
+    text: טקסט
+    textarea: אזור טקסט
+    datetime: תאריך ושעה
+    time: שעה
+    number: מספר
+    color: צבע
+    country: מדינה
+    telephone: טלפון
+    email: דוא״ל
+    language: שפה
+    locale: אזור
+    texteditor: עורך טקסט
+    url: URL
+    select: בחירה
+    multiselect: בחירה מרובה
+    image: תמונה
+  entity:
+    title: סוג שדה
+    title_plural: סוגי שדות
+  labels:
+    title: כותרת
+    code: קוד
+    translatable: ניתן לתרגום
+    filterable: ניתן לסינון
+    input_type: סוג קלט
+    decimal_separator: מפריד עשרוני
+locale:
+  title: אזורים
+  entity:
+    title: אזור
+    title_plural: אזורים
+  labels:
+    default: ברירת מחדל
+  actions:
+    set_as_default: הגדר כברירת מחדל
+settings:
+  title: הגדרות
+product:
+  title: מוצרים
+  entity:
+    title: מוצר
+    title_plural: מוצרים
+  labels:
+    identifiers: מזהים
+    product_type: סוג מוצר
+    created_at: נוצר בתאריך
+    updated_at: עודכן בתאריך
+    master_data: נתוני אב
+    fields: שדות
+general:
+  labels:
+    translation: תרגום
+    locale: אזור
+    language: שפה
