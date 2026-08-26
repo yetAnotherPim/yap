@@ -10,6 +10,7 @@ use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
+use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
@@ -40,6 +41,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(Product::class)]
 #[CoversClass(ProductRepository::class)]
+#[CoversClass(InputType::class)]
 #[UsesClass(Identifier::class)]
 #[UsesClass(IdentifierType::class)]
 #[UsesClass(Field::class)]

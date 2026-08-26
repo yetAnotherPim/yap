@@ -6,13 +6,12 @@ namespace App\Controller\Admin\Settings;
 
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Repository\LocaleRepository;
+use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Translation\TranslatableMessage;
@@ -25,8 +24,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class FieldTypeCrudController extends AbstractCrudController
 {
     public function __construct(
-        private readonly LocaleRepository $localeRepository,
         private readonly TranslatorInterface $translator,
+        private readonly TitleTranslationFieldRenderer $titleTranslationFieldRenderer,
     ) {
     }
 
@@ -37,7 +36,7 @@ class FieldTypeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
+        $fields = [
             FormField::addColumn(6),
             FormField::addFieldset(new TranslatableMessage('field_type.entity.title', [], 'admin')),
             TextField::new('code', new TranslatableMessage('field_type.labels.code', [], 'admin')),
@@ -55,24 +54,20 @@ class FieldTypeCrudController extends AbstractCrudController
                 ->setMaxLength(1)
                 ->onlyOnForms(),
             FormField::addColumn(6),
-            FormField::addFieldset(new TranslatableMessage('general.labels.translation', [], 'admin')),
-            LocaleField::new('translation_locale', new TranslatableMessage('general.labels.locale', [], 'admin'))
-                ->includeOnly($this->localeRepository->getAvailableLocaleIds())
-                ->setFormTypeOptions([
-                    'label' => 'Language',
-                    'data' => '',
-                    'mapped' => false,
-                ])
-                ->onlyOnForms(),
-            // TODO: for all locales
-            TextField::new('translation_title')
-                ->setFormTypeOptions([
-                    'label' => 'Title',
-                    'data' => '',
-                    'mapped' => false,
-                ])
-                ->onlyOnForms(),
         ];
+
+        if (Crud::PAGE_EDIT === $pageName || Crud::PAGE_NEW === $pageName) {
+            $fieldType = $this->getContext()
+                ?->getEntity()
+                ->getInstance();
+
+            $fields = array_merge(
+                $fields,
+                $this->titleTranslationFieldRenderer->render($fieldType, new TranslatableMessage('field_type.labels.title', [], 'admin'))
+            );
+        }
+
+        return $fields;
     }
 
     public function configureCrud(Crud $crud): Crud

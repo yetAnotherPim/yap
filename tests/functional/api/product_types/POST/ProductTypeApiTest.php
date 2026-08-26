@@ -76,7 +76,7 @@ class ProductTypeApiTest extends ApiTestCase
                 'body' => '{
                                 "title":"Generic Product",
                                 "code":"generic_product",
-                                "translations": [
+                                "titleTranslations": [
                                     {
                                         "locale": "/api/locales/'.$locale->getId().'",
                                         "value": "Generisches Produkt"

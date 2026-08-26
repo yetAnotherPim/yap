@@ -10,6 +10,7 @@ use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
+use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
@@ -36,6 +37,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[CoversClass(RelatedTimestampUpdater::class)]
 #[CoversClass(Field::class)]
 #[CoversClass(FieldRepository::class)]
+#[CoversClass(InputType::class)]
 #[UsesClass(Locale::class)]
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(FieldValueTranslation::class)]

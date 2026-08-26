@@ -79,7 +79,7 @@ class ProductTypeTest extends MockeryTestCase
     public static function associationDataProvider(): array
     {
         return [
-            ['getTranslations', 'addTranslation', 'removeTranslation', ProductTypeTitleTranslation::class, 'setProductType'],
+            ['getTitleTranslations', 'addTitleTranslation', 'removeTitleTranslation', ProductTypeTitleTranslation::class, 'setProductType'],
             ['getProductTypeFieldConfigurations', 'addProductTypeFieldConfiguration', 'removeProductTypeFieldConfiguration', ProductTypeFieldConfiguration::class, 'setProductType'],
         ];
     }

@@ -6,12 +6,11 @@ namespace App\Tests\unit\Controller\Admin\Settings;
 
 use App\Controller\Admin\Settings\FieldTypeCrudController;
 use App\Entity\Product\Field\Type\FieldType;
-use App\Repository\LocaleRepository;
+use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -22,16 +21,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[CoversClass(FieldTypeCrudController::class)]
 class FieldTypeCrudControllerTest extends MockeryTestCase
 {
-    /** @var LocaleRepository|MockInterface */
-    private LocaleRepository $localeRepositoryMock;
+    /** @var TitleTranslationFieldRenderer|MockInterface */
+    private TitleTranslationFieldRenderer $titleTranslationFieldRendererMock;
 
     /** @var TranslatorInterface|MockInterface */
     private TranslatorInterface $translatorMock;
 
     public function setUp(): void
     {
-        $this->localeRepositoryMock = \Mockery::mock(LocaleRepository::class);
         $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
+        $this->titleTranslationFieldRendererMock = \Mockery::mock(TitleTranslationFieldRenderer::class);
 
         parent::setUp();
     }
@@ -43,16 +42,11 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
-        $controller = new FieldTypeCrudController($this->localeRepositoryMock, $this->translatorMock);
-
-        $this->localeRepositoryMock
-            ->shouldReceive('getAvailableLocaleIds')
-            ->once()
-            ->andReturn(['es_ES', 'de_DE']);
+        $controller = new FieldTypeCrudController($this->translatorMock, $this->titleTranslationFieldRendererMock);
 
         $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
 
-        $this->assertCount(12, $fields);
+        $this->assertCount(9, $fields);
 
         $this->assertInstanceOf(FormField::class, $fields[0]);
         $this->assertInstanceOf(FormField::class, $fields[1]);
@@ -69,15 +63,55 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
         $this->assertInstanceOf(TextField::class, $fields[7]);
         $this->assertEquals('decimalSeparator', $fields[7]->getAsDto()->getProperty());
         $this->assertInstanceOf(FormField::class, $fields[8]);
-        $this->assertInstanceOf(FormField::class, $fields[9]);
-        $this->assertInstanceOf(LocaleField::class, $fields[10]);
+    }
 
-        // TODO: add translation fields
+    public function testConfigureFieldsForReturnsExpectedFieldsOnFormPage(): void
+    {
+        $controller = \Mockery::mock(
+            FieldTypeCrudController::class,
+            [$this->translatorMock, $this->titleTranslationFieldRendererMock],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn(null);
+
+        $this->titleTranslationFieldRendererMock
+            ->shouldReceive('render')
+            ->once()
+            ->with(
+                null,
+                \Mockery::type(TranslatableMessage::class),
+            )
+            ->andReturn([]);
+
+        $fields = iterator_to_array($controller->configureFields(Crud::PAGE_EDIT));
+
+        $this->assertCount(9, $fields);
+
+        $this->assertInstanceOf(FormField::class, $fields[0]);
+        $this->assertInstanceOf(FormField::class, $fields[1]);
+        $this->assertInstanceOf(TextField::class, $fields[2]);
+        $this->assertEquals('code', $fields[2]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[3]);
+        $this->assertEquals('title', $fields[3]->getAsDto()->getProperty());
+        $this->assertInstanceOf(BooleanField::class, $fields[4]);
+        $this->assertEquals('translatable', $fields[4]->getAsDto()->getProperty());
+        $this->assertInstanceOf(BooleanField::class, $fields[5]);
+        $this->assertEquals('filterable', $fields[5]->getAsDto()->getProperty());
+        $this->assertInstanceOf(ChoiceField::class, $fields[6]);
+        $this->assertEquals('inputType', $fields[6]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[7]);
+        $this->assertEquals('decimalSeparator', $fields[7]->getAsDto()->getProperty());
+        $this->assertInstanceOf(FormField::class, $fields[8]);
     }
 
     public function testConfigureCrudSetsAutocompleteCallback(): void
     {
-        $controller = new FieldTypeCrudController($this->localeRepositoryMock, $this->translatorMock);
+        $controller = new FieldTypeCrudController($this->translatorMock, $this->titleTranslationFieldRendererMock);
 
         $crud = Crud::new();
 

@@ -14,6 +14,8 @@ use ApiPlatform\Metadata\Post;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
+use App\Entity\Translation\Title\TitleTranslationInterface;
+use App\Entity\Translation\Title\TranslatableTitleInterface;
 use App\Repository\FieldTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,6 +25,9 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * @implements TranslatableTitleInterface<FieldTypeTitleTranslation>
+ */
 #[ORM\Entity(repositoryClass: FieldTypeRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
@@ -35,7 +40,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Get]
 #[GetCollection]
 #[Delete]
-class FieldType extends TimestampableEntity
+class FieldType extends TimestampableEntity implements TranslatableTitleInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -56,10 +61,6 @@ class FieldType extends TimestampableEntity
 
     #[ORM\Column]
     #[Groups(['field_type:write', 'field_type:read'])]
-    private bool $translatable;
-
-    #[ORM\Column]
-    #[Groups(['field_type:write', 'field_type:read'])]
     private bool $filterable;
 
     #[ORM\Column]
@@ -70,12 +71,16 @@ class FieldType extends TimestampableEntity
     #[Groups(['field_type:write', 'field_type:read'])]
     private ?string $decimalSeparator = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    #[Groups(['field_type:write', 'field_type:read'])]
+    private bool $translatable;
+
     /**
      * @var Collection<int, FieldTypeTitleTranslation>
      */
     #[ORM\OneToMany(targetEntity: FieldTypeTitleTranslation::class, mappedBy: 'fieldType', cascade: ['all'], orphanRemoval: true)]
     #[Groups(['field_type:write', 'field_type:read'])]
-    private Collection $translations;
+    private Collection $titleTranslations;
 
     /**
      * @var Collection<int, ProductTypeFieldConfiguration>
@@ -86,7 +91,7 @@ class FieldType extends TimestampableEntity
     public function __construct()
     {
         parent::__construct();
-        $this->translations = new ArrayCollection();
+        $this->titleTranslations = new ArrayCollection();
         $this->productTypeFieldConfigurations = new ArrayCollection();
     }
 
@@ -115,18 +120,6 @@ class FieldType extends TimestampableEntity
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function isTranslatable(): bool
-    {
-        return $this->translatable;
-    }
-
-    public function setTranslatable(bool $translatable): static
-    {
-        $this->translatable = $translatable;
 
         return $this;
     }
@@ -165,27 +158,45 @@ class FieldType extends TimestampableEntity
         return $this;
     }
 
+    public function isTranslatable(): bool
+    {
+        return $this->translatable;
+    }
+
+    public function setTranslatable(bool $translatable): FieldType
+    {
+        $this->translatable = $translatable;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, FieldTypeTitleTranslation>
      */
-    public function getTranslations(): Collection
+    public function getTitleTranslations(): Collection
     {
-        return $this->translations;
+        return $this->titleTranslations;
     }
 
-    public function addTranslation(FieldTypeTitleTranslation $translation): static
+    /**
+     * @param FieldTypeTitleTranslation $titleTranslation
+     */
+    public function addTitleTranslation(TitleTranslationInterface $titleTranslation): static
     {
-        if (!$this->translations->contains($translation)) {
-            $this->translations->add($translation);
-            $translation->setFieldType($this);
+        if (!$this->titleTranslations->contains($titleTranslation)) {
+            $this->titleTranslations->add($titleTranslation);
+            $titleTranslation->setFieldType($this);
         }
 
         return $this;
     }
 
-    public function removeTranslation(FieldTypeTitleTranslation $translation): static
+    /**
+     * @param FieldTypeTitleTranslation $titleTranslation
+     */
+    public function removeTitleTranslation(TitleTranslationInterface $titleTranslation): static
     {
-        $this->translations->removeElement($translation);
+        $this->titleTranslations->removeElement($titleTranslation);
 
         return $this;
     }

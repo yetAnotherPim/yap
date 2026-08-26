@@ -14,6 +14,8 @@ use ApiPlatform\Metadata\Post;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
+use App\Entity\Translation\Title\TitleTranslationInterface;
+use App\Entity\Translation\Title\TranslatableTitleInterface;
 use App\Repository\ProductTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,6 +25,9 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * @implements TranslatableTitleInterface<ProductTypeTitleTranslation>
+ */
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint(name: 'unique_product_type_code', fields: ['code'])]
@@ -35,7 +40,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Get]
 #[GetCollection]
 #[Delete]
-class ProductType extends TimestampableEntity
+class ProductType extends TimestampableEntity implements TranslatableTitleInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -60,7 +65,7 @@ class ProductType extends TimestampableEntity
      */
     #[ORM\OneToMany(targetEntity: ProductTypeTitleTranslation::class, mappedBy: 'productType', cascade: ['all'], orphanRemoval: true)]
     #[Groups(['product_type:write', 'product_type:read'])]
-    private Collection $translations;
+    private Collection $titleTranslations;
 
     /**
      * @var Collection<int, ProductTypeFieldConfiguration>
@@ -72,7 +77,7 @@ class ProductType extends TimestampableEntity
     public function __construct()
     {
         parent::__construct();
-        $this->translations = new ArrayCollection();
+        $this->titleTranslations = new ArrayCollection();
         $this->productTypeFieldConfigurations = new ArrayCollection();
     }
 
@@ -108,24 +113,30 @@ class ProductType extends TimestampableEntity
     /**
      * @return Collection<int, ProductTypeTitleTranslation>
      */
-    public function getTranslations(): Collection
+    public function getTitleTranslations(): Collection
     {
-        return $this->translations;
+        return $this->titleTranslations;
     }
 
-    public function addTranslation(ProductTypeTitleTranslation $translation): static
+    /**
+     * @param ProductTypeTitleTranslation $titleTranslation
+     */
+    public function addTitleTranslation(TitleTranslationInterface $titleTranslation): static
     {
-        if (!$this->translations->contains($translation)) {
-            $this->translations->add($translation);
-            $translation->setProductType($this);
+        if (!$this->titleTranslations->contains($titleTranslation)) {
+            $this->titleTranslations->add($titleTranslation);
+            $titleTranslation->setProductType($this);
         }
 
         return $this;
     }
 
-    public function removeTranslation(ProductTypeTitleTranslation $translation): static
+    /**
+     * @param ProductTypeTitleTranslation $titleTranslation
+     */
+    public function removeTitleTranslation(TitleTranslationInterface $titleTranslation): static
     {
-        $this->translations->removeElement($translation);
+        $this->titleTranslations->removeElement($titleTranslation);
 
         return $this;
     }

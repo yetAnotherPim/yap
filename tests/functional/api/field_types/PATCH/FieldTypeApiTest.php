@@ -109,7 +109,7 @@ class FieldTypeApiTest extends ApiTestCase
         $fieldType = FieldTypeFactory::createOne(
             [
                 'title' => 'Something',
-                'translations' => [
+                'titleTranslations' => [
                     FieldTypeTitleTranslationFactory::new([
                         'locale' => LocaleFactory::findOrCreate(['id' => 'en_GB']),
                     ]),
@@ -131,7 +131,7 @@ class FieldTypeApiTest extends ApiTestCase
                     'Authorization' => 'Bearer '.$this->authToken,
                 ],
                 'body' => '{
-                                "translations":[]
+                                "titleTranslations":[]
                             }',
             ]
         );

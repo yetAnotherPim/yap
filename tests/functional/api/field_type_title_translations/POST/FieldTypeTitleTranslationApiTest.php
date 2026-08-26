@@ -8,6 +8,7 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
+use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Entity\User\User;
@@ -39,6 +40,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(User::class)]
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
+#[UsesClass(InputType::class)]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {
     use AuthTrait;

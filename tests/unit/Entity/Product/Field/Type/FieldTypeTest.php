@@ -88,7 +88,7 @@ class FieldTypeTest extends MockeryTestCase
     public static function associationDataProvider(): array
     {
         return [
-            ['getTranslations', 'addTranslation', 'removeTranslation', FieldTypeTitleTranslation::class, 'setFieldType'],
+            ['getTitleTranslations', 'addTitleTranslation', 'removeTitleTranslation', FieldTypeTitleTranslation::class, 'setFieldType'],
             ['getProductTypeFieldConfigurations', 'addProductTypeFieldConfiguration', 'removeProductTypeFieldConfiguration', ProductTypeFieldConfiguration::class, 'setFieldType'],
         ];
     }

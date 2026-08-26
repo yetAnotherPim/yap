@@ -112,7 +112,7 @@ class ProductTypeApiTest extends ApiTestCase
             [
                 'title' => 'Something',
                 'code' => 'something',
-                'translations' => [
+                'titleTranslations' => [
                     ProductTypeTitleTranslationFactory::new([
                         'locale' => LocaleFactory::findOrCreate(['id' => 'en_GB']),
                     ]),
@@ -134,7 +134,7 @@ class ProductTypeApiTest extends ApiTestCase
                     'Authorization' => 'Bearer '.$this->authToken,
                 ],
                 'body' => '{
-                                "translations":[]
+                                "titleTranslations":[]
                             }',
             ]
         );

@@ -79,7 +79,7 @@ class FieldTypeApiTest extends ApiTestCase
                                 "translatable": true,
                                 "filterable": true,
                                 "inputType": "string",
-                                "translations": [
+                                "titleTranslations": [
                                     {
                                         "locale": "/api/locales/'.$locale->getId().'",
                                         "value": "Produktname"

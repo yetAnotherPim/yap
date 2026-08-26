@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Translation\Title\TitleTranslationInterface;
 use App\Repository\FieldTypeTitleTranslationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +23,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 #[Index(name: 'index_product_field_type_translation_fieldtype_id', columns: ['field_type_id'])]
 #[ORM\UniqueConstraint(name: 'unique_product_field_type_translation_locale_fieldtype', fields: ['locale', 'field_type'])]
-class FieldTypeTitleTranslation extends RelatedTimestampableEntity
+class FieldTypeTitleTranslation extends RelatedTimestampableEntity implements TitleTranslationInterface
 {
     protected array $updatableRelations = [
         FieldType::class => 'fieldType',
@@ -40,7 +41,7 @@ class FieldTypeTitleTranslation extends RelatedTimestampableEntity
     #[ORM\JoinColumn(nullable: false)]
     private Locale $locale;
 
-    #[ORM\ManyToOne(inversedBy: 'translations')]
+    #[ORM\ManyToOne(inversedBy: 'titleTranslations')]
     #[ORM\JoinColumn(nullable: false)]
     private FieldType $fieldType;
 
