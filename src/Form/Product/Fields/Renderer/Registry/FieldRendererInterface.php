@@ -17,5 +17,6 @@ interface FieldRendererInterface
 
     public function render(
         Field $field, ProductTypeFieldConfiguration $configuration,
+        string $label,
     ): FieldInterface;
 }

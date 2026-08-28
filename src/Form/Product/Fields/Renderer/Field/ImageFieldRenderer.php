@@ -26,13 +26,13 @@ final class ImageFieldRenderer implements FieldRendererInterface
         return InputType::Image === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return ImageField::new('field_'.$field->getType()->getCode())
             ->setUploadDir($this->fileResolver->getUploadDirectory(FileType::IMAGE))
             ->setUploadedFileNamePattern('[YYYY]/[MM]/[DD]/[slug]-[contenthash].[extension]')
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => $this->fileResolver->resolve($field->getValue(), FileType::IMAGE),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

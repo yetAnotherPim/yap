@@ -100,14 +100,14 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
         $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
         $fieldType = \Mockery::mock(FieldType::class);
 
+        $this->translatorMock
+            ->shouldReceive('getLocale')
+            ->once()
+            ->andReturn('de_DE');
+
         $configuration
             ->shouldReceive('getFieldType')
             ->andReturn($fieldType);
-
-        $fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Boolean field');
 
         $fieldType
             ->shouldReceive('getCode')
@@ -118,6 +118,11 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->shouldReceive('getInputType')
             ->once()
             ->andReturn(InputType::CheckBox);
+
+        $fieldType
+            ->shouldReceive('getTranslatedTitle')
+            ->once()
+            ->andReturn('Boolean field');
 
         $fields = iterator_to_array(
             $this->controller->configureFields(Crud::PAGE_NEW)

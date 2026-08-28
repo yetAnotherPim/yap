@@ -19,12 +19,12 @@ final class MultiSelectFieldRenderer implements FieldRendererInterface
         return InputType::MultiSelect === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return ChoiceField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
                 'multiple' => true,
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::MultiSelect),
                 'choices' => array_combine($configuration->getOptions(), $configuration->getOptions()),
                 'mapped' => false,

@@ -22,11 +22,11 @@ final class TimeFieldRenderer implements FieldRendererInterface
     /**
      * @throws \DateMalformedStringException
      */
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return TimeField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Time),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

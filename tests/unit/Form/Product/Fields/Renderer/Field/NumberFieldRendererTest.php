@@ -66,18 +66,13 @@ class NumberFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->times(4)
+            ->times(3)
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('price');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Price');
 
         $this->fieldType
             ->shouldReceive('getDecimalSeparator')
@@ -94,7 +89,7 @@ class NumberFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(NumberField::class, $result);
     }
@@ -103,18 +98,13 @@ class NumberFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->times(4)
+            ->times(3)
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('price');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Price');
 
         $this->fieldType
             ->shouldReceive('getDecimalSeparator')
@@ -131,7 +121,7 @@ class NumberFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(NumberField::class, $result);
 
@@ -142,7 +132,7 @@ class NumberFieldRendererTest extends MockeryTestCase
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
-        $this->assertSame('Price', $formTypeOptions['label']);
+        $this->assertSame('label', $formTypeOptions['label']);
         $this->assertSame(12.34, $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
         $this->assertTrue($formTypeOptions['required']);
@@ -152,18 +142,13 @@ class NumberFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->times(4)
+            ->times(3)
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('price');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Price');
 
         $this->fieldType
             ->shouldReceive('getDecimalSeparator')
@@ -180,7 +165,7 @@ class NumberFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(NumberField::class, $result);
 
@@ -191,7 +176,7 @@ class NumberFieldRendererTest extends MockeryTestCase
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
-        $this->assertSame('Price', $formTypeOptions['label']);
+        $this->assertSame('label', $formTypeOptions['label']);
         $this->assertSame(12.34, $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
         $this->assertTrue($formTypeOptions['required']);
@@ -201,18 +186,13 @@ class NumberFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->times(4)
+            ->times(3)
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('price');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Price');
 
         $this->fieldType
             ->shouldReceive('getDecimalSeparator')
@@ -229,7 +209,7 @@ class NumberFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
         $this->assertNull($formTypeOptions['data']);

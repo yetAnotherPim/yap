@@ -8,6 +8,7 @@ use App\Entity\Locale\Locale;
 use App\Entity\Translation\Title\TitleTranslationInterface;
 use App\Entity\Translation\Title\TranslatableTitleInterface;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
+use App\Form\Title\Translation\Resolver\TitleTranslationResolver;
 use App\Repository\LocaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -24,14 +25,19 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
     /** @var LocaleRepository&Mockery\MockInterface */
     private LocaleRepository $localeRepositoryMock;
 
+    /** @var TitleTranslationResolver&Mockery\MockInterface */
+    private TitleTranslationResolver $titleTranslationResolverMock;
+
     private TitleTranslationFieldRenderer $renderer;
 
     protected function setUp(): void
     {
         $this->localeRepositoryMock = \Mockery::mock(LocaleRepository::class);
+        $this->titleTranslationResolverMock = \Mockery::mock(TitleTranslationResolver::class);
 
         $this->renderer = new TitleTranslationFieldRenderer(
             $this->localeRepositoryMock,
+            $this->titleTranslationResolverMock,
         );
 
         parent::setUp();
@@ -40,9 +46,9 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
     public function testRenderReturnsEmptyArrayWhenNoLocalesAreAvailable(): void
     {
         $this->localeRepositoryMock
-            ->shouldReceive('getAvailableLocaleIds')
+            ->shouldReceive('getAvailableInterfaceTranslationLocales')
             ->once()
-            ->andReturn([]);
+            ->andReturn(new ArrayCollection());
 
         $fields = $this->renderer->render(
             null,
@@ -54,16 +60,37 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
 
     public function testRenderCreatesFieldsForAvailableLocalesWithoutEntity(): void
     {
+        $locale1 = \Mockery::mock(Locale::class);
+        $locale2 = \Mockery::mock(Locale::class);
+
+        $locale1
+            ->shouldReceive('getId')
+            ->andReturn('de_DE');
+
+        $locale2
+            ->shouldReceive('getId')
+            ->andReturn('en_GB');
+
         $this->localeRepositoryMock
-            ->shouldReceive('getAvailableLocaleIds')
+            ->shouldReceive('getAvailableInterfaceTranslationLocales')
             ->once()
-            ->andReturn(['de_DE', 'en_GB']);
+            ->andReturn(new ArrayCollection([$locale1, $locale2]));
 
         $label = new TranslatableMessage(
             'field_type.labels.title',
             [],
             'admin',
         );
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(null, $locale1);
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(null, $locale2);
 
         $fields = $this->renderer->render(null, $label);
 
@@ -92,28 +119,27 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
 
     public function testRenderUsesExistingTranslationsAsFieldData(): void
     {
-        $this->localeRepositoryMock
-            ->shouldReceive('getAvailableLocaleIds')
-            ->once()
-            ->andReturn(['de_DE', 'en_GB', 'fr_FR']);
-
         $deLocale = \Mockery::mock(Locale::class);
         $deLocale
             ->shouldReceive('getId')
-            ->once()
             ->andReturn('de_DE');
 
         $enLocale = \Mockery::mock(Locale::class);
         $enLocale
             ->shouldReceive('getId')
-            ->once()
             ->andReturn('en_GB');
 
-        $deTranslation = \Mockery::mock(TitleTranslationInterface::class);
-        $deTranslation
-            ->shouldReceive('getLocale')
+        $frLocale = \Mockery::mock(Locale::class);
+        $frLocale
+            ->shouldReceive('getId')
+            ->andReturn('fr_FR');
+
+        $this->localeRepositoryMock
+            ->shouldReceive('getAvailableInterfaceTranslationLocales')
             ->once()
-            ->andReturn($deLocale);
+            ->andReturn(new ArrayCollection([$deLocale, $enLocale, $frLocale]));
+
+        $deTranslation = \Mockery::mock(TitleTranslationInterface::class);
         $deTranslation
             ->shouldReceive('getValue')
             ->once()
@@ -121,22 +147,29 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
 
         $enTranslation = \Mockery::mock(TitleTranslationInterface::class);
         $enTranslation
-            ->shouldReceive('getLocale')
-            ->once()
-            ->andReturn($enLocale);
-        $enTranslation
             ->shouldReceive('getValue')
             ->once()
             ->andReturn('English title');
 
         $entity = \Mockery::mock(TranslatableTitleInterface::class);
-        $entity
-            ->shouldReceive('getTitleTranslations')
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
             ->once()
-            ->andReturn(new ArrayCollection([
-                $deTranslation,
-                $enTranslation,
-            ]));
+            ->with($entity, $deLocale)
+            ->andReturn($deTranslation);
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($entity, $enLocale)
+            ->andReturn($enTranslation);
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($entity, $frLocale)
+            ->andReturn(null);
 
         $fields = $this->renderer->render(
             $entity,
@@ -160,10 +193,44 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
 
     public function testRenderConfiguresLocaleField(): void
     {
+        $locale1 = \Mockery::mock(Locale::class);
+        $locale2 = \Mockery::mock(Locale::class);
+        $locale3 = \Mockery::mock(Locale::class);
+
+        $locale1
+            ->shouldReceive('getId')
+            ->andReturn('de_DE');
+
+        $locale2
+            ->shouldReceive('getId')
+            ->andReturn('en_GB');
+
+        $locale3
+            ->shouldReceive('getId')
+            ->andReturn('fr_FR');
+
         $this->localeRepositoryMock
-            ->shouldReceive('getAvailableLocaleIds')
+            ->shouldReceive('getAvailableInterfaceTranslationLocales')
             ->once()
-            ->andReturn(['de_DE', 'en_GB']);
+            ->andReturn(new ArrayCollection([$locale1, $locale2, $locale3]));
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(null, $locale1)
+            ->andReturn(null);
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(null, $locale2)
+            ->andReturn(null);
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(null, $locale3)
+            ->andReturn(null);
 
         $fields = $this->renderer->render(null, 'Title');
 
@@ -195,10 +262,22 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
 
     public function testRenderConfiguresTranslationFields(): void
     {
+        $locale = \Mockery::mock(Locale::class);
+
+        $locale
+            ->shouldReceive('getId')
+            ->andReturn('de_DE');
+
         $this->localeRepositoryMock
-            ->shouldReceive('getAvailableLocaleIds')
+            ->shouldReceive('getAvailableInterfaceTranslationLocales')
             ->once()
-            ->andReturn(['de_DE']);
+            ->andReturn(new ArrayCollection([$locale]));
+
+        $this->titleTranslationResolverMock
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(null, $locale)
+            ->andReturn(null);
 
         $fields = $this->renderer->render(null, 'Title');
 

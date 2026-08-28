@@ -59,37 +59,17 @@ class SectionRendererTest extends MockeryTestCase
 
     public function testRenderReturnsFormField(): void
     {
-        $this->field
-            ->shouldReceive('getType')
-            ->once()
-            ->andReturn($this->fieldType);
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('General');
-
-        $result = $this->renderer->render($this->field, \Mockery::mock(ProductTypeFieldConfiguration::class));
+        $result = $this->renderer->render($this->field, \Mockery::mock(ProductTypeFieldConfiguration::class), 'label');
 
         $this->assertInstanceOf(FormField::class, $result);
     }
 
     public function testRenderUsesFieldTypeTitle(): void
     {
-        $this->field
-            ->shouldReceive('getType')
-            ->once()
-            ->andReturn($this->fieldType);
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('General');
-
-        $result = $this->renderer->render($this->field, \Mockery::mock(ProductTypeFieldConfiguration::class));
+        $result = $this->renderer->render($this->field, \Mockery::mock(ProductTypeFieldConfiguration::class), 'label');
 
         $this->assertSame(
-            'General',
+            'label',
             $result->getAsDto()->getLabel()
         );
     }

@@ -15,6 +15,7 @@ use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Translation\Title\TitleTranslationInterface;
+use App\Entity\Translation\Title\TitleTranslationTrait;
 use App\Entity\Translation\Title\TranslatableTitleInterface;
 use App\Repository\FieldTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,6 +43,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Delete]
 class FieldType extends TimestampableEntity implements TranslatableTitleInterface
 {
+    use TitleTranslationTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -224,5 +227,10 @@ class FieldType extends TimestampableEntity implements TranslatableTitleInterfac
         $this->productTypeFieldConfigurations->removeElement($productTypeFieldConfiguration);
 
         return $this;
+    }
+
+    public function createTitleTranslation(): TitleTranslationInterface
+    {
+        return new FieldTypeTitleTranslation();
     }
 }

@@ -19,11 +19,11 @@ final class LanguageFieldRenderer implements FieldRendererInterface
         return InputType::Language === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return LanguageField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Language),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

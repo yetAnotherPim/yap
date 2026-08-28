@@ -10,12 +10,14 @@ use App\Form\Product\Fields\Resolver\FieldResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductFieldsRenderer
 {
     public function __construct(
         private readonly RendererRegistry $rendererRegistry,
         private readonly FieldResolver $fieldResolver,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -29,19 +31,27 @@ class ProductFieldsRenderer
         $fields[] = FormField::addTab(new TranslatableMessage('product.labels.fields', [], 'admin'));
 
         foreach ($product->getProductType()->getProductTypeFieldConfigurations() as $productTypeFieldConfiguration) {
-            if (null === $productTypeFieldConfiguration->getFieldType()) {
+            $fieldType = $productTypeFieldConfiguration->getFieldType();
+
+            if (null === $fieldType) {
                 continue;
             }
 
             $field = $this->fieldResolver->resolve(
                 $product,
-                $productTypeFieldConfiguration->getFieldType(),
+                $fieldType,
                 $productTypeFieldConfiguration->getDefaultValue()
             );
 
             $fields[] = $this->rendererRegistry
                 ->getRenderer($field)
-                ->render($field, $productTypeFieldConfiguration);
+                ->render(
+                    $field,
+                    $productTypeFieldConfiguration,
+                    (string) $fieldType->getTranslatedTitle(
+                        $this->translator->getLocale(),
+                    )
+                );
         }
 
         return $fields;

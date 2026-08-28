@@ -66,18 +66,13 @@ class TextFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('title');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Title');
 
         $this->field
             ->shouldReceive('getValue')
@@ -89,7 +84,7 @@ class TextFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(TextField::class, $result);
     }
@@ -98,18 +93,13 @@ class TextFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('title');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Title');
 
         $this->field
             ->shouldReceive('getValue')
@@ -121,7 +111,7 @@ class TextFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(TextField::class, $result);
 
@@ -132,7 +122,7 @@ class TextFieldRendererTest extends MockeryTestCase
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
-        $this->assertSame('Title', $formTypeOptions['label']);
+        $this->assertSame('label', $formTypeOptions['label']);
         $this->assertEquals('test', $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
         $this->assertFalse($formTypeOptions['required']);

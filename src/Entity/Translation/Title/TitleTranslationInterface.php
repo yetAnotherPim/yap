@@ -8,7 +8,11 @@ use App\Entity\Locale\Locale;
 
 interface TitleTranslationInterface
 {
+    public function setLocale(Locale $locale): static;
+
     public function getLocale(): Locale;
+
+    public function setValue(?string $value): static;
 
     public function getValue(): ?string;
 }

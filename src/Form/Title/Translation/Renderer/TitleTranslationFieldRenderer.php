@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Form\Title\Translation\Renderer;
 
+use App\Entity\Locale\Locale;
 use App\Entity\Translation\Title\TitleTranslationInterface;
 use App\Entity\Translation\Title\TranslatableTitleInterface;
+use App\Form\Title\Translation\Resolver\TitleTranslationResolver;
 use App\Repository\LocaleRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
@@ -20,6 +20,7 @@ class TitleTranslationFieldRenderer
 {
     public function __construct(
         private readonly LocaleRepository $localeRepository,
+        private readonly TitleTranslationResolver $titleTranslationResolver,
     ) {
     }
 
@@ -33,16 +34,21 @@ class TitleTranslationFieldRenderer
     public function render(?TranslatableTitleInterface $entity, string|TranslatableInterface $label): array
     {
         $fields = [];
-        $locales = $this->localeRepository->getAvailableLocaleIds();
-        $titleTranslations = $this->getIndexedCollection($entity);
+        $locales = $this->localeRepository->getAvailableInterfaceTranslationLocales();
 
-        if (true === empty($locales)) {
+        if (true === $locales->isEmpty()) {
             return $fields;
         }
 
+        $localeIds =
+            $locales->map(
+                static fn (Locale $locale): string => $locale->getId(),
+            )
+            ->toArray();
+
         $fields[] = FormField::addFieldset(new TranslatableMessage('general.labels.translation', [], 'admin'));
         $fields[] = LocaleField::new('translation_locale', new TranslatableMessage('general.labels.locale', [], 'admin'))
-            ->includeOnly($locales)
+            ->includeOnly($localeIds)
             ->setFormTypeOptions([
                 'data' => '',
                 'mapped' => false,
@@ -58,58 +64,17 @@ class TitleTranslationFieldRenderer
             ->onlyOnForms();
 
         foreach ($locales as $locale) {
-            $fields[] = TextField::new('title-'.$locale, $label)
+            $fields[] = TextField::new('title-'.$locale->getId(), $label)
                 ->setFormTypeOptions([
-                    'data' => $this->getTranslatedValue($titleTranslations, $locale),
+                    'data' => $this->titleTranslationResolver->resolve($entity, $locale)?->getValue(),
                     'mapped' => false,
                 ])
                 ->setFormTypeOption('row_attr', [
-                    'data-title-translation-locale' => $locale,
+                    'data-title-translation-locale' => $locale->getId(),
                 ])
                 ->onlyOnForms();
         }
 
         return $fields;
-    }
-
-    /**
-     * @template TTitleTranslation of TitleTranslationInterface
-     *
-     * @param TranslatableTitleInterface<TTitleTranslation>|null $entity
-     *
-     * @return Collection<string, TTitleTranslation>
-     */
-    private function getIndexedCollection(?TranslatableTitleInterface $entity): Collection
-    {
-        if (null === $entity) {
-            return new ArrayCollection();
-        }
-
-        return $entity
-            ->getTitleTranslations()
-            ->reduce(
-                static function (
-                    ArrayCollection $translations,
-                    TitleTranslationInterface $translation,
-                ): ArrayCollection {
-                    $translations->set(
-                        $translation->getLocale()->getId(),
-                        $translation,
-                    );
-
-                    return $translations;
-                },
-                new ArrayCollection(),
-            );
-    }
-
-    /**
-     * @template TTitleTranslation of TitleTranslationInterface
-     *
-     * @param Collection<string, TTitleTranslation> $titleTranslations
-     */
-    private function getTranslatedValue(Collection $titleTranslations, string $locale): ?string
-    {
-        return $titleTranslations->get($locale)?->getValue();
     }
 }

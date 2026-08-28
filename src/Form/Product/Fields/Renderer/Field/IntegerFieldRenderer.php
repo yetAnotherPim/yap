@@ -19,11 +19,11 @@ final class IntegerFieldRenderer implements FieldRendererInterface
         return InputType::Integer === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return IntegerField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Integer),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

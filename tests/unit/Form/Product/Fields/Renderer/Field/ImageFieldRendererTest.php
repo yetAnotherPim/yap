@@ -70,18 +70,13 @@ class ImageFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('image');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('File');
 
         $this->field
             ->shouldReceive('getValue')
@@ -108,6 +103,7 @@ class ImageFieldRendererTest extends MockeryTestCase
         $result = $this->renderer->render(
             $this->field,
             $this->configuration,
+            'label'
         );
 
         $this->assertInstanceOf(ImageField::class, $result);
@@ -121,18 +117,13 @@ class ImageFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('image');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('File');
 
         $this->field
             ->shouldReceive('getValue')
@@ -159,6 +150,7 @@ class ImageFieldRendererTest extends MockeryTestCase
         $result = $this->renderer->render(
             $this->field,
             $this->configuration,
+            'label'
         );
 
         $this->assertInstanceOf(ImageField::class, $result);
@@ -170,7 +162,7 @@ class ImageFieldRendererTest extends MockeryTestCase
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
-        $this->assertSame('File', $formTypeOptions['label']);
+        $this->assertSame('label', $formTypeOptions['label']);
         $this->assertSame($file, $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
         $this->assertTrue($formTypeOptions['required']);

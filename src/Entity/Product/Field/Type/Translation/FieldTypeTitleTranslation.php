@@ -22,7 +22,7 @@ use Symfony\Component\Uid\Uuid;
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
 #[Index(name: 'index_product_field_type_translation_fieldtype_id', columns: ['field_type_id'])]
-#[ORM\UniqueConstraint(name: 'unique_product_field_type_translation_locale_fieldtype', fields: ['locale', 'field_type'])]
+#[ORM\UniqueConstraint(name: 'unique_product_field_type_translation_locale_fieldtype', fields: ['locale', 'fieldType'])]
 class FieldTypeTitleTranslation extends RelatedTimestampableEntity implements TitleTranslationInterface
 {
     protected array $updatableRelations = [
@@ -83,7 +83,7 @@ class FieldTypeTitleTranslation extends RelatedTimestampableEntity implements Ti
         return $this->value;
     }
 
-    public function setValue(?string $value): FieldTypeTitleTranslation
+    public function setValue(?string $value): static
     {
         $this->value = $value;
 

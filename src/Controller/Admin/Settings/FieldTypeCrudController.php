@@ -7,6 +7,8 @@ namespace App\Controller\Admin\Settings;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
+use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -26,6 +28,7 @@ class FieldTypeCrudController extends AbstractCrudController
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly TitleTranslationFieldRenderer $titleTranslationFieldRenderer,
+        private readonly TitleTranslationSynchronizer $titleTranslationSynchronizer,
     ) {
     }
 
@@ -40,7 +43,10 @@ class FieldTypeCrudController extends AbstractCrudController
             FormField::addColumn(6),
             FormField::addFieldset(new TranslatableMessage('field_type.entity.title', [], 'admin')),
             TextField::new('code', new TranslatableMessage('field_type.labels.code', [], 'admin')),
-            TextField::new('title', new TranslatableMessage('field_type.labels.title', [], 'admin')),
+            TextField::new('title', new TranslatableMessage('field_type.labels.title', [], 'admin'))
+                ->formatValue(
+                    fn (?string $value, FieldType $fieldType): ?string => $fieldType->getTranslatedTitle($this->translator->getLocale()),
+                ),
             BooleanField::new('translatable', new TranslatableMessage('field_type.labels.translatable', [], 'admin')),
             BooleanField::new('filterable', new TranslatableMessage('field_type.labels.filterable', [], 'admin')),
             ChoiceField::new('inputType', new TranslatableMessage('field_type.labels.input_type', [], 'admin'))
@@ -75,10 +81,40 @@ class FieldTypeCrudController extends AbstractCrudController
         return $crud
             ->setEntityLabelInSingular(new TranslatableMessage('field_type.entity.title', [], 'admin'))
             ->setEntityLabelInPlural(new TranslatableMessage('field_type.entity.title_plural', [], 'admin'))
+            ->setSearchFields([
+                'title',
+                'code',
+                'titleTranslations.value',
+            ])
             ->autocomplete(
-                // TODO: translate title
-                callback: fn (FieldType $fieldType) => $fieldType->getTitle().' ('.$fieldType->getCode().' - '.$fieldType->getInputType()->trans($this->translator).')',
+                callback: fn (FieldType $fieldType) => $fieldType->getTranslatedTitle($this->translator->getLocale()).' ('.$fieldType->getCode().' - '.$fieldType->getInputType()->trans($this->translator).')',
             )
         ;
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    {
+        $requestData = $this->getContext()
+            ?->getRequest()
+            ->request
+            ->all('FieldType');
+
+        $this->titleTranslationSynchronizer->synchronizeTitleTranslations($entityInstance, $requestData);
+
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    public function createEntity(string $entityFqcn): object
+    {
+        $entity = parent::createEntity($entityFqcn);
+
+        $requestData = $this->getContext()
+            ?->getRequest()
+            ->request
+            ->all('FieldType');
+
+        $this->titleTranslationSynchronizer->synchronizeTitleTranslations($entity, $requestData);
+
+        return $entity;
     }
 }

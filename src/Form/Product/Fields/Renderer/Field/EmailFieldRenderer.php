@@ -19,11 +19,11 @@ final class EmailFieldRenderer implements FieldRendererInterface
         return InputType::Email === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return EmailField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Email),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

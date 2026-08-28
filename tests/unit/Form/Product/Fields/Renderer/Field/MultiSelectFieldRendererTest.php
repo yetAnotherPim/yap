@@ -66,18 +66,13 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('tags');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Tags');
 
         $this->field
             ->shouldReceive('getValue')
@@ -94,7 +89,7 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(ChoiceField::class, $result);
     }
@@ -103,18 +98,13 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('tags');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Tags');
 
         $this->field
             ->shouldReceive('getValue')
@@ -132,7 +122,7 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(ChoiceField::class, $result);
 
@@ -144,7 +134,7 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
         $this->assertTrue($formTypeOptions['multiple']);
-        $this->assertSame('Tags', $formTypeOptions['label']);
+        $this->assertSame('label', $formTypeOptions['label']);
         $this->assertEquals(['tag1', 'tag3'], $formTypeOptions['data']);
         $this->assertEquals(array_combine($options, $options), $formTypeOptions['choices']);
         $this->assertFalse($formTypeOptions['mapped']);
@@ -155,18 +145,13 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('tags');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Tags');
 
         $this->field
             ->shouldReceive('getValue')
@@ -184,7 +169,7 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
         $this->assertEquals([], $formTypeOptions['data']);

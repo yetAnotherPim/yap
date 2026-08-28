@@ -66,18 +66,13 @@ class LanguageFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('original_language');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Original Language');
 
         $this->field
             ->shouldReceive('getValue')
@@ -89,7 +84,7 @@ class LanguageFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(LanguageField::class, $result);
     }
@@ -98,18 +93,13 @@ class LanguageFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('original_language');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Original Language');
 
         $this->field
             ->shouldReceive('getValue')
@@ -121,7 +111,7 @@ class LanguageFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(LanguageField::class, $result);
 
@@ -132,7 +122,7 @@ class LanguageFieldRendererTest extends MockeryTestCase
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
-        $this->assertSame('Original Language', $formTypeOptions['label']);
+        $this->assertSame('label', $formTypeOptions['label']);
         $this->assertEquals('de', $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
         $this->assertFalse($formTypeOptions['required']);

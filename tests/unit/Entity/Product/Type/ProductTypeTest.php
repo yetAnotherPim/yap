@@ -9,6 +9,7 @@ use App\Entity\Product\Type\ProductType;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
 use App\Tests\helper\Trait\Unit\AssociationTrait;
 use App\Tests\helper\Trait\Unit\SetterGetterTrait;
+use App\Tests\helper\Trait\Unit\TitleTranslationTrait;
 use App\Tests\helper\Trait\Unit\UpdatedAtTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -22,6 +23,9 @@ class ProductTypeTest extends MockeryTestCase
     use SetterGetterTrait;
     use UpdatedAtTrait;
     use AssociationTrait;
+
+    /** @use TitleTranslationTrait<ProductTypeTitleTranslation, ProductType> */
+    use TitleTranslationTrait;
 
     public function testGetId(): void
     {
@@ -82,5 +86,15 @@ class ProductTypeTest extends MockeryTestCase
             ['getTitleTranslations', 'addTitleTranslation', 'removeTitleTranslation', ProductTypeTitleTranslation::class, 'setProductType'],
             ['getProductTypeFieldConfigurations', 'addProductTypeFieldConfiguration', 'removeProductTypeFieldConfiguration', ProductTypeFieldConfiguration::class, 'setProductType'],
         ];
+    }
+
+    protected function getTargetSetter(): string
+    {
+        return 'setProductType';
+    }
+
+    protected function getTranslationClass(): string
+    {
+        return ProductTypeTitleTranslation::class;
     }
 }

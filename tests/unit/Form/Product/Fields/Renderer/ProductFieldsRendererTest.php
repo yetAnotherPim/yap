@@ -20,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Mockery;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(ProductFieldsRenderer::class)]
 #[UsesClass(Field::class)]
@@ -38,6 +39,9 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
     /** @var FieldResolver&Mockery\MockInterface */
     private FieldResolver $fieldResolver;
 
+    /** @var TranslatorInterface&Mockery\MockInterface */
+    private TranslatorInterface $translator;
+
     private ProductFieldsRenderer $renderer;
 
     protected function setUp(): void
@@ -48,8 +52,9 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->productType = \Mockery::mock(ProductType::class);
         $this->rendererRegistry = \Mockery::mock(RendererRegistry::class);
         $this->fieldResolver = \Mockery::mock(FieldResolver::class);
+        $this->translator = \Mockery::mock(TranslatorInterface::class);
 
-        $this->renderer = new ProductFieldsRenderer($this->rendererRegistry, $this->fieldResolver);
+        $this->renderer = new ProductFieldsRenderer($this->rendererRegistry, $this->fieldResolver, $this->translator);
     }
 
     public function testRenderAddsFieldsTab(): void
@@ -106,9 +111,19 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ProductTypeFieldConfiguration::class
         );
 
+        $this->translator
+            ->shouldReceive('getLocale')
+            ->once()
+            ->andReturn('de_DE');
+
         $fieldType = \Mockery::mock(FieldType::class);
         $fieldRenderer = \Mockery::mock(FieldRendererInterface::class);
         $renderedField = TextField::new('field');
+
+        $fieldType
+            ->shouldReceive('getTranslatedTitle')
+            ->once()
+            ->andReturn('Translated title');
 
         $this->product
             ->shouldReceive('getProductType')
@@ -122,7 +137,7 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 
         $configuration
             ->shouldReceive('getFieldType')
-            ->twice()
+            ->once()
             ->andReturn($fieldType);
 
         $configuration
@@ -147,7 +162,7 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $fieldRenderer
             ->shouldReceive('render')
             ->once()
-            ->with($field, $configuration)
+            ->with($field, $configuration, 'Translated title')
             ->andReturn($renderedField);
 
         $result = $this->renderer->render($this->product);
@@ -159,6 +174,11 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 
     public function testRenderProcessesMultipleConfigurations(): void
     {
+        $this->translator
+            ->shouldReceive('getLocale')
+            ->twice()
+            ->andReturn('de_DE');
+
         $configurationWithoutType = \Mockery::mock(
             ProductTypeFieldConfiguration::class
         );
@@ -179,6 +199,16 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 
         $fieldRendererOne = \Mockery::mock(FieldRendererInterface::class);
         $fieldRendererTwo = \Mockery::mock(FieldRendererInterface::class);
+
+        $fieldTypeOne
+            ->shouldReceive('getTranslatedTitle')
+            ->once()
+            ->andReturn('Translated title');
+
+        $fieldTypeTwo
+            ->shouldReceive('getTranslatedTitle')
+            ->once()
+            ->andReturn('Translated title');
 
         $renderedFieldOne = TextField::new('fieldOne');
         $renderedFieldTwo = TextField::new('fieldTwo');
@@ -204,12 +234,12 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
 
         $configurationOne
             ->shouldReceive('getFieldType')
-            ->twice()
+            ->once()
             ->andReturn($fieldTypeOne);
 
         $configurationTwo
             ->shouldReceive('getFieldType')
-            ->twice()
+            ->once()
             ->andReturn($fieldTypeTwo);
 
         $configurationOne
@@ -249,13 +279,13 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $fieldRendererOne
             ->shouldReceive('render')
             ->once()
-            ->with($fieldOne, $configurationOne)
+            ->with($fieldOne, $configurationOne, 'Translated title')
             ->andReturn($renderedFieldOne);
 
         $fieldRendererTwo
             ->shouldReceive('render')
             ->once()
-            ->with($fieldTwo, $configurationTwo)
+            ->with($fieldTwo, $configurationTwo, 'Translated title')
             ->andReturn($renderedFieldTwo);
 
         $result = $this->renderer->render($this->product);

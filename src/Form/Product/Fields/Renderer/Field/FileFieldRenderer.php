@@ -26,13 +26,13 @@ final class FileFieldRenderer implements FieldRendererInterface
         return InputType::File === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return FileField::new('field_'.$field->getType()->getCode())
             ->setUploadDir($this->fileResolver->getUploadDirectory(FileType::FILE))
             ->setUploadedFileNamePattern('[YYYY]/[MM]/[DD]/[slug]-[contenthash].[extension]')
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => $this->fileResolver->resolve($field->getValue(), FileType::FILE),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

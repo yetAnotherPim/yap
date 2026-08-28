@@ -23,4 +23,13 @@ interface TranslatableTitleInterface
     public function removeTitleTranslation(
         TitleTranslationInterface $titleTranslation,
     ): static;
+
+    public function setTitle(string $title): static;
+
+    /**
+     * @return TTitleTranslation
+     */
+    public function createTitleTranslation(): TitleTranslationInterface;
+
+    public function getTranslatedTitle(string $locale): ?string;
 }

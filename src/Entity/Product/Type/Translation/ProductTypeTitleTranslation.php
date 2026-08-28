@@ -21,7 +21,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: ProductTypeTitleTranslationRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\UniqueConstraint(name: 'unique_product_type_translation_locale_producttype', fields: ['locale', 'product_type'])]
+#[ORM\UniqueConstraint(name: 'unique_product_type_translation_locale_producttype', fields: ['locale', 'productType'])]
 #[Index(name: 'index_product_type_translation_value', fields: ['value'])]
 #[Index(name: 'index_product_type_translation_producttype', columns: ['product_type_id'])]
 class ProductTypeTitleTranslation extends RelatedTimestampableEntity implements TitleTranslationInterface

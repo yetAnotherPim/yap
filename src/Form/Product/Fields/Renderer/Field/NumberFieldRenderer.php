@@ -19,12 +19,12 @@ final class NumberFieldRenderer implements FieldRendererInterface
         return InputType::Number === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return NumberField::new('field_'.$field->getType()->getCode())
             ->setDecimalSeparator($field->getType()->getDecimalSeparator() ?? '.')
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Number, $field->getType()->getDecimalSeparator()),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

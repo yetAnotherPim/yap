@@ -30,19 +30,16 @@ class LocaleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return string[]
+     * @return Collection<int, Locale>
      */
-    public function getAvailableLocaleIds(): array
+    public function getAvailableInterfaceTranslationLocales(): Collection
     {
-        /** @var string[] $localeIds */
-        $localeIds = $this->createQueryBuilder('locale')
-            ->select('locale.id')
-            ->where('locale.default = :default')
-            ->setParameter('default', false)
-            ->getQuery()
-            ->getSingleColumnResult();
-
-        return $localeIds;
+        return new ArrayCollection(
+            $this->findBy(
+                ['default' => false],
+                ['id' => 'ASC'],
+            ),
+        );
     }
 
     /**

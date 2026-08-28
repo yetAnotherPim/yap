@@ -19,11 +19,11 @@ final class SelectFieldRenderer implements FieldRendererInterface
         return InputType::Select === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return ChoiceField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Select),
                 'choices' => array_combine($configuration->getOptions(), $configuration->getOptions()),
                 'mapped' => false,

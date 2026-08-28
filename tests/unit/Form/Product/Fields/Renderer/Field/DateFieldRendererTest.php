@@ -66,18 +66,13 @@ class DateFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('release_date');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Release Date');
 
         $this->field
             ->shouldReceive('getValue')
@@ -89,7 +84,7 @@ class DateFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(DateField::class, $result);
     }
@@ -98,18 +93,13 @@ class DateFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('release_date');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Release Date');
 
         $this->field
             ->shouldReceive('getValue')
@@ -121,7 +111,7 @@ class DateFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $this->assertInstanceOf(DateField::class, $result);
 
@@ -132,7 +122,7 @@ class DateFieldRendererTest extends MockeryTestCase
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
-        $this->assertSame('Release Date', $formTypeOptions['label']);
+        $this->assertSame('label', $formTypeOptions['label']);
         $this->assertInstanceOf(\DateTimeInterface::class, $formTypeOptions['data']);
         $this->assertSame('2023-10-27', $formTypeOptions['data']->format('Y-m-d'));
         $this->assertFalse($formTypeOptions['mapped']);
@@ -143,18 +133,13 @@ class DateFieldRendererTest extends MockeryTestCase
     {
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->once()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('release_date');
-
-        $this->fieldType
-            ->shouldReceive('getTitle')
-            ->once()
-            ->andReturn('Release Date');
 
         $this->field
             ->shouldReceive('getValue')
@@ -166,7 +151,7 @@ class DateFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
-        $result = $this->renderer->render($this->field, $this->configuration);
+        $result = $this->renderer->render($this->field, $this->configuration, 'label');
 
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
         $this->assertNull($formTypeOptions['data']);

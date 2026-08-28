@@ -19,11 +19,11 @@ final class TextFieldRenderer implements FieldRendererInterface
         return InputType::String === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return TextField::new('field_'.$field->getType()->getCode())
             ->setFormTypeOptions([
-                'label' => $field->getType()->getTitle(),
+                'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::String),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Settings;
 
+use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -34,7 +35,12 @@ class ProductTypeCrudController extends AbstractCrudController
     {
         return $crud
             ->setEntityLabelInSingular(new TranslatableMessage('product_type.entity.title', [], 'admin'))
-            ->setEntityLabelInPlural(new TranslatableMessage('product_type.entity.title_plural', [], 'admin'));
+            ->setEntityLabelInPlural(new TranslatableMessage('product_type.entity.title_plural', [], 'admin'))
+            ->setSearchFields([
+                'title',
+                'code',
+                'titleTranslations.value',
+            ]);
     }
 
     public function configureFields(string $pageName): iterable
@@ -48,17 +54,21 @@ class ProductTypeCrudController extends AbstractCrudController
 
         return [
             TextField::new('code', new TranslatableMessage('product_type.labels.code', [], 'admin')),
-            TextField::new('title', new TranslatableMessage('product_type.labels.title', [], 'admin')),
+            TextField::new('title', new TranslatableMessage('product_type.labels.title', [], 'admin'))
+                ->formatValue(
+                    fn (?string $value, FieldType $fieldType): ?string => $fieldType->getTranslatedTitle($this->translator->getLocale()),
+                ),
             FormField::addFieldset(new TranslatableMessage('product_type.labels.fields', [], 'admin')),
             CollectionField::new('productTypeFieldConfigurations')
                 ->setRequired(true)
                 ->setEntryIsComplex()
                 ->setLabel(false)
                 ->addCssClass('sortable-collection')
-                // TODO: translate title
                 ->setEntryToStringMethod(
                     fn (ProductTypeFieldConfiguration $productTypeFieldConfiguration): string => (null !== $productTypeFieldConfiguration->getFieldType())
-                        ? $productTypeFieldConfiguration->getFieldType()->getTitle().' ('.$productTypeFieldConfiguration->getFieldType()->getCode().' - '.$productTypeFieldConfiguration->getFieldType()->getInputType()->trans($this->translator).')'
+                        ? $productTypeFieldConfiguration->getFieldType()->getTranslatedTitle(
+                            $this->translator->getLocale(),
+                        ).' ('.$productTypeFieldConfiguration->getFieldType()->getCode().' - '.$productTypeFieldConfiguration->getFieldType()->getInputType()->trans($this->translator).')'
                         : ''
                 ),
         ];

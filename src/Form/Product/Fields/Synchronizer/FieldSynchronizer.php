@@ -29,6 +29,7 @@ class FieldSynchronizer
 
         // TODO: integration test
         // -> 1.fieldtype deletion will remove assigned fields
+        // -> 2.fields aren't doubled
 
         foreach ($product->getProductType()->getProductTypeFieldConfigurations() as $configuration) {
             $fieldType = $configuration->getFieldType();

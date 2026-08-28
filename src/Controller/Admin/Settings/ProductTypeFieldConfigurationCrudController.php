@@ -80,8 +80,7 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
                 )
                 ->setRequired(true)
                 ->autocomplete(
-                    // TODO: translate title
-                    callback: fn (FieldType $fieldType) => $fieldType->getTitle().' ('.$fieldType->getCode().' - '.$fieldType->getInputType()->trans($this->translator).')',
+                    callback: fn (FieldType $fieldType) => $fieldType->getTranslatedTitle($this->translator->getLocale()).' ('.$fieldType->getCode().' - '.$fieldType->getInputType()->trans($this->translator).')',
                 ),
             ArrayField::new('options')
                 ->setFormTypeOption('row_attr', [
