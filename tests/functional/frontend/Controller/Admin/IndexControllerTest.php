@@ -22,6 +22,8 @@ use App\Entity\User\User;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
+use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
+use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Localisation\Exception\DefaultLocaleIsNotDefinedException;
@@ -65,6 +67,8 @@ use Symfony\Component\HttpFoundation\Response;
 #[UsesClass(ProductFieldsRenderer::class)]
 #[UsesClass(RendererRegistry::class)]
 #[UsesClass(FieldSynchronizer::class)]
+#[UsesClass(TitleTranslationFieldRenderer::class)]
+#[UsesClass(TitleTranslationSynchronizer::class)]
 class IndexControllerTest extends WebTestCase
 {
     use LoginTrait;
@@ -100,6 +104,25 @@ class IndexControllerTest extends WebTestCase
         ];
 
         $this->login();
+
+        $this->hasExpectedMenuItems($expectedMenuItems);
+        $this->hasExpectedRoutePermissions($expectedMenuItems);
+    }
+
+    public function testMenusWillBeTranslated(): void
+    {
+        $expectedMenuItems = [
+            'Home' => '/admin',
+            'Produkte' => '/admin/product',
+            'Sprachen' => '/admin/locale',
+            'Identifier' => '/admin/identifier-type',
+            'Feld' => '/admin/field-type',
+            'Produkt' => '/admin/product-type',
+            'Plugin Manager' => '/admin/plugin',
+            'Benutzer' => '/admin/user',
+        ];
+
+        $this->login(locale: 'de_DE');
 
         $this->hasExpectedMenuItems($expectedMenuItems);
         $this->hasExpectedRoutePermissions($expectedMenuItems);

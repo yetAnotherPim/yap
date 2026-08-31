@@ -19,6 +19,9 @@ final class CheckboxFieldRenderer implements FieldRendererInterface
         return InputType::CheckBox === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return BooleanField::new('field_'.$field->getType()->getCode())

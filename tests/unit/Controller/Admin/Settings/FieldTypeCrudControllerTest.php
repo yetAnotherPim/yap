@@ -37,13 +37,13 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
     private TranslatorInterface $translatorMock;
 
     /** @var TitleTranslationSynchronizer|MockInterface */
-    private TitleTranslationSynchronizer $titleTranslationSynchronizer;
+    private TitleTranslationSynchronizer $titleTranslationSynchronizerMock;
 
     public function setUp(): void
     {
         $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
         $this->titleTranslationFieldRendererMock = \Mockery::mock(TitleTranslationFieldRenderer::class);
-        $this->titleTranslationSynchronizer = \Mockery::mock(TitleTranslationSynchronizer::class);
+        $this->titleTranslationSynchronizerMock = \Mockery::mock(TitleTranslationSynchronizer::class);
 
         parent::setUp();
     }
@@ -58,7 +58,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
         $controller = new FieldTypeCrudController(
             $this->translatorMock,
             $this->titleTranslationFieldRendererMock,
-            $this->titleTranslationSynchronizer,
+            $this->titleTranslationSynchronizerMock,
         );
 
         $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
@@ -86,7 +86,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
     {
         $controller = \Mockery::mock(
             FieldTypeCrudController::class,
-            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizer],
+            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock],
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -131,7 +131,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
         $controller = new FieldTypeCrudController(
             $this->translatorMock,
             $this->titleTranslationFieldRendererMock,
-            $this->titleTranslationSynchronizer,
+            $this->titleTranslationSynchronizerMock,
         );
 
         $crud = Crud::new();
@@ -182,7 +182,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
             [
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
-                $this->titleTranslationSynchronizer,
+                $this->titleTranslationSynchronizerMock,
             ],
         )
             ->makePartial()
@@ -195,7 +195,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
 
         $fieldType = \Mockery::mock(FieldType::class);
 
-        $this->titleTranslationSynchronizer
+        $this->titleTranslationSynchronizerMock
             ->shouldReceive('synchronizeTitleTranslations')
             ->once()
             ->with(
@@ -247,7 +247,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
             [
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
-                $this->titleTranslationSynchronizer,
+                $this->titleTranslationSynchronizerMock,
             ],
         )
             ->makePartial()
@@ -258,7 +258,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
             ->once()
             ->andReturn($context);
 
-        $this->titleTranslationSynchronizer
+        $this->titleTranslationSynchronizerMock
             ->shouldReceive('synchronizeTitleTranslations')
             ->once()
             ->with(

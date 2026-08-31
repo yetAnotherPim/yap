@@ -45,7 +45,7 @@ class FieldTypeCrudController extends AbstractCrudController
             TextField::new('code', new TranslatableMessage('field_type.labels.code', [], 'admin')),
             TextField::new('title', new TranslatableMessage('field_type.labels.title', [], 'admin'))
                 ->formatValue(
-                    fn (?string $value, FieldType $fieldType): ?string => $fieldType->getTranslatedTitle($this->translator->getLocale()),
+                    fn (?string $value, FieldType $fieldType): string => $fieldType->getTranslatedTitle($this->translator->getLocale()),
                 ),
             BooleanField::new('translatable', new TranslatableMessage('field_type.labels.translatable', [], 'admin')),
             BooleanField::new('filterable', new TranslatableMessage('field_type.labels.filterable', [], 'admin')),
@@ -87,7 +87,7 @@ class FieldTypeCrudController extends AbstractCrudController
                 'titleTranslations.value',
             ])
             ->autocomplete(
-                callback: fn (FieldType $fieldType) => $fieldType->getTranslatedTitle($this->translator->getLocale()).' ('.$fieldType->getCode().' - '.$fieldType->getInputType()->trans($this->translator).')',
+                callback: fn (FieldType $fieldType): string => $fieldType->getTranslatedTitle($this->translator->getLocale()).' ('.$fieldType->getCode().' - '.$fieldType->getInputType()->trans($this->translator).')',
             )
         ;
     }

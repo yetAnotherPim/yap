@@ -40,6 +40,7 @@ use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(ProductCrudController::class)]
 #[UsesClass(Identifier::class)]
@@ -54,6 +55,9 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     /** @var FieldSynchronizer&MockInterface */
     private FieldSynchronizer $fieldSynchronizer;
+
+    /** @var TranslatorInterface&MockInterface */
+    private TranslatorInterface $translator;
     private ProductCrudController $controller;
 
     public function setUp(): void
@@ -61,8 +65,9 @@ class ProductCrudControllerTest extends MockeryTestCase
         $this->productFieldsRenderer = \Mockery::mock(ProductFieldsRenderer::class);
         $this->identifierTypeRepository = \Mockery::mock(IdentifierTypeRepository::class);
         $this->fieldSynchronizer = \Mockery::mock(FieldSynchronizer::class);
+        $this->translator = \Mockery::mock(TranslatorInterface::class);
 
-        $this->controller = new ProductCrudController($this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer = \Mockery::mock(FieldSynchronizer::class));
+        $this->controller = new ProductCrudController($this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator);
 
         parent::setUp();
     }
@@ -199,6 +204,7 @@ class ProductCrudControllerTest extends MockeryTestCase
                 $this->identifierTypeRepository,
                 $this->productFieldsRenderer,
                 $this->fieldSynchronizer,
+                $this->translator,
             ],
         )
             ->makePartial()
@@ -268,6 +274,7 @@ class ProductCrudControllerTest extends MockeryTestCase
                 $this->identifierTypeRepository,
                 $this->productFieldsRenderer,
                 $this->fieldSynchronizer,
+                $this->translator,
             ],
         )
             ->makePartial()
@@ -418,7 +425,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator]
         )->makePartial();
 
         /** @phpstan-var AdminContext<Product> $context */
@@ -451,7 +458,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator]
         )->makePartial();
 
         $this->expectException(\Error::class);
@@ -496,7 +503,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator]
         )->makePartial()
         ->shouldAllowMockingProtectedMethods();
 
@@ -534,7 +541,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer]
+            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();

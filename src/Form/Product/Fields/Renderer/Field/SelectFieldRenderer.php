@@ -19,6 +19,9 @@ final class SelectFieldRenderer implements FieldRendererInterface
         return InputType::Select === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return ChoiceField::new('field_'.$field->getType()->getCode())

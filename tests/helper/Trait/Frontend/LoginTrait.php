@@ -12,7 +12,7 @@ trait LoginTrait
 {
     private bool $hasCreatedTestData = false;
 
-    protected function login(Roles $role = Roles::ROLE_SUPER_ADMIN): void
+    protected function login(Roles $role = Roles::ROLE_SUPER_ADMIN, ?string $locale = null): void
     {
         $this->createRequiredTestData();
 
@@ -21,10 +21,16 @@ trait LoginTrait
         $this->client->request('GET', '/admin/login');
         $this->assertResponseIsSuccessful();
 
-        $this->client->submitForm('Sign in', [
+        $formData = [
             '_username' => $role->name,
             '_password' => 'password',
-        ]);
+        ];
+
+        if (null !== $locale) {
+            $formData['_locale'] = $locale;
+        }
+
+        $this->client->submitForm('Sign in', $formData);
 
         $this->assertResponseRedirects('/admin');
         $this->client->followRedirect();

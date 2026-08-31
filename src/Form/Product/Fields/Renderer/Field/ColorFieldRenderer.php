@@ -19,6 +19,9 @@ final class ColorFieldRenderer implements FieldRendererInterface
         return InputType::Color === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return ColorField::new('field_'.$field->getType()->getCode())

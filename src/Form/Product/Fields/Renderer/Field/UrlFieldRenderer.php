@@ -19,6 +19,9 @@ final class UrlFieldRenderer implements FieldRendererInterface
         return InputType::Url === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return UrlField::new('field_'.$field->getType()->getCode())

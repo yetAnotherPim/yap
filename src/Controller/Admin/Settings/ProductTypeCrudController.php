@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Settings;
 
-use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
+use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
+use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -22,8 +24,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[IsGranted('ROLE_ADMIN')]
 class ProductTypeCrudController extends AbstractCrudController
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly TitleTranslationFieldRenderer $titleTranslationFieldRenderer,
+        private readonly TitleTranslationSynchronizer $titleTranslationSynchronizer,
+    ) {
     }
 
     public static function getEntityFqcn(): string
@@ -48,29 +53,76 @@ class ProductTypeCrudController extends AbstractCrudController
         if (Crud::PAGE_INDEX === $pageName) {
             return [
                 TextField::new('code', new TranslatableMessage('product_type.labels.code', [], 'admin')),
-                TextField::new('title', new TranslatableMessage('product_type.labels.title', [], 'admin')),
+                TextField::new('title', new TranslatableMessage('product_type.labels.title', [], 'admin'))
+                    ->formatValue(
+                        fn (?string $value, ProductType $productType): string => $productType->getTranslatedTitle($this->translator->getLocale()),
+                    ),
             ];
         }
 
-        return [
+        $fields = [
+            FormField::addColumn(6),
+            FormField::addFieldset(new TranslatableMessage('product_type.entity.title', [], 'admin')),
             TextField::new('code', new TranslatableMessage('product_type.labels.code', [], 'admin')),
             TextField::new('title', new TranslatableMessage('product_type.labels.title', [], 'admin'))
                 ->formatValue(
-                    fn (?string $value, FieldType $fieldType): ?string => $fieldType->getTranslatedTitle($this->translator->getLocale()),
+                    fn (?string $value, ProductType $productType): string => $productType->getTranslatedTitle($this->translator->getLocale()),
                 ),
-            FormField::addFieldset(new TranslatableMessage('product_type.labels.fields', [], 'admin')),
-            CollectionField::new('productTypeFieldConfigurations')
-                ->setRequired(true)
-                ->setEntryIsComplex()
-                ->setLabel(false)
-                ->addCssClass('sortable-collection')
-                ->setEntryToStringMethod(
-                    fn (ProductTypeFieldConfiguration $productTypeFieldConfiguration): string => (null !== $productTypeFieldConfiguration->getFieldType())
-                        ? $productTypeFieldConfiguration->getFieldType()->getTranslatedTitle(
-                            $this->translator->getLocale(),
-                        ).' ('.$productTypeFieldConfiguration->getFieldType()->getCode().' - '.$productTypeFieldConfiguration->getFieldType()->getInputType()->trans($this->translator).')'
-                        : ''
-                ),
+            FormField::addColumn(6),
         ];
+
+        if (Crud::PAGE_EDIT === $pageName || Crud::PAGE_NEW === $pageName) {
+            $productType = $this->getContext()
+                ?->getEntity()
+                ->getInstance();
+
+            $fields = array_merge(
+                $fields,
+                $this->titleTranslationFieldRenderer->render($productType, new TranslatableMessage('field_type.labels.title', [], 'admin'))
+            );
+        }
+
+        $fields[] = FormField::addColumn(12);
+        $fields[] = FormField::addFieldset(new TranslatableMessage('product_type.labels.fields', [], 'admin'));
+        $fields[] = CollectionField::new('productTypeFieldConfigurations')
+            ->setRequired(true)
+            ->setEntryIsComplex()
+            ->setLabel(false)
+            ->addCssClass('sortable-collection')
+            ->setEntryToStringMethod(
+                fn (ProductTypeFieldConfiguration $productTypeFieldConfiguration): string => (null !== $productTypeFieldConfiguration->getFieldType())
+                    ? $productTypeFieldConfiguration->getFieldType()->getTranslatedTitle(
+                        $this->translator->getLocale(),
+                    ).' ('.$productTypeFieldConfiguration->getFieldType()->getCode().' - '.$productTypeFieldConfiguration->getFieldType()->getInputType()->trans($this->translator).')'
+                    : ''
+            );
+
+        return $fields;
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    {
+        $requestData = $this->getContext()
+            ?->getRequest()
+            ->request
+            ->all('ProductType');
+
+        $this->titleTranslationSynchronizer->synchronizeTitleTranslations($entityInstance, $requestData);
+
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    public function createEntity(string $entityFqcn): object
+    {
+        $entity = parent::createEntity($entityFqcn);
+
+        $requestData = $this->getContext()
+            ?->getRequest()
+            ->request
+            ->all('ProductType');
+
+        $this->titleTranslationSynchronizer->synchronizeTitleTranslations($entity, $requestData);
+
+        return $entity;
     }
 }

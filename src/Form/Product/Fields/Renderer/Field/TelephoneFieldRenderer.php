@@ -19,6 +19,9 @@ final class TelephoneFieldRenderer implements FieldRendererInterface
         return InputType::Telephone === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return TelephoneField::new('field_'.$field->getType()->getCode())

@@ -30,6 +30,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @extends AbstractCrudController<Product>
@@ -46,6 +47,7 @@ class ProductCrudController extends AbstractCrudController
         private readonly IdentifierTypeRepository $identifierTypeRepository,
         private readonly ProductFieldsRenderer $productFieldsRenderer,
         private readonly FieldSynchronizer $fieldSynchronizer,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -72,6 +74,11 @@ class ProductCrudController extends AbstractCrudController
             ->setEntityLabelInSingular(new TranslatableMessage('product.entity.title', [], 'admin'))
             ->setEntityLabelInPlural(new TranslatableMessage('product.entity.title_plural', [], 'admin'))
             ->hideNullValues()
+            ->setSearchFields([
+                'fields.value',
+                'fields.translations.value',
+                'identifiers.value',
+            ])
             ->setFormThemes(['easyadmin/fields/identifier/identifier_collection.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
     }
 
@@ -94,7 +101,7 @@ class ProductCrudController extends AbstractCrudController
                     ),
                 AssociationField::new('productType', new TranslatableMessage('product.labels.product_type', [], 'admin'))
                     ->formatValue(
-                        static fn (ProductType $productType): string => $productType->getTitle()
+                        fn (ProductType $productType): string => $productType->getTranslatedTitle($this->translator->getLocale())
                     ),
                 DateTimeField::new('createdAt', new TranslatableMessage('product.labels.created_at', [], 'admin')),
                 DateTimeField::new('updatedAt', new TranslatableMessage('product.labels.updated_at', [], 'admin')),
@@ -106,7 +113,7 @@ class ProductCrudController extends AbstractCrudController
             FormField::addTab(new TranslatableMessage('product.labels.master_data', [], 'admin')),
             AssociationField::new('productType', new TranslatableMessage('product.labels.product_type', [], 'admin'))
                 ->autocomplete(
-                    callback: static fn (ProductType $productType): string => $productType->getTitle()
+                    callback: fn (ProductType $productType): string => $productType->getTranslatedTitle($this->translator->getLocale())
                 )
                 ->setDisabled(Crud::PAGE_EDIT === $pageName),
             CollectionField::new('identifiers', new TranslatableMessage('product.labels.identifiers', [], 'admin'))

@@ -19,6 +19,9 @@ final class TextEditorFieldRenderer implements FieldRendererInterface
         return InputType::TextEditor === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return TextEditorField::new('field_'.$field->getType()->getCode())

@@ -9,7 +9,12 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
+use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
+use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -18,11 +23,13 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(ProductTypeCrudController::class)]
 #[UsesClass(InputType::class)]
+#[UsesClass(ProductType::class)]
 class ProductTypeCrudControllerTest extends MockeryTestCase
 {
     private ProductTypeCrudController $controller;
@@ -30,10 +37,19 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
     /** @var TranslatorInterface|MockInterface */
     private TranslatorInterface $translatorMock;
 
+    /** @var TitleTranslationFieldRenderer|MockInterface */
+    private TitleTranslationFieldRenderer $titleTranslationFieldRendererMock;
+
+    /** @var TitleTranslationSynchronizer|MockInterface */
+    private TitleTranslationSynchronizer $titleTranslationSynchronizerMock;
+
     public function setUp(): void
     {
         $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
-        $this->controller = new ProductTypeCrudController($this->translatorMock);
+        $this->titleTranslationFieldRendererMock = \Mockery::mock(TitleTranslationFieldRenderer::class);
+        $this->titleTranslationSynchronizerMock = \Mockery::mock(TitleTranslationSynchronizer::class);
+
+        $this->controller = new ProductTypeCrudController($this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock);
 
         parent::setUp();
     }
@@ -57,22 +73,68 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForReturnsExpectedFieldsOnFormPage(): void
     {
-        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_NEW));
+        $controller = \Mockery::mock(
+            ProductTypeCrudController::class,
+            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        $this->assertCount(4, $fields);
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn(null);
 
-        $this->assertInstanceOf(TextField::class, $fields[0]);
-        $this->assertEquals('code', $fields[0]->getAsDto()->getProperty());
-        $this->assertInstanceOf(TextField::class, $fields[1]);
-        $this->assertEquals('title', $fields[1]->getAsDto()->getProperty());
-        $this->assertInstanceOf(FormField::class, $fields[2]);
-        $this->assertEquals(EaFormFieldsetOpenType::class, $fields[2]->getAsDto()->getFormType());
-        $this->assertInstanceOf(CollectionField::class, $fields[3]);
-        $this->assertEquals('productTypeFieldConfigurations', $fields[3]->getAsDto()->getProperty());
+        $this->titleTranslationFieldRendererMock
+            ->shouldReceive('render')
+            ->once()
+            ->with(
+                null,
+                \Mockery::type(TranslatableMessage::class),
+            )
+            ->andReturn([]);
+
+        $fields = iterator_to_array($controller->configureFields(Crud::PAGE_NEW));
+
+        $this->assertCount(8, $fields);
+
+        $this->assertInstanceOf(FormField::class, $fields[0]);
+        $this->assertInstanceOf(FormField::class, $fields[1]);
+        $this->assertInstanceOf(TextField::class, $fields[2]);
+        $this->assertEquals('code', $fields[2]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[3]);
+        $this->assertEquals('title', $fields[3]->getAsDto()->getProperty());
+        $this->assertInstanceOf(FormField::class, $fields[4]);
+        $this->assertInstanceOf(FormField::class, $fields[5]);
+        $this->assertInstanceOf(FormField::class, $fields[6]);
+        $this->assertEquals(EaFormFieldsetOpenType::class, $fields[6]->getAsDto()->getFormType());
+        $this->assertInstanceOf(CollectionField::class, $fields[7]);
+        $this->assertEquals('productTypeFieldConfigurations', $fields[7]->getAsDto()->getProperty());
     }
 
     public function testConfigureFieldsOnFormPageEntryToStringMethodReturnsEmptyStringWithoutFieldType(): void
     {
+        $controller = \Mockery::mock(
+            ProductTypeCrudController::class,
+            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn(null);
+
+        $this->titleTranslationFieldRendererMock
+            ->shouldReceive('render')
+            ->once()
+            ->with(
+                null,
+                \Mockery::type(TranslatableMessage::class),
+            )
+            ->andReturn([]);
+
         $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
 
         $configuration
@@ -81,11 +143,11 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->andReturnNull();
 
         $fields = iterator_to_array(
-            $this->controller->configureFields(Crud::PAGE_NEW)
+            $controller->configureFields(Crud::PAGE_NEW)
         );
 
         /** @var CollectionField $collectionField */
-        $collectionField = $fields[3];
+        $collectionField = $fields[7];
 
         $entryToStringMethod = $collectionField
             ->getAsDto()
@@ -99,6 +161,27 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
     {
         $configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
         $fieldType = \Mockery::mock(FieldType::class);
+
+        $controller = \Mockery::mock(
+            ProductTypeCrudController::class,
+            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn(null);
+
+        $this->titleTranslationFieldRendererMock
+            ->shouldReceive('render')
+            ->once()
+            ->with(
+                null,
+                \Mockery::type(TranslatableMessage::class),
+            )
+            ->andReturn([]);
 
         $this->translatorMock
             ->shouldReceive('getLocale')
@@ -125,11 +208,11 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->andReturn('Boolean field');
 
         $fields = iterator_to_array(
-            $this->controller->configureFields(Crud::PAGE_NEW)
+            $controller->configureFields(Crud::PAGE_NEW)
         );
 
         /** @var CollectionField $collectionField */
-        $collectionField = $fields[3];
+        $collectionField = $fields[7];
 
         $entryToStringMethod = $collectionField
             ->getAsDto()
@@ -165,5 +248,121 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             'product_type.entity.title',
             $configuredCrud->getAsDto()->getEntityLabelInSingular()->getMessage()
         );
+    }
+
+    public function testUpdateEntitySynchronizesTitleTranslations(): void
+    {
+        $requestData = [
+            'title-de_DE' => 'Deutscher Titel',
+            'title-fr_FR' => 'Titre français',
+        ];
+
+        $request = new Request(
+            request: [
+                'ProductType' => $requestData,
+            ],
+        );
+
+        $requestContext = new RequestContext(
+            $request,
+            null,
+        );
+
+        $context = AdminContext::forTesting(
+            requestContext: $requestContext,
+        );
+
+        $controller = \Mockery::mock(
+            ProductTypeCrudController::class,
+            [
+                $this->translatorMock,
+                $this->titleTranslationFieldRendererMock,
+                $this->titleTranslationSynchronizerMock,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn($context);
+
+        $productType = \Mockery::mock(ProductType::class);
+
+        $this->titleTranslationSynchronizerMock
+            ->shouldReceive('synchronizeTitleTranslations')
+            ->once()
+            ->with(
+                $productType,
+                $requestData,
+            );
+
+        $entityManager = \Mockery::mock(EntityManagerInterface::class);
+
+        $entityManager
+            ->shouldReceive('persist')
+            ->once()
+            ->with($productType);
+
+        $entityManager
+            ->shouldReceive('flush')
+            ->once();
+
+        $controller->updateEntity(
+            $entityManager,
+            $productType,
+        );
+    }
+
+    public function testCreateEntitySynchronizesTitleTranslations(): void
+    {
+        $requestData = [
+            'title-de_DE' => 'Deutscher Titel',
+            'title-fr_FR' => 'Titre français',
+        ];
+
+        $request = new Request(
+            request: [
+                'ProductType' => $requestData,
+            ],
+        );
+
+        $requestContext = new RequestContext(
+            $request,
+            null,
+        );
+
+        $context = AdminContext::forTesting(
+            requestContext: $requestContext,
+        );
+
+        $controller = \Mockery::mock(
+            ProductTypeCrudController::class,
+            [
+                $this->translatorMock,
+                $this->titleTranslationFieldRendererMock,
+                $this->titleTranslationSynchronizerMock,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn($context);
+
+        $this->titleTranslationSynchronizerMock
+            ->shouldReceive('synchronizeTitleTranslations')
+            ->once()
+            ->with(
+                \Mockery::type(ProductType::class),
+                $requestData,
+            );
+
+        $entity = $controller->createEntity(ProductType::class);
+
+        $this->assertInstanceOf(ProductType::class, $entity);
     }
 }

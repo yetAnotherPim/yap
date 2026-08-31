@@ -19,6 +19,9 @@ final class EmailFieldRenderer implements FieldRendererInterface
         return InputType::Email === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return EmailField::new('field_'.$field->getType()->getCode())

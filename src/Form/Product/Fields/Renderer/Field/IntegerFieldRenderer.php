@@ -19,6 +19,9 @@ final class IntegerFieldRenderer implements FieldRendererInterface
         return InputType::Integer === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return IntegerField::new('field_'.$field->getType()->getCode())

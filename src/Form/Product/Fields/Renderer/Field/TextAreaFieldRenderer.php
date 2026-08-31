@@ -19,6 +19,9 @@ final class TextAreaFieldRenderer implements FieldRendererInterface
         return InputType::Text === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return TextareaField::new('field_'.$field->getType()->getCode())

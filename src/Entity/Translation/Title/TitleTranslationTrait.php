@@ -6,7 +6,7 @@ namespace App\Entity\Translation\Title;
 
 trait TitleTranslationTrait
 {
-    public function getTranslatedTitle(string $locale): ?string
+    public function getTranslatedTitle(string $locale): string
     {
         $translation = $this->titleTranslations->findFirst(
             static fn (

@@ -19,6 +19,9 @@ final class CountryFieldRenderer implements FieldRendererInterface
         return InputType::Country === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return CountryField::new('field_'.$field->getType()->getCode())

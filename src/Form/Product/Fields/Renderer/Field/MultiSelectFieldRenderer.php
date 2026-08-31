@@ -19,6 +19,9 @@ final class MultiSelectFieldRenderer implements FieldRendererInterface
         return InputType::MultiSelect === $type->getInputType();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
     {
         return ChoiceField::new('field_'.$field->getType()->getCode())
