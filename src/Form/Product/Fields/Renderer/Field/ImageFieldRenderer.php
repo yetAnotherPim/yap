@@ -43,6 +43,7 @@ final class ImageFieldRenderer implements FieldRendererInterface
         if (null !== $locale) {
             $element->setFormTypeOption('row_attr', [
                 'data-content-translation-locale' => $locale->getId(),
+                'hidden' => true,
             ]);
         }
 

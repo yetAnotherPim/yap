@@ -66,6 +66,7 @@ class TitleTranslationFieldRenderer
                 ])
                 ->setFormTypeOption('row_attr', [
                     'data-title-translation-locale' => $locale->getId(),
+                    'hidden' => true,
                 ])
                 ->onlyOnForms();
         }

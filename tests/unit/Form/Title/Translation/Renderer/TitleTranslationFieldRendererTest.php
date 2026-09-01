@@ -313,6 +313,7 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
         $this->assertSame(
             [
                 'data-title-translation-locale' => 'de_DE',
+                'hidden' => true,
             ],
             $field->getFormTypeOption('row_attr'),
         );

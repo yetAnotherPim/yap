@@ -58,7 +58,8 @@ class ProductFieldsTranslationRenderer
                 'change->content-translation#update',
             );
 
-        // TODO: beautify
+        // TODO: beautify - avoid foreach inside foreach
+        // TODO: hide initially
         foreach ($locales as $locale) {
             foreach ($product->getProductType()->getProductTypeFieldConfigurations() as $productTypeFieldConfiguration) {
                 $fieldType = $productTypeFieldConfiguration->getFieldType();
