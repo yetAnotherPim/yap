@@ -38,3 +38,37 @@ div.field-collection-item > div.accordion-item * .col-form-label.required:after 
     text-align: left;
     max-width: 350px;
 }
+
+.field-section {
+    margin-top: 1.25rem;
+    margin-bottom: .75rem;
+}
+
+.field-section:first-child {
+    margin-top: .5rem;
+}
+
+.field-section .col-form-label {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    font-size: .95rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.field-section .col-form-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+    opacity: .7;
+}
+
+.translation-locale-spacer {
+    visibility: hidden;
+}

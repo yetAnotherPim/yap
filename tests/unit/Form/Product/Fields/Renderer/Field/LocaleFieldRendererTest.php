@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Form\Product\Fields\Renderer\Field;
 
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
@@ -126,5 +127,41 @@ class LocaleFieldRendererTest extends MockeryTestCase
         $this->assertEquals('de_DE', $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
         $this->assertFalse($formTypeOptions['required']);
+    }
+
+    public function testRenderWithLocale(): void
+    {
+        $locale = \Mockery::mock(Locale::class);
+        $locale->shouldReceive('getId')->andReturn('de');
+
+        $this->field
+            ->shouldReceive('getType')
+            ->once()
+            ->andReturn($this->fieldType);
+
+        $this->fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('target_locale');
+
+        $this->field
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('de_DE');
+
+        $this->configuration
+            ->shouldReceive('isRequired')
+            ->once()
+            ->andReturn(true);
+
+        $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
+
+        $this->assertInstanceOf(LocaleField::class, $result);
+        $this->assertSame('field_target_locale-de', $result->getAsDto()->getProperty());
+        /** @var array<string, mixed> $formTypeOptions */
+        $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
+        /** @var array<string, mixed> $rowAttr */
+        $rowAttr = $formTypeOptions['row_attr'];
+        $this->assertSame('de', $rowAttr['data-content-translation-locale']);
     }
 }

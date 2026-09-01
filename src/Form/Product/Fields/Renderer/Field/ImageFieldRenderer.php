@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Product\Fields\Renderer\Field;
 
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
@@ -26,16 +27,25 @@ final class ImageFieldRenderer implements FieldRendererInterface
         return InputType::Image === $type->getInputType();
     }
 
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label, ?Locale $locale = null): FieldInterface
     {
-        return ImageField::new('field_'.$field->getType()->getCode())
+        $element = ImageField::new('field_'.$field->getType()->getCode().(null !== $locale ? '-'.$locale->getId() : ''))
             ->setUploadDir($this->fileResolver->getUploadDirectory(FileType::IMAGE))
             ->setUploadedFileNamePattern('[YYYY]/[MM]/[DD]/[slug]-[contenthash].[extension]')
+
             ->setFormTypeOptions([
                 'label' => $label,
                 'data' => $this->fileResolver->resolve($field->getValue(), FileType::IMAGE),
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);
+
+        if (null !== $locale) {
+            $element->setFormTypeOption('row_attr', [
+                'data-content-translation-locale' => $locale->getId(),
+            ]);
+        }
+
+        return $element;
     }
 }

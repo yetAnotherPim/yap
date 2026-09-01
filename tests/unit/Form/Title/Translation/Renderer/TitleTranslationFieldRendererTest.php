@@ -76,6 +76,11 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(new ArrayCollection([$locale1, $locale2]));
 
+        $this->localeRepositoryMock
+            ->shouldReceive('extractLocaleIds')
+            ->once()
+            ->andReturn(['de_DE', 'en_GB']);
+
         $label = new TranslatableMessage(
             'field_type.labels.title',
             [],
@@ -138,6 +143,11 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
             ->shouldReceive('getAvailableInterfaceTranslationLocales')
             ->once()
             ->andReturn(new ArrayCollection([$deLocale, $enLocale, $frLocale]));
+
+        $this->localeRepositoryMock
+            ->shouldReceive('extractLocaleIds')
+            ->once()
+            ->andReturn(['de_DE', 'en_GB', 'fr_FR']);
 
         $deTranslation = \Mockery::mock(TitleTranslationInterface::class);
         $deTranslation
@@ -214,6 +224,11 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(new ArrayCollection([$locale1, $locale2, $locale3]));
 
+        $this->localeRepositoryMock
+            ->shouldReceive('extractLocaleIds')
+            ->once()
+            ->andReturn(['de_DE', 'en_GB', 'fr_FR']);
+
         $this->titleTranslationResolverMock
             ->shouldReceive('resolve')
             ->once()
@@ -247,6 +262,10 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
         $this->assertFalse(
             $localeField->getFormTypeOption('mapped'),
         );
+        $this->assertSame(
+            ['de_DE', 'en_GB', 'fr_FR'],
+            $localeField->getCustomOption(LocaleField::OPTION_LOCALE_CODES_TO_KEEP),
+        );
 
         $htmlAttributes = $localeField->getHtmlAttributes();
 
@@ -272,6 +291,11 @@ class TitleTranslationFieldRendererTest extends MockeryTestCase
             ->shouldReceive('getAvailableInterfaceTranslationLocales')
             ->once()
             ->andReturn(new ArrayCollection([$locale]));
+
+        $this->localeRepositoryMock
+            ->shouldReceive('extractLocaleIds')
+            ->once()
+            ->andReturn(['de_DE']);
 
         $this->titleTranslationResolverMock
             ->shouldReceive('resolve')

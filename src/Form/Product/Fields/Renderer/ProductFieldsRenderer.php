@@ -6,9 +6,11 @@ namespace App\Form\Product\Fields\Renderer;
 
 use App\Entity\Product\Product;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
+use App\Form\Product\Fields\Renderer\Translation\ProductFieldsTranslationRenderer;
 use App\Form\Product\Fields\Resolver\FieldResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -18,6 +20,7 @@ class ProductFieldsRenderer
         private readonly RendererRegistry $rendererRegistry,
         private readonly FieldResolver $fieldResolver,
         private readonly TranslatorInterface $translator,
+        private readonly ProductFieldsTranslationRenderer $productFieldsTranslationRenderer,
     ) {
     }
 
@@ -29,6 +32,13 @@ class ProductFieldsRenderer
         $fields = [];
 
         $fields[] = FormField::addTab(new TranslatableMessage('product.labels.fields', [], 'admin'));
+        $fields[] = FormField::addColumn(6);
+        $fields[] = FormField::addFieldset(new TranslatableMessage('product.labels.fields', [], 'admin'));
+        $fields[] = LocaleField::new('translation_locale_spacer', 'Sprache')
+            ->addCssClass('translation-locale-spacer')
+            ->setFormTypeOptions([
+                'mapped' => false,
+            ]);
 
         foreach ($product->getProductType()->getProductTypeFieldConfigurations() as $productTypeFieldConfiguration) {
             $fieldType = $productTypeFieldConfiguration->getFieldType();
@@ -48,12 +58,15 @@ class ProductFieldsRenderer
                 ->render(
                     $field,
                     $productTypeFieldConfiguration,
-                    (string) $fieldType->getTranslatedTitle(
+                    $fieldType->getTranslatedTitle(
                         $this->translator->getLocale(),
                     )
                 );
         }
 
-        return $fields;
+        return array_merge(
+            $fields,
+            $this->productFieldsTranslationRenderer->render($product),
+        );
     }
 }

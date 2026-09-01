@@ -13,6 +13,7 @@ use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
+use App\Form\Product\Fields\Renderer\Translation\ProductFieldsTranslationRenderer;
 use App\Form\Product\Fields\Resolver\FieldResolver;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -42,6 +43,9 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
     /** @var TranslatorInterface&Mockery\MockInterface */
     private TranslatorInterface $translator;
 
+    /** @var ProductFieldsTranslationRenderer&Mockery\MockInterface */
+    private ProductFieldsTranslationRenderer $translationRenderer;
+
     private ProductFieldsRenderer $renderer;
 
     protected function setUp(): void
@@ -53,8 +57,9 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->rendererRegistry = \Mockery::mock(RendererRegistry::class);
         $this->fieldResolver = \Mockery::mock(FieldResolver::class);
         $this->translator = \Mockery::mock(TranslatorInterface::class);
+        $this->translationRenderer = \Mockery::mock(ProductFieldsTranslationRenderer::class);
 
-        $this->renderer = new ProductFieldsRenderer($this->rendererRegistry, $this->fieldResolver, $this->translator);
+        $this->renderer = new ProductFieldsRenderer($this->rendererRegistry, $this->fieldResolver, $this->translator, $this->translationRenderer);
     }
 
     public function testRenderAddsFieldsTab(): void
@@ -69,10 +74,18 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ->once()
             ->andReturn(new ArrayCollection());
 
+        $this->translationRenderer
+            ->shouldReceive('render')
+            ->once()
+            ->with($this->product)
+            ->andReturn([]);
+
         $result = $this->renderer->render($this->product);
 
-        $this->assertCount(1, $result);
-        $this->assertInstanceOf(FormField::class, $result[0]);
+        $this->assertCount(4, $result);
+        $this->assertInstanceOf(FormField::class, $result[0]); // Tab
+        $this->assertInstanceOf(FormField::class, $result[1]); // Column
+        $this->assertInstanceOf(FormField::class, $result[2]); // Fieldset
     }
 
     public function testRenderSkipsConfigurationWithoutFieldType(): void
@@ -99,10 +112,15 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $this->rendererRegistry
             ->shouldNotReceive('getRenderer');
 
+        $this->translationRenderer
+            ->shouldReceive('render')
+            ->once()
+            ->with($this->product)
+            ->andReturn([]);
+
         $result = $this->renderer->render($this->product);
 
-        $this->assertCount(1, $result);
-        $this->assertInstanceOf(FormField::class, $result[0]);
+        $this->assertCount(4, $result);
     }
 
     public function testRenderCreatesFieldAndRendersIt(): void
@@ -123,6 +141,7 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $fieldType
             ->shouldReceive('getTranslatedTitle')
             ->once()
+            ->with('de_DE')
             ->andReturn('Translated title');
 
         $this->product
@@ -165,11 +184,16 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ->with($field, $configuration, 'Translated title')
             ->andReturn($renderedField);
 
+        $this->translationRenderer
+            ->shouldReceive('render')
+            ->once()
+            ->with($this->product)
+            ->andReturn([]);
+
         $result = $this->renderer->render($this->product);
 
-        $this->assertCount(2, $result);
-        $this->assertInstanceOf(FormField::class, $result[0]);
-        $this->assertSame($renderedField, $result[1]);
+        $this->assertCount(5, $result);
+        $this->assertSame($renderedField, $result[4]);
     }
 
     public function testRenderProcessesMultipleConfigurations(): void
@@ -203,11 +227,13 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
         $fieldTypeOne
             ->shouldReceive('getTranslatedTitle')
             ->once()
+            ->with('de_DE')
             ->andReturn('Translated title');
 
         $fieldTypeTwo
             ->shouldReceive('getTranslatedTitle')
             ->once()
+            ->with('de_DE')
             ->andReturn('Translated title');
 
         $renderedFieldOne = TextField::new('fieldOne');
@@ -288,11 +314,16 @@ class ProductFieldsRendererTest extends Mockery\Adapter\Phpunit\MockeryTestCase
             ->with($fieldTwo, $configurationTwo, 'Translated title')
             ->andReturn($renderedFieldTwo);
 
+        $this->translationRenderer
+            ->shouldReceive('render')
+            ->once()
+            ->with($this->product)
+            ->andReturn([]);
+
         $result = $this->renderer->render($this->product);
 
-        $this->assertCount(3, $result);
-        $this->assertInstanceOf(FormField::class, $result[0]);
-        $this->assertSame($renderedFieldOne, $result[1]);
-        $this->assertSame($renderedFieldTwo, $result[2]);
+        $this->assertCount(6, $result);
+        $this->assertSame($renderedFieldOne, $result[4]);
+        $this->assertSame($renderedFieldTwo, $result[5]);
     }
 }

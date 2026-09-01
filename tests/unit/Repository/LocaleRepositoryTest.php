@@ -139,4 +139,41 @@ class LocaleRepositoryTest extends MockeryTestCase
 
         $repository->setDefaultLocale('de_DE');
     }
+
+    public function testExtractLocaleIdsWithProvidedCollection(): void
+    {
+        $registryMock = \Mockery::mock(ManagerRegistry::class);
+        $repository = new LocaleRepository($registryMock);
+
+        $locale1 = \Mockery::mock(Locale::class);
+        $locale1->shouldReceive('getId')->andReturn('de_DE');
+
+        $locale2 = \Mockery::mock(Locale::class);
+        $locale2->shouldReceive('getId')->andReturn('en_GB');
+
+        /** @var ArrayCollection<int, Locale> $collection */
+        $collection = new ArrayCollection([$locale1, $locale2]);
+
+        $result = $repository->extractLocaleIds($collection);
+
+        $this->assertSame(['de_DE', 'en_GB'], $result);
+    }
+
+    public function testExtractLocaleIdsWithoutProvidedCollection(): void
+    {
+        $registryMock = \Mockery::mock(ManagerRegistry::class);
+        $locale1 = \Mockery::mock(Locale::class);
+        $locale1->shouldReceive('getId')->andReturn('fr_FR');
+
+        $repository = \Mockery::mock(LocaleRepository::class, [$registryMock])
+            ->makePartial();
+
+        $repository->shouldReceive('getAvailableInterfaceTranslationLocales')
+            ->once()
+            ->andReturn(new ArrayCollection([$locale1]));
+
+        $result = $repository->extractLocaleIds();
+
+        $this->assertSame(['fr_FR'], $result);
+    }
 }

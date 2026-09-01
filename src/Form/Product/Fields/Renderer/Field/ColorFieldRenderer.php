@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Product\Fields\Renderer\Field;
 
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
@@ -22,9 +23,9 @@ final class ColorFieldRenderer implements FieldRendererInterface
     /**
      * @throws \DateMalformedStringException
      */
-    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label): FieldInterface
+    public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label, ?Locale $locale = null): FieldInterface
     {
-        return ColorField::new('field_'.$field->getType()->getCode())
+        $element = ColorField::new('field_'.$field->getType()->getCode().(null !== $locale ? '-'.$locale->getId() : ''))
             ->showValue()
             ->setFormTypeOptions([
                 'label' => $label,
@@ -32,5 +33,13 @@ final class ColorFieldRenderer implements FieldRendererInterface
                 'mapped' => false,
                 'required' => $configuration->isRequired(),
             ]);
+
+        if (null !== $locale) {
+            $element->setFormTypeOption('row_attr', [
+                'data-content-translation-locale' => $locale->getId(),
+            ]);
+        }
+
+        return $element;
     }
 }

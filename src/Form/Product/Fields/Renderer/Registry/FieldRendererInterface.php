@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Product\Fields\Renderer\Registry;
 
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
@@ -16,7 +17,9 @@ interface FieldRendererInterface
     public function supports(FieldType $type): bool;
 
     public function render(
-        Field $field, ProductTypeFieldConfiguration $configuration,
+        Field $field,
+        ProductTypeFieldConfiguration $configuration,
         string $label,
+        ?Locale $locale = null,
     ): FieldInterface;
 }

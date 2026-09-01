@@ -43,6 +43,23 @@ class LocaleRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param Collection<int, Locale>|null $locales
+     *
+     * @return array<int, string>
+     */
+    public function extractLocaleIds(?Collection $locales = null): array
+    {
+        if (null === $locales) {
+            $locales = $this->getAvailableInterfaceTranslationLocales();
+        }
+
+        return $locales->map(
+            static fn (Locale $locale): string => $locale->getId(),
+        )
+            ->toArray();
+    }
+
+    /**
      * @throws DefaultLocaleIsNotDefinedException
      */
     public function getDefaultLocale(): Locale

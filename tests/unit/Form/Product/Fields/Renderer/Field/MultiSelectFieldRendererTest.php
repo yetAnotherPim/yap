@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Form\Product\Fields\Renderer\Field;
 
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
@@ -173,5 +174,47 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
         $this->assertEquals([], $formTypeOptions['data']);
+    }
+
+    public function testRenderWithLocale(): void
+    {
+        $locale = \Mockery::mock(Locale::class);
+        $locale->shouldReceive('getId')->andReturn('de');
+
+        $this->field
+            ->shouldReceive('getType')
+            ->once()
+            ->andReturn($this->fieldType);
+
+        $this->fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('tags');
+
+        $this->field
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('tag1,tag2');
+
+        $options = ['tag1', 'tag2', 'tag3'];
+        $this->configuration
+            ->shouldReceive('getOptions')
+            ->twice()
+            ->andReturn($options);
+
+        $this->configuration
+            ->shouldReceive('isRequired')
+            ->once()
+            ->andReturn(true);
+
+        $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
+
+        $this->assertInstanceOf(ChoiceField::class, $result);
+        $this->assertSame('field_tags-de', $result->getAsDto()->getProperty());
+        /** @var array<string, mixed> $formTypeOptions */
+        $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
+        /** @var array<string, mixed> $rowAttr */
+        $rowAttr = $formTypeOptions['row_attr'];
+        $this->assertSame('de', $rowAttr['data-content-translation-locale']);
     }
 }

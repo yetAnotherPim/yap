@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Form\Title\Translation\Renderer;
 
-use App\Entity\Locale\Locale;
 use App\Entity\Translation\Title\TitleTranslationInterface;
 use App\Entity\Translation\Title\TranslatableTitleInterface;
 use App\Form\Title\Translation\Resolver\TitleTranslationResolver;
@@ -40,11 +39,7 @@ class TitleTranslationFieldRenderer
             return $fields;
         }
 
-        $localeIds =
-            $locales->map(
-                static fn (Locale $locale): string => $locale->getId(),
-            )
-            ->toArray();
+        $localeIds = $this->localeRepository->extractLocaleIds($locales);
 
         $fields[] = FormField::addFieldset(new TranslatableMessage('general.labels.translation', [], 'admin'));
         $fields[] = LocaleField::new('translation_locale', new TranslatableMessage('general.labels.locale', [], 'admin'))
