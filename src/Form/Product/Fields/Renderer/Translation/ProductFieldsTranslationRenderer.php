@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+// TODO: render as ajax form for solving max input vars issues
 class ProductFieldsTranslationRenderer
 {
     public function __construct(
@@ -32,7 +33,7 @@ class ProductFieldsTranslationRenderer
         $fields = [];
 
         // TODO: load only locales for content translation
-        $locales = $this->localeRepository->getAvailableInterfaceTranslationLocales();
+        $locales = $this->localeRepository->getAvailableContentTranslationLocales();
 
         if (true === $locales->isEmpty()) {
             return $fields;
@@ -59,7 +60,6 @@ class ProductFieldsTranslationRenderer
             );
 
         // TODO: beautify - avoid foreach inside foreach
-        // TODO: hide initially
         foreach ($locales as $locale) {
             foreach ($product->getProductType()->getProductTypeFieldConfigurations() as $productTypeFieldConfiguration) {
                 $fieldType = $productTypeFieldConfiguration->getFieldType();

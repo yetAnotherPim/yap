@@ -9,6 +9,7 @@ use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
+use App\Form\Product\Fields\Renderer\Field\Trait\TranslationTrait;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
 use App\Form\Product\Fields\Resolver\Enum\FileType;
 use App\Form\Product\Fields\Resolver\FileResolver;
@@ -17,6 +18,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 
 final class ImageFieldRenderer implements FieldRendererInterface
 {
+    use TranslationTrait;
+
     public function __construct(
         private readonly FileResolver $fileResolver,
     ) {
@@ -29,7 +32,7 @@ final class ImageFieldRenderer implements FieldRendererInterface
 
     public function render(Field $field, ProductTypeFieldConfiguration $configuration, string $label, ?Locale $locale = null): FieldInterface
     {
-        $element = ImageField::new('field_'.$field->getType()->getCode().(null !== $locale ? '-'.$locale->getId() : ''))
+        $element = ImageField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setUploadDir($this->fileResolver->getUploadDirectory(FileType::IMAGE))
             ->setUploadedFileNamePattern('[YYYY]/[MM]/[DD]/[slug]-[contenthash].[extension]')
 
@@ -40,13 +43,6 @@ final class ImageFieldRenderer implements FieldRendererInterface
                 'required' => $configuration->isRequired(),
             ]);
 
-        if (null !== $locale) {
-            $element->setFormTypeOption('row_attr', [
-                'data-content-translation-locale' => $locale->getId(),
-                'hidden' => true,
-            ]);
-        }
-
-        return $element;
+        return $this->addTranslationOptions($element, $field, $locale);
     }
 }

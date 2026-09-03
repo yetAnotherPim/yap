@@ -23,7 +23,10 @@ use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Entity\User\User;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
+use App\Form\Product\Fields\Renderer\Translation\ProductFieldsTranslationRenderer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
+use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
+use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\PluginManager\Cache\CacheClearer;
@@ -76,6 +79,9 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(ProductFieldsRenderer::class)]
 #[UsesClass(RendererRegistry::class)]
 #[UsesClass(FieldSynchronizer::class)]
+#[UsesClass(ProductFieldsTranslationRenderer::class)]
+#[UsesClass(TitleTranslationFieldRenderer::class)]
+#[UsesClass(TitleTranslationSynchronizer::class)]
 #[ResetDatabase]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {

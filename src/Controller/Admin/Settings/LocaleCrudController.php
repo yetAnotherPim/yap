@@ -65,6 +65,7 @@ class LocaleCrudController extends AbstractCrudController
             BooleanField::new('default', new TranslatableMessage('locale.labels.default', [], 'admin'))
                 ->onlyOnIndex()
                 ->setDisabled(),
+            BooleanField::new('contentTranslationEnabled', new TranslatableMessage('locale.labels.content_translation_enabled', [], 'admin')),
         ];
     }
 

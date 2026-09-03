@@ -165,13 +165,18 @@ class TimeFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getType')
-            ->once()
+            ->twice()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('opening_time');
+
+        $this->fieldType
+            ->shouldReceive('isTranslatable')
+            ->once()
+            ->andReturn(true);
 
         $this->field
             ->shouldReceive('getValue')

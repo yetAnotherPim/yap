@@ -116,6 +116,7 @@ locale:
         title_plural: 'Sprachen'
     labels:
         default: 'Standard'
+        content_translation_enabled: 'Für Inhaltsübersetzungen verwenden'
     actions:
         set_as_default: 'Als Standard setzen'
 

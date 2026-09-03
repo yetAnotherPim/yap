@@ -45,6 +45,8 @@ class LocaleTest extends MockeryTestCase
         return [
             ['setDefault', 'isDefault', true],
             ['setDefault', 'isDefault', null, \TypeError::class],
+            ['setContentTranslationEnabled', 'isContentTranslationEnabled', true],
+            ['setContentTranslationEnabled', 'isContentTranslationEnabled', null, \TypeError::class],
         ];
     }
 }

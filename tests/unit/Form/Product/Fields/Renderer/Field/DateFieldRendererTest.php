@@ -166,13 +166,18 @@ class DateFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getType')
-            ->once()
+            ->twice()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('release_date');
+
+        $this->fieldType
+            ->shouldReceive('isTranslatable')
+            ->once()
+            ->andReturn(true);
 
         $this->field
             ->shouldReceive('getValue')

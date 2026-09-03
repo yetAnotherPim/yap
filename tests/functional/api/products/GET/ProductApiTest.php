@@ -656,7 +656,10 @@ class ProductApiTest extends ApiTestCase
 
         /** @var list<array{
          *     type: array{code: string},
-         *     typedValue: string|int|float|bool|null
+         *     typedValue: string|int|float|bool|null,
+         *     translations: list<array{
+         *         typedValue: string|int|float|bool|null
+         *     }>
          * }> $fieldsResponse
          */
         $fieldsResponse = $response = $response->toArray()['fields'];
@@ -670,25 +673,42 @@ class ProductApiTest extends ApiTestCase
         );
 
         $this->assertNull($fields['null_value']['typedValue']);
+        $this->assertNull($fields['null_value']['translations'][0]['typedValue']);
         $this->assertSame('', $fields['empty_string']['typedValue']);
+        $this->assertSame('', $fields['empty_string']['translations'][0]['typedValue']);
         $this->assertSame('Something', $fields['string']['typedValue']);
+        $this->assertSame('Something', $fields['string']['translations'][0]['typedValue']);
 
         $this->assertTrue($fields['checkbox_true']['typedValue']);
+        $this->assertTrue($fields['checkbox_true']['translations'][0]['typedValue']);
         $this->assertFalse($fields['checkbox_false']['typedValue']);
+        $this->assertFalse($fields['checkbox_false']['translations'][0]['typedValue']);
         $this->assertNull($fields['checkbox_null']['typedValue']);
+        $this->assertNull($fields['checkbox_null']['translations'][0]['typedValue']);
         $this->assertTrue($fields['checkbox_unexpected']['typedValue']);
+        $this->assertTrue($fields['checkbox_unexpected']['translations'][0]['typedValue']);
 
         $this->assertSame(1, $fields['number_1']['typedValue']);
+        $this->assertSame(1, $fields['number_1']['translations'][0]['typedValue']);
         $this->assertSame(3.14159265359, $fields['number_float']['typedValue']);
+        $this->assertSame(3.14159265359, $fields['number_float']['translations'][0]['typedValue']);
         $this->assertSame(0, $fields['number_empty_string']['typedValue']);
+        $this->assertSame(0, $fields['number_empty_string']['translations'][0]['typedValue']);
         $this->assertNull($fields['number_null']['typedValue']);
+        $this->assertNull($fields['number_null']['translations'][0]['typedValue']);
         $this->assertSame(0, $fields['number_unexpected']['typedValue']);
+        $this->assertSame(0, $fields['number_unexpected']['translations'][0]['typedValue']);
 
         $this->assertSame(1, $fields['integer_1']['typedValue']);
+        $this->assertSame(1, $fields['integer_1']['translations'][0]['typedValue']);
         $this->assertSame(3, $fields['integer_float']['typedValue']);
+        $this->assertSame(3, $fields['integer_float']['translations'][0]['typedValue']);
         $this->assertSame(0, $fields['integer_empty_string']['typedValue']);
+        $this->assertSame(0, $fields['integer_empty_string']['translations'][0]['typedValue']);
         $this->assertNull($fields['integer_null']['typedValue']);
+        $this->assertNull($fields['integer_null']['translations'][0]['typedValue']);
         $this->assertSame(0, $fields['integer_unexpected']['typedValue']);
+        $this->assertSame(0, $fields['integer_unexpected']['translations'][0]['typedValue']);
 
         $this->assertResponseStatusCodeSame(200);
     }

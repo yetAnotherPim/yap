@@ -9,12 +9,15 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Repository\FieldValueTranslationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: FieldValueTranslationRepository::class)]
@@ -89,5 +92,21 @@ class FieldValueTranslation extends RelatedTimestampableEntity
         $this->value = $value;
 
         return $this;
+    }
+
+    #[ApiProperty(
+        types: ['integer', 'float', 'boolean', 'string']
+    )]
+    #[Context([
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
+    ])]
+    #[Groups(['product:read', 'field:read'])]
+    public function getTypedValue(): string|int|bool|float|null
+    {
+        if (false === isset($this->value)) {
+            return null;
+        }
+
+        return InputType::getTypedValue($this->value, $this->getField()->getType()->getInputType());
     }
 }

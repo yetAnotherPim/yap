@@ -136,13 +136,18 @@ class LocaleFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getType')
-            ->once()
+            ->twice()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('target_locale');
+
+        $this->fieldType
+            ->shouldReceive('isTranslatable')
+            ->once()
+            ->andReturn(true);
 
         $this->field
             ->shouldReceive('getValue')

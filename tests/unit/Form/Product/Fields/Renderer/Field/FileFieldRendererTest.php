@@ -176,13 +176,18 @@ class FileFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getType')
-            ->once()
+            ->twice()
             ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getCode')
             ->once()
             ->andReturn('file');
+
+        $this->fieldType
+            ->shouldReceive('isTranslatable')
+            ->once()
+            ->andReturn(true);
 
         $this->field
             ->shouldReceive('getValue')

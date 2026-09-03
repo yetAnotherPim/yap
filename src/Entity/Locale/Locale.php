@@ -30,6 +30,11 @@ class Locale
     #[ORM\Column(name: 'is_default', options: ['default' => 0])]
     private bool $default = false;
 
+    #[ORM\Column(
+        options: ['default' => 0],
+    )]
+    private bool $contentTranslationEnabled = false;
+
     public function setId(string $id): Locale
     {
         $this->id = $id;
@@ -50,6 +55,18 @@ class Locale
     public function setDefault(bool $default): Locale
     {
         $this->default = $default;
+
+        return $this;
+    }
+
+    public function isContentTranslationEnabled(): bool
+    {
+        return $this->contentTranslationEnabled;
+    }
+
+    public function setContentTranslationEnabled(bool $contentTranslationEnabled): Locale
+    {
+        $this->contentTranslationEnabled = $contentTranslationEnabled;
 
         return $this;
     }

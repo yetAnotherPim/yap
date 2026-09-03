@@ -116,6 +116,7 @@ locale:
         title_plural: 'Locales'
     labels:
         default: 'Default'
+        content_translation_enabled: 'Use for content translations'
     actions:
         set_as_default: 'Set as default'
 

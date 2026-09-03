@@ -43,6 +43,19 @@ class LocaleRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return Collection<int, Locale>
+     */
+    public function getAvailableContentTranslationLocales(): Collection
+    {
+        return new ArrayCollection(
+            $this->findBy(
+                ['contentTranslationEnabled' => true],
+                ['id' => 'ASC'],
+            ),
+        );
+    }
+
+    /**
      * @param Collection<int, Locale>|null $locales
      *
      * @return array<int, string>

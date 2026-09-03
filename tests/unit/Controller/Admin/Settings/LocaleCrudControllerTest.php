@@ -47,12 +47,14 @@ class LocaleCrudControllerTest extends MockeryTestCase
     {
         $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
 
-        $this->assertCount(2, $fields);
+        $this->assertCount(3, $fields);
 
         $this->assertInstanceOf(LocaleField::class, $fields[0]);
         $this->assertEquals('id', $fields[0]->getAsDto()->getProperty());
         $this->assertInstanceOf(BooleanField::class, $fields[1]);
         $this->assertEquals('default', $fields[1]->getAsDto()->getProperty());
+        $this->assertInstanceOf(BooleanField::class, $fields[2]);
+        $this->assertEquals('contentTranslationEnabled', $fields[2]->getAsDto()->getProperty());
     }
 
     /**
