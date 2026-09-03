@@ -30,7 +30,7 @@ class IdentifierType extends TimestampableEntity
 
     #[ORM\Column(length: 255, unique: true)]
     #[NotBlank]
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:read:without-translations'])]
     private string $title;
 
     #[ORM\Column(enumType: DataType::class)]

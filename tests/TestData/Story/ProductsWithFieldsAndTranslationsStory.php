@@ -28,7 +28,7 @@ final class ProductsWithFieldsAndTranslationsStory extends Story
             'title' => 'Similar to product',
         ]);
 
-        ProductFactory::createOne(
+        $product1 = ProductFactory::createOne(
             [
                 'fields' => [
                     FieldFactory::new([
@@ -53,7 +53,7 @@ final class ProductsWithFieldsAndTranslationsStory extends Story
             ]
         );
 
-        ProductFactory::createOne(
+        $product2 = ProductFactory::createOne(
             [
                 'fields' => [
                     FieldFactory::new([
@@ -77,5 +77,8 @@ final class ProductsWithFieldsAndTranslationsStory extends Story
                 ],
             ]
         );
+
+        $this->addState('product1', $product1);
+        $this->addState('product2', $product2);
     }
 }

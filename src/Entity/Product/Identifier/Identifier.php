@@ -47,12 +47,12 @@ class Identifier extends RelatedTimestampableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
     private IdentifierType $type;
 
     #[ORM\Column(length: 255)]
     #[NotBlank]
-    #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
     private string $value = '';
 
     #[ORM\ManyToOne(inversedBy: 'identifiers')]
@@ -82,7 +82,7 @@ class Identifier extends RelatedTimestampableEntity
         ],
         types: ['integer', 'string']
     )]
-    #[Groups(['product:read'])]
+    #[Groups(['product:read', 'product:read:without-translations'])]
     public function getTypedValue(): string|int
     {
         if (true === isset($this->type) && DataType::Integer === $this->getType()->getDataType()) {

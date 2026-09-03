@@ -58,7 +58,7 @@ class Field extends RelatedTimestampableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write', 'field:write', 'field:read'])]
     private FieldType $type;
 
     #[ORM\ManyToOne(inversedBy: 'fields')]
@@ -67,7 +67,7 @@ class Field extends RelatedTimestampableEntity
     private Product $product;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write', 'field:write', 'field:read'])]
     #[Context([
         AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
     ])]
@@ -133,7 +133,7 @@ class Field extends RelatedTimestampableEntity
     #[Context([
         AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
     ])]
-    #[Groups(['product:read', 'field:read'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'field:read'])]
     public function getTypedValue(): string|int|bool|float|null
     {
         if (false === isset($this->value)) {

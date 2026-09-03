@@ -130,6 +130,196 @@ class ProductApiTest extends ApiTestCase
     }
 
     /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testGetProductWithoutTranslations(): void
+    {
+        ProductsWithFieldsAndTranslationsStory::load();
+
+        /** @var Product $product */
+        $product = ProductsWithFieldsAndTranslationsStory::get('product1');
+
+        $response = $this->client->request(
+            'GET',
+            '/api/products/'.$product->getId().'?groups[]=product:read:without-translations',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ],
+        );
+
+        $this->assertResponseStatusCodeSame(200);
+
+        /**
+         * @var array{
+         *     fields: list<array<string, mixed>>
+         * } $responseData
+         */
+        $responseData = $response->toArray();
+
+        $this->assertNotEmpty($responseData['fields']);
+
+        foreach ($responseData['fields'] as $field) {
+            $this->assertArrayHasKey('type', $field);
+            $this->assertArrayHasKey('typedValue', $field);
+            $this->assertArrayNotHasKey('translations', $field);
+        }
+
+        $jsonSchema = file_get_contents(__DIR__.'/../../../../JsonSchema/product.schema.json');
+
+        $this->assertIsString($jsonSchema);
+        $this->assertMatchesJsonSchema($jsonSchema);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testGetProductWithTranslations(): void
+    {
+        ProductsWithFieldsAndTranslationsStory::load();
+
+        /** @var Product $product */
+        $product = ProductsWithFieldsAndTranslationsStory::get('product1');
+
+        $response = $this->client->request(
+            'GET',
+            '/api/products/'.$product->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ],
+        );
+
+        $this->assertResponseStatusCodeSame(200);
+
+        /**
+         * @var array{
+         *     fields: list<array<string, mixed>>
+         * } $responseData
+         */
+        $responseData = $response->toArray();
+
+        $this->assertNotEmpty($responseData['fields']);
+
+        foreach ($responseData['fields'] as $field) {
+            $this->assertArrayHasKey('type', $field);
+            $this->assertArrayHasKey('typedValue', $field);
+            $this->assertArrayHasKey('translations', $field);
+        }
+
+        $jsonSchema = file_get_contents(__DIR__.'/../../../../JsonSchema/product.schema.json');
+
+        $this->assertIsString($jsonSchema);
+        $this->assertMatchesJsonSchema($jsonSchema);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testGetProductsWithoutTranslations(): void
+    {
+        ProductsWithFieldsAndTranslationsStory::load();
+
+        $response = $this->client->request(
+            'GET',
+            '/api/products?groups[]=product:read:without-translations',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ],
+        );
+
+        $this->assertResponseStatusCodeSame(200);
+
+        /**
+         * @var array{
+         *     member: list<array{
+         *         fields: list<array<string, mixed>>
+         *     }>
+         * } $responseData
+         */
+        $responseData = $response->toArray();
+
+        $this->assertNotEmpty($responseData['member']);
+
+        foreach ($responseData['member'] as $product) {
+            $this->assertNotEmpty($product['fields']);
+
+            foreach ($product['fields'] as $field) {
+                $this->assertArrayHasKey('type', $field);
+                $this->assertArrayHasKey('typedValue', $field);
+                $this->assertArrayNotHasKey('translations', $field);
+            }
+        }
+
+        $jsonSchema = file_get_contents(__DIR__.'/../../../../JsonSchema/products.schema.json');
+
+        $this->assertIsString($jsonSchema);
+        $this->assertMatchesJsonSchema($jsonSchema);
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testGetProductsIncludesTranslationsByDefault(): void
+    {
+        ProductsWithFieldsAndTranslationsStory::load();
+
+        $response = $this->client->request(
+            'GET',
+            '/api/products',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ],
+        );
+
+        $this->assertResponseStatusCodeSame(200);
+
+        /**
+         * @var array{
+         *     member: list<array{
+         *         fields: list<array<string, mixed>>
+         *     }>
+         * } $responseData
+         */
+        $responseData = $response->toArray();
+
+        $this->assertArrayHasKey('member', $responseData);
+        $this->assertNotEmpty($responseData['member']);
+
+        $product = $responseData['member'][0];
+
+        $this->assertArrayHasKey('fields', $product);
+        $this->assertNotEmpty($product['fields']);
+
+        $field = $product['fields'][0];
+
+        $this->assertArrayHasKey('translations', $field);
+        $this->assertNotEmpty($field['translations']);
+    }
+
+    /**
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface

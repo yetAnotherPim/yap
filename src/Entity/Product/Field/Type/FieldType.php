@@ -54,12 +54,12 @@ class FieldType extends TimestampableEntity implements TranslatableTitleInterfac
 
     #[ORM\Column(length: 255, nullable: false)]
     #[NotBlank]
-    #[Groups(['product:read', 'field:read', 'field_type:write', 'field_type:read'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'field:read', 'field_type:write', 'field_type:read'])]
     private string $code;
 
     #[ORM\Column(length: 255, nullable: false)]
     #[NotBlank]
-    #[Groups(['product:read', 'field:read', 'field_type:write', 'field_type:read'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'field:read', 'field_type:write', 'field_type:read'])]
     private string $title;
 
     #[ORM\Column]

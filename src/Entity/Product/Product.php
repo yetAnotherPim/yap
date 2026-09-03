@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
+use ApiPlatform\Serializer\Filter\GroupFilter;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Identifier\Identifier;
@@ -33,11 +34,49 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[Index(name: 'index_product_producttype', columns: ['product_type_id'])]
 #[Get(
-    normalizationContext: ['groups' => ['product:read']]
+    normalizationContext: ['groups' => ['product:read']],
+    parameters: [
+        'groups' => new QueryParameter(
+            schema: [
+                'type' => 'array',
+                'items' => [
+                    'type' => 'string',
+                    'enum' => [
+                        'product:read:without-translations',
+                    ],
+                ],
+            ],
+            filter: new GroupFilter(
+                overrideDefaultGroups: true,
+                whitelist: [
+                    'product:read:without-translations',
+                ],
+            ),
+            description: 'Serializer groups. Use "product:read:without-translations" to return the product without field value translations.',
+        ),
+    ],
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['product:read']],
     parameters: [
+        'groups' => new QueryParameter(
+            schema: [
+                'type' => 'array',
+                'items' => [
+                    'type' => 'string',
+                    'enum' => [
+                        'product:read:without-translations',
+                    ],
+                ],
+            ],
+            filter: new GroupFilter(
+                overrideDefaultGroups: true,
+                whitelist: [
+                    'product:read:without-translations',
+                ],
+            ),
+            description: 'Serializer groups. Use "product:read:without-translations" to return products without field value translations.',
+        ),
         'createdAt' => new QueryParameter(
             filter: new ComparisonFilter(new ExactFilter()),
             property: 'createdAt',
@@ -110,21 +149,21 @@ class Product extends TimestampableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
     private ProductType $productType;
 
     /**
      * @var Collection<int, Identifier>
      */
     #[ORM\OneToMany(targetEntity: Identifier::class, mappedBy: 'product', cascade: ['all'], orphanRemoval: true)]
-    #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
     private Collection $identifiers;
 
     /**
      * @var Collection<int, Field>
      */
     #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'product', cascade: ['all'], orphanRemoval: true)]
-    #[Groups(['product:read', 'product:write'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
     private Collection $fields;
 
     public function __construct()

@@ -129,8 +129,7 @@
         "required": [
           "@id",
           "@type",
-          "type",
-          "translations"
+          "type"
         ]
       }
     },

@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 trait UpdatedAtTrait
 {
     #[ORM\Column(nullable: true)]
-    #[Groups(['product:read', 'field:read', 'field_type:read', 'product_type:read'])]
+    #[Groups(['product:read', 'product:read:without-translations', 'field:read', 'field_type:read', 'product_type:read'])]
     protected ?\DateTimeImmutable $updatedAt = null;
 
     public function getUpdatedAt(): ?\DateTimeImmutable
