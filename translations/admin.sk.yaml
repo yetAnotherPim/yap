@@ -108,6 +108,7 @@ locale:
     title: Miestne nastavenie
     title_plural: Miestne nastavenia
   labels:
+    content_translation_enabled: 'Použiť na preklady obsahu'
     default: Predvolené
   actions:
     set_as_default: Nastaviť ako predvolené

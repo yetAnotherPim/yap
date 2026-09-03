@@ -108,6 +108,7 @@ locale:
     title: Språkinställning
     title_plural: Språkinställningar
   labels:
+    content_translation_enabled: 'Använd för innehållsöversättningar'
     default: Standard
   actions:
     set_as_default: Ange som standard

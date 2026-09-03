@@ -108,6 +108,7 @@ locale:
     title: Eskualde-ezarpena
     title_plural: Eskualde-ezarpenak
   labels:
+    content_translation_enabled: 'Erabili edukien itzulpenetarako'
     default: Lehenetsia
   actions:
     set_as_default: Ezarri lehenetsi gisa

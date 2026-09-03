@@ -108,6 +108,7 @@ locale:
     title: الإعدادات المحلية
     title_plural: الإعدادات المحلية
   labels:
+    content_translation_enabled: 'استخدام لترجمات المحتوى'
     default: افتراضي
   actions:
     set_as_default: تعيين كافتراضي

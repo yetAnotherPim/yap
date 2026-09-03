@@ -108,6 +108,7 @@ locale:
     title: 地區設定
     title_plural: 地區設定
   labels:
+    content_translation_enabled: '用於內容翻譯'
     default: 預設
   actions:
     set_as_default: 設為預設

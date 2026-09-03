@@ -108,6 +108,7 @@ locale:
     title: Configuración regional
     title_plural: Configuraciones regionales
   labels:
+    content_translation_enabled: 'Usar para traducciones de contenido'
     default: Predeterminado
   actions:
     set_as_default: Establecer como predeterminado

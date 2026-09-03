@@ -108,6 +108,7 @@ locale:
     title: Yerel ayar
     title_plural: Yerel ayarlar
   labels:
+    content_translation_enabled: 'İçerik çevirileri için kullanın'
     default: Varsayılan
   actions:
     set_as_default: Varsayılan olarak ayarla

@@ -108,6 +108,7 @@ locale:
     title: Τοπικές ρυθμίσεις
     title_plural: Τοπικές ρυθμίσεις
   labels:
+    content_translation_enabled: 'Χρήση για μεταφράσεις περιεχομένου'
     default: Προεπιλογή
   actions:
     set_as_default: Ορισμός ως προεπιλογή

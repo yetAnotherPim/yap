@@ -108,6 +108,7 @@ locale:
     title: Lokalė
     title_plural: Lokalės
   labels:
+    content_translation_enabled: 'Naudoti turinio vertimams'
     default: Numatytasis
   actions:
     set_as_default: Nustatyti kaip numatytąjį

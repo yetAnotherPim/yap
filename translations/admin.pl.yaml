@@ -108,6 +108,7 @@ locale:
     title: Ustawienia regionalne
     title_plural: Ustawienia regionalne
   labels:
+    content_translation_enabled: 'Używaj do tłumaczeń treści'
     default: Domyślne
   actions:
     set_as_default: Ustaw jako domyślne

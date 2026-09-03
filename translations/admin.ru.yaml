@@ -108,6 +108,7 @@ locale:
     title: Локаль
     title_plural: Локали
   labels:
+    content_translation_enabled: 'Использовать для перевода контента'
     default: По умолчанию
   actions:
     set_as_default: Установить по умолчанию

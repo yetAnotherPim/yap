@@ -108,6 +108,7 @@ locale:
     title: Локал
     title_plural: Локали
   labels:
+    content_translation_enabled: 'Използвайте за превод на съдържание'
     default: По подразбиране
   actions:
     set_as_default: Задай по подразбиране

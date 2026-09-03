@@ -108,6 +108,7 @@ locale:
     title: אזור
     title_plural: אזורים
   labels:
+    content_translation_enabled: 'השתמש לתרגומי תוכן'
     default: ברירת מחדל
   actions:
     set_as_default: הגדר כברירת מחדל

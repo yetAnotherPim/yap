@@ -108,6 +108,7 @@ locale:
     title: Localidade
     title_plural: Localidades
   labels:
+    content_translation_enabled: 'Usar para traduções de conteúdo'
     default: Padrão
   actions:
     set_as_default: Definir como padrão

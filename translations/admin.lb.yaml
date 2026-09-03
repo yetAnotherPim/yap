@@ -108,6 +108,7 @@ locale:
     title: Locale
     title_plural: Locales
   labels:
+    content_translation_enabled: 'Fir Inhaltsiwwersetzunge benotzen'
     default: Standard
   actions:
     set_as_default: Als Standard setzen

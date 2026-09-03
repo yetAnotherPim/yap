@@ -108,6 +108,7 @@ locale:
     title: Področne nastavitve
     title_plural: Področne nastavitve
   labels:
+    content_translation_enabled: 'Uporabi za prevode vsebine'
     default: Privzeto
   actions:
     set_as_default: Nastavi kot privzeto

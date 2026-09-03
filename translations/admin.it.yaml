@@ -108,6 +108,7 @@ locale:
     title: Impostazioni locali
     title_plural: Impostazioni locali
   labels:
+    content_translation_enabled: 'Usa per le traduzioni dei contenuti'
     default: Predefinito
   actions:
     set_as_default: Imposta come predefinito

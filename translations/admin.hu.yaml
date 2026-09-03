@@ -108,6 +108,7 @@ locale:
     title: Területi beállítás
     title_plural: Területi beállítások
   labels:
+    content_translation_enabled: 'Tartalomfordításokhoz használja'
     default: Alapértelmezett
   actions:
     set_as_default: Beállítás alapértelmezettként

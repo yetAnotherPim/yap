@@ -108,6 +108,7 @@ locale:
     title: 区域设置
     title_plural: 区域设置
   labels:
+    content_translation_enabled: '用于内容翻译'
     default: 默认
   actions:
     set_as_default: 设为默认

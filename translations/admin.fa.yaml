@@ -108,6 +108,7 @@ locale:
     title: محلی
     title_plural: محلی‌ها
   labels:
+    content_translation_enabled: 'استفاده برای ترجمه محتوا'
     default: پیش‌فرض
   actions:
     set_as_default: تنظیم به‌عنوان پیش‌فرض

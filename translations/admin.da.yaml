@@ -108,6 +108,7 @@ locale:
     title: Landestandard
     title_plural: Landestandarder
   labels:
+    content_translation_enabled: 'Brug til indholdsoversættelser'
     default: Standard
   actions:
     set_as_default: Angiv som standard

@@ -108,6 +108,7 @@ locale:
     title: Národní prostředí
     title_plural: Národní prostředí
   labels:
+    content_translation_enabled: 'Použít pro překlady obsahu'
     default: Výchozí
   actions:
     set_as_default: Nastavit jako výchozí

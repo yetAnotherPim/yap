@@ -108,6 +108,7 @@ locale:
     title: Landinstelling
     title_plural: Landinstellingen
   labels:
+    content_translation_enabled: 'Gebruiken voor inhoudsvertalingen'
     default: Standaard
   actions:
     set_as_default: Als standaard instellen

@@ -108,6 +108,7 @@ locale:
     title: Լոկալ
     title_plural: Լոկալներ
   labels:
+    content_translation_enabled: 'Օգտագործել բովանդակության թարգմանությունների համար'
     default: Լռելյայն
   actions:
     set_as_default: Սահմանել որպես լռելյայն

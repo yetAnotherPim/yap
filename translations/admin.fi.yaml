@@ -108,6 +108,7 @@ locale:
     title: Alueasetus
     title_plural: Alueasetukset
   labels:
+    content_translation_enabled: 'Käytä sisällön kääntämiseen'
     default: Oletus
   actions:
     set_as_default: Aseta oletukseksi

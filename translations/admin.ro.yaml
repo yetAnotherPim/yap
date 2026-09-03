@@ -108,6 +108,7 @@ locale:
     title: Setări regionale
     title_plural: Setări regionale
   labels:
+    content_translation_enabled: 'Utilizați pentru traduceri de conținut'
     default: Implicit
   actions:
     set_as_default: Setează ca implicit

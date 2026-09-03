@@ -108,6 +108,7 @@ locale:
     title: Lokalne postavke
     title_plural: Lokalne postavke
   labels:
+    content_translation_enabled: 'Koristi za prijevode sadržaja'
     default: Zadano
   actions:
     set_as_default: Postavi kao zadano

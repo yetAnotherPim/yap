@@ -108,6 +108,7 @@ locale:
     title: Lokal
     title_plural: Lokal
   labels:
+    content_translation_enabled: 'Gunakan untuk terjemahan konten'
     default: Bawaan
   actions:
     set_as_default: Jadikan bawaan

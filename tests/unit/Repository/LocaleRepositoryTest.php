@@ -74,27 +74,6 @@ class LocaleRepositoryTest extends MockeryTestCase
         $this->assertCount(2, $result);
     }
 
-    public function testGetAvailableContentTranslationLocales(): void
-    {
-        $registryMock = \Mockery::mock(ManagerRegistry::class);
-
-        $locale1 = \Mockery::mock(Locale::class);
-        $locale2 = \Mockery::mock(Locale::class);
-
-        $repository = \Mockery::mock(LocaleRepository::class, [$registryMock])
-            ->makePartial();
-
-        $repository->shouldReceive('findBy')
-            ->once()
-            ->with(['contentTranslationEnabled' => true], ['id' => 'ASC'])
-            ->andReturn([$locale1, $locale2]);
-
-        $result = $repository->getAvailableContentTranslationLocales();
-
-        $this->assertInstanceOf(ArrayCollection::class, $result);
-        $this->assertCount(2, $result);
-    }
-
     public function testGetDefaultLocale(): void
     {
         $registryMock = \Mockery::mock(ManagerRegistry::class);

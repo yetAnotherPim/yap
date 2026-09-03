@@ -108,6 +108,7 @@ locale:
     title: Lokale
     title_plural: Lokaler
   labels:
+    content_translation_enabled: 'Bruk til innholdsoversettelser'
     default: Standard
   actions:
     set_as_default: Angi som standard
