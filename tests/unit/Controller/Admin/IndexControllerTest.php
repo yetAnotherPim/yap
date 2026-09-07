@@ -325,7 +325,7 @@ class IndexControllerTest extends MockeryTestCase
                 'easyadmin/page/home.hwtml.twig',
                 [
                     'statistics' => ['stat1' => 1],
-                    'systemMessages' => []
+                    'systemMessages' => [],
                 ]
             )
             ->andReturn('rendered content');

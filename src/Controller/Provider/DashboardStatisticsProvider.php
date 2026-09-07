@@ -25,6 +25,7 @@ class DashboardStatisticsProvider
 
     /**
      * @return array<string, int>
+     *
      * @throws \DateMalformedStringException
      */
     public function getStatistics(): array

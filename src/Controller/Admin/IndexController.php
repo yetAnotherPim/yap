@@ -15,7 +15,6 @@ use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
 use App\Repository\LocaleRepository;
-use App\Repository\ProductRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -49,7 +48,7 @@ class IndexController extends AbstractDashboardController
     {
         return $this->render('easyadmin/page/home.hwtml.twig', [
             'statistics' => $this->dashboardStatisticsProvider->getStatistics(),
-            'systemMessages' => $this->dashboardSystemStatusProvider->getMessages()
+            'systemMessages' => $this->dashboardSystemStatusProvider->getMessages(),
         ]);
     }
 

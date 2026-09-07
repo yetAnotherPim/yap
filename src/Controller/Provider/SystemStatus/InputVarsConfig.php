@@ -20,13 +20,12 @@ class InputVarsConfig implements SystemCheckInterface
     }
 
     /**
-     * @return list<TranslatableMessage>
+     * @return list<SystemStatusMessage>
      */
     public function check(): array
     {
         $messages = [];
         $maxInputVars = (int) \ini_get('max_input_vars');
-        $maxInputVars = 10;
 
         $enabledLocales = $this->localeRepository->count([
             'contentTranslationEnabled' => true,
@@ -85,6 +84,7 @@ class InputVarsConfig implements SystemCheckInterface
             ->getQuery()
             ->getArrayResult();
 
+        /** @phpstan-var list<array{code: string, title: string, fieldCount: int|string, translatableFieldCount: int|string}> $rows */
         return array_map(
             static fn (array $row): array => [
                 'code' => $row['code'],
