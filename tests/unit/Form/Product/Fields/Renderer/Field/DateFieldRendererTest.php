@@ -184,11 +184,6 @@ class DateFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(null);
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(false);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(DateField::class, $result);

@@ -1,0 +1,43 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    {{ 'dashboard.title'|trans({}, 'admin') }}
+{% endblock %}
+
+{% block main %}
+    <div class="row g-3">
+        {% for label, value in statistics %}
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="text-muted mb-2">
+                            {{ label|trans({}, 'admin') }}
+                        </div>
+
+                        <div class="fs-2 fw-bold">
+                            {{ value }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="h4 mt-5 mb-3">
+        {{ 'dashboard.system_status.title'|trans({}, 'admin') }}
+    </h2>
+
+    <div class="card">
+        <div class="card-body">
+            {% for message in systemMessages %}
+                <div class="alert alert-{{ message.type.value }} mb-3" role="alert">
+                    {{ message.message|trans }}
+                </div>
+            {% else %}
+                <div class="alert alert-success mb-0" role="status">
+                    {{ 'dashboard.system_status.all_ok'|trans({}, 'admin') }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

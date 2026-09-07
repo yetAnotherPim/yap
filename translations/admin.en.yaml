@@ -136,12 +136,17 @@ product:
         master_data: 'Master data'
         fields: 'Fields'
 
+dashboard:
+    title: 'Dashboard'
+    system_status:
+        title: 'System status'
+        input_vars:
+            message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
+    products:
+        latest: 'Latest products'
 
 general:
     labels:
         translation: 'Translation'
         locale: 'Locale'
         language: 'Language'
-
-
-

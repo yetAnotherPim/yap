@@ -246,11 +246,6 @@ class NumberFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('12,34');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(NumberField::class, $result);

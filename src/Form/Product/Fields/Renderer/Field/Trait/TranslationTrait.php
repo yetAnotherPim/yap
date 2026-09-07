@@ -72,6 +72,11 @@ trait TranslationTrait
 
         if (false === $field->getType()->isTranslatable()) {
             $element->addCssClass('translation-locale-spacer');
+
+            // disable non-translatable fields for reducing payload
+            $element->setFormTypeOption('attr', [
+                'disabled' => true,
+            ]);
         }
 
         $element->setFormTypeOption('row_attr', [

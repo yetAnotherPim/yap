@@ -40,7 +40,7 @@ final class ImageFieldRenderer implements FieldRendererInterface
                 'label' => $label,
                 'data' => $this->fileResolver->resolve($field->getValue(), FileType::IMAGE),
                 'mapped' => false,
-                'required' => $configuration->isRequired(),
+                'required' => null === $locale && $configuration->isRequired(),
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);

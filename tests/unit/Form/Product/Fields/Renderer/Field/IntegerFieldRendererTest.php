@@ -154,11 +154,6 @@ class IntegerFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('100');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(IntegerField::class, $result);

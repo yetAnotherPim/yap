@@ -126,6 +126,15 @@ product:
     updated_at: Обновлено
     master_data: Основные данные
     fields: Поля
+dashboard:
+  title: 'Dashboard'
+  system_status:
+    title: 'System status'
+    input_vars:
+      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
+  products:
+    latest: 'Latest products'
+
 general:
   labels:
     translation: Перевод

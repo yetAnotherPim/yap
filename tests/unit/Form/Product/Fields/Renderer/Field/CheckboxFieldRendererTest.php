@@ -154,11 +154,6 @@ class CheckboxFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(BooleanField::class, $result);

@@ -194,11 +194,6 @@ class ImageFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('2026/08/14/example.jpg');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(false);
-
         $this->fileResolver
             ->shouldReceive('getUploadDirectory')
             ->once()

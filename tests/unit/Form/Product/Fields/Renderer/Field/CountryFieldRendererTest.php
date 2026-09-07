@@ -154,11 +154,6 @@ class CountryFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('DE');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(false);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(CountryField::class, $result);

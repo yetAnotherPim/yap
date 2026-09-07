@@ -34,7 +34,7 @@ final class NumberFieldRenderer implements FieldRendererInterface
                 'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Number, $field->getType()->getDecimalSeparator()),
                 'mapped' => false,
-                'required' => $configuration->isRequired(),
+                'required' => null === $locale && $configuration->isRequired(),
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);

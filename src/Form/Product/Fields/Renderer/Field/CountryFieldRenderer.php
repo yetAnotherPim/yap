@@ -33,7 +33,7 @@ final class CountryFieldRenderer implements FieldRendererInterface
                 'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Country),
                 'mapped' => false,
-                'required' => $configuration->isRequired(),
+                'required' => null === $locale && $configuration->isRequired(),
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);

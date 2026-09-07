@@ -154,11 +154,6 @@ class TelephoneFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('+49123456789');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(TelephoneField::class, $result);

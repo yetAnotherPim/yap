@@ -11,8 +11,11 @@ use App\Controller\Admin\Settings\LocaleCrudController;
 use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Controller\Provider\DashboardStatisticsProvider;
+use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
 use App\Repository\LocaleRepository;
+use App\Repository\ProductRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -34,7 +37,20 @@ class IndexController extends AbstractDashboardController
         private readonly LocaleRepository $localeRepository,
         private readonly RequestStack $requestStack,
         private readonly Packages $assets,
+        private readonly DashboardStatisticsProvider $dashboardStatisticsProvider,
+        private readonly DashboardSystemStatusProvider $dashboardSystemStatusProvider,
     ) {
+    }
+
+    /**
+     * @throws \DateMalformedStringException
+     */
+    public function index(): Response
+    {
+        return $this->render('easyadmin/page/home.hwtml.twig', [
+            'statistics' => $this->dashboardStatisticsProvider->getStatistics(),
+            'systemMessages' => $this->dashboardSystemStatusProvider->getMessages()
+        ]);
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu
@@ -81,12 +97,6 @@ class IndexController extends AbstractDashboardController
     {
         return Assets::new()
             ->addAssetMapperEntry('admin');
-    }
-
-    public function index(): Response
-    {
-        return $this->render('@EasyAdmin/layout.html.twig', [
-        ]);
     }
 
     public function configureDashboard(): Dashboard

@@ -154,11 +154,6 @@ class ColorFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('#ffffff');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(ColorField::class, $result);

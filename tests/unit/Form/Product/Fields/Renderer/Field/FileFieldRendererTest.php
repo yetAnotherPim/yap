@@ -194,11 +194,6 @@ class FileFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('2026/08/14/example.pdf');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(false);
-
         $this->fileResolver
             ->shouldReceive('getUploadDirectory')
             ->once()

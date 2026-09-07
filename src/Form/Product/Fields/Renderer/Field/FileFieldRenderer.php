@@ -39,7 +39,7 @@ final class FileFieldRenderer implements FieldRendererInterface
                 'label' => $label,
                 'data' => $this->fileResolver->resolve($field->getValue(), FileType::FILE),
                 'mapped' => false,
-                'required' => $configuration->isRequired(),
+                'required' => null === $locale && $configuration->isRequired(),
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);

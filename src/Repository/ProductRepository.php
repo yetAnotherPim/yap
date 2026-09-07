@@ -17,4 +17,19 @@ class ProductRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Product::class);
     }
+
+    /**
+     * @throws \DateMalformedStringException
+     */
+    public function countCreatedWithinLastDays(int $days): int
+    {
+        $since = new \DateTimeImmutable(\sprintf('-%d days', $days));
+
+        return (int) $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->andWhere('p.createdAt >= :since')
+            ->setParameter('since', $since)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

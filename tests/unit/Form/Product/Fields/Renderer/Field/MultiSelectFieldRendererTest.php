@@ -207,11 +207,6 @@ class MultiSelectFieldRendererTest extends MockeryTestCase
             ->twice()
             ->andReturn($options);
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(ChoiceField::class, $result);

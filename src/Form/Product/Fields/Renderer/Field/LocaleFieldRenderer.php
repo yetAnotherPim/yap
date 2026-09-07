@@ -33,7 +33,7 @@ final class LocaleFieldRenderer implements FieldRendererInterface
                 'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Locale),
                 'mapped' => false,
-                'required' => $configuration->isRequired(),
+                'required' => null === $locale && $configuration->isRequired(),
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);

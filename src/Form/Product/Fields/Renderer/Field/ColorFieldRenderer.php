@@ -34,7 +34,7 @@ final class ColorFieldRenderer implements FieldRendererInterface
                 'label' => $label,
                 'data' => InputType::castValue($field->getValue(), InputType::Color),
                 'mapped' => false,
-                'required' => $configuration->isRequired(),
+                'required' => null === $locale && $configuration->isRequired(),
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);

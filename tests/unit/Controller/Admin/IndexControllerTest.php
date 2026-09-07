@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\unit\Controller\Admin;
 
 use App\Controller\Admin\IndexController;
+use App\Controller\Provider\DashboardStatisticsProvider;
+use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
 use App\Repository\LocaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -34,6 +36,12 @@ class IndexControllerTest extends MockeryTestCase
     /** @var Packages|MockInterface */
     private Packages $assets;
 
+    /** @var DashboardStatisticsProvider|MockInterface */
+    private DashboardStatisticsProvider $dashboardStatisticsProvider;
+
+    /** @var DashboardSystemStatusProvider|MockInterface */
+    private DashboardSystemStatusProvider $dashboardSystemStatusProvider;
+
     private IndexController $controller;
 
     public function setUp(): void
@@ -41,8 +49,16 @@ class IndexControllerTest extends MockeryTestCase
         $this->localeRepository = \Mockery::mock(LocaleRepository::class);
         $this->requestStack = \Mockery::mock(RequestStack::class);
         $this->assets = \Mockery::mock(Packages::class);
+        $this->dashboardStatisticsProvider = \Mockery::mock(DashboardStatisticsProvider::class);
+        $this->dashboardSystemStatusProvider = \Mockery::mock(DashboardSystemStatusProvider::class);
 
-        $this->controller = new IndexController($this->localeRepository, $this->requestStack, $this->assets);
+        $this->controller = new IndexController(
+            $this->localeRepository,
+            $this->requestStack,
+            $this->assets,
+            $this->dashboardStatisticsProvider,
+            $this->dashboardSystemStatusProvider
+        );
 
         parent::setUp();
     }
@@ -278,24 +294,51 @@ class IndexControllerTest extends MockeryTestCase
     {
         $expectedResponse = new Response();
 
-        $controller = \Mockery::mock(IndexController::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
 
-        $controller
+        $this->dashboardStatisticsProvider
+            ->shouldReceive('getStatistics')
+            ->once()
+            ->andReturn(['stat1' => 1]);
+
+        $this->dashboardSystemStatusProvider
+            ->shouldReceive('getMessages')
+            ->once()
+            ->andReturn([]);
+
+        $containerMock
+            ->shouldReceive('has')
+            ->with('twig')
+            ->andReturn(true);
+
+        $twigMock = \Mockery::mock(\Twig\Environment::class);
+        $containerMock
+            ->shouldReceive('get')
+            ->with('twig')
+            ->andReturn($twigMock);
+
+        $twigMock
             ->shouldReceive('render')
             ->once()
             ->with(
-                '@EasyAdmin/layout.html.twig',
-                []
+                'easyadmin/page/home.hwtml.twig',
+                [
+                    'statistics' => ['stat1' => 1],
+                    'systemMessages' => []
+                ]
             )
-            ->andReturn($expectedResponse);
+            ->andReturn('rendered content');
 
-        $response = $controller->index();
+        $response = $this->controller->index();
 
         $this->assertSame(
-            $expectedResponse,
-            $response
+            200,
+            $response->getStatusCode()
+        );
+        $this->assertSame(
+            'rendered content',
+            $response->getContent()
         );
     }
 }

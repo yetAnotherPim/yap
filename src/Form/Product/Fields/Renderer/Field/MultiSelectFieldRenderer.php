@@ -35,7 +35,7 @@ final class MultiSelectFieldRenderer implements FieldRendererInterface
                 'data' => InputType::castValue($field->getValue(), InputType::MultiSelect),
                 'choices' => array_combine($configuration->getOptions(), $configuration->getOptions()),
                 'mapped' => false,
-                'required' => $configuration->isRequired(),
+                'required' => null === $locale && $configuration->isRequired(),
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);

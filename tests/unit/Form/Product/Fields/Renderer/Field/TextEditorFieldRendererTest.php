@@ -154,11 +154,6 @@ class TextEditorFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('<p>Test content</p>');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(TextEditorField::class, $result);

@@ -154,11 +154,6 @@ class EmailFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('support@example.com');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(EmailField::class, $result);

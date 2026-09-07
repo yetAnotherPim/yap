@@ -183,11 +183,6 @@ class TimeFieldRendererTest extends MockeryTestCase
             ->once()
             ->andReturn('08:00:00');
 
-        $this->configuration
-            ->shouldReceive('isRequired')
-            ->once()
-            ->andReturn(true);
-
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 
         $this->assertInstanceOf(TimeField::class, $result);
