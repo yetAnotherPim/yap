@@ -31,7 +31,7 @@ final class UrlFieldRenderer implements FieldRendererInterface
         $element = UrlField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($field->getValue(), InputType::Url),
+                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::Url),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

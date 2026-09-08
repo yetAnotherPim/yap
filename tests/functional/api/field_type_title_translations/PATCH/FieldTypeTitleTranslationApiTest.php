@@ -16,15 +16,19 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Controller\Provider\DashboardStatisticsProvider;
+use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Entity\User\User;
+use App\Form\Product\Fields\Composer\ProductFieldsComposer;
+use App\Form\Product\Fields\Composer\Translation\ProductFieldTranslationComposer;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
-use App\Form\Product\Fields\Renderer\Translation\ProductFieldsTranslationRenderer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
+use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Localisation\Event\EventListener\LocaleListener;
@@ -36,6 +40,8 @@ use App\Repository\FieldTypeTitleTranslationRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\ProductRepository;
+use App\Repository\ProductTypeRepository;
 use App\Repository\UserRepository;
 use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
@@ -76,12 +82,22 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(User::class)]
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
-#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(ProductFieldsComposer::class)]
 #[UsesClass(RendererRegistry::class)]
 #[UsesClass(FieldSynchronizer::class)]
-#[UsesClass(ProductFieldsTranslationRenderer::class)]
+#[UsesClass(ProductFieldTranslationComposer::class)]
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(TitleTranslationSynchronizer::class)]
+#[UsesClass(DashboardSystemStatusProvider::class)]
+#[UsesClass(DashboardStatisticsProvider::class)]
+#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(FieldTranslationSynchronizer::class)]
+#[UsesClass(ProductRepository::class)]
+#[UsesClass(ProductTypeRepository::class)]
+#[UsesClass(UserRepository::class)]
+#[UsesClass(TitleTranslationSynchronizer::class)]
+#[UsesClass(TitleTranslationFieldRenderer::class)]
+#[UsesClass(ProductFieldTranslationComposer::class)]
 #[ResetDatabase]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {

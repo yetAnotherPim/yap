@@ -15,11 +15,18 @@ use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
 use App\Controller\Api\PluginWorkflowController;
+use App\Controller\Provider\DashboardStatisticsProvider;
+use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Plugin\Plugin;
+use App\Form\Product\Fields\Composer\ProductFieldsComposer;
+use App\Form\Product\Fields\Composer\Translation\ProductFieldTranslationComposer;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
+use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
+use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
+use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Kernel;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
@@ -32,9 +39,13 @@ use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
 use App\PluginManager\Event\WorkflowEvent\PluginActivateEvent;
 use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
+use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\ProductRepository;
+use App\Repository\ProductTypeRepository;
+use App\Repository\UserRepository;
 use App\Tests\helper\Trait\DatabaseTrait;
 use App\Tests\helper\Trait\Integration\PluginCommandTrait;
 use App\Tests\TestData\Factory\Plugin\PluginFactory;
@@ -81,9 +92,20 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[UsesClass(IndexController::class)]
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
-#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(ProductFieldsComposer::class)]
 #[UsesClass(RendererRegistry::class)]
 #[UsesClass(FieldSynchronizer::class)]
+#[UsesClass(DashboardSystemStatusProvider::class)]
+#[UsesClass(DashboardStatisticsProvider::class)]
+#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(FieldTranslationSynchronizer::class)]
+#[UsesClass(ProductRepository::class)]
+#[UsesClass(ProductTypeRepository::class)]
+#[UsesClass(FieldTypeRepository::class)]
+#[UsesClass(UserRepository::class)]
+#[UsesClass(TitleTranslationSynchronizer::class)]
+#[UsesClass(TitleTranslationFieldRenderer::class)]
+#[UsesClass(ProductFieldTranslationComposer::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]

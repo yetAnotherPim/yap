@@ -6,6 +6,7 @@ namespace App\Tests\unit\Form\Product\Fields\Renderer\Field;
 
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
+use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
@@ -163,6 +164,8 @@ class TimeFieldRendererTest extends MockeryTestCase
         $locale = \Mockery::mock(Locale::class);
         $locale->shouldReceive('getId')->andReturn('de');
 
+        $fieldValueTranslation = \Mockery::mock(FieldValueTranslation::class);
+
         $this->field
             ->shouldReceive('getType')
             ->twice()
@@ -179,6 +182,11 @@ class TimeFieldRendererTest extends MockeryTestCase
             ->andReturn(true);
 
         $this->field
+            ->shouldReceive('getTranslationByLocale')
+            ->once()
+            ->andReturn($fieldValueTranslation);
+
+        $fieldValueTranslation
             ->shouldReceive('getValue')
             ->once()
             ->andReturn('08:00:00');

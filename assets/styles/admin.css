@@ -69,6 +69,6 @@ div.field-collection-item > div.accordion-item * .col-form-label.required:after 
     opacity: .7;
 }
 
-.translation-locale-spacer {
+.translation-locale-spacer, .translation-field-spacer {
     visibility: hidden;
 }

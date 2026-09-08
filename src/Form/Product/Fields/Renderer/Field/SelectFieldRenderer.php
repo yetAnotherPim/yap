@@ -31,7 +31,7 @@ final class SelectFieldRenderer implements FieldRendererInterface
         $element = ChoiceField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($field->getValue(), InputType::Select),
+                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::Select),
                 'choices' => array_combine($configuration->getOptions(), $configuration->getOptions()),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),

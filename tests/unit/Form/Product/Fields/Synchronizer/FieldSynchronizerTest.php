@@ -11,7 +11,9 @@ use App\Entity\Product\Product;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Fields\Resolver\FieldResolver;
+use App\Form\Product\Fields\Synchronizer\Extractor\FieldValueExtractor;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
+use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -26,6 +28,10 @@ class FieldSynchronizerTest extends MockeryTestCase
 
     private FieldResolver&MockInterface $fieldResolver;
 
+    private FieldValueExtractor&MockInterface $fieldValueExtractor;
+
+    private FieldTranslationSynchronizer&MockInterface $fieldTranslationSynchronizer;
+
     private FieldSynchronizer $synchronizer;
 
     protected function setUp(): void
@@ -35,9 +41,11 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->product = \Mockery::mock(Product::class);
         $this->productType = \Mockery::mock(ProductType::class);
         $this->fieldResolver = \Mockery::mock(FieldResolver::class);
+        $this->fieldValueExtractor = \Mockery::mock(FieldValueExtractor::class);
+        $this->fieldTranslationSynchronizer = \Mockery::mock(FieldTranslationSynchronizer::class);
 
         $this->synchronizer = new FieldSynchronizer(
-            $this->fieldResolver
+            $this->fieldResolver, $this->fieldValueExtractor, $this->fieldTranslationSynchronizer
         );
     }
 
@@ -148,6 +156,11 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->once()
             ->with($field);
 
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, null, []);
+
         $this->synchronizer->synchronizeFields($this->product);
     }
 
@@ -174,18 +187,13 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(5)
+            ->once()
             ->andReturn(InputType::Text);
 
         $configuration
             ->shouldReceive('getDefaultValue')
             ->once()
             ->andReturn('Default');
-
-        $fieldType
-            ->shouldReceive('getCode')
-            ->once()
-            ->andReturn('title');
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -202,6 +210,17 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType, ['field_title' => 'Test value'], [])
+            ->andReturn('Test value');
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, ['field_title' => 'Test value'], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -232,18 +251,13 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(5)
+            ->once()
             ->andReturn(InputType::Text);
 
         $configuration
             ->shouldReceive('getDefaultValue')
             ->once()
             ->andReturn(null);
-
-        $fieldType
-            ->shouldReceive('getCode')
-            ->once()
-            ->andReturn('title');
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -259,6 +273,17 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType, ['field_title' => ''], [])
+            ->andReturn('');
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, ['field_title' => ''], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -289,18 +314,13 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->twice()
+            ->once()
             ->andReturn(InputType::CheckBox);
 
         $configuration
             ->shouldReceive('getDefaultValue')
             ->once()
             ->andReturn(null);
-
-        $fieldType
-            ->shouldReceive('getCode')
-            ->once()
-            ->andReturn('active');
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -316,6 +336,17 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType, ['field_active' => '1'], [])
+            ->andReturn('1');
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, ['field_active' => '1'], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -346,18 +377,13 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->twice()
+            ->once()
             ->andReturn(InputType::CheckBox);
 
         $configuration
             ->shouldReceive('getDefaultValue')
             ->once()
             ->andReturn(null);
-
-        $fieldType
-            ->shouldReceive('getCode')
-            ->once()
-            ->andReturn('active');
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -373,6 +399,17 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType, [], [])
+            ->andReturn(null);
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, null, []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -403,18 +440,13 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(5)
+            ->once()
             ->andReturn(InputType::MultiSelect);
 
         $configuration
             ->shouldReceive('getDefaultValue')
             ->once()
             ->andReturn(null);
-
-        $fieldType
-            ->shouldReceive('getCode')
-            ->once()
-            ->andReturn('tags');
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -430,6 +462,17 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType, ['field_tags' => ['tag1', 'tag2']], [])
+            ->andReturn('tag1,tag2');
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, ['field_tags' => ['tag1', 'tag2']], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -460,18 +503,13 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(5)
+            ->once()
             ->andReturn(InputType::MultiSelect);
 
         $configuration
             ->shouldReceive('getDefaultValue')
             ->once()
             ->andReturn(null);
-
-        $fieldType
-            ->shouldReceive('getCode')
-            ->once()
-            ->andReturn('tags');
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -487,6 +525,17 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType, ['field_tags' => ''], [])
+            ->andReturn('');
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, ['field_tags' => ''], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -515,13 +564,11 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->andReturn(new ArrayCollection([$config1, $config2]));
 
         $config1->shouldReceive('getFieldType')->once()->andReturn($fieldType1);
-        $fieldType1->shouldReceive('getInputType')->times(5)->andReturn(InputType::Text);
-        $fieldType1->shouldReceive('getCode')->once()->andReturn('title');
+        $fieldType1->shouldReceive('getInputType')->once()->andReturn(InputType::Text);
         $config1->shouldReceive('getDefaultValue')->once()->andReturn(null);
 
         $config2->shouldReceive('getFieldType')->once()->andReturn($fieldType2);
-        $fieldType2->shouldReceive('getInputType')->twice()->andReturn(InputType::CheckBox);
-        $fieldType2->shouldReceive('getCode')->once()->andReturn('active');
+        $fieldType2->shouldReceive('getInputType')->once()->andReturn(InputType::CheckBox);
         $config2->shouldReceive('getDefaultValue')->once()->andReturn(null);
 
         $this->fieldResolver->shouldReceive('resolve')->twice()->andReturn($field1, $field2);
@@ -531,6 +578,28 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $this->product->shouldReceive('addField')->once()->with($field1);
         $this->product->shouldReceive('addField')->once()->with($field2);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType1, ['field_title' => 'New Title', 'field_active' => '1'], [])
+            ->andReturn('New Title');
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType2, ['field_title' => 'New Title', 'field_active' => '1'], [])
+            ->andReturn('1');
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field1, ['field_title' => 'New Title', 'field_active' => '1'], []);
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field2, ['field_title' => 'New Title', 'field_active' => '1'], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -569,13 +638,8 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(3)
-            ->andReturn(InputType::File);
-
-        $fieldType
-            ->shouldReceive('getCode')
             ->once()
-            ->andReturn('file');
+            ->andReturn(InputType::File);
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -592,6 +656,29 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with(
+                $fieldType,
+                ['field_file' => ['deleted_files' => '']],
+                [
+                    'field_file' => '2026/08/14/indexcontroller-file.pdf',
+                ]
+            )
+            ->andReturn('2026/08/14/indexcontroller-file.pdf');
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with(
+                $field,
+                ['field_file' => ['deleted_files' => '']],
+                [
+                    'field_file' => '2026/08/14/indexcontroller-file.pdf',
+                ]
+            );
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -630,13 +717,8 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(3)
-            ->andReturn(InputType::File);
-
-        $fieldType
-            ->shouldReceive('getCode')
             ->once()
-            ->andReturn('file');
+            ->andReturn(InputType::File);
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -653,6 +735,17 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType, ['field_file' => ['deleted_files' => '']], [])
+            ->andReturn(null);
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, ['field_file' => ['deleted_files' => '']], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -689,13 +782,8 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(4)
-            ->andReturn(InputType::Image);
-
-        $fieldType
-            ->shouldReceive('getCode')
             ->once()
-            ->andReturn('image');
+            ->andReturn(InputType::Image);
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -712,6 +800,29 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with(
+                $fieldType,
+                ['field_image' => ['deleted_files' => '']],
+                [
+                    'field_image' => '2026/08/14/product-image.jpg',
+                ],
+            )
+            ->andReturn('2026/08/14/product-image.jpg');
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with(
+                $field,
+                ['field_image' => ['deleted_files' => '']],
+                [
+                    'field_image' => '2026/08/14/product-image.jpg',
+                ],
+            );
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -750,13 +861,8 @@ class FieldSynchronizerTest extends MockeryTestCase
 
         $fieldType
             ->shouldReceive('getInputType')
-            ->times(5)
-            ->andReturn(InputType::Text);
-
-        $fieldType
-            ->shouldReceive('getCode')
             ->once()
-            ->andReturn('title');
+            ->andReturn(InputType::Text);
 
         $this->fieldResolver
             ->shouldReceive('resolve')
@@ -773,6 +879,17 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->shouldReceive('addField')
             ->once()
             ->with($field);
+
+        $this->fieldValueExtractor
+            ->shouldReceive('extract')
+            ->once()
+            ->with($fieldType, ['field_title' => ['unexpected', 'array']], [])
+            ->andReturn(null);
+
+        $this->fieldTranslationSynchronizer
+            ->shouldReceive('synchronizeTranslation')
+            ->once()
+            ->with($field, ['field_title' => ['unexpected', 'array']], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,

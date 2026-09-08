@@ -58,7 +58,7 @@ trait TitleTranslationTrait
 
         $this->assertSame(
             'Deutscher Titel',
-            $type->getTranslatedTitle('de_DE'),
+            $type->getTranslatedTitleByLocale('de_DE'),
         );
     }
 
@@ -91,7 +91,7 @@ trait TitleTranslationTrait
 
         $this->assertSame(
             'Default title',
-            $type->getTranslatedTitle('de_DE'),
+            $type->getTranslatedTitleByLocale('de_DE'),
         );
     }
 
@@ -126,7 +126,7 @@ trait TitleTranslationTrait
 
         $this->assertSame(
             'Default title',
-            $type->getTranslatedTitle('de_DE'),
+            $type->getTranslatedTitleByLocale('de_DE'),
         );
     }
 

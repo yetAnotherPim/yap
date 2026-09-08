@@ -35,10 +35,9 @@ final class ImageFieldRenderer implements FieldRendererInterface
         $element = ImageField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setUploadDir($this->fileResolver->getUploadDirectory(FileType::IMAGE))
             ->setUploadedFileNamePattern('[YYYY]/[MM]/[DD]/[slug]-[contenthash].[extension]')
-
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => $this->fileResolver->resolve($field->getValue(), FileType::IMAGE),
+                'data' => $this->fileResolver->resolve($this->getFieldValue($field, $locale), FileType::IMAGE),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

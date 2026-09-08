@@ -37,7 +37,7 @@ final class FileFieldRenderer implements FieldRendererInterface
             ->setUploadedFileNamePattern('[YYYY]/[MM]/[DD]/[slug]-[contenthash].[extension]')
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => $this->fileResolver->resolve($field->getValue(), FileType::FILE),
+                'data' => $this->fileResolver->resolve($this->getFieldValue($field, $locale), FileType::FILE),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

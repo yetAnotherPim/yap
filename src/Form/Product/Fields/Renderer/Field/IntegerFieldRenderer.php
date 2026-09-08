@@ -31,7 +31,7 @@ final class IntegerFieldRenderer implements FieldRendererInterface
         $element = IntegerField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($field->getValue(), InputType::Integer),
+                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::Integer),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

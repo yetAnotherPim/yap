@@ -9,7 +9,7 @@ use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
-use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
+use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Repository\IdentifierTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,8 +48,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[UsesClass(TimestampableEntity::class)]
 class ProductCrudControllerTest extends MockeryTestCase
 {
-    /** @var ProductFieldsRenderer&MockInterface */
-    private ProductFieldsRenderer $productFieldsRenderer;
+    /** @var ProductFieldsComposer&MockInterface */
+    private ProductFieldsComposer $productFieldsRenderer;
     /** @var IdentifierTypeRepository&MockInterface */
     private IdentifierTypeRepository $identifierTypeRepository;
 
@@ -62,7 +62,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->productFieldsRenderer = \Mockery::mock(ProductFieldsRenderer::class);
+        $this->productFieldsRenderer = \Mockery::mock(ProductFieldsComposer::class);
         $this->identifierTypeRepository = \Mockery::mock(IdentifierTypeRepository::class);
         $this->fieldSynchronizer = \Mockery::mock(FieldSynchronizer::class);
         $this->translator = \Mockery::mock(TranslatorInterface::class);
@@ -481,7 +481,7 @@ class ProductCrudControllerTest extends MockeryTestCase
         $product = \Mockery::mock(Product::class);
 
         $this->productFieldsRenderer
-            ->shouldReceive('render')
+            ->shouldReceive('compose')
             ->once()
             ->with($product)
             ->andReturn([]);
@@ -537,7 +537,7 @@ class ProductCrudControllerTest extends MockeryTestCase
         );
 
         $this->productFieldsRenderer
-            ->shouldNotReceive('render');
+            ->shouldNotReceive('compose');
 
         $controller = \Mockery::mock(
             ProductCrudController::class,

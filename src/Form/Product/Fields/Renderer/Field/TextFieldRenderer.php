@@ -31,7 +31,7 @@ final class TextFieldRenderer implements FieldRendererInterface
         $element = TextField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($field->getValue(), InputType::String),
+                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::String),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

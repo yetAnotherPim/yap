@@ -19,7 +19,7 @@ use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
-use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
+use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
@@ -64,7 +64,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[UsesClass(IndexController::class)]
 #[UsesClass(Roles::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
-#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(ProductFieldsComposer::class)]
 #[UsesClass(RendererRegistry::class)]
 #[UsesClass(FieldSynchronizer::class)]
 #[UsesClass(TitleTranslationFieldRenderer::class)]

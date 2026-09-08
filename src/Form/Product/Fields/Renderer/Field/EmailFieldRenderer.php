@@ -31,7 +31,7 @@ final class EmailFieldRenderer implements FieldRendererInterface
         $element = EmailField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($field->getValue(), InputType::Email),
+                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::Email),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

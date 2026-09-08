@@ -55,7 +55,7 @@ class ProductTypeCrudController extends AbstractCrudController
                 TextField::new('code', new TranslatableMessage('product_type.labels.code', [], 'admin')),
                 TextField::new('title', new TranslatableMessage('product_type.labels.title', [], 'admin'))
                     ->formatValue(
-                        fn (?string $value, ProductType $productType): string => $productType->getTranslatedTitle($this->translator->getLocale()),
+                        fn (?string $value, ProductType $productType): string => $productType->getTranslatedTitleByLocale($this->translator->getLocale()),
                     ),
             ];
         }
@@ -66,7 +66,7 @@ class ProductTypeCrudController extends AbstractCrudController
             TextField::new('code', new TranslatableMessage('product_type.labels.code', [], 'admin')),
             TextField::new('title', new TranslatableMessage('product_type.labels.title', [], 'admin'))
                 ->formatValue(
-                    fn (?string $value, ProductType $productType): string => $productType->getTranslatedTitle($this->translator->getLocale()),
+                    fn (?string $value, ProductType $productType): string => $productType->getTranslatedTitleByLocale($this->translator->getLocale()),
                 ),
             FormField::addColumn(6),
         ];
@@ -91,7 +91,7 @@ class ProductTypeCrudController extends AbstractCrudController
             ->addCssClass('sortable-collection')
             ->setEntryToStringMethod(
                 fn (ProductTypeFieldConfiguration $productTypeFieldConfiguration): string => (null !== $productTypeFieldConfiguration->getFieldType())
-                    ? $productTypeFieldConfiguration->getFieldType()->getTranslatedTitle(
+                    ? $productTypeFieldConfiguration->getFieldType()->getTranslatedTitleByLocale(
                         $this->translator->getLocale(),
                     ).' ('.$productTypeFieldConfiguration->getFieldType()->getCode().' - '.$productTypeFieldConfiguration->getFieldType()->getInputType()->trans($this->translator).')'
                     : ''

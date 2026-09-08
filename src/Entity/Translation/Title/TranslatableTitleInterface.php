@@ -31,5 +31,5 @@ interface TranslatableTitleInterface
      */
     public function createTitleTranslation(): TitleTranslationInterface;
 
-    public function getTranslatedTitle(string $locale): ?string;
+    public function getTranslatedTitleByLocale(string $locale): ?string;
 }

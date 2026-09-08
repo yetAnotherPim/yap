@@ -71,7 +71,7 @@ trait TranslationTrait
         }
 
         if (false === $field->getType()->isTranslatable()) {
-            $element->addCssClass('translation-locale-spacer');
+            $element->addCssClass('translation-field-spacer');
 
             // disable non-translatable fields for reducing payload
             $element->setFormTypeOption('attr', [
@@ -85,5 +85,14 @@ trait TranslationTrait
         ]);
 
         return $element;
+    }
+
+    protected function getFieldValue(Field $field, ?Locale $locale): ?string
+    {
+        if (null === $locale) {
+            return $field->getValue();
+        }
+
+        return $field->getTranslationByLocale($locale->getId())?->getValue();
     }
 }

@@ -14,3 +14,4 @@ Cron für Markplätze (Produktdaten)
 Stockmodul - Referenz für Bestandsänderung (History)
 Import/Export Shopify
 Import/Export Shopware
+Associated Entities -> like Manufacturer

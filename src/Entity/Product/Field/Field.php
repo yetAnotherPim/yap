@@ -16,6 +16,7 @@ use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
+use App\Entity\Translation\Field\FieldValueTranslationTrait;
 use App\Repository\FieldRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -45,6 +46,8 @@ use Symfony\Component\Uid\Uuid;
 #[Delete]
 class Field extends RelatedTimestampableEntity
 {
+    use FieldValueTranslationTrait;
+
     protected array $updatableRelations = [
         Product::class => 'product',
     ];

@@ -32,7 +32,7 @@ final class MultiSelectFieldRenderer implements FieldRendererInterface
             ->setFormTypeOptions([
                 'multiple' => true,
                 'label' => $label,
-                'data' => InputType::castValue($field->getValue(), InputType::MultiSelect),
+                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::MultiSelect),
                 'choices' => array_combine($configuration->getOptions(), $configuration->getOptions()),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),

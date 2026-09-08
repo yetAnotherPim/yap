@@ -7,7 +7,7 @@ namespace App\Controller\Admin\Products;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
-use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
+use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Repository\IdentifierTypeRepository;
 use Doctrine\Common\Collections\Collection;
@@ -45,7 +45,7 @@ class ProductCrudController extends AbstractCrudController
 
     public function __construct(
         private readonly IdentifierTypeRepository $identifierTypeRepository,
-        private readonly ProductFieldsRenderer $productFieldsRenderer,
+        private readonly ProductFieldsComposer $productFieldsComposer,
         private readonly FieldSynchronizer $fieldSynchronizer,
         private readonly TranslatorInterface $translator,
     ) {
@@ -101,7 +101,7 @@ class ProductCrudController extends AbstractCrudController
                     ),
                 AssociationField::new('productType', new TranslatableMessage('product.labels.product_type', [], 'admin'))
                     ->formatValue(
-                        fn (ProductType $productType): string => $productType->getTranslatedTitle($this->translator->getLocale())
+                        fn (ProductType $productType): string => $productType->getTranslatedTitleByLocale($this->translator->getLocale())
                     ),
                 DateTimeField::new('createdAt', new TranslatableMessage('product.labels.created_at', [], 'admin')),
                 DateTimeField::new('updatedAt', new TranslatableMessage('product.labels.updated_at', [], 'admin')),
@@ -113,7 +113,7 @@ class ProductCrudController extends AbstractCrudController
             FormField::addTab(new TranslatableMessage('product.labels.master_data', [], 'admin')),
             AssociationField::new('productType', new TranslatableMessage('product.labels.product_type', [], 'admin'))
                 ->autocomplete(
-                    callback: fn (ProductType $productType): string => $productType->getTranslatedTitle($this->translator->getLocale())
+                    callback: fn (ProductType $productType): string => $productType->getTranslatedTitleByLocale($this->translator->getLocale())
                 )
                 ->setDisabled(Crud::PAGE_EDIT === $pageName),
             CollectionField::new('identifiers', new TranslatableMessage('product.labels.identifiers', [], 'admin'))
@@ -142,7 +142,7 @@ class ProductCrudController extends AbstractCrudController
                 return $fields;
             }
 
-            $fields = array_merge($fields, $this->productFieldsRenderer->render($product));
+            $fields = array_merge($fields, $this->productFieldsComposer->compose($product));
         }
 
         return $fields;

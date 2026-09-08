@@ -203,7 +203,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->andReturn(InputType::CheckBox);
 
         $fieldType
-            ->shouldReceive('getTranslatedTitle')
+            ->shouldReceive('getTranslatedTitleByLocale')
             ->once()
             ->andReturn('Boolean field');
 
