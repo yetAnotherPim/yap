@@ -94,10 +94,6 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(FieldTranslationSynchronizer::class)]
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductTypeRepository::class)]
-#[UsesClass(UserRepository::class)]
-#[UsesClass(TitleTranslationSynchronizer::class)]
-#[UsesClass(TitleTranslationFieldRenderer::class)]
-#[UsesClass(ProductFieldTranslationComposer::class)]
 #[ResetDatabase]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {
