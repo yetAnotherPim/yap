@@ -24,11 +24,11 @@ class FieldTranslationSynchronizer
      */
     public function synchronizeTranslation(Field $field, ?array $requestData = null, array $uploadedFilePaths = []): void
     {
-        $locales = $this->localeRepository->getAvailableContentTranslationLocales();
-
         if (false === $field->getType()->isTranslatable()) {
             return;
         }
+
+        $locales = $this->localeRepository->getAvailableContentTranslationLocales();
 
         foreach ($locales as $locale) {
             // TODO: set defaultValue

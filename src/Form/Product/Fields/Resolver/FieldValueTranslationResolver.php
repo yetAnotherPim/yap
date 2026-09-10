@@ -13,10 +13,7 @@ class FieldValueTranslationResolver
     public function resolve(Field $field, Locale $locale, ?string $defaultValue = null): FieldValueTranslation
     {
         $fieldValueTranslation = $field
-            ->getTranslations()
-            ->findFirst(
-                static fn (int $key, FieldValueTranslation $value): bool => $value->getLocale() === $locale
-            );
+            ->getTranslationByLocale($locale->getId());
 
         if ($fieldValueTranslation instanceof FieldValueTranslation) {
             return $fieldValueTranslation;

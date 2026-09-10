@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Entity\Product\Field;
 
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\Enum\InputType;
@@ -41,6 +42,39 @@ class FieldTest extends MockeryTestCase
     {
         $entity = new Field();
         $this->assertEquals([Product::class => 'product'], $entity->getUpdatableRelations());
+    }
+
+    public function testGetTranslatedTitleReturnsTranslationForLocale(): void
+    {
+        $locale = \Mockery::mock(Locale::class);
+        $locale
+            ->shouldReceive('getId')
+            ->andReturn('de_DE');
+
+        $translation = \Mockery::mock(FieldValueTranslation::class);
+        $translation
+            ->shouldReceive('getLocale')
+            ->andReturn($locale);
+
+        $field = new Field()
+            ->setValue('Default value');
+
+        $translation
+            ->shouldReceive('setField')
+            ->once()
+            ->with($field)
+            ->andReturn($translation);
+
+        $field->addTranslation($translation);
+
+        $this->assertNull(
+            $field->getTranslationByLocale('en_GB'),
+        );
+
+        $this->assertSame(
+            $translation,
+            $field->getTranslationByLocale('de_DE'),
+        );
     }
 
     /**
