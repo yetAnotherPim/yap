@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Programatutako zereginak ez dira exekutatu azken 24 orduetan.'

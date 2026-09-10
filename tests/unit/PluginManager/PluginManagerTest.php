@@ -489,6 +489,36 @@ class PluginManagerTest extends MockeryTestCase
             ->andReturn($definitionMock);
 
         $container
+            ->shouldReceive('prependExtensionConfig')
+            ->once()
+            ->with(
+                'framework',
+                \Mockery::on(
+                    static function (array $config): bool {
+                        /** @var array{
+                         *     translator?: array{
+                         *         paths?: list<mixed>
+                         *     }
+                         * } $config
+                         */
+                        $path = $config['translator']['paths'][0] ?? null;
+
+                        if (!\is_string($path)) {
+                            return false;
+                        }
+
+                        $path = str_replace('\\', '/', $path);
+
+                        return str_ends_with(
+                            $path,
+                            '/plugins/SamplePlugin/translations',
+                        );
+                    }
+                ),
+            )
+            ->andReturn($definitionMock);
+
+        $container
             ->shouldReceive('fileExists')
             ->once()
             ->with(\Mockery::type('string'))
@@ -620,6 +650,36 @@ class PluginManagerTest extends MockeryTestCase
             ->once()
             ->with('twig.loader.native_filesystem')
             ->andThrow(new ServiceNotFoundException('twig.loader.native_filesystem'));
+
+        $container
+            ->shouldReceive('prependExtensionConfig')
+            ->once()
+            ->with(
+                'framework',
+                \Mockery::on(
+                    static function (array $config): bool {
+                        /** @var array{
+                         *     translator?: array{
+                         *         paths?: list<mixed>
+                         *     }
+                         * } $config
+                         */
+                        $path = $config['translator']['paths'][0] ?? null;
+
+                        if (!\is_string($path)) {
+                            return false;
+                        }
+
+                        $path = str_replace('\\', '/', $path);
+
+                        return str_ends_with(
+                            $path,
+                            '/plugins/SamplePlugin/translations',
+                        );
+                    }
+                ),
+            )
+            ->andReturn($definitionMock);
 
         $container
             ->shouldReceive('fileExists')

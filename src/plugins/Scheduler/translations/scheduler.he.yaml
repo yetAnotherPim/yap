@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'המשימות המתוזמנות לא הופעלו במהלך 24 השעות האחרונות.'

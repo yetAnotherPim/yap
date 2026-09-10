@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Suplanuotos užduotys nebuvo vykdomos per pastarąsias 24 valandas.'

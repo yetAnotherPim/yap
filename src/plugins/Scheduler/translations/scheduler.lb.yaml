@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Déi geplangten Aufgabe goufen an de leschte 24 Stonnen net ausgefouert.'

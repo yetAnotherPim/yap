@@ -30,12 +30,10 @@ use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
-use App\Kernel;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
-use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
 use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
 use App\plugins\SamplePlugin\Command\SampleCommand;
@@ -52,7 +50,6 @@ use App\Repository\ProductTypeRepository;
 use App\Repository\UserRepository;
 use App\Tests\helper\Trait\Api\AuthTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -67,12 +64,10 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[CoversClass(Plugin::class)]
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(PluginManager::class)]
-#[CoversClass(PluginLoader::class)]
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(CacheClearer::class)]
 #[CoversClass(CacheClearerDecorator::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
-#[CoversMethod(Kernel::class, 'build')]
 // Deleting the cache is causing instantiation of following classes
 #[UsesClass(FieldTypeCrudController::class)]
 #[UsesClass(IdentifierCrudController::class)]
@@ -104,6 +99,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductTypeRepository::class)]
 #[UsesClass(FieldTypeRepository::class)]
+#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 #[ResetDatabase]
 class PluginTest extends ApiTestCase
 {
@@ -153,7 +149,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
 
         $this->client->request(
             'GET',
@@ -165,7 +161,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
     }
 
     /**
@@ -217,8 +213,8 @@ class PluginTest extends ApiTestCase
 
         $container = self::getContainer();
 
+        $this->assertContains(SampleController::class, $container->getServiceIds());
         $this->assertArrayHasKey(SampleCommand::class, $container->getRemovedIds());
-        $this->assertArrayHasKey(SampleController::class, $container->getRemovedIds());
         $this->assertArrayHasKey(ServiceDecoration::class, $container->getRemovedIds());
         $this->assertArrayHasKey(SampleEntity::class, $container->getRemovedIds());
         $this->assertArrayHasKey(SampleRepository::class, $container->getRemovedIds());
@@ -233,7 +229,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
     }
 
     /**

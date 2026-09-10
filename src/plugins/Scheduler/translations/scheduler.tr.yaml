@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Zamanlanmış görevler son 24 saat içinde çalıştırılmadı.'

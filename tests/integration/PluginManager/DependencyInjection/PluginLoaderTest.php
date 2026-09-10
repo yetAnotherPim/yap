@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\integration\PluginManager\DependencyInjection\CompilerPass;
+namespace App\Tests\integration\PluginManager\DependencyInjection;
 
-use App\Kernel;
-use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
 use App\PluginManager\Plugin\PluginInterface;
 use App\PluginManager\PluginManager;
 use App\plugins\SamplePlugin\Command\SampleCommand;
@@ -19,13 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Kernel\KernelInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-#[CoversClass(PluginLoader::class)]
 #[CoversClass(PluginManager::class)]
-#[CoversClass(Kernel::class)]
 class PluginLoaderTest extends KernelTestCase
 {
-    private const string DUMPFILE_PATH = __DIR__.'/../../../../../var/plugin_configuration/test_plugin_configuration';
-    private const string VAR_PATH = __DIR__.'/../../../../../var/';
+    private const string DUMPFILE_PATH = __DIR__.'/../../../../var/plugin_configuration/test_plugin_configuration';
+    private const string VAR_PATH = __DIR__.'/../../../../var/';
 
     public function setUp(): void
     {
@@ -71,9 +67,9 @@ class PluginLoaderTest extends KernelTestCase
 
         $this->assertTrue($container->getParameter('plugins_loaded_successfully'));
 
-        /* services aren't public, but if they have been removed, definitions have been loaded successfully */
+        /* services except controllers aren't public, but if they have been removed, definitions have been loaded successfully */
+        $this->assertContains(SampleController::class, $container->getServiceIds());
         $this->assertArrayHasKey(SampleCommand::class, $container->getRemovedIds());
-        $this->assertArrayHasKey(SampleController::class, $container->getRemovedIds());
         $this->assertArrayHasKey(ServiceDecoration::class, $container->getRemovedIds());
         $this->assertArrayHasKey(SampleEntity::class, $container->getRemovedIds());
         $this->assertArrayHasKey(SampleRepository::class, $container->getRemovedIds());

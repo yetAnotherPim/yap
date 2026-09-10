@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Sarcinile programate nu au fost executate în ultimele 24 de ore.'

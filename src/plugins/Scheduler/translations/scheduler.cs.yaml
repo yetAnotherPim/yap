@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Naplánované úlohy nebyly během posledních 24 hodin spuštěny.'

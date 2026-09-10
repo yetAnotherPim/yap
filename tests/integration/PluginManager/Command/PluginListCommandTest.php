@@ -31,7 +31,6 @@ use App\Kernel;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\Command\PluginsListCommand;
-use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
 use App\PluginManager\Event\Enum\Action;
 use App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
@@ -64,14 +63,12 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(PluginWorkflowEventListener::class)]
 #[CoversClass(PluginWorkflowController::class)]
 #[CoversClass(PluginManager::class)]
-#[CoversClass(PluginLoader::class)]
 #[CoversClass(PluginWorkflowException::class)]
 #[CoversClass(CacheClearer::class)]
 #[CoversClass(CacheClearerDecorator::class)]
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
-#[CoversClass(Kernel::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
 // Deleting the cache is causing instantiation of following classes
 #[UsesClass(FieldTypeCrudController::class)]
@@ -101,6 +98,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(TitleTranslationSynchronizer::class)]
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(ProductFieldTranslationComposer::class)]
+#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]

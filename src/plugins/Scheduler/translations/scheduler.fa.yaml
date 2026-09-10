@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'وظایف زمان‌بندی‌شده در ۲۴ ساعت گذشته اجرا نشده‌اند.'

@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Ajastettuja tehtäviä ei ole suoritettu viimeisten 24 tunnin aikana.'

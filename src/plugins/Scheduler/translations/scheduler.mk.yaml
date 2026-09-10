@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Закажаните задачи не се извршени во последните 24 часа.'

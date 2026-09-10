@@ -24,6 +24,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class PluginManager
 {
     private const string TWIG_FOLDER = 'twig/';
+
+    private const string TRANSLATION_FOLDER = 'translations/';
     private const string SERVICE_DEFINITION_FILE = 'services.yaml';
     private const string PLUGIN_FOLDER = __DIR__.'/../plugins/';
 
@@ -196,6 +198,7 @@ class PluginManager
         foreach ($activePlugins as $pluginName) {
             $serviceDefinitionFile = self::PLUGIN_FOLDER.trim($pluginName).'/'.self::SERVICE_DEFINITION_FILE;
             $twigFolder = realpath(self::PLUGIN_FOLDER.trim($pluginName).'/'.self::TWIG_FOLDER);
+            $translationFolder = realpath(self::PLUGIN_FOLDER.trim($pluginName).'/'.self::TRANSLATION_FOLDER);
 
             if (false === file_exists($serviceDefinitionFile)) {
                 continue;
@@ -211,6 +214,19 @@ class PluginManager
 
                 if (false !== $twigFolder && is_dir($twigFolder) && null !== $twigFilesystemLoaderDefinition) {
                     $twigFilesystemLoaderDefinition->addMethodCall('addPath', [$twigFolder]);
+                }
+
+                if (false !== $translationFolder && is_dir($translationFolder)) {
+                    $container->prependExtensionConfig(
+                        'framework',
+                        [
+                            'translator' => [
+                                'paths' => [
+                                    $translationFolder,
+                                ],
+                            ],
+                        ],
+                    );
                 }
             } catch (\Exception $e) {
                 $successfullyLoaded = false;

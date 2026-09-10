@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Az ütemezett feladatok nem futottak le az elmúlt 24 órában.'

@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Las tareas programadas no se han ejecutado en las últimas 24 horas.'

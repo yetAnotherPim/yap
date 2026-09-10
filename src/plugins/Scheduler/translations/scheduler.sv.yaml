@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'De schemalagda uppgifterna har inte körts under de senaste 24 timmarna.'

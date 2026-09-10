@@ -11,12 +11,10 @@ use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Plugin\Plugin;
 use App\Entity\User\User;
-use App\Kernel;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
-use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
 use App\PluginManager\Event\Enum\Action;
 use App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
@@ -34,7 +32,6 @@ use App\Tests\TestData\Factory\Plugin\PluginFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -59,12 +56,11 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
-#[CoversMethod(Kernel::class, 'build')]
-#[CoversClass(PluginLoader::class)]
 #[UsesClass(User::class)]
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
 #[UsesClass(Locale::class)]
+#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 class PluginTest extends ApiTestCase
 {
     use DatabaseTrait;
@@ -182,7 +178,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
 
         $dumpfileContent = file_get_contents(__DIR__.'/../../../../../var/plugin_configuration/test_plugin_configuration');
         $this->assertEmpty($dumpfileContent);
@@ -405,7 +401,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
         $content = $response->getContent();
         $this->assertStringContainsString('"active":false,"version":"0.9.0","updatable":false', $content);
         $this->assertStringNotContainsString('"installedVersion', $content);
@@ -420,7 +416,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
         $this->assertStringContainsString('"active":false', $response->getContent());
         $this->assertStringNotContainsString('"installedVersion', $content);
     }

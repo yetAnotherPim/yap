@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: 'Tugas terjadwal belum dijalankan dalam 24 jam terakhir.'

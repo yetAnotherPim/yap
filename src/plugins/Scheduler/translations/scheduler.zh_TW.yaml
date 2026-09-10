@@ -1,0 +1,4 @@
+yap_scheduler:
+    tasks:
+        warning:
+            not_active: '排程工作在過去 24 小時內未執行。'

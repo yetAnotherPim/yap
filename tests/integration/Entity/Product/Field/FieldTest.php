@@ -11,8 +11,6 @@ use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
-use App\Kernel;
-use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
 use App\PluginManager\PluginManager;
 use App\Repository\FieldRepository;
 use App\Repository\IdentifierRepository;
@@ -34,8 +32,6 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(IdentifierRepository::class)]
 #[UsesClass(FieldType::class)]
 #[UsesClass(FieldRepository::class)]
-#[UsesClass(Kernel::class)]
-#[UsesClass(PluginLoader::class)]
 #[UsesClass(PluginManager::class)]
 #[UsesClass(ProductType::class)]
 class FieldTest extends KernelTestCase

@@ -32,7 +32,6 @@ use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\Command\PluginActivateCommand;
 use App\PluginManager\Command\PluginsListCommand;
-use App\PluginManager\DependencyInjection\CompilerPass\PluginLoader;
 use App\PluginManager\Event\Enum\Action;
 use App\PluginManager\Event\WorkflowEvent\EventListener\PluginWorkflowEventListener;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
@@ -67,7 +66,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[CoversClass(PluginWorkflowEventListener::class)]
 #[CoversClass(PluginWorkflowController::class)]
 #[CoversClass(PluginManager::class)]
-#[CoversClass(PluginLoader::class)]
 #[CoversClass(PluginActivateEvent::class)]
 #[CoversClass(PluginWorkflowException::class)]
 #[CoversClass(CacheClearer::class)]
@@ -75,7 +73,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
-#[CoversClass(Kernel::class)]
 #[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
 // Deleting the cache is causing instantiation of following classes
@@ -106,6 +103,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[UsesClass(TitleTranslationSynchronizer::class)]
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(ProductFieldTranslationComposer::class)]
+#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]
