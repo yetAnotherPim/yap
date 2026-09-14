@@ -35,4 +35,4 @@ jobs:
 
             - name: Lint Yaml files
               run: |
-                  bin/console lint:yaml templates/
+                  bin/console lint:twig templates/ src/plugins/Scheduler/twig
