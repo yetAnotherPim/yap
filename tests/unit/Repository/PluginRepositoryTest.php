@@ -63,7 +63,7 @@ class PluginRepositoryTest extends MockeryTestCase
         $plugin1
             ->shouldReceive('getNamespace')
             ->once()
-            ->andReturn('App\\plugin\\SamplePlugin\\Plugin');
+            ->andReturn('App\\plugin\\Scheduler\\Plugin');
 
         $plugin2
             ->shouldReceive('getNamespace')
@@ -110,7 +110,7 @@ class PluginRepositoryTest extends MockeryTestCase
         $expressionMock
             ->shouldReceive('notIn')
             ->once()
-            ->with('plugin.namespace', ['App\\plugin\\SamplePlugin\\Plugin', 'App\\plugin\\TestPlugin\\Plugin'])
+            ->with('plugin.namespace', ['App\\plugin\\Scheduler\\Plugin', 'App\\plugin\\TestPlugin\\Plugin'])
             ->andReturn($expressionFunctionMock);
 
         $queryBuilderMock

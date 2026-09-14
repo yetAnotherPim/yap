@@ -8,13 +8,17 @@ use App\Controller\Admin\IndexController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
+use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\Repository\LocaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,6 +29,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatableMessage;
 
 #[CoversClass(IndexController::class)]
+#[UsesClass(MenuItemsConfiguredEvent::class)]
 class IndexControllerTest extends MockeryTestCase
 {
     /** @var LocaleRepository|MockInterface */
@@ -42,6 +47,9 @@ class IndexControllerTest extends MockeryTestCase
     /** @var DashboardSystemStatusProvider|MockInterface */
     private DashboardSystemStatusProvider $dashboardSystemStatusProvider;
 
+    /** @var EventDispatcherInterface|MockInterface */
+    private EventDispatcherInterface $eventDispatcher;
+
     private IndexController $controller;
 
     public function setUp(): void
@@ -51,13 +59,15 @@ class IndexControllerTest extends MockeryTestCase
         $this->assets = \Mockery::mock(Packages::class);
         $this->dashboardStatisticsProvider = \Mockery::mock(DashboardStatisticsProvider::class);
         $this->dashboardSystemStatusProvider = \Mockery::mock(DashboardSystemStatusProvider::class);
+        $this->eventDispatcher = \Mockery::mock(EventDispatcherInterface::class);
 
         $this->controller = new IndexController(
             $this->localeRepository,
             $this->requestStack,
             $this->assets,
             $this->dashboardStatisticsProvider,
-            $this->dashboardSystemStatusProvider
+            $this->dashboardSystemStatusProvider,
+            $this->eventDispatcher
         );
 
         parent::setUp();
@@ -203,9 +213,16 @@ class IndexControllerTest extends MockeryTestCase
 
     public function testConfigureMenuItemsReturnsExpectedMenuItems(): void
     {
-        $items = iterator_to_array(
-            $this->controller->configureMenuItems()
-        );
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->once()
+            ->with(\Mockery::type(MenuItemsConfiguredEvent::class))
+            ->andReturnUsing(
+                static fn (MenuItemsConfiguredEvent $event): MenuItemsConfiguredEvent => $event,
+            );
+
+        /** @var list<MenuItemInterface> $items */
+        $items = $this->controller->configureMenuItems();
 
         $this->assertCount(8, $items);
 
@@ -259,9 +276,16 @@ class IndexControllerTest extends MockeryTestCase
 
     public function testConfigureMenuItemsContainsTypeSubmenuEntries(): void
     {
-        $items = iterator_to_array(
-            $this->controller->configureMenuItems()
-        );
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->once()
+            ->with(\Mockery::type(MenuItemsConfiguredEvent::class))
+            ->andReturnUsing(
+                static fn (MenuItemsConfiguredEvent $event): MenuItemsConfiguredEvent => $event,
+            );
+
+        /** @var list<MenuItemInterface> $items */
+        $items = $this->controller->configureMenuItems();
 
         $submenu = $items[5];
 

@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: 'Scheduler'
     tasks:
+        title: 'Scheduled Tasks'
+        columns:
+            title: 'Title'
+            description: 'Description'
+        remove_obsolete_fields:
+            title: 'Remove obsolete fields'
+            description: 'Remove fields from products that are not assigned to the product''s type'
+        remove_obsolete_field_value_translations:
+            title: 'Remove obsolete field value translations'
+            description: 'Remove obsolete field value translations for fields that are not configured as translatable.'
+        label: 'Task'
         warning:
             not_active: 'Scheduled tasks have not been executed within the last 24 hours.'

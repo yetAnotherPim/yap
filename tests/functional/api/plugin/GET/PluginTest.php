@@ -36,11 +36,12 @@ use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\PluginManager;
 use App\PluginManager\State\PluginsRefreshProvider;
-use App\plugins\SamplePlugin\Command\SampleCommand;
-use App\plugins\SamplePlugin\Controller\SampleController;
-use App\plugins\SamplePlugin\Decoration\ServiceDecoration;
-use App\plugins\SamplePlugin\Entity\SampleEntity;
-use App\plugins\SamplePlugin\Repository\SampleRepository;
+use App\plugins\Scheduler\Controller\Admin\TasksController;
+use App\plugins\Scheduler\EventListener\MenuItemsConfiguredListener;
+use App\plugins\Scheduler\Provider\SystemStatus\TaskExecution;
+use App\plugins\Scheduler\Provider\TaskProvider;
+use App\plugins\Scheduler\Task\CleanUp\RemoveObsoleteFields;
+use App\plugins\Scheduler\Task\CleanUp\RemoveObsoleteFieldValueTranslations;
 use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
@@ -67,7 +68,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(CacheClearer::class)]
 #[CoversClass(CacheClearerDecorator::class)]
-#[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
+#[CoversClass(\App\plugins\Scheduler\Plugin::class)]
 // Deleting the cache is causing instantiation of following classes
 #[UsesClass(FieldTypeCrudController::class)]
 #[UsesClass(IdentifierCrudController::class)]
@@ -99,7 +100,6 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductTypeRepository::class)]
 #[UsesClass(FieldTypeRepository::class)]
-#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 #[ResetDatabase]
 class PluginTest extends ApiTestCase
 {
@@ -149,7 +149,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 3]);
+        $this->assertJsonContains(['totalItems' => 2]);
 
         $this->client->request(
             'GET',
@@ -161,7 +161,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 3]);
+        $this->assertJsonContains(['totalItems' => 2]);
     }
 
     /**
@@ -201,7 +201,7 @@ class PluginTest extends ApiTestCase
         new Filesystem()->remove(__DIR__.'/../../../../../var/cache/test');
         file_put_contents(
             __DIR__.'/../../../../../var/plugin_configuration/test_plugin_configuration',
-            implode(PHP_EOL, ['SamplePlugin', 'TestPlugin'])
+            implode(PHP_EOL, ['Scheduler', 'TestPlugin'])
         );
 
         self::getContainer()->reset();
@@ -213,11 +213,12 @@ class PluginTest extends ApiTestCase
 
         $container = self::getContainer();
 
-        $this->assertContains(SampleController::class, $container->getServiceIds());
-        $this->assertArrayHasKey(SampleCommand::class, $container->getRemovedIds());
-        $this->assertArrayHasKey(ServiceDecoration::class, $container->getRemovedIds());
-        $this->assertArrayHasKey(SampleEntity::class, $container->getRemovedIds());
-        $this->assertArrayHasKey(SampleRepository::class, $container->getRemovedIds());
+        $this->assertContains(TasksController::class, $container->getServiceIds());
+        $this->assertArrayHasKey(TaskProvider::class, $container->getRemovedIds());
+        $this->assertArrayHasKey(TaskExecution::class, $container->getRemovedIds());
+        $this->assertArrayHasKey(RemoveObsoleteFields::class, $container->getRemovedIds());
+        $this->assertArrayHasKey(RemoveObsoleteFieldValueTranslations::class, $container->getRemovedIds());
+        $this->assertArrayHasKey(MenuItemsConfiguredListener::class, $container->getRemovedIds());
 
         $this->client->request(
             'GET',
@@ -229,7 +230,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 3]);
+        $this->assertJsonContains(['totalItems' => 2]);
     }
 
     /**

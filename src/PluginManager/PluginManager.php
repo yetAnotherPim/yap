@@ -17,7 +17,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -189,16 +188,12 @@ class PluginManager
             // @codeCoverageIgnoreEnd
         }
 
-        try {
-            $twigFilesystemLoaderDefinition = $container->getDefinition('twig.loader.native_filesystem');
-        } catch (ServiceNotFoundException) {
-            $twigFilesystemLoaderDefinition = null;
-        }
-
         foreach ($activePlugins as $pluginName) {
-            $serviceDefinitionFile = self::PLUGIN_FOLDER.trim($pluginName).'/'.self::SERVICE_DEFINITION_FILE;
-            $twigFolder = realpath(self::PLUGIN_FOLDER.trim($pluginName).'/'.self::TWIG_FOLDER);
-            $translationFolder = realpath(self::PLUGIN_FOLDER.trim($pluginName).'/'.self::TRANSLATION_FOLDER);
+            $pluginName = trim($pluginName);
+
+            $serviceDefinitionFile = self::PLUGIN_FOLDER.$pluginName.'/'.self::SERVICE_DEFINITION_FILE;
+            $twigFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::TWIG_FOLDER);
+            $translationFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::TRANSLATION_FOLDER);
 
             if (false === file_exists($serviceDefinitionFile)) {
                 continue;
@@ -206,14 +201,21 @@ class PluginManager
 
             $loader = new YamlFileLoader(
                 $container,
-                new FileLocator(self::PLUGIN_FOLDER.trim($pluginName))
+                new FileLocator(self::PLUGIN_FOLDER.$pluginName)
             );
 
             try {
                 $loader->load(self::SERVICE_DEFINITION_FILE);
 
-                if (false !== $twigFolder && is_dir($twigFolder) && null !== $twigFilesystemLoaderDefinition) {
-                    $twigFilesystemLoaderDefinition->addMethodCall('addPath', [$twigFolder]);
+                if (false !== $twigFolder && is_dir($twigFolder)) {
+                    $container->prependExtensionConfig(
+                        'twig',
+                        [
+                            'paths' => [
+                                $twigFolder => $pluginName,
+                            ],
+                        ],
+                    );
                 }
 
                 if (false !== $translationFolder && is_dir($translationFolder)) {

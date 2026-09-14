@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: 'زمان‌بند'
     tasks:
+        title: 'وظایف زمان‌بندی‌شده'
+        columns:
+            title: 'عنوان'
+            description: 'توضیحات'
+        remove_obsolete_fields:
+            title: 'حذف فیلدهای منسوخ'
+            description: 'حذف فیلدهایی از محصولات که به نوع محصول اختصاص داده نشده‌اند'
+        remove_obsolete_field_value_translations:
+            title: 'حذف ترجمه‌های منسوخ مقادیر فیلد'
+            description: 'حذف ترجمه‌های منسوخ مقادیر فیلد برای فیلدهایی که به‌عنوان قابل ترجمه پیکربندی نشده‌اند.'
+        label: 'وظیفه'
         warning:
             not_active: 'وظایف زمان‌بندی‌شده در ۲۴ ساعت گذشته اجرا نشده‌اند.'

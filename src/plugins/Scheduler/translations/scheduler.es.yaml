@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: 'Programador'
     tasks:
+        title: 'Tareas programadas'
+        columns:
+            title: 'Título'
+            description: 'Descripción'
+        remove_obsolete_fields:
+            title: 'Eliminar campos obsoletos'
+            description: 'Eliminar de los productos los campos que no están asignados al tipo de producto'
+        remove_obsolete_field_value_translations:
+            title: 'Eliminar traducciones obsoletas de valores de campo'
+            description: 'Eliminar traducciones obsoletas de valores de campo para los campos que no están configurados como traducibles.'
+        label: 'Tarea'
         warning:
             not_active: 'Las tareas programadas no se han ejecutado en las últimas 24 horas.'

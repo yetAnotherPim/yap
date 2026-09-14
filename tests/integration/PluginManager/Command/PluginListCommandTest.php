@@ -69,7 +69,6 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
-#[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
 // Deleting the cache is causing instantiation of following classes
 #[UsesClass(FieldTypeCrudController::class)]
 #[UsesClass(IdentifierCrudController::class)]
@@ -144,9 +143,9 @@ class PluginListCommandTest extends KernelTestCase
             'active' => true,
         ]);
         PluginFactory::createOne([
-            'name' => 'SamplePlugin',
-            'installedVersion' => '0.8.0',
-            'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
+            'name' => 'Scheduler',
+            'installedVersion' => '0.9.0',
+            'namespace' => 'App\\plugins\\Scheduler\\Plugin',
             'active' => true,
         ]);
 
@@ -164,7 +163,7 @@ class PluginListCommandTest extends KernelTestCase
 
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('SamplePlugin', $output);
+        $this->assertStringContainsString('Scheduler', $output);
         $this->assertStringContainsString('TestPlugin', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
 
@@ -174,15 +173,15 @@ class PluginListCommandTest extends KernelTestCase
         /** @phpstan-var string $dumpFileContent */
         $dumpFileContent = file_get_contents(self::DUMPFILE_PATH);
 
-        $this->assertStringContainsString('SamplePlugin', $dumpFileContent);
+        $this->assertStringContainsString('Scheduler', $dumpFileContent);
         $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
         $this->assertStringNotContainsString('DeletedPlugin', $dumpFileContent);
 
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('[OK] Cache for the "ct" environment (debug=true) was successfully cleared.', $output);
-        $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.8.0               ✓', $output);
-        $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
+        $this->assertStringContainsString('  Scheduler    App\plugins\Scheduler\Plugin                   ✓        1.0.0     0.9.0               ✓', $output);
+        $this->assertStringContainsString('  TestPlugin   App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
     }
 
@@ -195,9 +194,9 @@ class PluginListCommandTest extends KernelTestCase
             'active' => true,
         ]);
         PluginFactory::createOne([
-            'name' => 'SamplePlugin',
-            'installedVersion' => '0.8.0',
-            'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
+            'name' => 'Scheduler',
+            'installedVersion' => '0.9.0',
+            'namespace' => 'App\\plugins\\Scheduler\\Plugin',
             'active' => true,
         ]);
 
@@ -215,7 +214,7 @@ class PluginListCommandTest extends KernelTestCase
 
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('SamplePlugin', $output);
+        $this->assertStringContainsString('Scheduler', $output);
         $this->assertStringContainsString('TestPlugin', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
 
@@ -225,15 +224,15 @@ class PluginListCommandTest extends KernelTestCase
         /** @phpstan-var string $dumpFileContent */
         $dumpFileContent = file_get_contents(self::DUMPFILE_PATH);
 
-        $this->assertStringContainsString('SamplePlugin', $dumpFileContent);
+        $this->assertStringContainsString('Scheduler', $dumpFileContent);
         $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
         $this->assertStringNotContainsString('DeletedPlugin', $dumpFileContent);
 
         $output = $this->applicationTester->getDisplay();
 
         $this->assertStringContainsString('[OK] Cache for the "ct" environment (debug=true) was successfully cleared.', $output);
-        $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.8.0               ✓', $output);
-        $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
+        $this->assertStringContainsString('  Scheduler    App\plugins\Scheduler\Plugin                   ✓        1.0.0     0.9.0               ✓', $output);
+        $this->assertStringContainsString('  TestPlugin   App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
         $this->assertStringNotContainsString('DeletedPlugin', $output);
     }
 
@@ -254,7 +253,7 @@ class PluginListCommandTest extends KernelTestCase
         $this->refreshPlugins($this->kernelInstance, true);
 
         $output = $this->applicationTester->getDisplay();
-        $this->assertStringContainsString('SamplePlugin', $output);
+        $this->assertStringContainsString('Scheduler', $output);
         $this->assertStringNotContainsString('TestPlugin', $output);
     }
 }

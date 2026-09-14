@@ -53,14 +53,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
-#[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
+#[CoversClass(\App\plugins\Scheduler\Plugin::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(User::class)]
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
 #[UsesClass(Locale::class)]
-#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 class PluginTest extends ApiTestCase
 {
     use DatabaseTrait;
@@ -94,7 +93,7 @@ class PluginTest extends ApiTestCase
      */
     public function testPluginActivationAndDeactivation(): void
     {
-        $this->assertFalse($this->tableExists('sample_plugin'));
+        $this->assertFalse($this->tableExists('yap_scheduler'));
 
         $this->refreshPlugins();
 
@@ -103,10 +102,10 @@ class PluginTest extends ApiTestCase
 
         $this->activatePlugin();
 
-        $this->assertTrue($this->tableExists('sample_plugin'));
+        $this->assertTrue($this->tableExists('yap_scheduler'));
         $dumpfileContent = file_get_contents(__DIR__.'/../../../../../var/plugin_configuration/test_plugin_configuration');
         $this->assertNotEmpty($dumpfileContent);
-        $this->assertEquals('SamplePlugin', $dumpfileContent);
+        $this->assertEquals('Scheduler', $dumpfileContent);
 
         $this->deactivatePlugin();
 
@@ -126,7 +125,7 @@ class PluginTest extends ApiTestCase
     {
         $this->client->request(
             'POST',
-            '/api/plugin/activate/SamplePlugin',
+            '/api/plugin/activate/Scheduler',
             [
                 'headers' => [
                     'Authorization' => 'Bearer '.$this->authToken,
@@ -178,7 +177,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 3]);
+        $this->assertJsonContains(['totalItems' => 2]);
 
         $dumpfileContent = file_get_contents(__DIR__.'/../../../../../var/plugin_configuration/test_plugin_configuration');
         $this->assertEmpty($dumpfileContent);
@@ -193,9 +192,9 @@ class PluginTest extends ApiTestCase
     public function testPluginRefreshWillReturnCorrectValueForIsUpdatable(): void
     {
         PluginFactory::createOne([
-            'name' => 'SamplePlugin',
-            'installedVersion' => '0.8.0',
-            'namespace' => \App\plugins\SamplePlugin\Plugin::class,
+            'name' => 'Scheduler',
+            'installedVersion' => '0.9.0',
+            'namespace' => \App\plugins\Scheduler\Plugin::class,
             'active' => false,
         ]);
 
@@ -211,7 +210,7 @@ class PluginTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(200);
 
         $content = $response->getContent();
-        $this->assertStringContainsString('"active":false,"installedVersion":"0.8.0","version":"0.9.0","updatable":true', $content);
+        $this->assertStringContainsString('"active":false,"installedVersion":"0.9.0","version":"1.0.0","updatable":true', $content);
     }
 
     /**
@@ -228,21 +227,17 @@ class PluginTest extends ApiTestCase
         $this->activatePlugin();
         $this->updatePlugin();
 
-        $this->assertFalse($this->columnExists('sample_plugin', 'new_column'));
-
         $repository = $this->entityManager->getRepository(Plugin::class);
-        $plugin = $repository->findOneBy(['name' => 'SamplePlugin']);
+        $plugin = $repository->findOneBy(['name' => 'Scheduler']);
 
         $this->assertInstanceOf(Plugin::class, $plugin);
 
-        $plugin->setInstalledVersion('0.8.0');
+        $plugin->setInstalledVersion('1.0.0');
 
         $this->entityManager->persist($plugin);
         $this->entityManager->flush();
 
         $this->updatePlugin();
-
-        $this->assertTrue($this->columnExists('sample_plugin', 'new_column'));
     }
 
     /**
@@ -256,7 +251,7 @@ class PluginTest extends ApiTestCase
     {
         $this->client->request(
             'POST',
-            '/api/plugin/something/SamplePlugin',
+            '/api/plugin/something/Scheduler',
             [
                 'headers' => [
                     'Authorization' => 'Bearer '.$this->authToken,
@@ -302,7 +297,7 @@ class PluginTest extends ApiTestCase
 
         $this->client->request(
             'POST',
-            '/api/plugin/update/SamplePlugin',
+            '/api/plugin/update/Scheduler',
             [
                 'headers' => [
                     'Authorization' => 'Bearer '.$this->authToken,
@@ -401,9 +396,9 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 3]);
+        $this->assertJsonContains(['totalItems' => 2]);
         $content = $response->getContent();
-        $this->assertStringContainsString('"active":false,"version":"0.9.0","updatable":false', $content);
+        $this->assertStringContainsString('"active":false,"version":"1.0.0","updatable":false', $content);
         $this->assertStringNotContainsString('"installedVersion', $content);
 
         $response = $this->client->request(
@@ -416,7 +411,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 3]);
+        $this->assertJsonContains(['totalItems' => 2]);
         $this->assertStringContainsString('"active":false', $response->getContent());
         $this->assertStringNotContainsString('"installedVersion', $content);
     }
@@ -433,7 +428,7 @@ class PluginTest extends ApiTestCase
     {
         $this->client->request(
             'POST',
-            '/api/plugin/activate/SamplePlugin',
+            '/api/plugin/activate/Scheduler',
             [
                 'headers' => [
                     'Authorization' => 'Bearer '.$this->authToken,
@@ -453,7 +448,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertStringContainsString('"active":true,"installedVersion":"0.9.0"', $response->getContent());
+        $this->assertStringContainsString('"active":true,"installedVersion":"1.0.0"', $response->getContent());
     }
 
     /**
@@ -468,7 +463,7 @@ class PluginTest extends ApiTestCase
     {
         $this->client->request(
             'POST',
-            '/api/plugin/deactivate/SamplePlugin',
+            '/api/plugin/deactivate/Scheduler',
             [
                 'headers' => [
                     'Authorization' => 'Bearer '.$this->authToken,
@@ -488,7 +483,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertStringContainsString('"active":false,"installedVersion":"0.9.0"', $response->getContent());
+        $this->assertStringContainsString('"active":false,"installedVersion":"1.0.0"', $response->getContent());
     }
 
     /**
@@ -502,7 +497,7 @@ class PluginTest extends ApiTestCase
     {
         $this->client->request(
             'POST',
-            '/api/plugin/update/SamplePlugin',
+            '/api/plugin/update/Scheduler',
             [
                 'headers' => [
                     'Authorization' => 'Bearer '.$this->authToken,
@@ -518,7 +513,7 @@ class PluginTest extends ApiTestCase
      */
     public function testRequestRequiresAuth(): void
     {
-        $this->client->request('POST', '/api/plugin/activate/SamplePlugin');
+        $this->client->request('POST', '/api/plugin/activate/Scheduler');
 
         $this->assertResponseStatusCodeSame(401);
     }

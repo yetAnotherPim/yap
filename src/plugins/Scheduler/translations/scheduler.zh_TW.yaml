@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: '排程器'
     tasks:
+        title: '排程工作'
+        columns:
+            title: '標題'
+            description: '描述'
+        remove_obsolete_fields:
+            title: '移除過時欄位'
+            description: '從產品中移除未指派給產品類型的欄位'
+        remove_obsolete_field_value_translations:
+            title: '移除過時的欄位值翻譯'
+            description: '移除未設定為可翻譯欄位的過時欄位值翻譯。'
+        label: '工作'
         warning:
             not_active: '排程工作在過去 24 小時內未執行。'

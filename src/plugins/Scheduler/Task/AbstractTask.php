@@ -6,7 +6,10 @@ namespace App\plugins\Scheduler\Task;
 
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use Symfony\Component\String\UnicodeString;
 
+#[AutoconfigureTag('yap.scheduler.task')]
 abstract class AbstractTask
 {
     public function __construct(
@@ -25,6 +28,14 @@ abstract class AbstractTask
     }
 
     abstract public function run(): void;
+
+    public function getTranslationKey(): string
+    {
+        return new UnicodeString($this::class)
+            ->afterLast('\\')
+            ->snake()
+            ->toString();
+    }
 
     /**
      * @throws Exception

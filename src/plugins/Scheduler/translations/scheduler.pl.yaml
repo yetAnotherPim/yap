@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: 'Harmonogram'
     tasks:
+        title: 'Zaplanowane zadania'
+        columns:
+            title: 'Tytuł'
+            description: 'Opis'
+        remove_obsolete_fields:
+            title: 'Usuń przestarzałe pola'
+            description: 'Usuń z produktów pola, które nie są przypisane do typu produktu'
+        remove_obsolete_field_value_translations:
+            title: 'Usuń przestarzałe tłumaczenia wartości pól'
+            description: 'Usuń przestarzałe tłumaczenia wartości pól dla pól, które nie są skonfigurowane jako tłumaczalne.'
+        label: 'Zadanie'
         warning:
             not_active: 'Zaplanowane zadania nie zostały wykonane w ciągu ostatnich 24 godzin.'

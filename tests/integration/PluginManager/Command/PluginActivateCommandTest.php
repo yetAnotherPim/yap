@@ -60,6 +60,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Zenstruck\Foundry\Attribute\ResetDatabase;
 
 #[CoversClass(PluginActivateCommand::class)]
 #[CoversClass(Plugin::class)]
@@ -73,7 +74,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
-#[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
+#[CoversClass(\App\plugins\Scheduler\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
 // Deleting the cache is causing instantiation of following classes
 #[UsesClass(FieldTypeCrudController::class)]
@@ -103,8 +104,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[UsesClass(TitleTranslationSynchronizer::class)]
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(ProductFieldTranslationComposer::class)]
-#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 #[RunTestsInSeparateProcesses]
+#[ResetDatabase]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]
 class PluginActivateCommandTest extends KernelTestCase
@@ -118,6 +119,8 @@ class PluginActivateCommandTest extends KernelTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         self::bootKernel(['debug' => true]);
         $kernel = self::$kernel;
 
@@ -136,8 +139,6 @@ class PluginActivateCommandTest extends KernelTestCase
         $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
 
         $this->entityManager = $entityManager;
-
-        parent::setUp();
     }
 
     /**
@@ -147,16 +148,16 @@ class PluginActivateCommandTest extends KernelTestCase
     {
         $dumpfilePath = __DIR__.'/../../../../var/plugin_configuration/ct_plugin_configuration';
         file_put_contents($dumpfilePath, '');
-        $this->assertFalse($this->tableExists('sample_plugin'));
+        $this->assertFalse($this->tableExists('yap_scheduler'));
 
         $this->loggerMock
             ->shouldReceive('error')
             ->never();
 
         $this->refreshPlugins($this->kernelInstance);
-        $this->activatePlugin('SamplePlugin', true);
+        $this->activatePlugin('Scheduler', true);
 
-        $this->assertTrue($this->tableExists('sample_plugin'));
+        $this->assertTrue($this->tableExists('yap_scheduler'));
 
         $this->listPlugins(true);
 
@@ -164,29 +165,41 @@ class PluginActivateCommandTest extends KernelTestCase
         /** @phpstan-var string $dumpFileContent */
         $dumpFileContent = file_get_contents($dumpfilePath);
 
-        $this->assertStringContainsString('SamplePlugin', $dumpFileContent);
+        $this->assertStringContainsString('Scheduler', $dumpFileContent);
         $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
 
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.9.0               x', $output);
-        $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
+        $this->assertStringContainsString('  Scheduler    App\plugins\Scheduler\Plugin                   ✓        1.0.0     1.0.0               x', $output);
+        $this->assertStringContainsString('  TestPlugin   App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
     }
 
     public function testPluginActivateWithMissingEntity(): void
     {
+        $pluginRepository = $this->entityManager->getRepository(Plugin::class);
+
+        $plugin = $pluginRepository->findOneBy([
+            'name' => 'Scheduler',
+        ]);
+
+        if (null !== $plugin) {
+            $this->entityManager->remove($plugin);
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+        }
+
         $this->loggerMock
             ->shouldReceive('error')
             ->once()
             ->with(
                 '{pluginName} not found',
                 [
-                    'pluginName' => 'SamplePlugin',
+                    'pluginName' => 'Scheduler',
                     'action' => 'ACTIVATE',
                 ]
             );
 
-        $this->activatePlugin('SamplePlugin');
+        $this->activatePlugin('Scheduler');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();

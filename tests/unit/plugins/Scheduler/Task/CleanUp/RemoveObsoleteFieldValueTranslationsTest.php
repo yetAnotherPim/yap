@@ -193,4 +193,9 @@ final class RemoveObsoleteFieldValueTranslationsTest extends MockeryTestCase
             ->once()
             ->andReturn($this->query);
     }
+
+    public function testGetTranslationKey(): void
+    {
+        $this->assertEquals('remove_obsolete_field_value_translations', $this->task->getTranslationKey());
+    }
 }

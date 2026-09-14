@@ -6,12 +6,13 @@ namespace App\Tests\integration\PluginManager\DependencyInjection;
 
 use App\PluginManager\Plugin\PluginInterface;
 use App\PluginManager\PluginManager;
-use App\plugins\SamplePlugin\Command\SampleCommand;
-use App\plugins\SamplePlugin\Controller\SampleController;
-use App\plugins\SamplePlugin\Decoration\ServiceDecoration;
-use App\plugins\SamplePlugin\Entity\SampleEntity;
-use App\plugins\SamplePlugin\Plugin;
-use App\plugins\SamplePlugin\Repository\SampleRepository;
+use App\plugins\Scheduler\Controller\Admin\TasksController;
+use App\plugins\Scheduler\EventListener\MenuItemsConfiguredListener;
+use App\plugins\Scheduler\Plugin;
+use App\plugins\Scheduler\Provider\SystemStatus\TaskExecution;
+use App\plugins\Scheduler\Provider\TaskProvider;
+use App\plugins\Scheduler\Task\CleanUp\RemoveObsoleteFields;
+use App\plugins\Scheduler\Task\CleanUp\RemoveObsoleteFieldValueTranslations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Kernel\KernelInterface;
@@ -42,22 +43,24 @@ class PluginLoaderTest extends KernelTestCase
 
         $this->assertTrue($container->getParameter('plugins_loaded_successfully'));
 
-        $this->assertArrayNotHasKey(SampleCommand::class, $container->getRemovedIds());
-        $this->assertArrayNotHasKey(SampleController::class, $container->getRemovedIds());
-        $this->assertArrayNotHasKey(ServiceDecoration::class, $container->getRemovedIds());
-        $this->assertArrayNotHasKey(SampleEntity::class, $container->getRemovedIds());
-        $this->assertArrayNotHasKey(SampleRepository::class, $container->getRemovedIds());
+        $this->assertArrayNotHasKey(TasksController::class, $container->getRemovedIds());
+        $this->assertArrayNotHasKey(TaskProvider::class, $container->getRemovedIds());
+        $this->assertArrayNotHasKey(TaskExecution::class, $container->getRemovedIds());
+        $this->assertArrayNotHasKey(RemoveObsoleteFields::class, $container->getRemovedIds());
+        $this->assertArrayNotHasKey(RemoveObsoleteFieldValueTranslations::class, $container->getRemovedIds());
+        $this->assertArrayNotHasKey(MenuItemsConfiguredListener::class, $container->getRemovedIds());
 
-        $this->assertFalse($container->has(SampleCommand::class));
-        $this->assertFalse($container->has(SampleController::class));
-        $this->assertFalse($container->has(ServiceDecoration::class));
-        $this->assertFalse($container->has(SampleEntity::class));
-        $this->assertFalse($container->has(SampleRepository::class));
+        $this->assertFalse($container->has(TasksController::class));
+        $this->assertFalse($container->has(TaskProvider::class));
+        $this->assertFalse($container->has(TaskExecution::class));
+        $this->assertFalse($container->has(RemoveObsoleteFields::class));
+        $this->assertFalse($container->has(RemoveObsoleteFieldValueTranslations::class));
+        $this->assertFalse($container->has(MenuItemsConfiguredListener::class));
     }
 
     public function testActiveDumpedPluginIsLoadedAfterCompilation(): void
     {
-        file_put_contents(self::DUMPFILE_PATH, 'SamplePlugin');
+        file_put_contents(self::DUMPFILE_PATH, 'Scheduler');
 
         self::bootKernel();
         $container = static::getContainer();
@@ -68,11 +71,12 @@ class PluginLoaderTest extends KernelTestCase
         $this->assertTrue($container->getParameter('plugins_loaded_successfully'));
 
         /* services except controllers aren't public, but if they have been removed, definitions have been loaded successfully */
-        $this->assertContains(SampleController::class, $container->getServiceIds());
-        $this->assertArrayHasKey(SampleCommand::class, $container->getRemovedIds());
-        $this->assertArrayHasKey(ServiceDecoration::class, $container->getRemovedIds());
-        $this->assertArrayHasKey(SampleEntity::class, $container->getRemovedIds());
-        $this->assertArrayHasKey(SampleRepository::class, $container->getRemovedIds());
+        $this->assertContains(TasksController::class, $container->getServiceIds());
+        $this->assertArrayHasKey(TaskProvider::class, $container->getRemovedIds());
+        $this->assertArrayHasKey(TaskExecution::class, $container->getRemovedIds());
+        $this->assertArrayHasKey(RemoveObsoleteFields::class, $container->getRemovedIds());
+        $this->assertArrayHasKey(RemoveObsoleteFieldValueTranslations::class, $container->getRemovedIds());
+        $this->assertArrayHasKey(MenuItemsConfiguredListener::class, $container->getRemovedIds());
     }
 
     public function testLoadActivePluginsWithNoDumpfile(): void

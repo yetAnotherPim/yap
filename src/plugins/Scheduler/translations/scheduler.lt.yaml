@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: 'Tvarkaraštis'
     tasks:
+        title: 'Suplanuotos užduotys'
+        columns:
+            title: 'Pavadinimas'
+            description: 'Aprašymas'
+        remove_obsolete_fields:
+            title: 'Pašalinti pasenusius laukus'
+            description: 'Pašalinti iš produktų laukus, kurie nepriskirti produkto tipui'
+        remove_obsolete_field_value_translations:
+            title: 'Pašalinti pasenusius laukų reikšmių vertimus'
+            description: 'Pašalinti pasenusius laukų reikšmių vertimus laukams, kurie nesukonfigūruoti kaip verčiami.'
+        label: 'Užduotis'
         warning:
             not_active: 'Suplanuotos užduotys nebuvo vykdomos per pastarąsias 24 valandas.'

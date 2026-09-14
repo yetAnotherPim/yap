@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: 'Ütemező'
     tasks:
+        title: 'Ütemezett feladatok'
+        columns:
+            title: 'Cím'
+            description: 'Leírás'
+        remove_obsolete_fields:
+            title: 'Elavult mezők eltávolítása'
+            description: 'A terméktípushoz nem rendelt mezők eltávolítása a termékekből'
+        remove_obsolete_field_value_translations:
+            title: 'Elavult mezőérték-fordítások eltávolítása'
+            description: 'A nem fordíthatóként beállított mezők elavult mezőérték-fordításainak eltávolítása.'
+        label: 'Feladat'
         warning:
             not_active: 'Az ütemezett feladatok nem futottak le az elmúlt 24 órában.'

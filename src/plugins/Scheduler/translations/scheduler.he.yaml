@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: 'מתזמן'
     tasks:
+        title: 'משימות מתוזמנות'
+        columns:
+            title: 'כותרת'
+            description: 'תיאור'
+        remove_obsolete_fields:
+            title: 'הסרת שדות מיושנים'
+            description: 'הסרת שדות ממוצרים שאינם משויכים לסוג המוצר'
+        remove_obsolete_field_value_translations:
+            title: 'הסרת תרגומים מיושנים של ערכי שדות'
+            description: 'הסרת תרגומים מיושנים של ערכי שדות עבור שדות שאינם מוגדרים כניתנים לתרגום.'
+        label: 'משימה'
         warning:
             not_active: 'המשימות המתוזמנות לא הופעלו במהלך 24 השעות האחרונות.'

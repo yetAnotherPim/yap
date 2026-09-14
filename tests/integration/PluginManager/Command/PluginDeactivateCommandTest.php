@@ -71,7 +71,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
-#[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
+#[CoversClass(\App\plugins\Scheduler\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
 // Deleting the cache is causing instantiation of following classes
 #[UsesClass(FieldTypeCrudController::class)]
@@ -101,7 +101,6 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(TitleTranslationSynchronizer::class)]
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(ProductFieldTranslationComposer::class)]
-#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]
@@ -139,9 +138,9 @@ class PluginDeactivateCommandTest extends KernelTestCase
         $dumpfilePath = __DIR__.'/../../../../var/plugin_configuration/ct_plugin_configuration';
 
         PluginFactory::createOne([
-            'name' => 'SamplePlugin',
-            'installedVersion' => '0.9.0',
-            'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
+            'name' => 'Scheduler',
+            'installedVersion' => '1.0.0',
+            'namespace' => 'App\\plugins\\Scheduler\\Plugin',
             'active' => true,
         ]);
 
@@ -153,31 +152,31 @@ class PluginDeactivateCommandTest extends KernelTestCase
 
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.9.0               x', $output);
-        $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
+        $this->assertStringContainsString('  Scheduler    App\plugins\Scheduler\Plugin                   ✓        1.0.0     1.0.0               x', $output);
+        $this->assertStringContainsString('  TestPlugin   App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
 
         $this->assertFileExists($dumpfilePath);
         /** @phpstan-var string $dumpFileContent */
         $dumpFileContent = file_get_contents($dumpfilePath);
 
-        $this->assertStringContainsString('SamplePlugin', $dumpFileContent);
+        $this->assertStringContainsString('Scheduler', $dumpFileContent);
         $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
         $this->assertStringNotContainsString('DeletedPlugin', $dumpFileContent);
 
-        $this->deactivatePlugin('SamplePlugin', true);
+        $this->deactivatePlugin('Scheduler', true);
         $this->listPlugins(true);
 
         $this->assertFileExists($dumpfilePath);
         /** @phpstan-var string $dumpFileContent */
         $dumpFileContent = file_get_contents($dumpfilePath);
 
-        $this->assertStringNotContainsString('SamplePlugin', $dumpFileContent);
+        $this->assertStringNotContainsString('Scheduler', $dumpFileContent);
         $this->assertStringNotContainsString('TestPlugin', $dumpFileContent);
 
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                x        0.9.0     0.9.0               x', $output);
-        $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
+        $this->assertStringContainsString('  Scheduler    App\plugins\Scheduler\Plugin                   x        1.0.0     1.0.0               x', $output);
+        $this->assertStringContainsString('  TestPlugin   App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
     }
 
     public function testPluginDeactivateWithMissingEntity(): void
@@ -188,12 +187,12 @@ class PluginDeactivateCommandTest extends KernelTestCase
             ->with(
                 '{pluginName} not found',
                 [
-                    'pluginName' => 'SamplePlugin',
+                    'pluginName' => 'Scheduler',
                     'action' => 'DEACTIVATE',
                 ]
             );
 
-        $this->deactivatePlugin('SamplePlugin');
+        $this->deactivatePlugin('Scheduler');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();

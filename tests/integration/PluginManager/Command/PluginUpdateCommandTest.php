@@ -76,7 +76,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(PluginsRefreshProvider::class)]
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
-#[CoversClass(\App\plugins\SamplePlugin\Plugin::class)]
+#[CoversClass(\App\plugins\Scheduler\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
 #[UsesClass(PluginActivateCommand::class)]
 #[UsesClass(PluginActivateEvent::class)]
@@ -108,7 +108,6 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(TitleTranslationSynchronizer::class)]
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(ProductFieldTranslationComposer::class)]
-#[UsesClass(\App\plugins\Scheduler\Plugin::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]
@@ -153,36 +152,32 @@ class PluginUpdateCommandTest extends KernelTestCase
     #[WithEnvironmentVariable('APP_ENV', 'ct')]
     public function testPluginUpdate(): void
     {
-        $this->assertFalse($this->columnExists('sample_plugin', 'new_column'));
-
         $this->loggerMock
             ->shouldReceive('error')
             ->never();
 
         $this->refreshPlugins($this->kernelInstance);
-        $this->activatePlugin('SamplePlugin', true);
-        $this->updatePlugin('SamplePlugin', true);
-
-        $this->assertFalse($this->columnExists('sample_plugin', 'new_column'));
+        $this->activatePlugin('Scheduler', true);
+        $this->updatePlugin('Scheduler', true);
 
         $repository = $this->entityManager->getRepository(Plugin::class);
-        $plugin = $repository->findOneBy(['name' => 'SamplePlugin']);
+        $plugin = $repository->findOneBy(['name' => 'Scheduler']);
 
         $this->assertInstanceOf(Plugin::class, $plugin);
-        $plugin->setInstalledVersion('0.8.0');
+        $plugin->setInstalledVersion('0.9.0');
 
         $this->entityManager->persist($plugin);
         $this->entityManager->flush();
 
-        $this->updatePlugin('SamplePlugin', true);
+        $this->updatePlugin('Scheduler', true);
 
-        $this->assertTrue($this->columnExists('sample_plugin', 'new_column'));
+        $this->assertTrue($this->columnExists('yap_scheduler', 'last_run'));
 
         $this->refreshPlugins($this->kernelInstance, true);
         $output = $this->applicationTester->getDisplay();
 
-        $this->assertStringContainsString('  SamplePlugin   App\plugins\SamplePlugin\Plugin                ✓        0.9.0     0.9.0               x', $output);
-        $this->assertStringContainsString('  TestPlugin     App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
+        $this->assertStringContainsString('  Scheduler    App\plugins\Scheduler\Plugin                   ✓        1.0.0     1.0.0               x', $output);
+        $this->assertStringContainsString('  TestPlugin   App\Tests\TestData\plugins\TestPlugin\Plugin   x        0.9.0                         x', $output);
     }
 
     public function testPluginUpdateWithMissingEntity(): void
@@ -193,12 +188,12 @@ class PluginUpdateCommandTest extends KernelTestCase
             ->with(
                 '{pluginName} not found',
                 [
-                    'pluginName' => 'SamplePlugin',
+                    'pluginName' => 'Scheduler',
                     'action' => 'UPDATE',
                 ]
             );
 
-        $this->updatePlugin('SamplePlugin');
+        $this->updatePlugin('Scheduler');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();
@@ -237,8 +232,8 @@ class PluginUpdateCommandTest extends KernelTestCase
     public function testPluginUpdateWithMissingInstalledVersion(): void
     {
         PluginFactory::createOne([
-            'name' => 'SamplePlugin',
-            'namespace' => 'App\\plugins\\SamplePlugin\\Plugin',
+            'name' => 'Scheduler',
+            'namespace' => 'App\\plugins\\Scheduler\\Plugin',
             'active' => true,
         ]);
 
@@ -248,12 +243,12 @@ class PluginUpdateCommandTest extends KernelTestCase
             ->with(
                 'Plugin {pluginInstance} is not installed',
                 [
-                    'pluginInstance' => \App\plugins\SamplePlugin\Plugin::class,
-                    'toVersion' => '0.9.0',
+                    'pluginInstance' => \App\plugins\Scheduler\Plugin::class,
+                    'toVersion' => '1.0.0',
                 ]
             );
 
-        $this->updatePlugin('SamplePlugin');
+        $this->updatePlugin('Scheduler');
 
         $this->applicationTester->assertCommandFailed();
         $output = $this->applicationTester->getDisplay();

@@ -1,4 +1,16 @@
 yap_scheduler:
+    title: 'Планувальник'
     tasks:
+        title: 'Заплановані завдання'
+        columns:
+            title: 'Назва'
+            description: 'Опис'
+        remove_obsolete_fields:
+            title: 'Видалити застарілі поля'
+            description: 'Видалити з товарів поля, які не призначені типу товару'
+        remove_obsolete_field_value_translations:
+            title: 'Видалити застарілі переклади значень полів'
+            description: 'Видалити застарілі переклади значень полів для полів, які не налаштовані як перекладні.'
+        label: 'Завдання'
         warning:
             not_active: 'Заплановані завдання не виконувалися протягом останніх 24 годин.'
