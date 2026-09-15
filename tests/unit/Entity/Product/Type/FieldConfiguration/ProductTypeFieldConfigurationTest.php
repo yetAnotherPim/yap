@@ -6,8 +6,10 @@ namespace App\Tests\unit\Entity\Product\Type\FieldConfiguration;
 
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
+use App\Tests\helper\Trait\Unit\AssociationTrait;
 use App\Tests\helper\Trait\Unit\SetterGetterTrait;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -22,6 +24,7 @@ use Symfony\Component\Uid\UuidV7;
 class ProductTypeFieldConfigurationTest extends MockeryTestCase
 {
     use SetterGetterTrait;
+    use AssociationTrait;
 
     public function testGetId(): void
     {
@@ -38,6 +41,15 @@ class ProductTypeFieldConfigurationTest extends MockeryTestCase
     public function testSetterGetter(string $setter, string $getter, mixed $value, ?string $expectedException = null): void
     {
         $this->performSetterGetterTesting($setter, $getter, $value, $expectedException);
+    }
+
+    /**
+     * @param class-string $targetValue
+     */
+    #[DataProvider('associationDataProvider')]
+    public function testAssociations(string $getter, string $adder, string $remover, string $targetValue, ?string $inverseSetter = null): void
+    {
+        $this->performOneToManyAssociationTesting($getter, $adder, $remover, $targetValue, $inverseSetter);
     }
 
     protected function getTargetClass(): string
@@ -63,6 +75,16 @@ class ProductTypeFieldConfigurationTest extends MockeryTestCase
             ['setProductType', 'getProductType', null, \TypeError::class],
             ['setOptions', 'getOptions', []],
             ['setOptions', 'getOptions', null, \TypeError::class],
+        ];
+    }
+
+    /**
+     * @return array{array{0:string, 1:string, 2:string, 3:class-string, 4?:string}}
+     */
+    public static function associationDataProvider(): array
+    {
+        return [
+            ['getProductTypeFieldConfigurationDefaultTranslations', 'addProductTypeFieldConfigurationDefaultTranslation', 'removeProductTypeFieldConfigurationDefaultTranslation', ProductTypeFieldConfigurationDefaultTranslation::class, 'setProductTypeFieldConfiguration'],
         ];
     }
 }

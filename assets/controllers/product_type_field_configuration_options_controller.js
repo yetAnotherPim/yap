@@ -8,24 +8,31 @@ export default class extends Controller {
     };
 
     connect() {
-        this.updateOptions();
+        this.updateFieldOptions();
     }
 
     async update() {
         this.showDuplicateWarning();
-        await this.updateOptions();
+        await this.updateFieldOptions();
     }
 
-    async updateOptions() {
+    async updateFieldOptions() {
         const optionsRow = this.findOptionsRow();
+        const translationsRow = this.findTranslationsRow();
 
-        if (!optionsRow) {
+        if (!optionsRow && !translationsRow) {
             return;
         }
 
-        const inputType = await this.fetchInputType();
+        const fieldType = await this.fetchFieldType();
 
-        this.updateVisibility(optionsRow, inputType);
+        if(optionsRow) {
+            this.updateOptionsVisibility(optionsRow, fieldType?.inputType ?? null);
+        }
+
+        if(translationsRow) {
+            this.updateTranslationsVisibility(translationsRow, fieldType?.isTranslatable ?? false);
+        }
     }
 
     showDuplicateWarning() {
@@ -67,7 +74,7 @@ export default class extends Controller {
         this.element.closest('.form-widget')?.append(warning);
     }
 
-    async fetchInputType() {
+    async fetchFieldType() {
         const fieldTypeId = this.element.value;
 
         if (!fieldTypeId) {
@@ -89,15 +96,23 @@ export default class extends Controller {
             return null;
         }
 
-        const data = await response.json();
-
-        return data.inputType;
+        return await response.json();
     }
 
-    updateVisibility(optionsRow, inputType) {
+    updateOptionsVisibility(optionsRow, inputType) {
         optionsRow.hidden = !this.visibleInputTypesValue.includes(
             inputType,
         );
+    }
+
+    updateTranslationsVisibility(translationsRow, translatable) {
+        translationsRow.hidden = !translatable;
+
+        translationsRow
+            .querySelectorAll('input, textarea, select, button')
+            .forEach((element) => {
+                element.disabled = !translatable;
+            });
     }
 
     findOptionsRow() {
@@ -109,6 +124,18 @@ export default class extends Controller {
 
         return row.querySelector(
             '[data-field-type-options-field]',
+        );
+    }
+
+    findTranslationsRow() {
+        const row = this.element.closest('.row');
+
+        if (!row) {
+            return null;
+        }
+
+        return row.querySelector(
+            '[data-field-type-translations-field]',
         );
     }
 }

@@ -7,10 +7,12 @@ namespace App\Controller\Admin\Settings;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
+use App\Form\ProductTypeFieldConfiguration\ProductTypeFieldConfigurationDefaultTranslationsType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,14 +33,15 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
     }
 
     #[Route(
-        '/admin/field-type/{id}/input-type',
-        name: 'admin_field_type_input_type',
+        '/admin/field-type/{id}/json',
+        name: 'admin_field_type',
         methods: ['GET']
     )]
-    public function ajaxGetInputType(FieldType $fieldType): JsonResponse
+    public function ajaxGetFieldType(FieldType $fieldType): JsonResponse
     {
         return $this->json([
             'inputType' => $fieldType->getInputType()->value,
+            'isTranslatable' => $fieldType->isTranslatable(),
         ]);
     }
 
@@ -62,7 +65,7 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
                 )
                 ->setHtmlAttribute(
                     'data-product-type-field-configuration-options-url-value',
-                    '/admin/field-type/__ID__/input-type',
+                    '/admin/field-type/__ID__/json',
                 )
                 ->setHtmlAttribute(
                     'data-product-type-field-configuration-options-visible-input-types-value',
@@ -96,6 +99,17 @@ class ProductTypeFieldConfigurationCrudController extends AbstractCrudController
                 )
                 ->setFormTypeOption('row_attr', [
                     'data-controller' => 'help-tooltip',
+                ]),
+            Field::new(
+                'productTypeFieldConfigurationDefaultTranslations',
+            )
+                ->setLabel(false)
+                ->setFormType(
+                    ProductTypeFieldConfigurationDefaultTranslationsType::class,
+                )
+                ->setFormTypeOption('mapped', false)
+                ->setFormTypeOption('row_attr', [
+                    'data-field-type-translations-field' => 'true',
                 ]),
             BooleanField::new('required', new TranslatableMessage('product_type_field_configuration.labels.required', [], 'admin')),
             HiddenField::new('position'),

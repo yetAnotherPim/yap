@@ -7,8 +7,11 @@ namespace App\Entity\Product\Type\FieldConfiguration;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
 use App\Entity\Product\Type\ProductType;
 use App\Repository\ProductTypeFieldConfigurationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
@@ -53,6 +56,17 @@ class ProductTypeFieldConfiguration
      */
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private array $options = [];
+
+    /**
+     * @var Collection<int, ProductTypeFieldConfigurationDefaultTranslation>
+     */
+    #[ORM\OneToMany(targetEntity: ProductTypeFieldConfigurationDefaultTranslation::class, mappedBy: 'productTypeFieldConfiguration', cascade: ['all'], orphanRemoval: true)]
+    private Collection $productTypeFieldConfigurationDefaultTranslations;
+
+    public function __construct()
+    {
+        $this->productTypeFieldConfigurationDefaultTranslations = new ArrayCollection();
+    }
 
     public function getId(): Uuid
     {
@@ -133,6 +147,31 @@ class ProductTypeFieldConfiguration
     public function setOptions(array $options): ProductTypeFieldConfiguration
     {
         $this->options = $options;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductTypeFieldConfigurationDefaultTranslation>
+     */
+    public function getProductTypeFieldConfigurationDefaultTranslations(): Collection
+    {
+        return $this->productTypeFieldConfigurationDefaultTranslations;
+    }
+
+    public function addProductTypeFieldConfigurationDefaultTranslation(ProductTypeFieldConfigurationDefaultTranslation $productTypeFieldConfigurationDefaultTranslation): static
+    {
+        if (!$this->productTypeFieldConfigurationDefaultTranslations->contains($productTypeFieldConfigurationDefaultTranslation)) {
+            $this->productTypeFieldConfigurationDefaultTranslations->add($productTypeFieldConfigurationDefaultTranslation);
+            $productTypeFieldConfigurationDefaultTranslation->setProductTypeFieldConfiguration($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductTypeFieldConfigurationDefaultTranslation(ProductTypeFieldConfigurationDefaultTranslation $productTypeFieldConfigurationDefaultTranslation): static
+    {
+        $this->productTypeFieldConfigurationDefaultTranslations->removeElement($productTypeFieldConfigurationDefaultTranslation);
 
         return $this;
     }
