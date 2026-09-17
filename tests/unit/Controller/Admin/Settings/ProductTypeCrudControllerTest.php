@@ -9,12 +9,19 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\ProductTypeFieldConfigurationDefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use App\Repository\LocaleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\FormFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -23,6 +30,11 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -43,13 +55,27 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
     /** @var TitleTranslationSynchronizer|MockInterface */
     private TitleTranslationSynchronizer $titleTranslationSynchronizerMock;
 
+    /** @var ProductTypeFieldConfigurationDefaultTranslationSynchronizer|MockInterface */
+    private ProductTypeFieldConfigurationDefaultTranslationSynchronizer $productTypeFieldConfigurationDefaultTranslationSynchronizerMock;
+
+    /** @var LocaleRepository|MockInterface */
+    private LocaleRepository $localeRepositoryMock;
+
     public function setUp(): void
     {
         $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
         $this->titleTranslationFieldRendererMock = \Mockery::mock(TitleTranslationFieldRenderer::class);
         $this->titleTranslationSynchronizerMock = \Mockery::mock(TitleTranslationSynchronizer::class);
+        $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock = \Mockery::mock(ProductTypeFieldConfigurationDefaultTranslationSynchronizer::class);
+        $this->localeRepositoryMock = \Mockery::mock(LocaleRepository::class);
 
-        $this->controller = new ProductTypeCrudController($this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock);
+        $this->controller = new ProductTypeCrudController(
+            $this->translatorMock,
+            $this->titleTranslationFieldRendererMock,
+            $this->titleTranslationSynchronizerMock,
+            $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+            $this->localeRepositoryMock
+        );
 
         parent::setUp();
     }
@@ -75,7 +101,13 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
     {
         $controller = \Mockery::mock(
             ProductTypeCrudController::class,
-            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock],
+            [
+                $this->translatorMock,
+                $this->titleTranslationFieldRendererMock,
+                $this->titleTranslationSynchronizerMock,
+                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->localeRepositoryMock,
+            ],
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -116,8 +148,13 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
     {
         $controller = \Mockery::mock(
             ProductTypeCrudController::class,
-            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock],
-        )
+            [
+                $this->translatorMock,
+                $this->titleTranslationFieldRendererMock,
+                $this->titleTranslationSynchronizerMock,
+                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->localeRepositoryMock,
+            ])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -164,7 +201,13 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductTypeCrudController::class,
-            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock],
+            [
+                $this->translatorMock,
+                $this->titleTranslationFieldRendererMock,
+                $this->titleTranslationSynchronizerMock,
+                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->localeRepositoryMock,
+            ],
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -278,6 +321,8 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
+                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->localeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -343,6 +388,8 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
+                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->localeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -364,5 +411,452 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
         $entity = $controller->createEntity(ProductType::class);
 
         $this->assertInstanceOf(ProductType::class, $entity);
+    }
+
+    public function testAddDefaultTranslationListenerSynchronizesTranslations(): void
+    {
+        $configuration = \Mockery::mock(
+            ProductTypeFieldConfiguration::class,
+        );
+
+        $deTranslationForm = \Mockery::mock(FormInterface::class);
+        $deTranslationForm
+            ->shouldReceive('getData')
+            ->once()
+            ->andReturn('Deutscher Standardwert');
+
+        $esTranslationForm = \Mockery::mock(FormInterface::class);
+        $esTranslationForm
+            ->shouldReceive('getData')
+            ->once()
+            ->andReturn(null);
+
+        $invalidTranslationForm = \Mockery::mock(FormInterface::class);
+        $invalidTranslationForm
+            ->shouldReceive('getData')
+            ->once()
+            ->andReturn(['invalid']);
+
+        $translationsForm = \Mockery::mock(FormInterface::class);
+        $translationsForm
+            ->shouldReceive('getIterator')
+            ->once()
+            ->andReturn(
+                new \ArrayIterator([
+                    'de_DE' => $deTranslationForm,
+                    'es_ES' => $esTranslationForm,
+                    'invalid' => $invalidTranslationForm,
+                ]),
+            );
+
+        $configurationForm = \Mockery::mock(FormInterface::class);
+        $configurationForm
+            ->shouldReceive('getData')
+            ->once()
+            ->andReturn($configuration);
+
+        $configurationForm
+            ->shouldReceive('has')
+            ->once()
+            ->with(
+                'productTypeFieldConfigurationDefaultTranslations',
+            )
+            ->andReturnTrue();
+
+        $configurationForm
+            ->shouldReceive('get')
+            ->once()
+            ->with(
+                'productTypeFieldConfigurationDefaultTranslations',
+            )
+            ->andReturn($translationsForm);
+
+        $configurationsForm = \Mockery::mock(FormInterface::class);
+        $configurationsForm
+            ->shouldReceive('getIterator')
+            ->once()
+            ->andReturn(
+                new \ArrayIterator([
+                    $configurationForm,
+                ]),
+            );
+
+        $form = \Mockery::mock(FormInterface::class);
+        $form
+            ->shouldReceive('has')
+            ->once()
+            ->with('productTypeFieldConfigurations')
+            ->andReturnTrue();
+
+        $form
+            ->shouldReceive('get')
+            ->once()
+            ->with('productTypeFieldConfigurations')
+            ->andReturn($configurationsForm);
+
+        $locales = new ArrayCollection();
+
+        $this->localeRepositoryMock
+            ->shouldReceive(
+                'getAvailableContentTranslationLocales',
+            )
+            ->once()
+            ->andReturn($locales);
+
+        $this
+            ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock
+            ->shouldReceive('synchronize')
+            ->once()
+            ->with(
+                $configuration,
+                $locales,
+                [
+                    'de_DE' => 'Deutscher Standardwert',
+                    'es_ES' => null,
+                ],
+            );
+
+        /** @var FormBuilderInterface<ProductType>&MockInterface $builder */
+        $builder = \Mockery::mock(FormBuilderInterface::class);
+
+        /** @var \Closure|null $listener */
+        $listener = null;
+
+        $builder
+            ->shouldReceive('addEventListener')
+            ->once()
+            ->with(
+                FormEvents::POST_SUBMIT,
+                \Mockery::on(
+                    static function (mixed $callback) use (&$listener): bool {
+                        if (!$callback instanceof \Closure) {
+                            return false;
+                        }
+
+                        $listener = $callback;
+
+                        return true;
+                    },
+                ),
+            )
+            ->andReturnSelf();
+
+        $controller = \Mockery::mock(
+            ProductTypeCrudController::class,
+            [
+                $this->translatorMock,
+                $this->titleTranslationFieldRendererMock,
+                $this->titleTranslationSynchronizerMock,
+                $this
+                    ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->localeRepositoryMock,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        /* @phpstan-ignore-next-line */
+        $controller->addDefaultTranslationListener($builder);
+
+        if (!$listener instanceof \Closure) {
+            $this->fail('POST_SUBMIT listener was not registered.');
+        }
+
+        $listener(
+            new FormEvent(
+                $form,
+                null,
+            ),
+        );
+    }
+
+    public function testAddDefaultTranslationListenerReturnsWhenConfigurationsFieldDoesNotExist(): void
+    {
+        $form = \Mockery::mock(FormInterface::class);
+
+        $form
+            ->shouldReceive('has')
+            ->once()
+            ->with('productTypeFieldConfigurations')
+            ->andReturnFalse();
+
+        $this
+            ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock
+            ->shouldNotReceive('synchronize');
+
+        $this->localeRepositoryMock
+            ->shouldNotReceive(
+                'getAvailableContentTranslationLocales',
+            );
+
+        $listener = $this->getDefaultTranslationListener();
+
+        $listener(
+            new FormEvent(
+                $form,
+                null,
+            ),
+        );
+    }
+
+    public function testAddDefaultTranslationListenerIgnoresInvalidConfiguration(): void
+    {
+        $configurationForm = \Mockery::mock(FormInterface::class);
+
+        $configurationForm
+            ->shouldReceive('getData')
+            ->once()
+            ->andReturn(null);
+
+        $configurationForm
+            ->shouldNotReceive('has');
+
+        $configurationsForm = \Mockery::mock(FormInterface::class);
+
+        $configurationsForm
+            ->shouldReceive('getIterator')
+            ->once()
+            ->andReturn(
+                new \ArrayIterator([
+                    $configurationForm,
+                ]),
+            );
+
+        $form = \Mockery::mock(FormInterface::class);
+
+        $form
+            ->shouldReceive('has')
+            ->once()
+            ->with('productTypeFieldConfigurations')
+            ->andReturnTrue();
+
+        $form
+            ->shouldReceive('get')
+            ->once()
+            ->with('productTypeFieldConfigurations')
+            ->andReturn($configurationsForm);
+
+        $this
+            ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock
+            ->shouldNotReceive('synchronize');
+
+        $this->localeRepositoryMock
+            ->shouldNotReceive(
+                'getAvailableContentTranslationLocales',
+            );
+
+        $listener = $this->getDefaultTranslationListener();
+
+        $listener(
+            new FormEvent(
+                $form,
+                null,
+            ),
+        );
+    }
+
+    public function testAddDefaultTranslationListenerIgnoresConfigurationWithoutTranslationsField(): void
+    {
+        $configuration = \Mockery::mock(
+            ProductTypeFieldConfiguration::class,
+        );
+
+        $configurationForm = \Mockery::mock(FormInterface::class);
+
+        $configurationForm
+            ->shouldReceive('getData')
+            ->once()
+            ->andReturn($configuration);
+
+        $configurationForm
+            ->shouldReceive('has')
+            ->once()
+            ->with(
+                'productTypeFieldConfigurationDefaultTranslations',
+            )
+            ->andReturnFalse();
+
+        $configurationForm
+            ->shouldNotReceive('get');
+
+        $configurationsForm = \Mockery::mock(FormInterface::class);
+
+        $configurationsForm
+            ->shouldReceive('getIterator')
+            ->once()
+            ->andReturn(
+                new \ArrayIterator([
+                    $configurationForm,
+                ]),
+            );
+
+        $form = \Mockery::mock(FormInterface::class);
+
+        $form
+            ->shouldReceive('has')
+            ->once()
+            ->with('productTypeFieldConfigurations')
+            ->andReturnTrue();
+
+        $form
+            ->shouldReceive('get')
+            ->once()
+            ->with('productTypeFieldConfigurations')
+            ->andReturn($configurationsForm);
+
+        $this
+            ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock
+            ->shouldNotReceive('synchronize');
+
+        $this->localeRepositoryMock
+            ->shouldNotReceive(
+                'getAvailableContentTranslationLocales',
+            );
+
+        $listener = $this->getDefaultTranslationListener();
+
+        $listener(
+            new FormEvent(
+                $form,
+                null,
+            ),
+        );
+    }
+
+    /**
+     * @return \Closure(FormEvent): void
+     */
+    private function getDefaultTranslationListener(): \Closure
+    {
+        /**
+         * @var FormBuilderInterface<ProductType>&MockInterface $builder
+         */
+        $builder = \Mockery::mock(
+            FormBuilderInterface::class,
+        );
+
+        /** @var \Closure|null $listener */
+        $listener = null;
+
+        $builder
+            ->shouldReceive('addEventListener')
+            ->once()
+            ->with(
+                FormEvents::POST_SUBMIT,
+                \Mockery::on(
+                    static function (mixed $callback) use (&$listener): bool {
+                        if (!$callback instanceof \Closure) {
+                            return false;
+                        }
+
+                        $listener = $callback;
+
+                        return true;
+                    },
+                ),
+            )
+            ->andReturnSelf();
+
+        $controller = \Mockery::mock(
+            ProductTypeCrudController::class,
+            [
+                $this->translatorMock,
+                $this->titleTranslationFieldRendererMock,
+                $this->titleTranslationSynchronizerMock,
+                $this
+                    ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->localeRepositoryMock,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        /* @phpstan-ignore-next-line */
+        $controller->addDefaultTranslationListener(
+            $builder,
+        );
+
+        if (!$listener instanceof \Closure) {
+            $this->fail(
+                'POST_SUBMIT listener was not registered.',
+            );
+        }
+
+        return $listener;
+    }
+
+    public function testCreateEditFormBuilderAddsDefaultTranslationListener(): void
+    {
+        /** @phpstan-var EntityDto<ProductType> $entityDto */
+        $entityDto = new EntityDto(
+            ProductType::class,
+            \Mockery::mock(ClassMetadata::class),
+        );
+
+        $formOptions = KeyValueStore::new();
+
+        /** @phpstan-var AdminContext<ProductType> $context */
+        $context = AdminContext::forTesting();
+
+        /**
+         * @var FormBuilderInterface<ProductType>&MockInterface $builder
+         */
+        $builder = \Mockery::mock(
+            FormBuilderInterface::class,
+        );
+
+        $formFactory = \Mockery::mock(\stdClass::class);
+
+        $formFactory
+            ->shouldReceive('createEditFormBuilder')
+            ->once()
+            ->with(
+                $entityDto,
+                $formOptions,
+                $context,
+            )
+            ->andReturn($builder);
+
+        $container = \Mockery::mock(
+            ContainerInterface::class,
+        );
+
+        $container
+            ->shouldReceive('get')
+            ->once()
+            ->with(FormFactory::class)
+            ->andReturn($formFactory);
+
+        $controller = \Mockery::mock(
+            ProductTypeCrudController::class,
+            [
+                $this->translatorMock,
+                $this->titleTranslationFieldRendererMock,
+                $this->titleTranslationSynchronizerMock,
+                $this
+                    ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->localeRepositoryMock,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller->setContainer($container);
+
+        $controller
+            ->shouldReceive('addDefaultTranslationListener')
+            ->once()
+            ->with($builder);
+
+        $result = $controller->createEditFormBuilder(
+            $entityDto,
+            $formOptions,
+            $context,
+        );
+
+        $this->assertSame(
+            $builder,
+            $result,
+        );
     }
 }

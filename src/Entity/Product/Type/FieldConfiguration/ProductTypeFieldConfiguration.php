@@ -24,8 +24,6 @@ use Symfony\Component\Uid\Uuid;
 #[ApiResource]
 class ProductTypeFieldConfiguration
 {
-    // TODO: add default translation
-
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UuidType::NAME, unique: true)]

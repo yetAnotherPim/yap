@@ -7,7 +7,7 @@ namespace App\Controller\Admin\Settings;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
-use App\Form\ProductTypeFieldConfiguration\ProductTypeFieldConfigurationDefaultTranslationsType;
+use App\Form\ProductType\DefaultTranslation\Type\ProductTypeFieldConfigurationDefaultTranslationsType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;

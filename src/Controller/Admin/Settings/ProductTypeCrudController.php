@@ -6,14 +6,22 @@ namespace App\Controller\Admin\Settings;
 
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\ProductTypeFieldConfigurationDefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use App\Repository\LocaleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -28,6 +36,8 @@ class ProductTypeCrudController extends AbstractCrudController
         private readonly TranslatorInterface $translator,
         private readonly TitleTranslationFieldRenderer $titleTranslationFieldRenderer,
         private readonly TitleTranslationSynchronizer $titleTranslationSynchronizer,
+        private readonly ProductTypeFieldConfigurationDefaultTranslationSynchronizer $defaultTranslationSynchronizer,
+        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -124,5 +134,78 @@ class ProductTypeCrudController extends AbstractCrudController
         $this->titleTranslationSynchronizer->synchronizeTitleTranslations($entity, $requestData);
 
         return $entity;
+    }
+
+    /**
+     * @return FormBuilderInterface<ProductType>
+     */
+    public function createEditFormBuilder(
+        EntityDto $entityDto,
+        KeyValueStore $formOptions,
+        AdminContext $context,
+    ): FormBuilderInterface {
+        $formBuilder = parent::createEditFormBuilder(
+            $entityDto,
+            $formOptions,
+            $context,
+        );
+
+        $this->addDefaultTranslationListener($formBuilder);
+
+        return $formBuilder;
+    }
+
+    /**
+     * @param FormBuilderInterface<ProductType> $formBuilder
+     */
+    protected function addDefaultTranslationListener(
+        FormBuilderInterface $formBuilder,
+    ): void {
+        $formBuilder->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event): void {
+                $form = $event->getForm();
+
+                if (!$form->has('productTypeFieldConfigurations')) {
+                    return;
+                }
+
+                foreach ($form->get('productTypeFieldConfigurations') as $configurationForm) {
+                    $configuration = $configurationForm->getData();
+
+                    if (!$configuration instanceof ProductTypeFieldConfiguration) {
+                        continue;
+                    }
+
+                    if (!$configurationForm->has('productTypeFieldConfigurationDefaultTranslations')) {
+                        continue;
+                    }
+
+                    $translationsForm = $configurationForm->get(
+                        'productTypeFieldConfigurationDefaultTranslations',
+                    );
+
+                    $values = [];
+
+                    foreach (
+                        $translationsForm as $localeId => $translationForm
+                    ) {
+                        $value = $translationForm->getData();
+
+                        if (null !== $value && !\is_string($value)) {
+                            continue;
+                        }
+
+                        $values[$localeId] = $value;
+                    }
+
+                    $this->defaultTranslationSynchronizer->synchronize(
+                        $configuration,
+                        $this->localeRepository->getAvailableContentTranslationLocales(),
+                        $values,
+                    );
+                }
+            },
+        );
     }
 }
