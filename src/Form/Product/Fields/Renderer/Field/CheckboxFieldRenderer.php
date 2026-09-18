@@ -31,7 +31,7 @@ final class CheckboxFieldRenderer implements FieldRendererInterface
         $element = BooleanField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::CheckBox),
+                'data' => InputType::castValue($this->getFieldValue($field, $configuration, $locale), InputType::CheckBox),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

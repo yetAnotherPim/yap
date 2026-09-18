@@ -7,22 +7,22 @@ namespace App\Tests\unit\Form\ProductType\DefaultTranslation\Resolver;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
-use App\Form\ProductType\DefaultTranslation\Resolver\ProductTypeFieldConfigurationDefaultTranslationResolver;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 
-#[CoversClass(ProductTypeFieldConfigurationDefaultTranslationResolver::class)]
+#[CoversClass(DefaultTranslationResolver::class)]
 #[UsesClass(ProductTypeFieldConfigurationDefaultTranslation::class)]
-final class ProductTypeFieldConfigurationDefaultTranslationResolverTest extends MockeryTestCase
+final class DefaultTranslationResolverTest extends MockeryTestCase
 {
     private ProductTypeFieldConfiguration&MockInterface $configuration;
 
     private Locale&MockInterface $locale;
 
-    private ProductTypeFieldConfigurationDefaultTranslationResolver $resolver;
+    private DefaultTranslationResolver $resolver;
 
     protected function setUp(): void
     {
@@ -37,7 +37,7 @@ final class ProductTypeFieldConfigurationDefaultTranslationResolverTest extends 
         );
 
         $this->resolver =
-            new ProductTypeFieldConfigurationDefaultTranslationResolver();
+            new DefaultTranslationResolver();
     }
 
     public function testResolveReturnsExistingTranslation(): void

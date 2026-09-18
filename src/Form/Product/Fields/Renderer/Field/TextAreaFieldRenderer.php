@@ -31,7 +31,7 @@ final class TextAreaFieldRenderer implements FieldRendererInterface
         $element = TextareaField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::Text),
+                'data' => InputType::castValue($this->getFieldValue($field, $configuration, $locale), InputType::Text),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

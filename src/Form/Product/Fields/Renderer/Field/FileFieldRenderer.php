@@ -13,6 +13,7 @@ use App\Form\Product\Fields\Renderer\Field\Trait\TranslationTrait;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
 use App\Form\Product\Fields\Resolver\Enum\FileType;
 use App\Form\Product\Fields\Resolver\FileResolver;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FileField;
 
@@ -22,6 +23,7 @@ final class FileFieldRenderer implements FieldRendererInterface
 
     public function __construct(
         private readonly FileResolver $fileResolver,
+        protected readonly DefaultTranslationResolver $defaultTranslationResolver,
     ) {
     }
 
@@ -37,7 +39,7 @@ final class FileFieldRenderer implements FieldRendererInterface
             ->setUploadedFileNamePattern('[YYYY]/[MM]/[DD]/[slug]-[contenthash].[extension]')
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => $this->fileResolver->resolve($this->getFieldValue($field, $locale), FileType::FILE),
+                'data' => $this->fileResolver->resolve($this->getFieldValue($field, $configuration, $locale), FileType::FILE),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

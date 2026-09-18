@@ -6,13 +6,13 @@ namespace App\Form\ProductType\DefaultTranslation\Synchronizer;
 
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
-use App\Form\ProductType\DefaultTranslation\Resolver\ProductTypeFieldConfigurationDefaultTranslationResolver;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use Doctrine\Common\Collections\Collection;
 
-class ProductTypeFieldConfigurationDefaultTranslationSynchronizer
+class DefaultTranslationSynchronizer
 {
     public function __construct(
-        private readonly ProductTypeFieldConfigurationDefaultTranslationResolver $productTypeFieldConfigurationDefaultTranslationResolver,
+        private readonly DefaultTranslationResolver $productTypeFieldConfigurationDefaultTranslationResolver,
     ) {
     }
 
@@ -27,7 +27,7 @@ class ProductTypeFieldConfigurationDefaultTranslationSynchronizer
     ): void {
         $fieldType = $configuration->getFieldType();
 
-        if (null === $fieldType || false === $fieldType->isTranslatable()) {
+        if (null === $fieldType) {
             return;
         }
 
@@ -51,6 +51,10 @@ class ProductTypeFieldConfigurationDefaultTranslationSynchronizer
                 $configuration,
                 $locale,
             );
+
+            if (false === $fieldType->isTranslatable()) {
+                $configuration->removeProductTypeFieldConfigurationDefaultTranslation($translation);
+            }
 
             $value = \is_string($value) && '' !== $value
                 ? $value

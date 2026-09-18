@@ -11,6 +11,7 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\LocaleFieldRenderer;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -22,11 +23,9 @@ use PHPUnit\Framework\Attributes\UsesClass;
 class LocaleFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;
-
     private FieldType&MockInterface $fieldType;
-
     private ProductTypeFieldConfiguration&MockInterface $configuration;
-
+    private DefaultTranslationResolver&MockInterface $defaultTranslationResolver;
     private LocaleFieldRenderer $renderer;
 
     protected function setUp(): void
@@ -36,8 +35,9 @@ class LocaleFieldRendererTest extends MockeryTestCase
         $this->field = \Mockery::mock(Field::class);
         $this->fieldType = \Mockery::mock(FieldType::class);
         $this->configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $this->defaultTranslationResolver = \Mockery::mock(DefaultTranslationResolver::class);
 
-        $this->renderer = new LocaleFieldRenderer();
+        $this->renderer = new LocaleFieldRenderer($this->defaultTranslationResolver);
     }
 
     public function testSupportsReturnsTrueForLocaleInputType(): void
@@ -139,7 +139,7 @@ class LocaleFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->times(3)
             ->andReturn($this->fieldType);
 
         $this->fieldType
@@ -149,7 +149,7 @@ class LocaleFieldRendererTest extends MockeryTestCase
 
         $this->fieldType
             ->shouldReceive('isTranslatable')
-            ->once()
+            ->twice()
             ->andReturn(true);
 
         $this->field

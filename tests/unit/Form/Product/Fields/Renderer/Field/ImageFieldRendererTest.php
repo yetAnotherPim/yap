@@ -13,6 +13,7 @@ use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\ImageFieldRenderer;
 use App\Form\Product\Fields\Resolver\Enum\FileType;
 use App\Form\Product\Fields\Resolver\FileResolver;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -23,11 +24,9 @@ use Symfony\Component\HttpFoundation\File\File;
 class ImageFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;
-
     private FieldType&MockInterface $fieldType;
-
     private ProductTypeFieldConfiguration&MockInterface $configuration;
-
+    private DefaultTranslationResolver&MockInterface $defaultTranslationResolver;
     private FileResolver&MockInterface $fileResolver;
 
     private ImageFieldRenderer $renderer;
@@ -40,8 +39,9 @@ class ImageFieldRendererTest extends MockeryTestCase
         $this->fieldType = \Mockery::mock(FieldType::class);
         $this->configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
         $this->fileResolver = \Mockery::mock(FileResolver::class);
+        $this->defaultTranslationResolver = \Mockery::mock(DefaultTranslationResolver::class);
 
-        $this->renderer = new ImageFieldRenderer($this->fileResolver);
+        $this->renderer = new ImageFieldRenderer($this->fileResolver, $this->defaultTranslationResolver);
     }
 
     public function testSupportsReturnsTrueForFileInputType(): void
@@ -179,7 +179,7 @@ class ImageFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->times(3)
             ->andReturn($this->fieldType);
 
         $this->fieldType
@@ -189,7 +189,7 @@ class ImageFieldRendererTest extends MockeryTestCase
 
         $this->fieldType
             ->shouldReceive('isTranslatable')
-            ->once()
+            ->twice()
             ->andReturn(true);
 
         $this->field

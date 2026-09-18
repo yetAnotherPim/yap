@@ -31,7 +31,7 @@ final class LocaleFieldRenderer implements FieldRendererInterface
         $element = LocaleField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::Locale),
+                'data' => InputType::castValue($this->getFieldValue($field, $configuration, $locale), InputType::Locale),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

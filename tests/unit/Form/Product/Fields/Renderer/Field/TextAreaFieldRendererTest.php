@@ -6,11 +6,11 @@ namespace App\Tests\unit\Form\Product\Fields\Renderer\Field;
 
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
-use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\TextAreaFieldRenderer;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -22,11 +22,9 @@ use PHPUnit\Framework\Attributes\UsesClass;
 class TextAreaFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;
-
     private FieldType&MockInterface $fieldType;
-
     private ProductTypeFieldConfiguration&MockInterface $configuration;
-
+    private DefaultTranslationResolver&MockInterface $defaultTranslationResolver;
     private TextAreaFieldRenderer $renderer;
 
     protected function setUp(): void
@@ -36,8 +34,9 @@ class TextAreaFieldRendererTest extends MockeryTestCase
         $this->field = \Mockery::mock(Field::class);
         $this->fieldType = \Mockery::mock(FieldType::class);
         $this->configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $this->defaultTranslationResolver = \Mockery::mock(DefaultTranslationResolver::class);
 
-        $this->renderer = new TextAreaFieldRenderer();
+        $this->renderer = new TextAreaFieldRenderer($this->defaultTranslationResolver);
     }
 
     public function testSupportsReturnsFalseForBooleanInputType(): void
@@ -135,11 +134,9 @@ class TextAreaFieldRendererTest extends MockeryTestCase
         $locale = \Mockery::mock(Locale::class);
         $locale->shouldReceive('getId')->andReturn('de');
 
-        $fieldValueTranslation = \Mockery::mock(FieldValueTranslation::class);
-
         $this->field
             ->shouldReceive('getType')
-            ->twice()
+            ->times(3)
             ->andReturn($this->fieldType);
 
         $this->fieldType
@@ -149,18 +146,8 @@ class TextAreaFieldRendererTest extends MockeryTestCase
 
         $this->fieldType
             ->shouldReceive('isTranslatable')
-            ->once()
+            ->twice()
             ->andReturn(false);
-
-        $this->field
-            ->shouldReceive('getTranslationByLocale')
-            ->once()
-            ->andReturn($fieldValueTranslation);
-
-        $fieldValueTranslation
-            ->shouldReceive('getValue')
-            ->once()
-            ->andReturn('test');
 
         $result = $this->renderer->render($this->field, $this->configuration, 'label', $locale);
 

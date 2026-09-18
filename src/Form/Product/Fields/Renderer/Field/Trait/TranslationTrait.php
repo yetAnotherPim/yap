@@ -6,7 +6,9 @@ namespace App\Form\Product\Fields\Renderer\Field\Trait;
 
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Field\Section\SectionField;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -52,6 +54,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
  */
 trait TranslationTrait
 {
+    public function __construct(
+        protected readonly DefaultTranslationResolver $defaultTranslationResolver,
+    ) {
+    }
+
     protected function getTranslationSuffix(?Locale $locale): string
     {
         if (null === $locale) {
@@ -87,12 +94,22 @@ trait TranslationTrait
         return $element;
     }
 
-    protected function getFieldValue(Field $field, ?Locale $locale): ?string
+    protected function getFieldValue(Field $field, ProductTypeFieldConfiguration $configuration, ?Locale $locale): ?string
     {
         if (null === $locale) {
             return $field->getValue();
         }
 
-        return $field->getTranslationByLocale($locale->getId())?->getValue();
+        if (false === $field->getType()->isTranslatable()) {
+            return null;
+        }
+
+        $fieldTranslation = $field->getTranslationByLocale($locale->getId());
+
+        if (null === $fieldTranslation) {
+            return $this->defaultTranslationResolver->resolve($configuration, $locale)->getValue();
+        }
+
+        return $fieldTranslation->getValue();
     }
 }

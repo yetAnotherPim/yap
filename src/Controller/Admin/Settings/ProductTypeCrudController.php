@@ -6,7 +6,7 @@ namespace App\Controller\Admin\Settings;
 
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
-use App\Form\ProductType\DefaultTranslation\Synchronizer\ProductTypeFieldConfigurationDefaultTranslationSynchronizer;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Repository\LocaleRepository;
@@ -36,7 +36,7 @@ class ProductTypeCrudController extends AbstractCrudController
         private readonly TranslatorInterface $translator,
         private readonly TitleTranslationFieldRenderer $titleTranslationFieldRenderer,
         private readonly TitleTranslationSynchronizer $titleTranslationSynchronizer,
-        private readonly ProductTypeFieldConfigurationDefaultTranslationSynchronizer $defaultTranslationSynchronizer,
+        private readonly DefaultTranslationSynchronizer $defaultTranslationSynchronizer,
         private readonly LocaleRepository $localeRepository,
     ) {
     }

@@ -9,7 +9,7 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Entity\Product\Type\ProductType;
-use App\Form\ProductType\DefaultTranslation\Synchronizer\ProductTypeFieldConfigurationDefaultTranslationSynchronizer;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Repository\LocaleRepository;
@@ -55,8 +55,8 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
     /** @var TitleTranslationSynchronizer|MockInterface */
     private TitleTranslationSynchronizer $titleTranslationSynchronizerMock;
 
-    /** @var ProductTypeFieldConfigurationDefaultTranslationSynchronizer|MockInterface */
-    private ProductTypeFieldConfigurationDefaultTranslationSynchronizer $productTypeFieldConfigurationDefaultTranslationSynchronizerMock;
+    /** @var DefaultTranslationSynchronizer|MockInterface */
+    private DefaultTranslationSynchronizer $productTypeFieldConfigurationDefaultTranslationSynchronizerMock;
 
     /** @var LocaleRepository|MockInterface */
     private LocaleRepository $localeRepositoryMock;
@@ -66,7 +66,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
         $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
         $this->titleTranslationFieldRendererMock = \Mockery::mock(TitleTranslationFieldRenderer::class);
         $this->titleTranslationSynchronizerMock = \Mockery::mock(TitleTranslationSynchronizer::class);
-        $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock = \Mockery::mock(ProductTypeFieldConfigurationDefaultTranslationSynchronizer::class);
+        $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock = \Mockery::mock(DefaultTranslationSynchronizer::class);
         $this->localeRepositoryMock = \Mockery::mock(LocaleRepository::class);
 
         $this->controller = new ProductTypeCrudController(

@@ -31,7 +31,7 @@ final class DateFieldRenderer implements FieldRendererInterface
         $element = DateField::new('field_'.$field->getType()->getCode().$this->getTranslationSuffix($locale))
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::Date),
+                'data' => InputType::castValue($this->getFieldValue($field, $configuration, $locale), InputType::Date),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

@@ -32,7 +32,7 @@ final class NumberFieldRenderer implements FieldRendererInterface
             ->setDecimalSeparator($field->getType()->getDecimalSeparator() ?? '.')
             ->setFormTypeOptions([
                 'label' => $label,
-                'data' => InputType::castValue($this->getFieldValue($field, $locale), InputType::Number, $field->getType()->getDecimalSeparator()),
+                'data' => InputType::castValue($this->getFieldValue($field, $configuration, $locale), InputType::Number, $field->getType()->getDecimalSeparator()),
                 'mapped' => false,
                 'required' => null === $locale && $configuration->isRequired(),
             ]);

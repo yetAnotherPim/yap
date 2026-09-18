@@ -8,31 +8,31 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
-use App\Form\ProductType\DefaultTranslation\Resolver\ProductTypeFieldConfigurationDefaultTranslationResolver;
-use App\Form\ProductType\DefaultTranslation\Synchronizer\ProductTypeFieldConfigurationDefaultTranslationSynchronizer;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(ProductTypeFieldConfigurationDefaultTranslationSynchronizer::class)]
-final class ProductTypeFieldConfigurationDefaultTranslationSynchronizerTest extends MockeryTestCase
+#[CoversClass(DefaultTranslationSynchronizer::class)]
+final class DefaultTranslationSynchronizerTest extends MockeryTestCase
 {
-    private ProductTypeFieldConfigurationDefaultTranslationResolver&MockInterface $resolver;
+    private DefaultTranslationResolver&MockInterface $resolver;
 
     private ProductTypeFieldConfiguration&MockInterface $configuration;
 
     private FieldType&MockInterface $fieldType;
 
-    private ProductTypeFieldConfigurationDefaultTranslationSynchronizer $synchronizer;
+    private DefaultTranslationSynchronizer $synchronizer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->resolver = \Mockery::mock(
-            ProductTypeFieldConfigurationDefaultTranslationResolver::class,
+            DefaultTranslationResolver::class,
         );
 
         $this->configuration = \Mockery::mock(
@@ -44,7 +44,7 @@ final class ProductTypeFieldConfigurationDefaultTranslationSynchronizerTest exte
         );
 
         $this->synchronizer =
-            new ProductTypeFieldConfigurationDefaultTranslationSynchronizer(
+            new DefaultTranslationSynchronizer(
                 $this->resolver,
             );
     }
@@ -158,11 +158,6 @@ final class ProductTypeFieldConfigurationDefaultTranslationSynchronizerTest exte
             ->once()
             ->andReturn($this->fieldType);
 
-        $this->fieldType
-            ->shouldReceive('isTranslatable')
-            ->once()
-            ->andReturnTrue();
-
         $locale
             ->shouldReceive('getId')
             ->once()
@@ -191,11 +186,6 @@ final class ProductTypeFieldConfigurationDefaultTranslationSynchronizerTest exte
             ->shouldReceive('getFieldType')
             ->once()
             ->andReturn($this->fieldType);
-
-        $this->fieldType
-            ->shouldReceive('isTranslatable')
-            ->once()
-            ->andReturnFalse();
 
         $this->resolver
             ->shouldNotReceive('resolve');
@@ -237,11 +227,6 @@ final class ProductTypeFieldConfigurationDefaultTranslationSynchronizerTest exte
             ->shouldReceive('getFieldType')
             ->once()
             ->andReturn($this->fieldType);
-
-        $this->fieldType
-            ->shouldReceive('isTranslatable')
-            ->once()
-            ->andReturnTrue();
 
         $this->resolver
             ->shouldNotReceive('resolve');

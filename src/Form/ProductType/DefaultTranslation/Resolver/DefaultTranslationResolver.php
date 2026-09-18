@@ -8,7 +8,7 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 
-class ProductTypeFieldConfigurationDefaultTranslationResolver
+class DefaultTranslationResolver
 {
     public function resolve(
         ProductTypeFieldConfiguration $configuration,

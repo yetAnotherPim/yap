@@ -11,6 +11,7 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\NumberFieldRenderer;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -22,11 +23,9 @@ use PHPUnit\Framework\Attributes\UsesClass;
 class NumberFieldRendererTest extends MockeryTestCase
 {
     private Field&MockInterface $field;
-
     private FieldType&MockInterface $fieldType;
-
     private ProductTypeFieldConfiguration&MockInterface $configuration;
-
+    private DefaultTranslationResolver&MockInterface $defaultTranslationResolver;
     private NumberFieldRenderer $renderer;
 
     protected function setUp(): void
@@ -36,8 +35,9 @@ class NumberFieldRendererTest extends MockeryTestCase
         $this->field = \Mockery::mock(Field::class);
         $this->fieldType = \Mockery::mock(FieldType::class);
         $this->configuration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $this->defaultTranslationResolver = \Mockery::mock(DefaultTranslationResolver::class);
 
-        $this->renderer = new NumberFieldRenderer();
+        $this->renderer = new NumberFieldRenderer($this->defaultTranslationResolver);
     }
 
     public function testSupportsReturnsTrueForNumberInputType(): void
@@ -226,7 +226,7 @@ class NumberFieldRendererTest extends MockeryTestCase
 
         $this->field
             ->shouldReceive('getType')
-            ->times(4)
+            ->times(5)
             ->andReturn($this->fieldType);
 
         $this->fieldType
@@ -236,7 +236,7 @@ class NumberFieldRendererTest extends MockeryTestCase
 
         $this->fieldType
             ->shouldReceive('isTranslatable')
-            ->once()
+            ->twice()
             ->andReturn(true);
 
         $this->fieldType
