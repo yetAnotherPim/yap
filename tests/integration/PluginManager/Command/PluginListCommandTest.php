@@ -25,6 +25,7 @@ use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Kernel;
@@ -98,6 +99,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(ProductFieldTranslationComposer::class)]
 #[UsesClass(\App\plugins\Scheduler\Plugin::class)]
+#[UsesClass(DefaultTranslationSynchronizer::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]

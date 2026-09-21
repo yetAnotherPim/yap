@@ -13,9 +13,12 @@ use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynch
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Repository\LocaleRepository;
+use App\Repository\ProductTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -56,25 +59,30 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
     private TitleTranslationSynchronizer $titleTranslationSynchronizerMock;
 
     /** @var DefaultTranslationSynchronizer|MockInterface */
-    private DefaultTranslationSynchronizer $productTypeFieldConfigurationDefaultTranslationSynchronizerMock;
+    private DefaultTranslationSynchronizer $defaultTranslationSynchronizerMock;
 
     /** @var LocaleRepository|MockInterface */
     private LocaleRepository $localeRepositoryMock;
+
+    /** @var ProductTypeRepository|MockInterface */
+    private ProductTypeRepository $productTypeRepositoryMock;
 
     public function setUp(): void
     {
         $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
         $this->titleTranslationFieldRendererMock = \Mockery::mock(TitleTranslationFieldRenderer::class);
         $this->titleTranslationSynchronizerMock = \Mockery::mock(TitleTranslationSynchronizer::class);
-        $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock = \Mockery::mock(DefaultTranslationSynchronizer::class);
+        $this->defaultTranslationSynchronizerMock = \Mockery::mock(DefaultTranslationSynchronizer::class);
         $this->localeRepositoryMock = \Mockery::mock(LocaleRepository::class);
+        $this->productTypeRepositoryMock = \Mockery::mock(ProductTypeRepository::class);
 
         $this->controller = new ProductTypeCrudController(
             $this->translatorMock,
             $this->titleTranslationFieldRendererMock,
             $this->titleTranslationSynchronizerMock,
-            $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
-            $this->localeRepositoryMock
+            $this->defaultTranslationSynchronizerMock,
+            $this->localeRepositoryMock,
+            $this->productTypeRepositoryMock,
         );
 
         parent::setUp();
@@ -105,8 +113,9 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
-                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->defaultTranslationSynchronizerMock,
                 $this->localeRepositoryMock,
+                $this->productTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -152,8 +161,9 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
-                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->defaultTranslationSynchronizerMock,
                 $this->localeRepositoryMock,
+                $this->productTypeRepositoryMock,
             ])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -205,8 +215,9 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
-                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->defaultTranslationSynchronizerMock,
                 $this->localeRepositoryMock,
+                $this->productTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -321,8 +332,9 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
-                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->defaultTranslationSynchronizerMock,
                 $this->localeRepositoryMock,
+                $this->productTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -388,8 +400,9 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
-                $this->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->defaultTranslationSynchronizerMock,
                 $this->localeRepositoryMock,
+                $this->productTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -504,7 +517,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->andReturn($locales);
 
         $this
-            ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock
+            ->defaultTranslationSynchronizerMock
             ->shouldReceive('synchronize')
             ->once()
             ->with(
@@ -548,8 +561,9 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
                 $this
-                    ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                    ->defaultTranslationSynchronizerMock,
                 $this->localeRepositoryMock,
+                $this->productTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -581,7 +595,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->andReturnFalse();
 
         $this
-            ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock
+            ->defaultTranslationSynchronizerMock
             ->shouldNotReceive('synchronize');
 
         $this->localeRepositoryMock
@@ -637,7 +651,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->andReturn($configurationsForm);
 
         $this
-            ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock
+            ->defaultTranslationSynchronizerMock
             ->shouldNotReceive('synchronize');
 
         $this->localeRepositoryMock
@@ -705,7 +719,7 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
             ->andReturn($configurationsForm);
 
         $this
-            ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock
+            ->defaultTranslationSynchronizerMock
             ->shouldNotReceive('synchronize');
 
         $this->localeRepositoryMock
@@ -763,9 +777,9 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
-                $this
-                    ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->defaultTranslationSynchronizerMock,
                 $this->localeRepositoryMock,
+                $this->productTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -833,9 +847,9 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
-                $this
-                    ->productTypeFieldConfigurationDefaultTranslationSynchronizerMock,
+                $this->defaultTranslationSynchronizerMock,
                 $this->localeRepositoryMock,
+                $this->productTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -857,6 +871,35 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
         $this->assertSame(
             $builder,
             $result,
+        );
+    }
+
+    public function testConfigureActions(): void
+    {
+        $actions = Actions::new()
+            ->add(Crud::PAGE_INDEX, Action::DELETE)
+            ->add(Crud::PAGE_DETAIL, Action::DELETE)
+            ->add(Crud::PAGE_INDEX, Action::BATCH_DELETE);
+
+        $result = $this->controller->configureActions($actions);
+
+        $this->assertSame($actions, $result);
+
+        $indexActions = $result->getAsDto(Crud::PAGE_INDEX);
+        $detailActions = $result->getAsDto(Crud::PAGE_DETAIL);
+
+        $this->assertNotNull(
+            $indexActions->getAction(
+                Crud::PAGE_INDEX,
+                Action::DELETE,
+            ),
+        );
+
+        $this->assertNotNull(
+            $detailActions->getAction(
+                Crud::PAGE_DETAIL,
+                Action::DELETE,
+            ),
         );
     }
 }

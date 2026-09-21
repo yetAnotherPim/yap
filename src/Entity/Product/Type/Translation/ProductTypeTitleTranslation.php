@@ -39,7 +39,7 @@ class ProductTypeTitleTranslation extends RelatedTimestampableEntity implements 
 
     #[ORM\ManyToOne]
     #[Groups(['product_type:write', 'product_type:read'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Locale $locale;
 
     #[ORM\ManyToOne(inversedBy: 'titleTranslations')]

@@ -37,7 +37,6 @@ class ProductFieldsRenderer
             $field = $this->fieldResolver->resolve(
                 $product,
                 $fieldType,
-                // TODO: get default translation
                 (null === $locale) ? $productTypeFieldConfiguration->getDefaultValue() : null,
             );
 

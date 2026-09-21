@@ -9,6 +9,7 @@ use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\DateFieldRenderer;
 use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
@@ -201,5 +202,65 @@ class DateFieldRendererTest extends MockeryTestCase
         /** @var array<string, mixed> $rowAttr */
         $rowAttr = $formTypeOptions['row_attr'];
         $this->assertSame('de', $rowAttr['data-content-translation-locale']);
+    }
+
+    public function testRenderWithLocaleUsesDefaultTranslationWhenFieldTranslationDoesNotExist(): void
+    {
+        $locale = \Mockery::mock(Locale::class);
+
+        $locale
+            ->shouldReceive('getId')
+            ->andReturn('de');
+
+        $defaultTranslation = \Mockery::mock(
+            ProductTypeFieldConfigurationDefaultTranslation::class,
+        );
+
+        $this->field
+            ->shouldReceive('getType')
+            ->andReturn($this->fieldType);
+
+        $this->fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('release_date');
+
+        $this->fieldType
+            ->shouldReceive('isTranslatable')
+            ->andReturn(true);
+
+        $this->field
+            ->shouldReceive('getTranslationByLocale')
+            ->once()
+            ->with('de')
+            ->andReturnNull();
+
+        $this->defaultTranslationResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(
+                $this->configuration,
+                $locale,
+            )
+            ->andReturn($defaultTranslation);
+
+        $defaultTranslation
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('2020-10-27');
+
+        $result = $this->renderer->render(
+            $this->field,
+            $this->configuration,
+            'label',
+            $locale,
+        );
+
+        $this->assertInstanceOf(\DateTime::class, $result->getAsDto()->getFormTypeOptions()['data']);
+
+        $this->assertSame(
+            '2020-10-27',
+            $result->getAsDto()->getFormTypeOptions()['data']->format('Y-m-d'),
+        );
     }
 }

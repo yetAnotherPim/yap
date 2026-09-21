@@ -61,7 +61,7 @@ class FieldSynchronizer
                 );
             }
 
-            $this->fieldTranslationSynchronizer->synchronizeTranslation($field, $requestData, $uploadedFilePaths);
+            $this->fieldTranslationSynchronizer->synchronizeTranslation($field, $configuration, $requestData, $uploadedFilePaths);
 
             $product->addField($field);
         }

@@ -8,9 +8,12 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Resolver\FieldValueTranslationResolver;
 use App\Form\Product\Fields\Synchronizer\Extractor\FieldValueExtractor;
 use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use App\Repository\LocaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -25,6 +28,7 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
     private FieldValueTranslationResolver&MockInterface $fieldValueTranslationResolver;
 
     private FieldValueExtractor&MockInterface $fieldValueExtractor;
+    private DefaultTranslationResolver&MockInterface $defaultTranslationResolver;
 
     private FieldTranslationSynchronizer $synchronizer;
 
@@ -35,17 +39,21 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
         $this->localeRepository = \Mockery::mock(LocaleRepository::class);
         $this->fieldValueTranslationResolver = \Mockery::mock(FieldValueTranslationResolver::class);
         $this->fieldValueExtractor = \Mockery::mock(FieldValueExtractor::class);
+        $this->defaultTranslationResolver = \Mockery::mock(DefaultTranslationResolver::class);
 
         $this->synchronizer = new FieldTranslationSynchronizer(
             $this->localeRepository,
             $this->fieldValueTranslationResolver,
             $this->fieldValueExtractor,
+            $this->defaultTranslationResolver
         );
     }
 
     public function testSynchronizeTranslationDoesNothingForNonTranslatableField(): void
     {
         $fieldType = \Mockery::mock(FieldType::class);
+        $productTypeFieldConfiguration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+
         $fieldType
             ->shouldReceive('isTranslatable')
             ->once()
@@ -69,7 +77,7 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
         $field
             ->shouldNotReceive('addTranslation');
 
-        $this->synchronizer->synchronizeTranslation($field);
+        $this->synchronizer->synchronizeTranslation($field, $productTypeFieldConfiguration);
     }
 
     public function testSynchronizeTranslationAddsTranslationWithoutChangingValueWhenRequestDataIsNull(): void
@@ -77,6 +85,8 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
         $locale = \Mockery::mock(Locale::class);
         $translation = \Mockery::mock(FieldValueTranslation::class);
         $fieldType = \Mockery::mock(FieldType::class);
+        $productTypeFieldConfiguration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $defaultTranslation = \Mockery::mock(ProductTypeFieldConfigurationDefaultTranslation::class);
 
         $fieldType
             ->shouldReceive('isTranslatable')
@@ -97,21 +107,29 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
         $this->fieldValueTranslationResolver
             ->shouldReceive('resolve')
             ->once()
-            ->with($field, $locale)
+            ->with($field, $locale, 'default_translation_value')
             ->andReturn($translation);
-
-        $translation
-            ->shouldNotReceive('setValue');
 
         $this->fieldValueExtractor
             ->shouldNotReceive('extract');
+
+        $this->defaultTranslationResolver
+            ->shouldNotReceive('resolve')
+            ->once()
+            ->with($productTypeFieldConfiguration, $locale)
+            ->andReturn($defaultTranslation);
+
+        $defaultTranslation
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('default_translation_value');
 
         $field
             ->shouldReceive('addTranslation')
             ->once()
             ->with($translation);
 
-        $this->synchronizer->synchronizeTranslation($field);
+        $this->synchronizer->synchronizeTranslation($field, $productTypeFieldConfiguration);
     }
 
     public function testSynchronizeTranslationExtractsAndSetsTranslatedValue(): void
@@ -127,6 +145,8 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
         $locale = \Mockery::mock(Locale::class);
         $translation = \Mockery::mock(FieldValueTranslation::class);
         $fieldType = \Mockery::mock(FieldType::class);
+        $productTypeFieldConfiguration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $defaultTranslation = \Mockery::mock(ProductTypeFieldConfigurationDefaultTranslation::class);
 
         $fieldType
             ->shouldReceive('isTranslatable')
@@ -147,7 +167,7 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
         $this->fieldValueTranslationResolver
             ->shouldReceive('resolve')
             ->once()
-            ->with($field, $locale)
+            ->with($field, $locale, 'default_translation_value')
             ->andReturn($translation);
 
         $this->fieldValueExtractor
@@ -167,6 +187,17 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
             ->with('Deutsche Beschreibung')
             ->andReturnSelf();
 
+        $this->defaultTranslationResolver
+            ->shouldNotReceive('resolve')
+            ->once()
+            ->with($productTypeFieldConfiguration, $locale)
+            ->andReturn($defaultTranslation);
+
+        $defaultTranslation
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('default_translation_value');
+
         $field
             ->shouldReceive('addTranslation')
             ->once()
@@ -174,6 +205,7 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
 
         $this->synchronizer->synchronizeTranslation(
             $field,
+            $productTypeFieldConfiguration,
             $requestData,
             $uploadedFilePaths,
         );
@@ -181,6 +213,10 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
 
     public function testSynchronizeTranslationSynchronizesAllLocales(): void
     {
+        $productTypeFieldConfiguration = \Mockery::mock(ProductTypeFieldConfiguration::class);
+        $defaultTranslationDe = \Mockery::mock(ProductTypeFieldConfigurationDefaultTranslation::class);
+        $defaultTranslationFr = \Mockery::mock(ProductTypeFieldConfigurationDefaultTranslation::class);
+
         $deLocale = \Mockery::mock(Locale::class);
         $frLocale = \Mockery::mock(Locale::class);
 
@@ -207,16 +243,38 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
                 $frLocale,
             ]));
 
+        $this->defaultTranslationResolver
+            ->shouldNotReceive('resolve')
+            ->once()
+            ->with($productTypeFieldConfiguration, $deLocale)
+            ->andReturn($defaultTranslationDe);
+
+        $this->defaultTranslationResolver
+            ->shouldNotReceive('resolve')
+            ->once()
+            ->with($productTypeFieldConfiguration, $frLocale)
+            ->andReturn($defaultTranslationFr);
+
+        $defaultTranslationDe
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('default_translation_value_de');
+
+        $defaultTranslationFr
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn(null);
+
         $this->fieldValueTranslationResolver
             ->shouldReceive('resolve')
             ->once()
-            ->with($field, $deLocale)
+            ->with($field, $deLocale, 'default_translation_value_de')
             ->andReturn($deTranslation);
 
         $this->fieldValueTranslationResolver
             ->shouldReceive('resolve')
             ->once()
-            ->with($field, $frLocale)
+            ->with($field, $frLocale, null)
             ->andReturn($frTranslation);
 
         $requestData = [
@@ -260,6 +318,7 @@ class FieldTranslationSynchronizerTest extends MockeryTestCase
 
         $this->synchronizer->synchronizeTranslation(
             $field,
+            $productTypeFieldConfiguration,
             $requestData,
         );
     }

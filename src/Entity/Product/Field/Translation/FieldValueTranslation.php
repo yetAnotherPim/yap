@@ -42,7 +42,7 @@ class FieldValueTranslation extends RelatedTimestampableEntity
 
     #[ORM\ManyToOne]
     #[Groups(['product:read', 'product:write', 'field:write', 'field:read'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Locale $locale;
 
     #[ORM\ManyToOne(inversedBy: 'translations')]

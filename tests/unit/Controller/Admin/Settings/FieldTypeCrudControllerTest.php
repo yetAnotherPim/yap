@@ -9,7 +9,10 @@ use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use App\Repository\FieldTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
@@ -39,11 +42,24 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
     /** @var TitleTranslationSynchronizer|MockInterface */
     private TitleTranslationSynchronizer $titleTranslationSynchronizerMock;
 
+    /** @var FieldTypeRepository|MockInterface */
+    private FieldTypeRepository $fieldTypeRepositoryMock;
+
+    private FieldTypeCrudController $controller;
+
     public function setUp(): void
     {
         $this->translatorMock = \Mockery::mock(TranslatorInterface::class);
         $this->titleTranslationFieldRendererMock = \Mockery::mock(TitleTranslationFieldRenderer::class);
         $this->titleTranslationSynchronizerMock = \Mockery::mock(TitleTranslationSynchronizer::class);
+        $this->fieldTypeRepositoryMock = \Mockery::mock(FieldTypeRepository::class);
+
+        $this->controller = new FieldTypeCrudController(
+            $this->translatorMock,
+            $this->titleTranslationFieldRendererMock,
+            $this->titleTranslationSynchronizerMock,
+            $this->fieldTypeRepositoryMock,
+        );
 
         parent::setUp();
     }
@@ -59,6 +75,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
             $this->translatorMock,
             $this->titleTranslationFieldRendererMock,
             $this->titleTranslationSynchronizerMock,
+            $this->fieldTypeRepositoryMock,
         );
 
         $fields = iterator_to_array($controller->configureFields(Crud::PAGE_INDEX));
@@ -86,7 +103,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
     {
         $controller = \Mockery::mock(
             FieldTypeCrudController::class,
-            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock],
+            [$this->translatorMock, $this->titleTranslationFieldRendererMock, $this->titleTranslationSynchronizerMock, $this->fieldTypeRepositoryMock],
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -132,6 +149,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
             $this->translatorMock,
             $this->titleTranslationFieldRendererMock,
             $this->titleTranslationSynchronizerMock,
+            $this->fieldTypeRepositoryMock,
         );
 
         $crud = Crud::new();
@@ -183,6 +201,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
+                $this->fieldTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -248,6 +267,7 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
                 $this->translatorMock,
                 $this->titleTranslationFieldRendererMock,
                 $this->titleTranslationSynchronizerMock,
+                $this->fieldTypeRepositoryMock,
             ],
         )
             ->makePartial()
@@ -269,5 +289,34 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
         $entity = $controller->createEntity(FieldType::class);
 
         $this->assertInstanceOf(FieldType::class, $entity);
+    }
+
+    public function testConfigureActions(): void
+    {
+        $actions = Actions::new()
+            ->add(Crud::PAGE_INDEX, Action::DELETE)
+            ->add(Crud::PAGE_DETAIL, Action::DELETE)
+            ->add(Crud::PAGE_INDEX, Action::BATCH_DELETE);
+
+        $result = $this->controller->configureActions($actions);
+
+        $this->assertSame($actions, $result);
+
+        $indexActions = $result->getAsDto(Crud::PAGE_INDEX);
+        $detailActions = $result->getAsDto(Crud::PAGE_DETAIL);
+
+        $this->assertNotNull(
+            $indexActions->getAction(
+                Crud::PAGE_INDEX,
+                Action::DELETE,
+            ),
+        );
+
+        $this->assertNotNull(
+            $detailActions->getAction(
+                Crud::PAGE_DETAIL,
+                Action::DELETE,
+            ),
+        );
     }
 }

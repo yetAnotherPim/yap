@@ -10,7 +10,10 @@ use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynch
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Repository\LocaleRepository;
+use App\Repository\ProductTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -38,6 +41,7 @@ class ProductTypeCrudController extends AbstractCrudController
         private readonly TitleTranslationSynchronizer $titleTranslationSynchronizer,
         private readonly DefaultTranslationSynchronizer $defaultTranslationSynchronizer,
         private readonly LocaleRepository $localeRepository,
+        private readonly ProductTypeRepository $productTypeRepository,
     ) {
     }
 
@@ -108,6 +112,18 @@ class ProductTypeCrudController extends AbstractCrudController
             );
 
         return $fields;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::DELETE,
+                fn (Action $action) => $action->displayIf(fn (ProductType $productType) => !$this->productTypeRepository->isInUse($productType))
+            )
+            ->update(Crud::PAGE_DETAIL, Action::DELETE,
+                fn (Action $action) => $action->displayIf(fn (ProductType $productType) => !$this->productTypeRepository->isInUse($productType))
+            )
+            ->disable(Action::BATCH_DELETE);
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void

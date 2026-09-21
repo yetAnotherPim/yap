@@ -159,7 +159,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, null, []);
+            ->with($field, $configuration, null, []);
 
         $this->synchronizer->synchronizeFields($this->product);
     }
@@ -220,7 +220,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, ['field_title' => 'Test value'], []);
+            ->with($field, $configuration, ['field_title' => 'Test value'], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -283,7 +283,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, ['field_title' => ''], []);
+            ->with($field, $configuration, ['field_title' => ''], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -346,7 +346,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, ['field_active' => '1'], []);
+            ->with($field, $configuration, ['field_active' => '1'], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -409,7 +409,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, null, []);
+            ->with($field, $configuration, null, []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -472,7 +472,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, ['field_tags' => ['tag1', 'tag2']], []);
+            ->with($field, $configuration, ['field_tags' => ['tag1', 'tag2']], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -535,7 +535,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, ['field_tags' => ''], []);
+            ->with($field, $configuration, ['field_tags' => ''], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -594,12 +594,12 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field1, ['field_title' => 'New Title', 'field_active' => '1'], []);
+            ->with($field1, $config1, ['field_title' => 'New Title', 'field_active' => '1'], []);
 
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field2, ['field_title' => 'New Title', 'field_active' => '1'], []);
+            ->with($field2, $config2, ['field_title' => 'New Title', 'field_active' => '1'], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -674,6 +674,7 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->once()
             ->with(
                 $field,
+                $configuration,
                 ['field_file' => ['deleted_files' => '']],
                 [
                     'field_file' => '2026/08/14/indexcontroller-file.pdf',
@@ -745,7 +746,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, ['field_file' => ['deleted_files' => '']], []);
+            ->with($field, $configuration, ['field_file' => ['deleted_files' => '']], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,
@@ -818,6 +819,7 @@ class FieldSynchronizerTest extends MockeryTestCase
             ->once()
             ->with(
                 $field,
+                $configuration,
                 ['field_image' => ['deleted_files' => '']],
                 [
                     'field_image' => '2026/08/14/product-image.jpg',
@@ -889,7 +891,7 @@ class FieldSynchronizerTest extends MockeryTestCase
         $this->fieldTranslationSynchronizer
             ->shouldReceive('synchronizeTranslation')
             ->once()
-            ->with($field, ['field_title' => ['unexpected', 'array']], []);
+            ->with($field, $configuration, ['field_title' => ['unexpected', 'array']], []);
 
         $this->synchronizer->synchronizeFields(
             $this->product,

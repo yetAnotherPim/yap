@@ -239,4 +239,61 @@ final class DefaultTranslationSynchronizerTest extends MockeryTestCase
             ],
         );
     }
+
+    public function testSynchronizeRemovesTranslationForNonTranslatableFieldType(): void
+    {
+        $locale = \Mockery::mock(Locale::class);
+        $translation = \Mockery::mock(
+            ProductTypeFieldConfigurationDefaultTranslation::class,
+        );
+
+        $this->configuration
+            ->shouldReceive('getFieldType')
+            ->once()
+            ->andReturn($this->fieldType);
+
+        $locale
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn('de_DE');
+
+        $this->resolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(
+                $this->configuration,
+                $locale,
+            )
+            ->andReturn($translation);
+
+        $this->fieldType
+            ->shouldReceive('isTranslatable')
+            ->once()
+            ->andReturnFalse();
+
+        $this->configuration
+            ->shouldReceive(
+                'removeProductTypeFieldConfigurationDefaultTranslation',
+            )
+            ->once()
+            ->with($translation);
+
+        $translation
+            ->shouldReceive('setValue')
+            ->once()
+            ->with('Default Title');
+
+        /** @var Collection<int, Locale> $locales */
+        $locales = new ArrayCollection([
+            $locale,
+        ]);
+
+        $this->synchronizer->synchronize(
+            $this->configuration,
+            $locales,
+            [
+                'de_DE' => 'Default Title',
+            ],
+        );
+    }
 }

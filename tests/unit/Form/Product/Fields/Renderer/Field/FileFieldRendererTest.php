@@ -9,6 +9,7 @@ use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\FileFieldRenderer;
 use App\Form\Product\Fields\Resolver\Enum\FileType;
@@ -222,5 +223,76 @@ class FileFieldRendererTest extends MockeryTestCase
         /** @var array<string, mixed> $rowAttr */
         $rowAttr = $formTypeOptions['row_attr'];
         $this->assertSame('de', $rowAttr['data-content-translation-locale']);
+    }
+
+    public function testRenderWithLocaleUsesDefaultTranslation(): void
+    {
+        $locale = \Mockery::mock(Locale::class);
+        $locale->shouldReceive('getId')->andReturn('de');
+
+        $defaultTranslation = \Mockery::mock(
+            ProductTypeFieldConfigurationDefaultTranslation::class,
+        );
+
+        $file = \Mockery::mock(File::class);
+
+        $this->field
+            ->shouldReceive('getType')
+            ->times(3)
+            ->andReturn($this->fieldType);
+
+        $this->fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('file');
+
+        $this->fieldType
+            ->shouldReceive('isTranslatable')
+            ->twice()
+            ->andReturn(true);
+
+        $this->field
+            ->shouldReceive('getTranslationByLocale')
+            ->once()
+            ->with('de')
+            ->andReturnNull();
+
+        $this->defaultTranslationResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->configuration, $locale)
+            ->andReturn($defaultTranslation);
+
+        $defaultTranslation
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('2026/08/14/default.pdf');
+
+        $this->fileResolver
+            ->shouldReceive('getUploadDirectory')
+            ->once()
+            ->with(FileType::FILE)
+            ->andReturn('public/uploads/files/');
+
+        $this->fileResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with(
+                '2026/08/14/default.pdf',
+                FileType::FILE,
+            )
+            ->andReturn($file);
+
+        $result = $this->renderer->render(
+            $this->field,
+            $this->configuration,
+            'label',
+            $locale,
+        );
+
+        $this->assertSame(
+            $file,
+            $result->getAsDto()->getFormTypeOptions()['data'],
+        );
     }
 }

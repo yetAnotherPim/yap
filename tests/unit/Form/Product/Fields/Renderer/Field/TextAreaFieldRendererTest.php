@@ -8,6 +8,7 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Type\FieldConfiguration\DefaultTranslation\ProductTypeFieldConfigurationDefaultTranslation;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\TextAreaFieldRenderer;
 use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
@@ -158,5 +159,59 @@ class TextAreaFieldRendererTest extends MockeryTestCase
         /** @var array<string, mixed> $rowAttr */
         $rowAttr = $formTypeOptions['row_attr'];
         $this->assertSame('de', $rowAttr['data-content-translation-locale']);
+    }
+
+    public function testRenderWithLocaleUsesDefaultTranslation(): void
+    {
+        $locale = \Mockery::mock(Locale::class);
+        $locale->shouldReceive('getId')->andReturn('de');
+
+        $defaultTranslation = \Mockery::mock(
+            ProductTypeFieldConfigurationDefaultTranslation::class,
+        );
+
+        $this->field
+            ->shouldReceive('getType')
+            ->times(3)
+            ->andReturn($this->fieldType);
+
+        $this->fieldType
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn('description');
+
+        $this->fieldType
+            ->shouldReceive('isTranslatable')
+            ->twice()
+            ->andReturn(true);
+
+        $this->field
+            ->shouldReceive('getTranslationByLocale')
+            ->once()
+            ->with('de')
+            ->andReturnNull();
+
+        $this->defaultTranslationResolver
+            ->shouldReceive('resolve')
+            ->once()
+            ->with($this->configuration, $locale)
+            ->andReturn($defaultTranslation);
+
+        $defaultTranslation
+            ->shouldReceive('getValue')
+            ->once()
+            ->andReturn('Default description');
+
+        $result = $this->renderer->render(
+            $this->field,
+            $this->configuration,
+            'label',
+            $locale,
+        );
+
+        $this->assertSame(
+            'Default description',
+            $result->getAsDto()->getFormTypeOptions()['data'],
+        );
     }
 }

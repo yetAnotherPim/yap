@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Form\Product\Fields\Synchronizer\Translation;
 
 use App\Entity\Product\Field\Field;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Resolver\FieldValueTranslationResolver;
 use App\Form\Product\Fields\Synchronizer\Extractor\FieldValueExtractor;
+use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use App\Repository\LocaleRepository;
 
 class FieldTranslationSynchronizer
@@ -15,6 +17,7 @@ class FieldTranslationSynchronizer
         private readonly LocaleRepository $localeRepository,
         private readonly FieldValueTranslationResolver $fieldValueTranslationResolver,
         private readonly FieldValueExtractor $fieldValueExtractor,
+        private readonly DefaultTranslationResolver $defaultTranslationResolver,
     ) {
     }
 
@@ -22,7 +25,7 @@ class FieldTranslationSynchronizer
      * @param array<mixed>|null    $requestData
      * @param array<string, mixed> $uploadedFilePaths
      */
-    public function synchronizeTranslation(Field $field, ?array $requestData = null, array $uploadedFilePaths = []): void
+    public function synchronizeTranslation(Field $field, ProductTypeFieldConfiguration $productTypeFieldConfiguration, ?array $requestData = null, array $uploadedFilePaths = []): void
     {
         if (false === $field->getType()->isTranslatable()) {
             return;
@@ -31,8 +34,8 @@ class FieldTranslationSynchronizer
         $locales = $this->localeRepository->getAvailableContentTranslationLocales();
 
         foreach ($locales as $locale) {
-            // TODO: set defaultValue
-            $fieldValueTranslation = $this->fieldValueTranslationResolver->resolve($field, $locale);
+            $defaultTranslation = $this->defaultTranslationResolver->resolve($productTypeFieldConfiguration, $locale);
+            $fieldValueTranslation = $this->fieldValueTranslationResolver->resolve($field, $locale, $defaultTranslation->getValue());
 
             if (null !== $requestData) {
                 $fieldValueTranslation->setValue(

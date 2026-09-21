@@ -38,7 +38,7 @@ class FieldTypeTitleTranslation extends RelatedTimestampableEntity implements Ti
 
     #[ORM\ManyToOne]
     #[Groups(['product:read', 'product:write', 'field_type:write', 'field_type:read'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Locale $locale;
 
     #[ORM\ManyToOne(inversedBy: 'titleTranslations')]

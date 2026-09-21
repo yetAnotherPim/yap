@@ -8,7 +8,10 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use App\Repository\FieldTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -29,6 +32,7 @@ class FieldTypeCrudController extends AbstractCrudController
         private readonly TranslatorInterface $translator,
         private readonly TitleTranslationFieldRenderer $titleTranslationFieldRenderer,
         private readonly TitleTranslationSynchronizer $titleTranslationSynchronizer,
+        private readonly FieldTypeRepository $fieldTypeRepository,
     ) {
     }
 
@@ -90,6 +94,18 @@ class FieldTypeCrudController extends AbstractCrudController
                 callback: fn (FieldType $fieldType): string => $fieldType->getTranslatedTitleByLocale($this->translator->getLocale()).' ('.$fieldType->getCode().' - '.$fieldType->getInputType()->trans($this->translator).')',
             )
         ;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::DELETE,
+                fn (Action $action) => $action->displayIf(fn (FieldType $fieldType) => !$this->fieldTypeRepository->isInUse($fieldType))
+            )
+            ->update(Crud::PAGE_DETAIL, Action::DELETE,
+                fn (Action $action) => $action->displayIf(fn (FieldType $fieldType) => !$this->fieldTypeRepository->isInUse($fieldType))
+            )
+            ->disable(Action::BATCH_DELETE);
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
