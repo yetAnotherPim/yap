@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
@@ -26,6 +27,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -146,6 +149,22 @@ class ProductCrudController extends AbstractCrudController
         }
 
         return $fields;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(
+                EntityFilter::new('productType')
+                    ->setFormTypeOption(
+                        'value_type_options.choice_label',
+                        fn (ProductType $productType): string => $productType->getTranslatedTitleByLocale(
+                            $this->translator->getLocale(),
+                        ),
+                    ),
+            )
+            ->add(DateTimeFilter::new('updatedAt'))
+            ->add(DateTimeFilter::new('createdAt'));
     }
 
     public function createEntity(string $entityFqcn): object

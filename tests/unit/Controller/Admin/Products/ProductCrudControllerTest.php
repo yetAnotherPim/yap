@@ -9,6 +9,7 @@ use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Repository\IdentifierTypeRepository;
@@ -18,6 +19,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
@@ -26,6 +28,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\Model\FileUploadState;
 use EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Option\ButtonVariant;
@@ -841,5 +845,70 @@ class ProductCrudControllerTest extends MockeryTestCase
             ->andReturn($config);
 
         return $form;
+    }
+
+    public function testConfigureFilters(): void
+    {
+        $this->translator
+            ->shouldReceive('getLocale')
+            ->once()
+            ->andReturn('de_DE');
+
+        $productType = \Mockery::mock(ProductType::class);
+        $productType
+            ->shouldReceive('getTranslatedTitleByLocale')
+            ->once()
+            ->with('de_DE')
+            ->andReturn('Bekleidung');
+
+        $filters = $this->controller->configureFilters(
+            Filters::new(),
+        );
+
+        $filtersDto = $filters->getAsDto();
+
+        $productTypeFilter = $filtersDto->getFilter('productType');
+
+        $this->assertInstanceOf(
+            EntityFilter::class,
+            $productTypeFilter,
+        );
+
+        $productTypeFilterDto = $productTypeFilter->getAsDto();
+
+        $formTypeOptions = $productTypeFilterDto->getFormTypeOptions();
+
+        $this->assertArrayHasKey(
+            'value_type_options',
+            $formTypeOptions,
+        );
+
+        $this->assertIsArray(
+            $formTypeOptions['value_type_options'],
+        );
+
+        $this->assertArrayHasKey(
+            'choice_label',
+            $formTypeOptions['value_type_options'],
+        );
+
+        $choiceLabel = $formTypeOptions['value_type_options']['choice_label'];
+
+        $this->assertIsCallable($choiceLabel);
+
+        $this->assertSame(
+            'Bekleidung',
+            $choiceLabel($productType),
+        );
+
+        $this->assertInstanceOf(
+            DateTimeFilter::class,
+            $filtersDto->getFilter('updatedAt'),
+        );
+
+        $this->assertInstanceOf(
+            DateTimeFilter::class,
+            $filtersDto->getFilter('createdAt'),
+        );
     }
 }
