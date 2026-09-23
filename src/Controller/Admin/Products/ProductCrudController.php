@@ -9,7 +9,8 @@ use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
-use App\Repository\IdentifierTypeRepository;
+use App\Form\Product\Filter\Composer\ProductFilterComposer;
+use App\Form\Product\Identifier\IdentifierManager;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Order;
@@ -27,8 +28,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -47,10 +46,11 @@ class ProductCrudController extends AbstractCrudController
     private array $uploadedFilePaths = [];
 
     public function __construct(
-        private readonly IdentifierTypeRepository $identifierTypeRepository,
+        private readonly IdentifierManager $identfierManager,
         private readonly ProductFieldsComposer $productFieldsComposer,
         private readonly FieldSynchronizer $fieldSynchronizer,
         private readonly TranslatorInterface $translator,
+        private readonly ProductFilterComposer $productFilterComposer,
     ) {
     }
 
@@ -153,25 +153,14 @@ class ProductCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
-        return $filters
-            ->add(
-                EntityFilter::new('productType')
-                    ->setFormTypeOption(
-                        'value_type_options.choice_label',
-                        fn (ProductType $productType): string => $productType->getTranslatedTitleByLocale(
-                            $this->translator->getLocale(),
-                        ),
-                    ),
-            )
-            ->add(DateTimeFilter::new('updatedAt'))
-            ->add(DateTimeFilter::new('createdAt'));
+        return $this->productFilterComposer->compose($filters);
     }
 
     public function createEntity(string $entityFqcn): object
     {
         $product = new Product();
 
-        $this->initializeIdentifiers($product);
+        $this->identfierManager->initializeIdentifiers($product);
 
         return $product;
     }
@@ -187,7 +176,7 @@ class ProductCrudController extends AbstractCrudController
             return parent::createEditForm($entityDto, $formOptions, $context);
         }
 
-        $this->initializeIdentifiers($product);
+        $this->identfierManager->initializeIdentifiers($product);
 
         return parent::createEditForm($entityDto, $formOptions, $context);
     }
@@ -197,7 +186,7 @@ class ProductCrudController extends AbstractCrudController
      */
     public function persistEntity(EntityManagerInterface $entityManager, object $entityInstance): void
     {
-        $this->clearUnsetIdentifiers($entityInstance);
+        $this->identfierManager->clearUnsetIdentifiers($entityInstance);
 
         $this->fieldSynchronizer->synchronizeFields($entityInstance);
 
@@ -209,7 +198,7 @@ class ProductCrudController extends AbstractCrudController
      */
     public function updateEntity(EntityManagerInterface $entityManager, object $entityInstance): void
     {
-        $this->clearUnsetIdentifiers($entityInstance);
+        $this->identfierManager->clearUnsetIdentifiers($entityInstance);
         $entityInstance->updateUpdatedAt();
 
         $requestData = $this->getContext()
@@ -262,35 +251,6 @@ class ProductCrudController extends AbstractCrudController
                 /** @phpstan-var FormInterface<Product> $child */
                 $this->collectUploadedFilePaths($child, $path);
             }
-        }
-    }
-
-    private function clearUnsetIdentifiers(Product $product): void
-    {
-        foreach ($product->getIdentifiers() as $identifier) {
-            if (true === empty($identifier->getValue())) {
-                $product->removeIdentifier($identifier);
-            }
-        }
-    }
-
-    private function initializeIdentifiers(Product $product): void
-    {
-        $identifierTypes = $this->identifierTypeRepository->findAll();
-
-        foreach ($identifierTypes as $identifierType) {
-            $identifier = $product->getIdentifiers()->findFirst(
-                static fn (int $key, Identifier $identifier): bool => $identifier->getType()->getId() === $identifierType->getId()
-            );
-
-            if (null !== $identifier) {
-                continue;
-            }
-
-            $product->addIdentifier(
-                new Identifier()
-                    ->setType($identifierType)
-            );
         }
     }
 }

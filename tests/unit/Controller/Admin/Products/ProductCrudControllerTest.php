@@ -7,13 +7,11 @@ namespace App\Tests\unit\Controller\Admin\Products;
 use App\Controller\Admin\Products\ProductCrudController;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Identifier\Identifier;
-use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Product;
-use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
-use App\Repository\IdentifierTypeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Form\Product\Filter\Composer\ProductFilterComposer;
+use App\Form\Product\Identifier\IdentifierManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -28,8 +26,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\Model\FileUploadState;
 use EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Option\ButtonVariant;
@@ -43,7 +39,6 @@ use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatableMessage;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(ProductCrudController::class)]
@@ -54,24 +49,34 @@ class ProductCrudControllerTest extends MockeryTestCase
 {
     /** @var ProductFieldsComposer&MockInterface */
     private ProductFieldsComposer $productFieldsRenderer;
-    /** @var IdentifierTypeRepository&MockInterface */
-    private IdentifierTypeRepository $identifierTypeRepository;
+    /** @var IdentifierManager&MockInterface */
+    private IdentifierManager $identifierManager;
 
     /** @var FieldSynchronizer&MockInterface */
     private FieldSynchronizer $fieldSynchronizer;
 
     /** @var TranslatorInterface&MockInterface */
     private TranslatorInterface $translator;
+
+    /** @var ProductFilterComposer&MockInterface */
+    private ProductFilterComposer $productFilterComposer;
     private ProductCrudController $controller;
 
     public function setUp(): void
     {
         $this->productFieldsRenderer = \Mockery::mock(ProductFieldsComposer::class);
-        $this->identifierTypeRepository = \Mockery::mock(IdentifierTypeRepository::class);
+        $this->identifierManager = \Mockery::mock(IdentifierManager::class);
         $this->fieldSynchronizer = \Mockery::mock(FieldSynchronizer::class);
         $this->translator = \Mockery::mock(TranslatorInterface::class);
+        $this->productFilterComposer = \Mockery::mock(ProductFilterComposer::class);
 
-        $this->controller = new ProductCrudController($this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator);
+        $this->controller = new ProductCrudController(
+            $this->identifierManager,
+            $this->productFieldsRenderer,
+            $this->fieldSynchronizer,
+            $this->translator,
+            $this->productFilterComposer
+        );
 
         parent::setUp();
     }
@@ -83,10 +88,9 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testCreateEntityCreatesProduct(): void
     {
-        $this->identifierTypeRepository
-            ->shouldReceive('findAll')
-            ->once()
-            ->andReturn([]);
+        $this->identifierManager
+            ->shouldReceive('initializeIdentifiers')
+            ->once();
 
         $product = $this->controller->createEntity(Product::class);
 
@@ -109,221 +113,95 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testCreateEntityInitializesIdentifiers(): void
     {
-        $type1 = \Mockery::mock(IdentifierType::class);
-        $type1->shouldReceive('getId')
-            ->andReturn(Uuid::v7());
-
-        $type2 = \Mockery::mock(IdentifierType::class);
-        $type2->shouldReceive('getId')
-            ->andReturn(Uuid::v7());
-
-        $this->identifierTypeRepository
-            ->shouldReceive('findAll')
+        $this->identifierManager
+            ->shouldReceive('initializeIdentifiers')
             ->once()
-            ->andReturn([$type1, $type2]);
+            ->with(Product::class);
 
-        $product = $this->controller->createEntity(Product::class);
-
-        $this->assertCount(2, $product->getIdentifiers());
+        $this->controller->createEntity(Product::class);
     }
 
-    public function testCreateEntityDoesNotCreateIdentifiersWhenNoIdentifierTypesExist(): void
+    public function testCreateEditFormInitializesMissingIdentifiers(): void
     {
-        $this->identifierTypeRepository
-            ->shouldReceive('findAll')
-            ->once()
-            ->andReturn([]);
-
-        $product = $this->controller->createEntity(Product::class);
-
-        $this->assertCount(
-            0,
-            $product->getIdentifiers()
-        );
-    }
-
-    public function testUpdateEntityRemovesEmptyIdentifiers(): void
-    {
-        $entityManager = \Mockery::mock(EntityManagerInterface::class);
-
-        $emptyIdentifier = \Mockery::mock(Identifier::class);
-        $emptyIdentifier
-            ->shouldReceive('getValue')
-            ->once()
-            ->andReturn('');
-
-        $validIdentifier = \Mockery::mock(Identifier::class);
-        $validIdentifier
-            ->shouldReceive('getValue')
-            ->once()
-            ->andReturn('ABC123');
-
         $product = \Mockery::mock(Product::class);
 
-        $product
-            ->shouldReceive('getIdentifiers')
-            ->once()
-            ->andReturn(new ArrayCollection([$emptyIdentifier, $validIdentifier]));
-
-        $product
-            ->shouldReceive('removeIdentifier')
-            ->once()
-            ->with($emptyIdentifier);
-
-        $product
-            ->shouldReceive('removeIdentifier')
-            ->never()
-            ->with($validIdentifier);
-
-        $product
-            ->shouldReceive('updateUpdatedAt')
-            ->once();
-
-        $entityManager
-            ->shouldReceive('persist')
+        $this->identifierManager
+            ->shouldReceive('initializeIdentifiers')
             ->once()
             ->with($product);
 
-        $entityManager
-            ->shouldReceive('flush')
-            ->once();
-
-        $this->fieldSynchronizer
-            ->shouldReceive('synchronizeFields')
-            ->once()
-            ->with($product, [], []);
-
-        $request = new Request(
-            [],
-            ['Product' => []],
-        );
-
-        $context = AdminContext::forTesting(
-            requestContext: RequestContext::forTesting($request),
+        /** @var EntityDto<Product> $entityDto */
+        $entityDto = new EntityDto(
+            Product::class,
+            \Mockery::mock(ClassMetadata::class),
+            null,
+            $product
         );
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [
-                $this->identifierTypeRepository,
-                $this->productFieldsRenderer,
-                $this->fieldSynchronizer,
-                $this->translator,
-            ],
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+            [$this->identifierManager, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator, $this->productFilterComposer]
+        )->makePartial();
 
-        $controller
-            ->shouldReceive('getContext')
-            ->once()
-            ->andReturn($context);
+        /** @phpstan-var AdminContext<Product> $context */
+        $context = AdminContext::forTesting();
 
-        $controller->updateEntity($entityManager, $product);
+        $this->expectException(\Error::class);
+        $this->expectExceptionMessageIsOrContains(
+            'AbstractController::$container'
+        );
+
+        $controller->createEditForm(
+            $entityDto,
+            KeyValueStore::new(),
+            $context
+        );
     }
 
-    public function testUpdateEntityRemovesEmptyIdentifiersIfRequestDataIsNotAvailable(): void
+    public function testCreateEditFormSkipsInitializationForNonProductInstance(): void
     {
-        $entityManager = \Mockery::mock(EntityManagerInterface::class);
-
-        $emptyIdentifier = \Mockery::mock(Identifier::class);
-        $emptyIdentifier
-            ->shouldReceive('getValue')
-            ->once()
-            ->andReturn('');
-
-        $validIdentifier = \Mockery::mock(Identifier::class);
-        $validIdentifier
-            ->shouldReceive('getValue')
-            ->once()
-            ->andReturn('ABC123');
-
-        $product = \Mockery::mock(Product::class);
-
-        $product
-            ->shouldReceive('getIdentifiers')
-            ->once()
-            ->andReturn(new ArrayCollection([$emptyIdentifier, $validIdentifier]));
-
-        $product
-            ->shouldReceive('removeIdentifier')
-            ->once()
-            ->with($emptyIdentifier);
-
-        $product
-            ->shouldReceive('removeIdentifier')
-            ->never()
-            ->with($validIdentifier);
-
-        $product
-            ->shouldReceive('updateUpdatedAt')
-            ->once();
-
-        $entityManager
-            ->shouldReceive('persist')
-            ->once()
-            ->with($product);
-
-        $entityManager
-            ->shouldReceive('flush')
-            ->once();
-
-        $this->fieldSynchronizer
-            ->shouldReceive('synchronizeFields')
+        $this->identifierManager
+            ->shouldNotReceive('initializeIdentifiers')
             ->never();
 
+        /** @var EntityDto<Product> $entityDto */
+        $entityDto = new EntityDto(
+            \stdClass::class,
+            \Mockery::mock(ClassMetadata::class),
+            null,
+            new \stdClass()
+        );
+
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [
-                $this->identifierTypeRepository,
-                $this->productFieldsRenderer,
-                $this->fieldSynchronizer,
-                $this->translator,
-            ],
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+            [$this->identifierManager, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator, $this->productFilterComposer]
+        )->makePartial();
 
-        $controller
-            ->shouldReceive('getContext')
-            ->once()
-            ->andReturn(null);
+        $this->expectException(\Error::class);
+        $this->expectExceptionMessageIsOrContains(
+            'AbstractController::$container'
+        );
 
-        $controller->updateEntity($entityManager, $product);
+        /** @phpstan-var AdminContext<Product> $context */
+        $context = AdminContext::forTesting();
+
+        $controller->createEditForm(
+            $entityDto,
+            KeyValueStore::new(),
+            $context
+        );
     }
 
     public function testPersistEntityRemovesEmptyIdentifiers(): void
     {
         $entityManager = \Mockery::mock(EntityManagerInterface::class);
 
-        $emptyIdentifier = \Mockery::mock(Identifier::class);
-        $emptyIdentifier
-            ->shouldReceive('getValue')
-            ->once()
-            ->andReturn('');
-
-        $validIdentifier = \Mockery::mock(Identifier::class);
-        $validIdentifier
-            ->shouldReceive('getValue')
-            ->once()
-            ->andReturn('EAN123');
-
         $product = \Mockery::mock(Product::class);
 
-        $product
-            ->shouldReceive('getIdentifiers')
+        $this->identifierManager
+            ->shouldReceive('clearUnsetIdentifiers')
             ->once()
-            ->andReturn(new ArrayCollection([$emptyIdentifier, $validIdentifier]));
-
-        $product
-            ->shouldReceive('removeIdentifier')
-            ->once()
-            ->with($emptyIdentifier);
-
-        $product
-            ->shouldReceive('removeIdentifier')
-            ->never()
-            ->with($validIdentifier);
+            ->with($product);
 
         $entityManager
             ->shouldReceive('persist')
@@ -340,6 +218,114 @@ class ProductCrudControllerTest extends MockeryTestCase
             ->with($product);
 
         $this->controller->persistEntity($entityManager, $product);
+    }
+
+    public function testUpdateEntityRemovesEmptyIdentifiers(): void
+    {
+        $entityManager = \Mockery::mock(EntityManagerInterface::class);
+
+        $product = \Mockery::mock(Product::class);
+
+        $product
+            ->shouldReceive('updateUpdatedAt')
+            ->once();
+
+        $entityManager
+            ->shouldReceive('persist')
+            ->once()
+            ->with($product);
+
+        $entityManager
+            ->shouldReceive('flush')
+            ->once();
+
+        $request = new Request(
+            [],
+            ['Product' => []],
+        );
+
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+        );
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $this->identifierManager
+            ->shouldReceive('clearUnsetIdentifiers')
+            ->once()
+            ->with($product);
+
+        $this->fieldSynchronizer
+            ->shouldReceive('synchronizeFields')
+            ->once()
+            ->with($product, [], []);
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn($context);
+
+        $controller->updateEntity($entityManager, $product);
+    }
+
+    public function testUpdateEntityRemovesEmptyIdentifiersIfRequestDataIsNotAvailable(): void
+    {
+        $entityManager = \Mockery::mock(EntityManagerInterface::class);
+
+        $product = \Mockery::mock(Product::class);
+
+        $product
+            ->shouldReceive('updateUpdatedAt')
+            ->once();
+
+        $entityManager
+            ->shouldReceive('persist')
+            ->once()
+            ->with($product);
+
+        $entityManager
+            ->shouldReceive('flush')
+            ->once();
+
+        $this->identifierManager
+            ->shouldReceive('clearUnsetIdentifiers')
+            ->once()
+            ->with($product);
+
+        $this->fieldSynchronizer
+            ->shouldReceive('synchronizeFields')
+            ->never();
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getContext')
+            ->once()
+            ->andReturn(null);
+
+        $controller->updateEntity($entityManager, $product);
     }
 
     public function testConfigureFieldsForIndexPageReturnsExpectedFields(): void
@@ -379,107 +365,6 @@ class ProductCrudControllerTest extends MockeryTestCase
         $this->assertEquals('disabled', $fields[4]->getAsDto()->getFormTypeOption('disabled'));
     }
 
-    public function testCreateEditFormInitializesMissingIdentifiers(): void
-    {
-        $existingTypeId = Uuid::v7();
-        $missingTypeId = Uuid::v7();
-
-        $identifierType1 = \Mockery::mock(IdentifierType::class);
-        $identifierType1->shouldReceive('getId')->andReturn($existingTypeId);
-
-        $identifierType2 = \Mockery::mock(IdentifierType::class);
-        $identifierType2->shouldReceive('getId')->andReturn($missingTypeId);
-
-        $this->identifierTypeRepository
-            ->shouldReceive('findAll')
-            ->once()
-            ->andReturn([$identifierType1, $identifierType2]);
-
-        $existingIdentifierType = \Mockery::mock(IdentifierType::class);
-        $existingIdentifierType
-            ->shouldReceive('getId')
-            ->andReturn($existingTypeId);
-
-        $identifier = \Mockery::mock(Identifier::class);
-        $identifier
-            ->shouldReceive('getType')
-            ->andReturn($existingIdentifierType);
-
-        $product = \Mockery::mock(Product::class);
-
-        $product
-            ->shouldReceive('getIdentifiers')
-            ->times(2)
-            ->andReturn(new ArrayCollection([$identifier]));
-
-        $product
-            ->shouldReceive('addIdentifier')
-            ->once()
-            ->with(\Mockery::on(
-                static fn (Identifier $identifier): bool => $identifier->getType() === $identifierType2
-            ));
-
-        /** @var EntityDto<Product> $entityDto */
-        $entityDto = new EntityDto(
-            Product::class,
-            \Mockery::mock(ClassMetadata::class),
-            null,
-            $product
-        );
-
-        $controller = \Mockery::mock(
-            ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator]
-        )->makePartial();
-
-        /** @phpstan-var AdminContext<Product> $context */
-        $context = AdminContext::forTesting();
-
-        $this->expectException(\Error::class);
-        $this->expectExceptionMessageIsOrContains(
-            'AbstractController::$container'
-        );
-
-        $controller->createEditForm(
-            $entityDto,
-            KeyValueStore::new(),
-            $context
-        );
-    }
-
-    public function testCreateEditFormSkipsInitializationForNonProductInstance(): void
-    {
-        $this->identifierTypeRepository
-            ->shouldNotReceive('findAll');
-
-        /** @var EntityDto<Product> $entityDto */
-        $entityDto = new EntityDto(
-            \stdClass::class,
-            \Mockery::mock(ClassMetadata::class),
-            null,
-            new \stdClass()
-        );
-
-        $controller = \Mockery::mock(
-            ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator]
-        )->makePartial();
-
-        $this->expectException(\Error::class);
-        $this->expectExceptionMessageIsOrContains(
-            'AbstractController::$container'
-        );
-
-        /** @phpstan-var AdminContext<Product> $context */
-        $context = AdminContext::forTesting();
-
-        $controller->createEditForm(
-            $entityDto,
-            KeyValueStore::new(),
-            $context
-        );
-    }
-
     public function testConfigureFieldsForEditPageRendersProductFields(): void
     {
         $product = \Mockery::mock(Product::class);
@@ -507,7 +392,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator]
+            [$this->identifierManager, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator, $this->productFilterComposer]
         )->makePartial()
         ->shouldAllowMockingProtectedMethods();
 
@@ -545,7 +430,7 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierTypeRepository, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator]
+            [$this->identifierManager, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator, $this->productFilterComposer]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -849,66 +734,18 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFilters(): void
     {
-        $this->translator
-            ->shouldReceive('getLocale')
+        $filters = Filters::new();
+
+        $this->productFilterComposer
+            ->shouldReceive('compose')
             ->once()
-            ->andReturn('de_DE');
+            ->with($filters)
+            ->andReturn($filters);
 
-        $productType = \Mockery::mock(ProductType::class);
-        $productType
-            ->shouldReceive('getTranslatedTitleByLocale')
-            ->once()
-            ->with('de_DE')
-            ->andReturn('Bekleidung');
-
-        $filters = $this->controller->configureFilters(
-            Filters::new(),
+        $result = $this->controller->configureFilters(
+            $filters
         );
 
-        $filtersDto = $filters->getAsDto();
-
-        $productTypeFilter = $filtersDto->getFilter('productType');
-
-        $this->assertInstanceOf(
-            EntityFilter::class,
-            $productTypeFilter,
-        );
-
-        $productTypeFilterDto = $productTypeFilter->getAsDto();
-
-        $formTypeOptions = $productTypeFilterDto->getFormTypeOptions();
-
-        $this->assertArrayHasKey(
-            'value_type_options',
-            $formTypeOptions,
-        );
-
-        $this->assertIsArray(
-            $formTypeOptions['value_type_options'],
-        );
-
-        $this->assertArrayHasKey(
-            'choice_label',
-            $formTypeOptions['value_type_options'],
-        );
-
-        $choiceLabel = $formTypeOptions['value_type_options']['choice_label'];
-
-        $this->assertIsCallable($choiceLabel);
-
-        $this->assertSame(
-            'Bekleidung',
-            $choiceLabel($productType),
-        );
-
-        $this->assertInstanceOf(
-            DateTimeFilter::class,
-            $filtersDto->getFilter('updatedAt'),
-        );
-
-        $this->assertInstanceOf(
-            DateTimeFilter::class,
-            $filtersDto->getFilter('createdAt'),
-        );
+        $this->assertSame($filters, $result);
     }
 }
