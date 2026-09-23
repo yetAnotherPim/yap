@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Դաշտի տեսակ
-    default_value: Լռելյայն արժեք
-    required: Պարտադիր
-  alert:
-    duplicate_field_type: 'Դաշտի այս տեսակն արդեն օգտագործվում է։'
-  default_value:
-    help: |-
-      Լռելյայն արժեք: Ապրանք.
+    labels:
+        field_type: Դաշտի տեսակ
+        default_value: Լռելյայն արժեք
+        required: Պարտադիր
+    alert:
+        duplicate_field_type: 'Դաշտի այս տեսակն արդեն օգտագործվում է։'
+    default_value:
+        help: |-
+            Լռելյայն արժեք: Ապրանք.
 
-      Տեսակներ:
-      'Some text'
-      '17.06'
-      '1' - Ակտիվ (Նշման վանդակ)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Տեսակներ:
+            'Some text'
+            '17.06'
+            '1' - Ակտիվ (Նշման վանդակ)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Փլագինների կառավարիչ
-  labels:
-    name: Անուն
-    namespace: Անվանատարածք
-    version: Տարբերակ
-    installed_version: Տեղադրված տարբերակ
-    active: Ակտիվ
-    actions:
-      reload: Վերաբեռնել
-      activate: Ակտիվացնել
-      deactivate: Ապաակտիվացնել
-      update: Թարմացնել
+    title: Փլագինների կառավարիչ
+    labels:
+        name: Անուն
+        namespace: Անվանատարածք
+        version: Տարբերակ
+        installed_version: Տեղադրված տարբերակ
+        active: Ակտիվ
+        actions:
+            reload: Վերաբեռնել
+            activate: Ակտիվացնել
+            deactivate: Ապաակտիվացնել
+            update: Թարմացնել
 user:
-  title: Օգտատերեր
-  entity:
-    title: Օգտատեր
-    title_plural: Օգտատերեր
-  labels:
-    master_data: Հիմնական տվյալներ
-    password: Գաղտնաբառ
-    repeat_password: Կրկնել գաղտնաբառը
-    username: Օգտանուն
-    role: Դեր
-    email: Էլ. փոստ
-    first_name: Անուն
-    last_name: Ազգանուն
+    title: Օգտատերեր
+    entity:
+        title: Օգտատեր
+        title_plural: Օգտատերեր
+    labels:
+        master_data: Հիմնական տվյալներ
+        password: Գաղտնաբառ
+        repeat_password: Կրկնել գաղտնաբառը
+        username: Օգտանուն
+        role: Դեր
+        email: Էլ. փոստ
+        first_name: Անուն
+        last_name: Ազգանուն
 types:
-  title: Տեսակներ
-  label:
-    identifier: Նույնացուցիչ
-    field: Դաշտ
-    product: Ապրանք
+    title: Տեսակներ
+    label:
+        identifier: Նույնացուցիչ
+        field: Դաշտ
+        product: Ապրանք
 identifier_type:
-  title: Նույնացուցիչի տեսակ
-  data_type:
-    string: Տող
-    integer: Ամբողջ թիվ
-  entity:
     title: Նույնացուցիչի տեսակ
-    title_plural: Նույնացուցիչների տեսակներ
-  labels:
-    title: Վերնագիր
-    data_type: Տվյալի տեսակ
+    data_type:
+        string: Տող
+        integer: Ամբողջ թիվ
+    entity:
+        title: Նույնացուցիչի տեսակ
+        title_plural: Նույնացուցիչների տեսակներ
+    labels:
+        title: Վերնագիր
+        data_type: Տվյալի տեսակ
 product_type:
-  title: Ապրանքի տեսակ
-  entity:
     title: Ապրանքի տեսակ
-    title_plural: Ապրանքի տեսակներ
-  labels:
-    title: Վերնագիր
-    code: Կոդ
-    fields: Դաշտեր
+    entity:
+        title: Ապրանքի տեսակ
+        title_plural: Ապրանքի տեսակներ
+    labels:
+        title: Վերնագիր
+        code: Կոդ
+        fields: Դաշտեր
 field_type:
-  title: Դաշտի տեսակ
-  input_type:
-    string: Տող
-    integer: Ամբողջ թիվ
-    checkbox: Նշման վանդակ
-    date: Ամսաթիվ
-    file: Ֆայլ
-    section: Բաժին
-    text: Տեքստ
-    textarea: Տեքստային դաշտ
-    datetime: Ամսաթիվ և ժամ
-    time: Ժամ
-    number: Թիվ
-    color: Գույն
-    country: Երկիր
-    telephone: Հեռախոս
-    email: Էլ. փոստ
-    language: Լեզու
-    locale: Լոկալ
-    texteditor: Տեքստային խմբագիր
-    url: URL
-    select: Ընտրություն
-    multiselect: Բազմակի ընտրություն
-    image: Պատկեր
-  entity:
     title: Դաշտի տեսակ
-    title_plural: Դաշտերի տեսակներ
-  labels:
-    title: Վերնագիր
-    code: Կոդ
-    translatable: Թարգմանելի
-    filterable: Զտելի
-    input_type: Մուտքագրման տեսակ
-    decimal_separator: Տասնորդական բաժանիչ
+    input_type:
+        string: Տող
+        integer: Ամբողջ թիվ
+        checkbox: Նշման վանդակ
+        date: Ամսաթիվ
+        file: Ֆայլ
+        section: Բաժին
+        text: Տեքստ
+        textarea: Տեքստային դաշտ
+        datetime: Ամսաթիվ և ժամ
+        time: Ժամ
+        number: Թիվ
+        color: Գույն
+        country: Երկիր
+        telephone: Հեռախոս
+        email: Էլ. փոստ
+        language: Լեզու
+        locale: Լոկալ
+        texteditor: Տեքստային խմբագիր
+        url: URL
+        select: Ընտրություն
+        multiselect: Բազմակի ընտրություն
+        image: Պատկեր
+    entity:
+        title: Դաշտի տեսակ
+        title_plural: Դաշտերի տեսակներ
+    labels:
+        title: Վերնագիր
+        code: Կոդ
+        translatable: Թարգմանելի
+        filterable: Զտելի
+        input_type: Մուտքագրման տեսակ
+        decimal_separator: Տասնորդական բաժանիչ
 locale:
-  title: Լոկալներ
-  entity:
-    title: Լոկալ
-    title_plural: Լոկալներ
-  labels:
-    content_translation_enabled: 'Օգտագործել բովանդակության թարգմանությունների համար'
-    default: Լռելյայն
-  actions:
-    set_as_default: Սահմանել որպես լռելյայն
+    title: Լոկալներ
+    entity:
+        title: Լոկալ
+        title_plural: Լոկալներ
+    labels:
+        content_translation_enabled: 'Օգտագործել բովանդակության թարգմանությունների համար'
+        default: Լռելյայն
+    actions:
+        set_as_default: Սահմանել որպես լռելյայն
 settings:
-  title: Կարգավորումներ
+    title: Կարգավորումներ
 product:
-  title: Ապրանքներ
-  entity:
-    title: Ապրանք
-    title_plural: Ապրանքներ
-  labels:
-    identifiers: Նույնացուցիչներ
-    product_type: Ապրանքի տեսակ
-    created_at: Ստեղծվել է
-    updated_at: Թարմացվել է
-    master_data: Հիմնական տվյալներ
-    fields: Դաշտեր
+    title: Ապրանքներ
+    entity:
+        title: Ապրանք
+        title_plural: Ապրանքներ
+    labels:
+        identifiers: Նույնացուցիչներ
+        product_type: Ապրանքի տեսակ
+        created_at: Ստեղծվել է
+        updated_at: Թարմացվել է
+        master_data: Հիմնական տվյալներ
+        fields: Դաշտեր
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Կառավարման վահանակ'
+    system_status:
+        title: 'Համակարգի կարգավիճակ'
+        all_ok: 'OK'
+        input_vars:
+            message: '«%productType%» ապրանքի տեսակը պահանջում է %fieldCount% մուտքային փոփոխական։ max_input_vars-ի կազմաձևված արժեքը %maxInputVars% է։'
+    products:
+        latest: 'Վերջին ապրանքները'
 
+filter:
+    is_set: '%name%-ը սահմանված է'
+    
 general:
-  labels:
-    translation: Թարգմանություն
-    locale: Լոկալ
-    language: Լեզու
+    labels:
+        translation: Թարգմանություն
+        locale: Լոկալ
+        language: Լեզու

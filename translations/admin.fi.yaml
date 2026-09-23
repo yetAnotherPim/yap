@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Kenttätyyppi
-    default_value: Oletusarvo
-    required: Pakollinen
-  alert:
-    duplicate_field_type: 'Tämä kenttätyyppi on jo käytössä.'
-  default_value:
-    help: |-
-      Oletusarvo: Tuote.
+    labels:
+        field_type: Kenttätyyppi
+        default_value: Oletusarvo
+        required: Pakollinen
+    alert:
+        duplicate_field_type: 'Tämä kenttätyyppi on jo käytössä.'
+    default_value:
+        help: |-
+            Oletusarvo: Tuote.
 
-      Tyypit:
-      'Some text'
-      '17.06'
-      '1' - Aktiivinen (Valintaruutu)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Tyypit:
+            'Some text'
+            '17.06'
+            '1' - Aktiivinen (Valintaruutu)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Lisäosien hallinta
-  labels:
-    name: Nimi
-    namespace: Nimiavaruus
-    version: Versio
-    installed_version: Asennettu versio
-    active: Aktiivinen
-    actions:
-      reload: Lataa uudelleen
-      activate: Aktivoi
-      deactivate: Poista käytöstä
-      update: Päivitä
+    title: Lisäosien hallinta
+    labels:
+        name: Nimi
+        namespace: Nimiavaruus
+        version: Versio
+        installed_version: Asennettu versio
+        active: Aktiivinen
+        actions:
+            reload: Lataa uudelleen
+            activate: Aktivoi
+            deactivate: Poista käytöstä
+            update: Päivitä
 user:
-  title: Käyttäjät
-  entity:
-    title: Käyttäjä
-    title_plural: Käyttäjät
-  labels:
-    master_data: Perustiedot
-    password: Salasana
-    repeat_password: Toista salasana
-    username: Käyttäjänimi
-    role: Rooli
-    email: Sähköposti
-    first_name: Etunimi
-    last_name: Sukunimi
+    title: Käyttäjät
+    entity:
+        title: Käyttäjä
+        title_plural: Käyttäjät
+    labels:
+        master_data: Perustiedot
+        password: Salasana
+        repeat_password: Toista salasana
+        username: Käyttäjänimi
+        role: Rooli
+        email: Sähköposti
+        first_name: Etunimi
+        last_name: Sukunimi
 types:
-  title: Tyypit
-  label:
-    identifier: Tunniste
-    field: Kenttä
-    product: Tuote
+    title: Tyypit
+    label:
+        identifier: Tunniste
+        field: Kenttä
+        product: Tuote
 identifier_type:
-  title: Tunnistetyyppi
-  data_type:
-    string: Merkkijono
-    integer: Kokonaisluku
-  entity:
     title: Tunnistetyyppi
-    title_plural: Tunnistetyypit
-  labels:
-    title: Otsikko
-    data_type: Tietotyyppi
+    data_type:
+        string: Merkkijono
+        integer: Kokonaisluku
+    entity:
+        title: Tunnistetyyppi
+        title_plural: Tunnistetyypit
+    labels:
+        title: Otsikko
+        data_type: Tietotyyppi
 product_type:
-  title: Tuotetyyppi
-  entity:
     title: Tuotetyyppi
-    title_plural: Tuotetyypit
-  labels:
-    title: Otsikko
-    code: Koodi
-    fields: Kentät
+    entity:
+        title: Tuotetyyppi
+        title_plural: Tuotetyypit
+    labels:
+        title: Otsikko
+        code: Koodi
+        fields: Kentät
 field_type:
-  title: Kenttätyyppi
-  input_type:
-    string: Merkkijono
-    integer: Kokonaisluku
-    checkbox: Valintaruutu
-    date: Päivämäärä
-    file: Tiedosto
-    section: Osio
-    text: Teksti
-    textarea: Tekstialue
-    datetime: Päivämäärä ja aika
-    time: Aika
-    number: Numero
-    color: Väri
-    country: Maa
-    telephone: Puhelin
-    email: Sähköposti
-    language: Kieli
-    locale: Alueasetus
-    texteditor: Tekstieditori
-    url: URL
-    select: Valinta
-    multiselect: Monivalinta
-    image: Kuva
-  entity:
     title: Kenttätyyppi
-    title_plural: Kenttätyypit
-  labels:
-    title: Otsikko
-    code: Koodi
-    translatable: Käännettävä
-    filterable: Suodatettava
-    input_type: Syötetyyppi
-    decimal_separator: Desimaalierotin
+    input_type:
+        string: Merkkijono
+        integer: Kokonaisluku
+        checkbox: Valintaruutu
+        date: Päivämäärä
+        file: Tiedosto
+        section: Osio
+        text: Teksti
+        textarea: Tekstialue
+        datetime: Päivämäärä ja aika
+        time: Aika
+        number: Numero
+        color: Väri
+        country: Maa
+        telephone: Puhelin
+        email: Sähköposti
+        language: Kieli
+        locale: Alueasetus
+        texteditor: Tekstieditori
+        url: URL
+        select: Valinta
+        multiselect: Monivalinta
+        image: Kuva
+    entity:
+        title: Kenttätyyppi
+        title_plural: Kenttätyypit
+    labels:
+        title: Otsikko
+        code: Koodi
+        translatable: Käännettävä
+        filterable: Suodatettava
+        input_type: Syötetyyppi
+        decimal_separator: Desimaalierotin
 locale:
-  title: Alueasetukset
-  entity:
-    title: Alueasetus
-    title_plural: Alueasetukset
-  labels:
-    content_translation_enabled: 'Käytä sisällön kääntämiseen'
-    default: Oletus
-  actions:
-    set_as_default: Aseta oletukseksi
+    title: Alueasetukset
+    entity:
+        title: Alueasetus
+        title_plural: Alueasetukset
+    labels:
+        content_translation_enabled: 'Käytä sisällön kääntämiseen'
+        default: Oletus
+    actions:
+        set_as_default: Aseta oletukseksi
 settings:
-  title: Asetukset
+    title: Asetukset
 product:
-  title: Tuotteet
-  entity:
-    title: Tuote
-    title_plural: Tuotteet
-  labels:
-    identifiers: Tunnisteet
-    product_type: Tuotetyyppi
-    created_at: Luotu
-    updated_at: Päivitetty
-    master_data: Perustiedot
-    fields: Kentät
+    title: Tuotteet
+    entity:
+        title: Tuote
+        title_plural: Tuotteet
+    labels:
+        identifiers: Tunnisteet
+        product_type: Tuotetyyppi
+        created_at: Luotu
+        updated_at: Päivitetty
+        master_data: Perustiedot
+        fields: Kentät
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Hallintapaneeli'
+    system_status:
+        title: 'Järjestelmän tila'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Tuotetyyppi "%productType%" vaatii %fieldCount% syötemuuttujaa. max_input_vars-asetuksen määritetty arvo on %maxInputVars%.'
+    products:
+        latest: 'Uusimmat tuotteet'
+
+filter:
+    is_set: '%name% on asetettu'
 
 general:
-  labels:
-    translation: Käännös
-    locale: Alueasetus
-    language: Kieli
+    labels:
+        translation: Käännös
+        locale: Alueasetus
+        language: Kieli

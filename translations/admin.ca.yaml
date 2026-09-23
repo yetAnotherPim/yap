@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Tipus de camp
-    default_value: Valor per defecte
-    required: Obligatori
-  alert:
-    duplicate_field_type: 'Aquest tipus de camp ja està en ús.'
-  default_value:
-    help: |-
-      Valor per defecte: Producte.
+    labels:
+        field_type: Tipus de camp
+        default_value: Valor per defecte
+        required: Obligatori
+    alert:
+        duplicate_field_type: 'Aquest tipus de camp ja està en ús.'
+    default_value:
+        help: |-
+            Valor per defecte: Producte.
 
-      Tipus:
-      'Some text'
-      '17.06'
-      '1' - Actiu (Casella de selecció)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Tipus:
+            'Some text'
+            '17.06'
+            '1' - Actiu (Casella de selecció)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Gestor de connectors
-  labels:
-    name: Nom
-    namespace: Espai de noms
-    version: Versió
-    installed_version: Versió instal·lada
-    active: Actiu
-    actions:
-      reload: Torna a carregar
-      activate: Activa
-      deactivate: Desactiva
-      update: Actualitza
+    title: Gestor de connectors
+    labels:
+        name: Nom
+        namespace: Espai de noms
+        version: Versió
+        installed_version: Versió instal·lada
+        active: Actiu
+        actions:
+            reload: Torna a carregar
+            activate: Activa
+            deactivate: Desactiva
+            update: Actualitza
 user:
-  title: Usuaris
-  entity:
-    title: Usuari
-    title_plural: Usuaris
-  labels:
-    master_data: Dades mestres
-    password: Contrasenya
-    repeat_password: Repeteix la contrasenya
-    username: Nom d’usuari
-    role: Rol
-    email: Correu electrònic
-    first_name: Nom
-    last_name: Cognoms
+    title: Usuaris
+    entity:
+        title: Usuari
+        title_plural: Usuaris
+    labels:
+        master_data: Dades mestres
+        password: Contrasenya
+        repeat_password: Repeteix la contrasenya
+        username: Nom d’usuari
+        role: Rol
+        email: Correu electrònic
+        first_name: Nom
+        last_name: Cognoms
 types:
-  title: Tipus
-  label:
-    identifier: Identificador
-    field: Camp
-    product: Producte
+    title: Tipus
+    label:
+        identifier: Identificador
+        field: Camp
+        product: Producte
 identifier_type:
-  title: Tipus d’identificador
-  data_type:
-    string: Cadena
-    integer: Enter
-  entity:
     title: Tipus d’identificador
-    title_plural: Tipus d’identificador
-  labels:
-    title: Títol
-    data_type: Tipus de dades
+    data_type:
+        string: Cadena
+        integer: Enter
+    entity:
+        title: Tipus d’identificador
+        title_plural: Tipus d’identificador
+    labels:
+        title: Títol
+        data_type: Tipus de dades
 product_type:
-  title: Tipus de producte
-  entity:
     title: Tipus de producte
-    title_plural: Tipus de producte
-  labels:
-    title: Títol
-    code: Codi
-    fields: Camps
+    entity:
+        title: Tipus de producte
+        title_plural: Tipus de producte
+    labels:
+        title: Títol
+        code: Codi
+        fields: Camps
 field_type:
-  title: Tipus de camp
-  input_type:
-    string: Cadena
-    integer: Enter
-    checkbox: Casella de selecció
-    date: Data
-    file: Fitxer
-    section: Secció
-    text: Text
-    textarea: Àrea de text
-    datetime: Data i hora
-    time: Hora
-    number: Número
-    color: Color
-    country: País
-    telephone: Telèfon
-    email: Correu electrònic
-    language: Idioma
-    locale: Configuració regional
-    texteditor: Editor de text
-    url: URL
-    select: Selecció
-    multiselect: Selecció múltiple
-    image: Imatge
-  entity:
     title: Tipus de camp
-    title_plural: Tipus de camp
-  labels:
-    title: Títol
-    code: Codi
-    translatable: Traduïble
-    filterable: Filtrable
-    input_type: Tipus d’entrada
-    decimal_separator: Separador decimal
+    input_type:
+        string: Cadena
+        integer: Enter
+        checkbox: Casella de selecció
+        date: Data
+        file: Fitxer
+        section: Secció
+        text: Text
+        textarea: Àrea de text
+        datetime: Data i hora
+        time: Hora
+        number: Número
+        color: Color
+        country: País
+        telephone: Telèfon
+        email: Correu electrònic
+        language: Idioma
+        locale: Configuració regional
+        texteditor: Editor de text
+        url: URL
+        select: Selecció
+        multiselect: Selecció múltiple
+        image: Imatge
+    entity:
+        title: Tipus de camp
+        title_plural: Tipus de camp
+    labels:
+        title: Títol
+        code: Codi
+        translatable: Traduïble
+        filterable: Filtrable
+        input_type: Tipus d’entrada
+        decimal_separator: Separador decimal
 locale:
-  title: Configuracions regionals
-  entity:
-    title: Configuració regional
-    title_plural: Configuracions regionals
-  labels:
-    content_translation_enabled: 'Utilitza per a traduccions de contingut'
-    default: Per defecte
-  actions:
-    set_as_default: Estableix per defecte
+    title: Configuracions regionals
+    entity:
+        title: Configuració regional
+        title_plural: Configuracions regionals
+    labels:
+        content_translation_enabled: 'Utilitza per a traduccions de contingut'
+        default: Per defecte
+    actions:
+        set_as_default: Estableix per defecte
 settings:
-  title: Configuració
+    title: Configuració
 product:
-  title: Productes
-  entity:
-    title: Producte
-    title_plural: Productes
-  labels:
-    identifiers: Identificadors
-    product_type: Tipus de producte
-    created_at: Creat el
-    updated_at: Actualitzat el
-    master_data: Dades mestres
-    fields: Camps
+    title: Productes
+    entity:
+        title: Producte
+        title_plural: Productes
+    labels:
+        identifiers: Identificadors
+        product_type: Tipus de producte
+        created_at: Creat el
+        updated_at: Actualitzat el
+        master_data: Dades mestres
+        fields: Camps
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Tauler'
+    system_status:
+        title: 'Estat del sistema'
+        all_ok: 'OK'
+        input_vars:
+            message: 'El tipus de producte "%productType%" requereix %fieldCount% variables d’entrada. El valor configurat de max_input_vars és %maxInputVars%.'
+    products:
+        latest: 'Productes més recents'
+
+filter:
+    is_set: '%name% està definit'
 
 general:
-  labels:
-    translation: Traducció
-    locale: Configuració regional
-    language: Idioma
+    labels:
+        translation: Traducció
+        locale: Configuració regional
+        language: Idioma

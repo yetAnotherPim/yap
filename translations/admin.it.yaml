@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Tipo di campo
-    default_value: Valore predefinito
-    required: Obbligatorio
-  alert:
-    duplicate_field_type: 'Questo tipo di campo è già in uso.'
-  default_value:
-    help: |-
-      I valori predefiniti vengono applicati alla creazione del prodotto.
+    labels:
+        field_type: Tipo di campo
+        default_value: Valore predefinito
+        required: Obbligatorio
+    alert:
+        duplicate_field_type: 'Questo tipo di campo è già in uso.'
+    default_value:
+        help: |-
+            I valori predefiniti vengono applicati alla creazione del prodotto.
 
-      I valori possibili sono:
-      'Some text'
-      '17.06'
-      '1' - Viene interpretato come attivo nelle caselle di controllo
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            I valori possibili sono:
+            'Some text'
+            '17.06'
+            '1' - Viene interpretato come attivo nelle caselle di controllo
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Gestore plugin
-  labels:
-    name: Nome
-    namespace: Spazio dei nomi
-    version: Versione
-    installed_version: Versione installata
-    active: Attivo
-    actions:
-      reload: Ricarica
-      activate: Attiva
-      deactivate: Disattiva
-      update: Aggiorna
+    title: Gestore plugin
+    labels:
+        name: Nome
+        namespace: Spazio dei nomi
+        version: Versione
+        installed_version: Versione installata
+        active: Attivo
+        actions:
+            reload: Ricarica
+            activate: Attiva
+            deactivate: Disattiva
+            update: Aggiorna
 user:
-  title: Utenti
-  entity:
-    title: Utente
-    title_plural: Utenti
-  labels:
-    master_data: Dati principali
-    password: Password
-    repeat_password: Ripeti password
-    username: Nome utente
-    role: Ruolo
-    email: Email
-    first_name: Nome
-    last_name: Cognome
+    title: Utenti
+    entity:
+        title: Utente
+        title_plural: Utenti
+    labels:
+        master_data: Dati principali
+        password: Password
+        repeat_password: Ripeti password
+        username: Nome utente
+        role: Ruolo
+        email: Email
+        first_name: Nome
+        last_name: Cognome
 types:
-  title: Tipi
-  label:
-    identifier: Identificatore
-    field: Campo
-    product: Prodotto
+    title: Tipi
+    label:
+        identifier: Identificatore
+        field: Campo
+        product: Prodotto
 identifier_type:
-  title: Tipo di identificatore
-  data_type:
-    string: Stringa
-    integer: Intero
-  entity:
     title: Tipo di identificatore
-    title_plural: Tipi di identificatore
-  labels:
-    title: Titolo
-    data_type: Tipo di dati
+    data_type:
+        string: Stringa
+        integer: Intero
+    entity:
+        title: Tipo di identificatore
+        title_plural: Tipi di identificatore
+    labels:
+        title: Titolo
+        data_type: Tipo di dati
 product_type:
-  title: Tipo di prodotto
-  entity:
     title: Tipo di prodotto
-    title_plural: Tipi di prodotto
-  labels:
-    title: Titolo
-    code: Codice
-    fields: Campi
+    entity:
+        title: Tipo di prodotto
+        title_plural: Tipi di prodotto
+    labels:
+        title: Titolo
+        code: Codice
+        fields: Campi
 field_type:
-  title: Tipo di campo
-  input_type:
-    string: Stringa
-    integer: Intero
-    checkbox: Casella di controllo
-    date: Data
-    file: File
-    section: Sezione
-    text: Testo
-    textarea: Area di testo
-    datetime: Data e ora
-    time: Ora
-    number: Numero
-    color: Colore
-    country: Paese
-    telephone: Telefono
-    email: Email
-    language: Lingua
-    locale: Impostazioni locali
-    texteditor: Editor di testo
-    url: URL
-    select: Selezione
-    multiselect: Selezione multipla
-    image: Immagine
-  entity:
     title: Tipo di campo
-    title_plural: Tipi di campo
-  labels:
-    title: Titolo
-    code: Codice
-    translatable: Traducibile
-    filterable: Filtrabile
-    input_type: Tipo di input
-    decimal_separator: Separatore decimale
+    input_type:
+        string: Stringa
+        integer: Intero
+        checkbox: Casella di controllo
+        date: Data
+        file: File
+        section: Sezione
+        text: Testo
+        textarea: Area di testo
+        datetime: Data e ora
+        time: Ora
+        number: Numero
+        color: Colore
+        country: Paese
+        telephone: Telefono
+        email: Email
+        language: Lingua
+        locale: Impostazioni locali
+        texteditor: Editor di testo
+        url: URL
+        select: Selezione
+        multiselect: Selezione multipla
+        image: Immagine
+    entity:
+        title: Tipo di campo
+        title_plural: Tipi di campo
+    labels:
+        title: Titolo
+        code: Codice
+        translatable: Traducibile
+        filterable: Filtrabile
+        input_type: Tipo di input
+        decimal_separator: Separatore decimale
 locale:
-  title: Impostazioni locali
-  entity:
     title: Impostazioni locali
-    title_plural: Impostazioni locali
-  labels:
-    content_translation_enabled: 'Usa per le traduzioni dei contenuti'
-    default: Predefinito
-  actions:
-    set_as_default: Imposta come predefinito
+    entity:
+        title: Impostazioni locali
+        title_plural: Impostazioni locali
+    labels:
+        content_translation_enabled: 'Usa per le traduzioni dei contenuti'
+        default: Predefinito
+    actions:
+        set_as_default: Imposta come predefinito
 settings:
-  title: Impostazioni
+    title: Impostazioni
 product:
-  title: Prodotti
-  entity:
-    title: Prodotto
-    title_plural: Prodotti
-  labels:
-    identifiers: Identificatori
-    product_type: Tipo di prodotto
-    created_at: Creato il
-    updated_at: Aggiornato il
-    master_data: Dati principali
-    fields: Campi
+    title: Prodotti
+    entity:
+        title: Prodotto
+        title_plural: Prodotti
+    labels:
+        identifiers: Identificatori
+        product_type: Tipo di prodotto
+        created_at: Creato il
+        updated_at: Aggiornato il
+        master_data: Dati principali
+        fields: Campi
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Dashboard'
+    system_status:
+        title: 'Stato del sistema'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Il tipo di prodotto "%productType%" richiede %fieldCount% variabili di input. Il valore configurato di max_input_vars è %maxInputVars%.'
+    products:
+        latest: 'Prodotti più recenti'
 
+filter:
+    is_set: '%name% è impostato'
+    
 general:
-  labels:
-    translation: Traduzione
-    locale: Impostazioni locali
-    language: Lingua
+    labels:
+        translation: Traduzione
+        locale: Impostazioni locali
+        language: Lingua

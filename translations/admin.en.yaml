@@ -146,6 +146,9 @@ dashboard:
     products:
         latest: 'Latest products'
 
+filter:
+    is_set: '%name% is set'
+
 general:
     labels:
         translation: 'Translation'

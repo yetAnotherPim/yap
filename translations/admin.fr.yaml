@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Type de champ
-    default_value: Valeur par défaut
-    required: Obligatoire
-  alert:
-    duplicate_field_type: 'Ce type de champ est déjà utilisé.'
-  default_value:
-    help: |-
-      Les valeurs par défaut sont appliquées lors de la création d’un produit.
+    labels:
+        field_type: Type de champ
+        default_value: Valeur par défaut
+        required: Obligatoire
+    alert:
+        duplicate_field_type: 'Ce type de champ est déjà utilisé.'
+    default_value:
+        help: |-
+            Les valeurs par défaut sont appliquées lors de la création d’un produit.
 
-      Les valeurs possibles sont :
-      'Some text'
-      '17.06'
-      '1' - Sera interprété comme actif pour les cases à cocher
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Les valeurs possibles sont :
+            'Some text'
+            '17.06'
+            '1' - Sera interprété comme actif pour les cases à cocher
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Gestionnaire de plugins
-  labels:
-    name: Nom
-    namespace: Espace de noms
-    version: Version
-    installed_version: Version installée
-    active: Actif
-    actions:
-      reload: Recharger
-      activate: Activer
-      deactivate: Désactiver
-      update: Mettre à jour
+    title: Gestionnaire de plugins
+    labels:
+        name: Nom
+        namespace: Espace de noms
+        version: Version
+        installed_version: Version installée
+        active: Actif
+        actions:
+            reload: Recharger
+            activate: Activer
+            deactivate: Désactiver
+            update: Mettre à jour
 user:
-  title: Utilisateurs
-  entity:
-    title: Utilisateur
-    title_plural: Utilisateurs
-  labels:
-    master_data: Données de base
-    password: Mot de passe
-    repeat_password: Répéter le mot de passe
-    username: Nom d’utilisateur
-    role: Rôle
-    email: E-mail
-    first_name: Prénom
-    last_name: Nom de famille
+    title: Utilisateurs
+    entity:
+        title: Utilisateur
+        title_plural: Utilisateurs
+    labels:
+        master_data: Données de base
+        password: Mot de passe
+        repeat_password: Répéter le mot de passe
+        username: Nom d’utilisateur
+        role: Rôle
+        email: E-mail
+        first_name: Prénom
+        last_name: Nom de famille
 types:
-  title: Types
-  label:
-    identifier: Identifiant
-    field: Champ
-    product: Produit
+    title: Types
+    label:
+        identifier: Identifiant
+        field: Champ
+        product: Produit
 identifier_type:
-  title: Type d’identifiant
-  data_type:
-    string: Chaîne
-    integer: Entier
-  entity:
     title: Type d’identifiant
-    title_plural: Types d’identifiant
-  labels:
-    title: Titre
-    data_type: Type de données
+    data_type:
+        string: Chaîne
+        integer: Entier
+    entity:
+        title: Type d’identifiant
+        title_plural: Types d’identifiant
+    labels:
+        title: Titre
+        data_type: Type de données
 product_type:
-  title: Type de produit
-  entity:
     title: Type de produit
-    title_plural: Types de produits
-  labels:
-    title: Titre
-    code: Code
-    fields: Champs
+    entity:
+        title: Type de produit
+        title_plural: Types de produits
+    labels:
+        title: Titre
+        code: Code
+        fields: Champs
 field_type:
-  title: Type de champ
-  input_type:
-    string: Chaîne
-    integer: Entier
-    checkbox: Case à cocher
-    date: Date
-    file: Fichier
-    section: Section
-    text: Texte
-    textarea: Zone de texte
-    datetime: Date et heure
-    time: Heure
-    number: Nombre
-    color: Couleur
-    country: Pays
-    telephone: Téléphone
-    email: E-mail
-    language: Langue
-    locale: Paramètres régionaux
-    texteditor: Éditeur de texte
-    url: URL
-    select: Sélection
-    multiselect: Sélection multiple
-    image: Image
-  entity:
     title: Type de champ
-    title_plural: Types de champs
-  labels:
-    title: Titre
-    code: Code
-    translatable: Traduisible
-    filterable: Filtrable
-    input_type: Type de saisie
-    decimal_separator: Séparateur décimal
+    input_type:
+        string: Chaîne
+        integer: Entier
+        checkbox: Case à cocher
+        date: Date
+        file: Fichier
+        section: Section
+        text: Texte
+        textarea: Zone de texte
+        datetime: Date et heure
+        time: Heure
+        number: Nombre
+        color: Couleur
+        country: Pays
+        telephone: Téléphone
+        email: E-mail
+        language: Langue
+        locale: Paramètres régionaux
+        texteditor: Éditeur de texte
+        url: URL
+        select: Sélection
+        multiselect: Sélection multiple
+        image: Image
+    entity:
+        title: Type de champ
+        title_plural: Types de champs
+    labels:
+        title: Titre
+        code: Code
+        translatable: Traduisible
+        filterable: Filtrable
+        input_type: Type de saisie
+        decimal_separator: Séparateur décimal
 locale:
-  title: Paramètres régionaux
-  entity:
     title: Paramètres régionaux
-    title_plural: Paramètres régionaux
-  labels:
-    content_translation_enabled: 'Utiliser pour les traductions de contenu'
-    default: Par défaut
-  actions:
-    set_as_default: Définir par défaut
+    entity:
+        title: Paramètres régionaux
+        title_plural: Paramètres régionaux
+    labels:
+        content_translation_enabled: 'Utiliser pour les traductions de contenu'
+        default: Par défaut
+    actions:
+        set_as_default: Définir par défaut
 settings:
-  title: Paramètres
+    title: Paramètres
 product:
-  title: Produits
-  entity:
-    title: Produit
-    title_plural: Produits
-  labels:
-    identifiers: Identifiants
-    product_type: Type de produit
-    created_at: Créé le
-    updated_at: Mis à jour le
-    master_data: Données de base
-    fields: Champs
+    title: Produits
+    entity:
+        title: Produit
+        title_plural: Produits
+    labels:
+        identifiers: Identifiants
+        product_type: Type de produit
+        created_at: Créé le
+        updated_at: Mis à jour le
+        master_data: Données de base
+        fields: Champs
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Tableau de bord'
+    system_status:
+        title: 'État du système'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Le type de produit « %productType% » nécessite %fieldCount% variables d’entrée. La valeur configurée de max_input_vars est %maxInputVars%.'
+    products:
+        latest: 'Produits récents'
+
+filter:
+    is_set: '%name% est défini'
 
 general:
-  labels:
-    translation: Traduction
-    locale: Paramètres régionaux
-    language: Langue
+    labels:
+        translation: Traduction
+        locale: Paramètres régionaux
+        language: Langue

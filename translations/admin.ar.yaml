@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: نوع الحقل
-    default_value: القيمة الافتراضية
-    required: مطلوب
-  alert:
-    duplicate_field_type: 'نوع الحقل هذا مستخدم بالفعل.'
-  default_value:
-    help: |-
-      تُطبَّق القيم الافتراضية عند إنشاء المنتج.
+    labels:
+        field_type: نوع الحقل
+        default_value: القيمة الافتراضية
+        required: مطلوب
+    alert:
+        duplicate_field_type: 'نوع الحقل هذا مستخدم بالفعل.'
+    default_value:
+        help: |-
+            تُطبَّق القيم الافتراضية عند إنشاء المنتج.
 
-      القيم الممكنة هي:
-      'Some text'
-      '17.06'
-      '1' - تُفسَّر كقيمة نشطة في مربعات الاختيار
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            القيم الممكنة هي:
+            'Some text'
+            '17.06'
+            '1' - تُفسَّر كقيمة نشطة في مربعات الاختيار
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: مدير الإضافات
-  labels:
-    name: الاسم
-    namespace: مساحة الاسم
-    version: الإصدار
-    installed_version: الإصدار المثبت
-    active: نشط
-    actions:
-      reload: إعادة تحميل
-      activate: تفعيل
-      deactivate: تعطيل
-      update: تحديث
+    title: مدير الإضافات
+    labels:
+        name: الاسم
+        namespace: مساحة الاسم
+        version: الإصدار
+        installed_version: الإصدار المثبت
+        active: نشط
+        actions:
+            reload: إعادة تحميل
+            activate: تفعيل
+            deactivate: تعطيل
+            update: تحديث
 user:
-  title: المستخدمون
-  entity:
-    title: المستخدم
-    title_plural: المستخدمون
-  labels:
-    master_data: البيانات الأساسية
-    password: كلمة المرور
-    repeat_password: تكرار كلمة المرور
-    username: اسم المستخدم
-    role: الدور
-    email: البريد الإلكتروني
-    first_name: الاسم الأول
-    last_name: اسم العائلة
+    title: المستخدمون
+    entity:
+        title: المستخدم
+        title_plural: المستخدمون
+    labels:
+        master_data: البيانات الأساسية
+        password: كلمة المرور
+        repeat_password: تكرار كلمة المرور
+        username: اسم المستخدم
+        role: الدور
+        email: البريد الإلكتروني
+        first_name: الاسم الأول
+        last_name: اسم العائلة
 types:
-  title: الأنواع
-  label:
-    identifier: المعرّف
-    field: الحقل
-    product: المنتج
+    title: الأنواع
+    label:
+        identifier: المعرّف
+        field: الحقل
+        product: المنتج
 identifier_type:
-  title: نوع المعرّف
-  data_type:
-    string: سلسلة نصية
-    integer: عدد صحيح
-  entity:
     title: نوع المعرّف
-    title_plural: أنواع المعرّفات
-  labels:
-    title: العنوان
-    data_type: نوع البيانات
+    data_type:
+        string: سلسلة نصية
+        integer: عدد صحيح
+    entity:
+        title: نوع المعرّف
+        title_plural: أنواع المعرّفات
+    labels:
+        title: العنوان
+        data_type: نوع البيانات
 product_type:
-  title: نوع المنتج
-  entity:
     title: نوع المنتج
-    title_plural: أنواع المنتجات
-  labels:
-    title: العنوان
-    code: الرمز
-    fields: الحقول
+    entity:
+        title: نوع المنتج
+        title_plural: أنواع المنتجات
+    labels:
+        title: العنوان
+        code: الرمز
+        fields: الحقول
 field_type:
-  title: نوع الحقل
-  input_type:
-    string: سلسلة نصية
-    integer: عدد صحيح
-    checkbox: مربع اختيار
-    date: التاريخ
-    file: ملف
-    section: قسم
-    text: نص
-    textarea: منطقة نص
-    datetime: التاريخ والوقت
-    time: الوقت
-    number: رقم
-    color: اللون
-    country: الدولة
-    telephone: الهاتف
-    email: البريد الإلكتروني
-    language: اللغة
-    locale: الإعدادات المحلية
-    texteditor: محرر النصوص
-    url: URL
-    select: اختيار
-    multiselect: اختيار متعدد
-    image: صورة
-  entity:
     title: نوع الحقل
-    title_plural: أنواع الحقول
-  labels:
-    title: العنوان
-    code: الرمز
-    translatable: قابل للترجمة
-    filterable: قابل للتصفية
-    input_type: نوع الإدخال
-    decimal_separator: الفاصل العشري
+    input_type:
+        string: سلسلة نصية
+        integer: عدد صحيح
+        checkbox: مربع اختيار
+        date: التاريخ
+        file: ملف
+        section: قسم
+        text: نص
+        textarea: منطقة نص
+        datetime: التاريخ والوقت
+        time: الوقت
+        number: رقم
+        color: اللون
+        country: الدولة
+        telephone: الهاتف
+        email: البريد الإلكتروني
+        language: اللغة
+        locale: الإعدادات المحلية
+        texteditor: محرر النصوص
+        url: URL
+        select: اختيار
+        multiselect: اختيار متعدد
+        image: صورة
+    entity:
+        title: نوع الحقل
+        title_plural: أنواع الحقول
+    labels:
+        title: العنوان
+        code: الرمز
+        translatable: قابل للترجمة
+        filterable: قابل للتصفية
+        input_type: نوع الإدخال
+        decimal_separator: الفاصل العشري
 locale:
-  title: الإعدادات المحلية
-  entity:
     title: الإعدادات المحلية
-    title_plural: الإعدادات المحلية
-  labels:
-    content_translation_enabled: 'استخدام لترجمات المحتوى'
-    default: افتراضي
-  actions:
-    set_as_default: تعيين كافتراضي
+    entity:
+        title: الإعدادات المحلية
+        title_plural: الإعدادات المحلية
+    labels:
+        content_translation_enabled: 'استخدام لترجمات المحتوى'
+        default: افتراضي
+    actions:
+        set_as_default: تعيين كافتراضي
 settings:
-  title: الإعدادات
+    title: الإعدادات
 product:
-  title: المنتجات
-  entity:
-    title: المنتج
-    title_plural: المنتجات
-  labels:
-    identifiers: المعرّفات
-    product_type: نوع المنتج
-    created_at: تاريخ الإنشاء
-    updated_at: تاريخ التحديث
-    master_data: البيانات الأساسية
-    fields: الحقول
+    title: المنتجات
+    entity:
+        title: المنتج
+        title_plural: المنتجات
+    labels:
+        identifiers: المعرّفات
+        product_type: نوع المنتج
+        created_at: تاريخ الإنشاء
+        updated_at: تاريخ التحديث
+        master_data: البيانات الأساسية
+        fields: الحقول
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'لوحة التحكم'
+    system_status:
+        title: 'حالة النظام'
+        all_ok: 'OK'
+        input_vars:
+            message: 'نوع المنتج "%productType%" يتطلب %fieldCount% من متغيرات الإدخال. القيمة المضبوطة لـ max_input_vars هي %maxInputVars%.'
+    products:
+        latest: 'أحدث المنتجات'
+
+filter:
+    is_set: 'تم تعيين %name%'
 
 general:
-  labels:
-    translation: الترجمة
-    locale: الإعدادات المحلية
-    language: اللغة
+    labels:
+        translation: الترجمة
+        locale: الإعدادات المحلية
+        language: اللغة

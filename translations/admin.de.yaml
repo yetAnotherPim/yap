@@ -140,10 +140,14 @@ dashboard:
     title: 'Dashboard'
     system_status:
         title: 'Systemstatus'
+        all_ok: 'OK'
         input_vars:
             message: 'Der Produkttyp "%productType%" benötigt %fieldCount% Input-Variablen. Der konfigurierte Wert für max_input_vars ist %maxInputVars%.'
     products:
         latest: 'Neueste Produkte'
+
+filter:
+    is_set: '%name% ist gesetzt'
 
 general:
     labels:

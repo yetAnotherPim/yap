@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Eremu mota
-    default_value: Balio lehenetsia
-    required: Beharrezkoa
-  alert:
-    duplicate_field_type: 'Eremu mota hau dagoeneko erabiltzen ari da.'
-  default_value:
-    help: |-
-      Balio lehenetsia: Produktua.
+    labels:
+        field_type: Eremu mota
+        default_value: Balio lehenetsia
+        required: Beharrezkoa
+    alert:
+        duplicate_field_type: 'Eremu mota hau dagoeneko erabiltzen ari da.'
+    default_value:
+        help: |-
+            Balio lehenetsia: Produktua.
 
-      Motak:
-      'Some text'
-      '17.06'
-      '1' - Aktibo (Kontrol-laukia)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Motak:
+            'Some text'
+            '17.06'
+            '1' - Aktibo (Kontrol-laukia)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Plugin kudeatzailea
-  labels:
-    name: Izena
-    namespace: Izen-eremua
-    version: Bertsioa
-    installed_version: Instalatutako bertsioa
-    active: Aktibo
-    actions:
-      reload: Birkargatu
-      activate: Aktibatu
-      deactivate: Desaktibatu
-      update: Eguneratu
+    title: Plugin kudeatzailea
+    labels:
+        name: Izena
+        namespace: Izen-eremua
+        version: Bertsioa
+        installed_version: Instalatutako bertsioa
+        active: Aktibo
+        actions:
+            reload: Birkargatu
+            activate: Aktibatu
+            deactivate: Desaktibatu
+            update: Eguneratu
 user:
-  title: Erabiltzaileak
-  entity:
-    title: Erabiltzailea
-    title_plural: Erabiltzaileak
-  labels:
-    master_data: Datu nagusiak
-    password: Pasahitza
-    repeat_password: Errepikatu pasahitza
-    username: Erabiltzaile-izena
-    role: Rola
-    email: Helbide elektronikoa
-    first_name: Izena
-    last_name: Abizena
+    title: Erabiltzaileak
+    entity:
+        title: Erabiltzailea
+        title_plural: Erabiltzaileak
+    labels:
+        master_data: Datu nagusiak
+        password: Pasahitza
+        repeat_password: Errepikatu pasahitza
+        username: Erabiltzaile-izena
+        role: Rola
+        email: Helbide elektronikoa
+        first_name: Izena
+        last_name: Abizena
 types:
-  title: Motak
-  label:
-    identifier: Identifikatzailea
-    field: Eremua
-    product: Produktua
+    title: Motak
+    label:
+        identifier: Identifikatzailea
+        field: Eremua
+        product: Produktua
 identifier_type:
-  title: Identifikatzaile mota
-  data_type:
-    string: Katea
-    integer: Zenbaki osoa
-  entity:
     title: Identifikatzaile mota
-    title_plural: Identifikatzaile motak
-  labels:
-    title: Izenburua
-    data_type: Datu mota
+    data_type:
+        string: Katea
+        integer: Zenbaki osoa
+    entity:
+        title: Identifikatzaile mota
+        title_plural: Identifikatzaile motak
+    labels:
+        title: Izenburua
+        data_type: Datu mota
 product_type:
-  title: Produktu mota
-  entity:
     title: Produktu mota
-    title_plural: Produktu motak
-  labels:
-    title: Izenburua
-    code: Kodea
-    fields: Eremuak
+    entity:
+        title: Produktu mota
+        title_plural: Produktu motak
+    labels:
+        title: Izenburua
+        code: Kodea
+        fields: Eremuak
 field_type:
-  title: Eremu mota
-  input_type:
-    string: Katea
-    integer: Zenbaki osoa
-    checkbox: Kontrol-laukia
-    date: Data
-    file: Fitxategia
-    section: Atala
-    text: Testua
-    textarea: Testu-eremua
-    datetime: Data eta ordua
-    time: Ordua
-    number: Zenbakia
-    color: Kolorea
-    country: Herrialdea
-    telephone: Telefonoa
-    email: Helbide elektronikoa
-    language: Hizkuntza
-    locale: Eskualde-ezarpena
-    texteditor: Testu-editorea
-    url: URL
-    select: Hautatu
-    multiselect: Hautaketa anitza
-    image: Irudia
-  entity:
     title: Eremu mota
-    title_plural: Eremu motak
-  labels:
-    title: Izenburua
-    code: Kodea
-    translatable: Itzulgarria
-    filterable: Iragazgarria
-    input_type: Sarrera mota
-    decimal_separator: Bereizle hamartarra
+    input_type:
+        string: Katea
+        integer: Zenbaki osoa
+        checkbox: Kontrol-laukia
+        date: Data
+        file: Fitxategia
+        section: Atala
+        text: Testua
+        textarea: Testu-eremua
+        datetime: Data eta ordua
+        time: Ordua
+        number: Zenbakia
+        color: Kolorea
+        country: Herrialdea
+        telephone: Telefonoa
+        email: Helbide elektronikoa
+        language: Hizkuntza
+        locale: Eskualde-ezarpena
+        texteditor: Testu-editorea
+        url: URL
+        select: Hautatu
+        multiselect: Hautaketa anitza
+        image: Irudia
+    entity:
+        title: Eremu mota
+        title_plural: Eremu motak
+    labels:
+        title: Izenburua
+        code: Kodea
+        translatable: Itzulgarria
+        filterable: Iragazgarria
+        input_type: Sarrera mota
+        decimal_separator: Bereizle hamartarra
 locale:
-  title: Eskualde-ezarpenak
-  entity:
-    title: Eskualde-ezarpena
-    title_plural: Eskualde-ezarpenak
-  labels:
-    content_translation_enabled: 'Erabili edukien itzulpenetarako'
-    default: Lehenetsia
-  actions:
-    set_as_default: Ezarri lehenetsi gisa
+    title: Eskualde-ezarpenak
+    entity:
+        title: Eskualde-ezarpena
+        title_plural: Eskualde-ezarpenak
+    labels:
+        content_translation_enabled: 'Erabili edukien itzulpenetarako'
+        default: Lehenetsia
+    actions:
+        set_as_default: Ezarri lehenetsi gisa
 settings:
-  title: Ezarpenak
+    title: Ezarpenak
 product:
-  title: Produktuak
-  entity:
-    title: Produktua
-    title_plural: Produktuak
-  labels:
-    identifiers: Identifikatzaileak
-    product_type: Produktu mota
-    created_at: Sortua
-    updated_at: Eguneratua
-    master_data: Datu nagusiak
-    fields: Eremuak
+    title: Produktuak
+    entity:
+        title: Produktua
+        title_plural: Produktuak
+    labels:
+        identifiers: Identifikatzaileak
+        product_type: Produktu mota
+        created_at: Sortua
+        updated_at: Eguneratua
+        master_data: Datu nagusiak
+        fields: Eremuak
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Aginte-panela'
+    system_status:
+        title: 'Sistemaren egoera'
+        all_ok: 'OK'
+        input_vars:
+            message: '"%productType%" produktu motak %fieldCount% sarrera-aldagai behar ditu. max_input_vars aukerarako konfiguratutako balioa %maxInputVars% da.'
+    products:
+        latest: 'Azken produktuak'
+
+filter:
+    is_set: '%name% ezarrita dago'
 
 general:
-  labels:
-    translation: Itzulpena
-    locale: Eskualde-ezarpena
-    language: Hizkuntza
+    labels:
+        translation: Itzulpena
+        locale: Eskualde-ezarpena
+        language: Hizkuntza
