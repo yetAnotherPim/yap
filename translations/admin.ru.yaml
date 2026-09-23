@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Тип поля
-    default_value: Значение по умолчанию
-    required: Обязательно
-  alert:
-    duplicate_field_type: 'Этот тип поля уже используется.'
-  default_value:
-    help: |-
-      Значение по умолчанию: Продукт.
+    labels:
+        field_type: Тип поля
+        default_value: Значение по умолчанию
+        required: Обязательно
+    alert:
+        duplicate_field_type: 'Этот тип поля уже используется.'
+    default_value:
+        help: |-
+            Значение по умолчанию: Продукт.
 
-      Типы:
-      'Some text'
-      '17.06'
-      '1' - Активный (Флажок)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Типы:
+            'Some text'
+            '17.06'
+            '1' - Активный (Флажок)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Менеджер плагинов
-  labels:
-    name: Название
-    namespace: Пространство имён
-    version: Версия
-    installed_version: Установленная версия
-    active: Активный
-    actions:
-      reload: Перезагрузить
-      activate: Активировать
-      deactivate: Деактивировать
-      update: Обновить
+    title: Менеджер плагинов
+    labels:
+        name: Название
+        namespace: Пространство имён
+        version: Версия
+        installed_version: Установленная версия
+        active: Активный
+        actions:
+            reload: Перезагрузить
+            activate: Активировать
+            deactivate: Деактивировать
+            update: Обновить
 user:
-  title: Пользователи
-  entity:
-    title: Пользователь
-    title_plural: Пользователи
-  labels:
-    master_data: Основные данные
-    password: Пароль
-    repeat_password: Повторить пароль
-    username: Имя пользователя
-    role: Роль
-    email: Электронная почта
-    first_name: Имя
-    last_name: Фамилия
+    title: Пользователи
+    entity:
+        title: Пользователь
+        title_plural: Пользователи
+    labels:
+        master_data: Основные данные
+        password: Пароль
+        repeat_password: Повторить пароль
+        username: Имя пользователя
+        role: Роль
+        email: Электронная почта
+        first_name: Имя
+        last_name: Фамилия
 types:
-  title: Типы
-  label:
-    identifier: Идентификатор
-    field: Поле
-    product: Продукт
+    title: Типы
+    label:
+        identifier: Идентификатор
+        field: Поле
+        product: Продукт
 identifier_type:
-  title: Тип идентификатора
-  data_type:
-    string: Строка
-    integer: Целое число
-  entity:
     title: Тип идентификатора
-    title_plural: Типы идентификаторов
-  labels:
-    title: Заголовок
-    data_type: Тип данных
+    data_type:
+        string: Строка
+        integer: Целое число
+    entity:
+        title: Тип идентификатора
+        title_plural: Типы идентификаторов
+    labels:
+        title: Заголовок
+        data_type: Тип данных
 product_type:
-  title: Тип продукта
-  entity:
     title: Тип продукта
-    title_plural: Типы продуктов
-  labels:
-    title: Заголовок
-    code: Код
-    fields: Поля
+    entity:
+        title: Тип продукта
+        title_plural: Типы продуктов
+    labels:
+        title: Заголовок
+        code: Код
+        fields: Поля
 field_type:
-  title: Тип поля
-  input_type:
-    string: Строка
-    integer: Целое число
-    checkbox: Флажок
-    date: Дата
-    file: Файл
-    section: Раздел
-    text: Текст
-    textarea: Текстовая область
-    datetime: Дата и время
-    time: Время
-    number: Число
-    color: Цвет
-    country: Страна
-    telephone: Телефон
-    email: Электронная почта
-    language: Язык
-    locale: Локаль
-    texteditor: Текстовый редактор
-    url: URL
-    select: Выбор
-    multiselect: Множественный выбор
-    image: Изображение
-  entity:
     title: Тип поля
-    title_plural: Типы полей
-  labels:
-    title: Заголовок
-    code: Код
-    translatable: Переводимый
-    filterable: Фильтруемый
-    input_type: Тип ввода
-    decimal_separator: Десятичный разделитель
+    input_type:
+        string: Строка
+        integer: Целое число
+        checkbox: Флажок
+        date: Дата
+        file: Файл
+        section: Раздел
+        text: Текст
+        textarea: Текстовая область
+        datetime: Дата и время
+        time: Время
+        number: Число
+        color: Цвет
+        country: Страна
+        telephone: Телефон
+        email: Электронная почта
+        language: Язык
+        locale: Локаль
+        texteditor: Текстовый редактор
+        url: URL
+        select: Выбор
+        multiselect: Множественный выбор
+        image: Изображение
+    entity:
+        title: Тип поля
+        title_plural: Типы полей
+    labels:
+        title: Заголовок
+        code: Код
+        translatable: Переводимый
+        filterable: Фильтруемый
+        input_type: Тип ввода
+        decimal_separator: Десятичный разделитель
 locale:
-  title: Локали
-  entity:
-    title: Локаль
-    title_plural: Локали
-  labels:
-    content_translation_enabled: 'Использовать для перевода контента'
-    default: По умолчанию
-  actions:
-    set_as_default: Установить по умолчанию
+    title: Локали
+    entity:
+        title: Локаль
+        title_plural: Локали
+    labels:
+        content_translation_enabled: 'Использовать для перевода контента'
+        default: По умолчанию
+    actions:
+        set_as_default: Установить по умолчанию
 settings:
-  title: Настройки
+    title: Настройки
 product:
-  title: Продукты
-  entity:
-    title: Продукт
-    title_plural: Продукты
-  labels:
-    identifiers: Идентификаторы
-    product_type: Тип продукта
-    created_at: Создано
-    updated_at: Обновлено
-    master_data: Основные данные
-    fields: Поля
+    title: Продукты
+    entity:
+        title: Продукт
+        title_plural: Продукты
+    labels:
+        identifiers: Идентификаторы
+        product_type: Тип продукта
+        created_at: Создано
+        updated_at: Обновлено
+        master_data: Основные данные
+        fields: Поля
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Панель управления'
+    system_status:
+        title: 'Состояние системы'
+        all_ok: 'ОК'
+        input_vars:
+            message: 'Для типа продукта «%productType%» требуется %fieldCount% входных переменных. Настроенное значение max_input_vars — %maxInputVars%.'
+    products:
+        latest: 'Последние продукты'
+
+filter:
+    is_set: '%name% задан'
 
 general:
-  labels:
-    translation: Перевод
-    locale: Локаль
-    language: Язык
+    labels:
+        translation: Перевод
+        locale: Локаль
+        language: Язык

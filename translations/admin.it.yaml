@@ -138,7 +138,7 @@ dashboard:
 
 filter:
     is_set: '%name% è impostato'
-    
+
 general:
     labels:
         translation: Traduzione

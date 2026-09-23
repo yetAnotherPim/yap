@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Fälttyp
-    default_value: Standardvärde
-    required: Obligatoriskt
-  alert:
-    duplicate_field_type: 'Den här fälttypen används redan.'
-  default_value:
-    help: |-
-      Standardvärde: Produkt.
+    labels:
+        field_type: Fälttyp
+        default_value: Standardvärde
+        required: Obligatoriskt
+    alert:
+        duplicate_field_type: 'Den här fälttypen används redan.'
+    default_value:
+        help: |-
+            Standardvärde: Produkt.
 
-      Typer:
-      'Some text'
-      '17.06'
-      '1' - Aktiv (Kryssruta)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Typer:
+            'Some text'
+            '17.06'
+            '1' - Aktiv (Kryssruta)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Pluginhanterare
-  labels:
-    name: Namn
-    namespace: Namnrymd
-    version: Version
-    installed_version: Installerad version
-    active: Aktiv
-    actions:
-      reload: Ladda om
-      activate: Aktivera
-      deactivate: Inaktivera
-      update: Uppdatera
+    title: Pluginhanterare
+    labels:
+        name: Namn
+        namespace: Namnrymd
+        version: Version
+        installed_version: Installerad version
+        active: Aktiv
+        actions:
+            reload: Ladda om
+            activate: Aktivera
+            deactivate: Inaktivera
+            update: Uppdatera
 user:
-  title: Användare
-  entity:
     title: Användare
-    title_plural: Användare
-  labels:
-    master_data: Grunddata
-    password: Lösenord
-    repeat_password: Upprepa lösenord
-    username: Användarnamn
-    role: Roll
-    email: E-post
-    first_name: Förnamn
-    last_name: Efternamn
+    entity:
+        title: Användare
+        title_plural: Användare
+    labels:
+        master_data: Grunddata
+        password: Lösenord
+        repeat_password: Upprepa lösenord
+        username: Användarnamn
+        role: Roll
+        email: E-post
+        first_name: Förnamn
+        last_name: Efternamn
 types:
-  title: Typer
-  label:
-    identifier: Identifierare
-    field: Fält
-    product: Produkt
+    title: Typer
+    label:
+        identifier: Identifierare
+        field: Fält
+        product: Produkt
 identifier_type:
-  title: Identifierartyp
-  data_type:
-    string: Sträng
-    integer: Heltal
-  entity:
     title: Identifierartyp
-    title_plural: Identifierartyper
-  labels:
-    title: Titel
-    data_type: Datatyp
+    data_type:
+        string: Sträng
+        integer: Heltal
+    entity:
+        title: Identifierartyp
+        title_plural: Identifierartyper
+    labels:
+        title: Titel
+        data_type: Datatyp
 product_type:
-  title: Produkttyp
-  entity:
     title: Produkttyp
-    title_plural: Produkttyper
-  labels:
-    title: Titel
-    code: Kod
-    fields: Fält
+    entity:
+        title: Produkttyp
+        title_plural: Produkttyper
+    labels:
+        title: Titel
+        code: Kod
+        fields: Fält
 field_type:
-  title: Fälttyp
-  input_type:
-    string: Sträng
-    integer: Heltal
-    checkbox: Kryssruta
-    date: Datum
-    file: Fil
-    section: Sektion
-    text: Text
-    textarea: Textområde
-    datetime: Datum och tid
-    time: Tid
-    number: Nummer
-    color: Färg
-    country: Land
-    telephone: Telefon
-    email: E-post
-    language: Språk
-    locale: Språkinställning
-    texteditor: Textredigerare
-    url: URL
-    select: Val
-    multiselect: Flerval
-    image: Bild
-  entity:
     title: Fälttyp
-    title_plural: Fälttyper
-  labels:
-    title: Titel
-    code: Kod
-    translatable: Översättningsbar
-    filterable: Filtrerbar
-    input_type: Inmatningstyp
-    decimal_separator: Decimaltecken
+    input_type:
+        string: Sträng
+        integer: Heltal
+        checkbox: Kryssruta
+        date: Datum
+        file: Fil
+        section: Sektion
+        text: Text
+        textarea: Textområde
+        datetime: Datum och tid
+        time: Tid
+        number: Nummer
+        color: Färg
+        country: Land
+        telephone: Telefon
+        email: E-post
+        language: Språk
+        locale: Språkinställning
+        texteditor: Textredigerare
+        url: URL
+        select: Val
+        multiselect: Flerval
+        image: Bild
+    entity:
+        title: Fälttyp
+        title_plural: Fälttyper
+    labels:
+        title: Titel
+        code: Kod
+        translatable: Översättningsbar
+        filterable: Filtrerbar
+        input_type: Inmatningstyp
+        decimal_separator: Decimaltecken
 locale:
-  title: Språkinställningar
-  entity:
-    title: Språkinställning
-    title_plural: Språkinställningar
-  labels:
-    content_translation_enabled: 'Använd för innehållsöversättningar'
-    default: Standard
-  actions:
-    set_as_default: Ange som standard
+    title: Språkinställningar
+    entity:
+        title: Språkinställning
+        title_plural: Språkinställningar
+    labels:
+        content_translation_enabled: 'Använd för innehållsöversättningar'
+        default: Standard
+    actions:
+        set_as_default: Ange som standard
 settings:
-  title: Inställningar
+    title: Inställningar
 product:
-  title: Produkter
-  entity:
-    title: Produkt
-    title_plural: Produkter
-  labels:
-    identifiers: Identifierare
-    product_type: Produkttyp
-    created_at: Skapad
-    updated_at: Uppdaterad
-    master_data: Grunddata
-    fields: Fält
+    title: Produkter
+    entity:
+        title: Produkt
+        title_plural: Produkter
+    labels:
+        identifiers: Identifierare
+        product_type: Produkttyp
+        created_at: Skapad
+        updated_at: Uppdaterad
+        master_data: Grunddata
+        fields: Fält
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Instrumentpanel'
+    system_status:
+        title: 'Systemstatus'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Produkttypen ”%productType%” kräver %fieldCount% indatavariabler. Det konfigurerade värdet för max_input_vars är %maxInputVars%.'
+    products:
+        latest: 'Senaste produkterna'
+
+filter:
+    is_set: '%name% är angivet'
 
 general:
-  labels:
-    translation: Översättning
-    locale: Språkinställning
-    language: Språk
+    labels:
+        translation: Översättning
+        locale: Språkinställning
+        language: Språk

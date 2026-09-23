@@ -129,11 +129,15 @@ product:
 dashboard:
   title: 'Dashboard'
   system_status:
-    title: 'System status'
+    title: 'Systemstatus'
+    all_ok: 'OK'
     input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
+      message: 'De Produkttyp "%productType%" brauch %fieldCount% Input-Variabelen. De konfiguréierte Wäert fir max_input_vars ass %maxInputVars%.'
   products:
-    latest: 'Latest products'
+    latest: 'Neist Produkter'
+
+filter:
+  is_set: '%name% ass agestallt'
 
 general:
   labels:

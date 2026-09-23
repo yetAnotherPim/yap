@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Тип поля
-    default_value: Значення за замовчуванням
-    required: Обов’язково
-  alert:
-    duplicate_field_type: 'Цей тип поля вже використовується.'
-  default_value:
-    help: |-
-      Значення за замовчуванням: Продукт.
+    labels:
+        field_type: Тип поля
+        default_value: Значення за замовчуванням
+        required: Обов’язково
+    alert:
+        duplicate_field_type: 'Цей тип поля вже використовується.'
+    default_value:
+        help: |-
+            Значення за замовчуванням: Продукт.
 
-      Типи:
-      'Some text'
-      '17.06'
-      '1' - Активний (Прапорець)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Типи:
+            'Some text'
+            '17.06'
+            '1' - Активний (Прапорець)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Менеджер плагінів
-  labels:
-    name: Назва
-    namespace: Простір імен
-    version: Версія
-    installed_version: Встановлена версія
-    active: Активний
-    actions:
-      reload: Перезавантажити
-      activate: Активувати
-      deactivate: Деактивувати
-      update: Оновити
+    title: Менеджер плагінів
+    labels:
+        name: Назва
+        namespace: Простір імен
+        version: Версія
+        installed_version: Встановлена версія
+        active: Активний
+        actions:
+            reload: Перезавантажити
+            activate: Активувати
+            deactivate: Деактивувати
+            update: Оновити
 user:
-  title: Користувачі
-  entity:
-    title: Користувач
-    title_plural: Користувачі
-  labels:
-    master_data: Основні дані
-    password: Пароль
-    repeat_password: Повторіть пароль
-    username: Ім’я користувача
-    role: Роль
-    email: Електронна пошта
-    first_name: Ім’я
-    last_name: Прізвище
+    title: Користувачі
+    entity:
+        title: Користувач
+        title_plural: Користувачі
+    labels:
+        master_data: Основні дані
+        password: Пароль
+        repeat_password: Повторіть пароль
+        username: Ім’я користувача
+        role: Роль
+        email: Електронна пошта
+        first_name: Ім’я
+        last_name: Прізвище
 types:
-  title: Типи
-  label:
-    identifier: Ідентифікатор
-    field: Поле
-    product: Продукт
+    title: Типи
+    label:
+        identifier: Ідентифікатор
+        field: Поле
+        product: Продукт
 identifier_type:
-  title: Тип ідентифікатора
-  data_type:
-    string: Рядок
-    integer: Ціле число
-  entity:
     title: Тип ідентифікатора
-    title_plural: Типи ідентифікаторів
-  labels:
-    title: Заголовок
-    data_type: Тип даних
+    data_type:
+        string: Рядок
+        integer: Ціле число
+    entity:
+        title: Тип ідентифікатора
+        title_plural: Типи ідентифікаторів
+    labels:
+        title: Заголовок
+        data_type: Тип даних
 product_type:
-  title: Тип продукту
-  entity:
     title: Тип продукту
-    title_plural: Типи продуктів
-  labels:
-    title: Заголовок
-    code: Код
-    fields: Поля
+    entity:
+        title: Тип продукту
+        title_plural: Типи продуктів
+    labels:
+        title: Заголовок
+        code: Код
+        fields: Поля
 field_type:
-  title: Тип поля
-  input_type:
-    string: Рядок
-    integer: Ціле число
-    checkbox: Прапорець
-    date: Дата
-    file: Файл
-    section: Розділ
-    text: Текст
-    textarea: Текстова область
-    datetime: Дата й час
-    time: Час
-    number: Число
-    color: Колір
-    country: Країна
-    telephone: Телефон
-    email: Електронна пошта
-    language: Мова
-    locale: Локаль
-    texteditor: Текстовий редактор
-    url: URL
-    select: Вибір
-    multiselect: Множинний вибір
-    image: Зображення
-  entity:
     title: Тип поля
-    title_plural: Типи полів
-  labels:
-    title: Заголовок
-    code: Код
-    translatable: Перекладний
-    filterable: Фільтрований
-    input_type: Тип введення
-    decimal_separator: Десятковий роздільник
+    input_type:
+        string: Рядок
+        integer: Ціле число
+        checkbox: Прапорець
+        date: Дата
+        file: Файл
+        section: Розділ
+        text: Текст
+        textarea: Текстова область
+        datetime: Дата й час
+        time: Час
+        number: Число
+        color: Колір
+        country: Країна
+        telephone: Телефон
+        email: Електронна пошта
+        language: Мова
+        locale: Локаль
+        texteditor: Текстовий редактор
+        url: URL
+        select: Вибір
+        multiselect: Множинний вибір
+        image: Зображення
+    entity:
+        title: Тип поля
+        title_plural: Типи полів
+    labels:
+        title: Заголовок
+        code: Код
+        translatable: Перекладний
+        filterable: Фільтрований
+        input_type: Тип введення
+        decimal_separator: Десятковий роздільник
 locale:
-  title: Локалі
-  entity:
-    title: Локаль
-    title_plural: Локалі
-  labels:
-    content_translation_enabled: 'Використовуйте для перекладу контенту'
-    default: За замовчуванням
-  actions:
-    set_as_default: Встановити за замовчуванням
+    title: Локалі
+    entity:
+        title: Локаль
+        title_plural: Локалі
+    labels:
+        content_translation_enabled: 'Використовуйте для перекладу контенту'
+        default: За замовчуванням
+    actions:
+        set_as_default: Встановити за замовчуванням
 settings:
-  title: Налаштування
+    title: Налаштування
 product:
-  title: Продукти
-  entity:
-    title: Продукт
-    title_plural: Продукти
-  labels:
-    identifiers: Ідентифікатори
-    product_type: Тип продукту
-    created_at: Створено
-    updated_at: Оновлено
-    master_data: Основні дані
-    fields: Поля
+    title: Продукти
+    entity:
+        title: Продукт
+        title_plural: Продукти
+    labels:
+        identifiers: Ідентифікатори
+        product_type: Тип продукту
+        created_at: Створено
+        updated_at: Оновлено
+        master_data: Основні дані
+        fields: Поля
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Панель керування'
+    system_status:
+        title: 'Стан системи'
+        all_ok: 'Гаразд'
+        input_vars:
+            message: 'Тип продукту «%productType%» потребує %fieldCount% вхідних змінних. Налаштоване значення max_input_vars — %maxInputVars%.'
+    products:
+        latest: 'Останні продукти'
+
+filter:
+    is_set: '%name% задано'
 
 general:
-  labels:
-    translation: Переклад
-    locale: Локаль
-    language: Мова
+    labels:
+        translation: Переклад
+        locale: Локаль
+        language: Мова

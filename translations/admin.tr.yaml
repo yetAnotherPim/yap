@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Alan türü
-    default_value: Varsayılan değer
-    required: Zorunlu
-  alert:
-    duplicate_field_type: 'Bu alan türü zaten kullanılıyor.'
-  default_value:
-    help: |-
-      Varsayılan değer: Ürün.
+    labels:
+        field_type: Alan türü
+        default_value: Varsayılan değer
+        required: Zorunlu
+    alert:
+        duplicate_field_type: 'Bu alan türü zaten kullanılıyor.'
+    default_value:
+        help: |-
+            Varsayılan değer: Ürün.
 
-      Türler:
-      'Some text'
-      '17.06'
-      '1' - Etkin (Onay kutusu)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Türler:
+            'Some text'
+            '17.06'
+            '1' - Etkin (Onay kutusu)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Eklenti Yöneticisi
-  labels:
-    name: Ad
-    namespace: Ad alanı
-    version: Sürüm
-    installed_version: Yüklü sürüm
-    active: Etkin
-    actions:
-      reload: Yeniden yükle
-      activate: Etkinleştir
-      deactivate: Devre dışı bırak
-      update: Güncelle
+    title: Eklenti Yöneticisi
+    labels:
+        name: Ad
+        namespace: Ad alanı
+        version: Sürüm
+        installed_version: Yüklü sürüm
+        active: Etkin
+        actions:
+            reload: Yeniden yükle
+            activate: Etkinleştir
+            deactivate: Devre dışı bırak
+            update: Güncelle
 user:
-  title: Kullanıcılar
-  entity:
-    title: Kullanıcı
-    title_plural: Kullanıcılar
-  labels:
-    master_data: Ana veriler
-    password: Parola
-    repeat_password: Parolayı tekrarla
-    username: Kullanıcı adı
-    role: Rol
-    email: E-posta
-    first_name: Ad
-    last_name: Soyad
+    title: Kullanıcılar
+    entity:
+        title: Kullanıcı
+        title_plural: Kullanıcılar
+    labels:
+        master_data: Ana veriler
+        password: Parola
+        repeat_password: Parolayı tekrarla
+        username: Kullanıcı adı
+        role: Rol
+        email: E-posta
+        first_name: Ad
+        last_name: Soyad
 types:
-  title: Türler
-  label:
-    identifier: Tanımlayıcı
-    field: Alan
-    product: Ürün
+    title: Türler
+    label:
+        identifier: Tanımlayıcı
+        field: Alan
+        product: Ürün
 identifier_type:
-  title: Tanımlayıcı türü
-  data_type:
-    string: Dize
-    integer: Tam sayı
-  entity:
     title: Tanımlayıcı türü
-    title_plural: Tanımlayıcı türleri
-  labels:
-    title: Başlık
-    data_type: Veri türü
+    data_type:
+        string: Dize
+        integer: Tam sayı
+    entity:
+        title: Tanımlayıcı türü
+        title_plural: Tanımlayıcı türleri
+    labels:
+        title: Başlık
+        data_type: Veri türü
 product_type:
-  title: Ürün türü
-  entity:
     title: Ürün türü
-    title_plural: Ürün türleri
-  labels:
-    title: Başlık
-    code: Kod
-    fields: Alanlar
+    entity:
+        title: Ürün türü
+        title_plural: Ürün türleri
+    labels:
+        title: Başlık
+        code: Kod
+        fields: Alanlar
 field_type:
-  title: Alan türü
-  input_type:
-    string: Dize
-    integer: Tam sayı
-    checkbox: Onay kutusu
-    date: Tarih
-    file: Dosya
-    section: Bölüm
-    text: Metin
-    textarea: Metin alanı
-    datetime: Tarih ve saat
-    time: Saat
-    number: Sayı
-    color: Renk
-    country: Ülke
-    telephone: Telefon
-    email: E-posta
-    language: Dil
-    locale: Yerel ayar
-    texteditor: Metin düzenleyici
-    url: URL
-    select: Seçim
-    multiselect: Çoklu seçim
-    image: Görsel
-  entity:
     title: Alan türü
-    title_plural: Alan türleri
-  labels:
-    title: Başlık
-    code: Kod
-    translatable: Çevrilebilir
-    filterable: Filtrelenebilir
-    input_type: Giriş türü
-    decimal_separator: Ondalık ayırıcı
+    input_type:
+        string: Dize
+        integer: Tam sayı
+        checkbox: Onay kutusu
+        date: Tarih
+        file: Dosya
+        section: Bölüm
+        text: Metin
+        textarea: Metin alanı
+        datetime: Tarih ve saat
+        time: Saat
+        number: Sayı
+        color: Renk
+        country: Ülke
+        telephone: Telefon
+        email: E-posta
+        language: Dil
+        locale: Yerel ayar
+        texteditor: Metin düzenleyici
+        url: URL
+        select: Seçim
+        multiselect: Çoklu seçim
+        image: Görsel
+    entity:
+        title: Alan türü
+        title_plural: Alan türleri
+    labels:
+        title: Başlık
+        code: Kod
+        translatable: Çevrilebilir
+        filterable: Filtrelenebilir
+        input_type: Giriş türü
+        decimal_separator: Ondalık ayırıcı
 locale:
-  title: Yerel ayarlar
-  entity:
-    title: Yerel ayar
-    title_plural: Yerel ayarlar
-  labels:
-    content_translation_enabled: 'İçerik çevirileri için kullanın'
-    default: Varsayılan
-  actions:
-    set_as_default: Varsayılan olarak ayarla
+    title: Yerel ayarlar
+    entity:
+        title: Yerel ayar
+        title_plural: Yerel ayarlar
+    labels:
+        content_translation_enabled: 'İçerik çevirileri için kullanın'
+        default: Varsayılan
+    actions:
+        set_as_default: Varsayılan olarak ayarla
 settings:
-  title: Ayarlar
+    title: Ayarlar
 product:
-  title: Ürünler
-  entity:
-    title: Ürün
-    title_plural: Ürünler
-  labels:
-    identifiers: Tanımlayıcılar
-    product_type: Ürün türü
-    created_at: Oluşturulma
-    updated_at: Güncellenme
-    master_data: Ana veriler
-    fields: Alanlar
+    title: Ürünler
+    entity:
+        title: Ürün
+        title_plural: Ürünler
+    labels:
+        identifiers: Tanımlayıcılar
+        product_type: Ürün türü
+        created_at: Oluşturulma
+        updated_at: Güncellenme
+        master_data: Ana veriler
+        fields: Alanlar
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Kontrol paneli'
+    system_status:
+        title: 'Sistem durumu'
+        all_ok: 'Tamam'
+        input_vars:
+            message: '"%productType%" ürün türü %fieldCount% giriş değişkeni gerektiriyor. Yapılandırılmış max_input_vars değeri %maxInputVars%.'
+    products:
+        latest: 'En yeni ürünler'
+
+filter:
+    is_set: '%name% ayarlanmış'
 
 general:
-  labels:
-    translation: Çeviri
-    locale: Yerel ayar
-    language: Dil
+    labels:
+        translation: Çeviri
+        locale: Yerel ayar
+        language: Dil

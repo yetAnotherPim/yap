@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Typ poľa
-    default_value: Predvolená hodnota
-    required: Povinné
-  alert:
-    duplicate_field_type: 'Tento typ poľa sa už používa.'
-  default_value:
-    help: |-
-      Predvolená hodnota: Produkt.
+    labels:
+        field_type: Typ poľa
+        default_value: Predvolená hodnota
+        required: Povinné
+    alert:
+        duplicate_field_type: 'Tento typ poľa sa už používa.'
+    default_value:
+        help: |-
+            Predvolená hodnota: Produkt.
 
-      Typy:
-      'Some text'
-      '17.06'
-      '1' - Aktívne (Začiarkavacie políčko)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Typy:
+            'Some text'
+            '17.06'
+            '1' - Aktívne (Začiarkavacie políčko)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Správca doplnkov
-  labels:
-    name: Názov
-    namespace: Menný priestor
-    version: Verzia
-    installed_version: Nainštalovaná verzia
-    active: Aktívne
-    actions:
-      reload: Znovu načítať
-      activate: Aktivovať
-      deactivate: Deaktivovať
-      update: Aktualizovať
+    title: Správca doplnkov
+    labels:
+        name: Názov
+        namespace: Menný priestor
+        version: Verzia
+        installed_version: Nainštalovaná verzia
+        active: Aktívne
+        actions:
+            reload: Znovu načítať
+            activate: Aktivovať
+            deactivate: Deaktivovať
+            update: Aktualizovať
 user:
-  title: Používatelia
-  entity:
-    title: Používateľ
-    title_plural: Používatelia
-  labels:
-    master_data: Kmeňové údaje
-    password: Heslo
-    repeat_password: Zopakovať heslo
-    username: Používateľské meno
-    role: Rola
-    email: E-mail
-    first_name: Meno
-    last_name: Priezvisko
+    title: Používatelia
+    entity:
+        title: Používateľ
+        title_plural: Používatelia
+    labels:
+        master_data: Kmeňové údaje
+        password: Heslo
+        repeat_password: Zopakovať heslo
+        username: Používateľské meno
+        role: Rola
+        email: E-mail
+        first_name: Meno
+        last_name: Priezvisko
 types:
-  title: Typy
-  label:
-    identifier: Identifikátor
-    field: Pole
-    product: Produkt
+    title: Typy
+    label:
+        identifier: Identifikátor
+        field: Pole
+        product: Produkt
 identifier_type:
-  title: Typ identifikátora
-  data_type:
-    string: Reťazec
-    integer: Celé číslo
-  entity:
     title: Typ identifikátora
-    title_plural: Typy identifikátorov
-  labels:
-    title: Názov
-    data_type: Dátový typ
+    data_type:
+        string: Reťazec
+        integer: Celé číslo
+    entity:
+        title: Typ identifikátora
+        title_plural: Typy identifikátorov
+    labels:
+        title: Názov
+        data_type: Dátový typ
 product_type:
-  title: Typ produktu
-  entity:
     title: Typ produktu
-    title_plural: Typy produktov
-  labels:
-    title: Názov
-    code: Kód
-    fields: Polia
+    entity:
+        title: Typ produktu
+        title_plural: Typy produktov
+    labels:
+        title: Názov
+        code: Kód
+        fields: Polia
 field_type:
-  title: Typ poľa
-  input_type:
-    string: Reťazec
-    integer: Celé číslo
-    checkbox: Začiarkavacie políčko
-    date: Dátum
-    file: Súbor
-    section: Sekcia
-    text: Text
-    textarea: Textová oblasť
-    datetime: Dátum a čas
-    time: Čas
-    number: Číslo
-    color: Farba
-    country: Krajina
-    telephone: Telefón
-    email: E-mail
-    language: Jazyk
-    locale: Miestne nastavenie
-    texteditor: Textový editor
-    url: URL
-    select: Výber
-    multiselect: Viacnásobný výber
-    image: Obrázok
-  entity:
     title: Typ poľa
-    title_plural: Typy polí
-  labels:
-    title: Názov
-    code: Kód
-    translatable: Preložiteľné
-    filterable: Filtrovateľné
-    input_type: Typ vstupu
-    decimal_separator: Desatinný oddeľovač
+    input_type:
+        string: Reťazec
+        integer: Celé číslo
+        checkbox: Začiarkavacie políčko
+        date: Dátum
+        file: Súbor
+        section: Sekcia
+        text: Text
+        textarea: Textová oblasť
+        datetime: Dátum a čas
+        time: Čas
+        number: Číslo
+        color: Farba
+        country: Krajina
+        telephone: Telefón
+        email: E-mail
+        language: Jazyk
+        locale: Miestne nastavenie
+        texteditor: Textový editor
+        url: URL
+        select: Výber
+        multiselect: Viacnásobný výber
+        image: Obrázok
+    entity:
+        title: Typ poľa
+        title_plural: Typy polí
+    labels:
+        title: Názov
+        code: Kód
+        translatable: Preložiteľné
+        filterable: Filtrovateľné
+        input_type: Typ vstupu
+        decimal_separator: Desatinný oddeľovač
 locale:
-  title: Miestne nastavenia
-  entity:
-    title: Miestne nastavenie
-    title_plural: Miestne nastavenia
-  labels:
-    content_translation_enabled: 'Použiť na preklady obsahu'
-    default: Predvolené
-  actions:
-    set_as_default: Nastaviť ako predvolené
+    title: Miestne nastavenia
+    entity:
+        title: Miestne nastavenie
+        title_plural: Miestne nastavenia
+    labels:
+        content_translation_enabled: 'Použiť na preklady obsahu'
+        default: Predvolené
+    actions:
+        set_as_default: Nastaviť ako predvolené
 settings:
-  title: Nastavenia
+    title: Nastavenia
 product:
-  title: Produkty
-  entity:
-    title: Produkt
-    title_plural: Produkty
-  labels:
-    identifiers: Identifikátory
-    product_type: Typ produktu
-    created_at: Vytvorené
-    updated_at: Aktualizované
-    master_data: Kmeňové údaje
-    fields: Polia
+    title: Produkty
+    entity:
+        title: Produkt
+        title_plural: Produkty
+    labels:
+        identifiers: Identifikátory
+        product_type: Typ produktu
+        created_at: Vytvorené
+        updated_at: Aktualizované
+        master_data: Kmeňové údaje
+        fields: Polia
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Prehľad'
+    system_status:
+        title: 'Stav systému'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Typ produktu „%productType%“ vyžaduje %fieldCount% vstupných premenných. Nakonfigurovaná hodnota max_input_vars je %maxInputVars%.'
+    products:
+        latest: 'Najnovšie produkty'
+
+filter:
+    is_set: '%name% je nastavené'
 
 general:
-  labels:
-    translation: Preklad
-    locale: Miestne nastavenie
-    language: Jazyk
+    labels:
+        translation: Preklad
+        locale: Miestne nastavenie
+        language: Jazyk

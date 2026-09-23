@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Typ pola
-    default_value: Wartość domyślna
-    required: Wymagane
-  alert:
-    duplicate_field_type: 'Ten typ pola jest już używany.'
-  default_value:
-    help: |-
-      Wartość domyślna: Produkt.
+    labels:
+        field_type: Typ pola
+        default_value: Wartość domyślna
+        required: Wymagane
+    alert:
+        duplicate_field_type: 'Ten typ pola jest już używany.'
+    default_value:
+        help: |-
+            Wartość domyślna: Produkt.
 
-      Typy:
-      'Some text'
-      '17.06'
-      '1' - Aktywny (Pole wyboru)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Typy:
+            'Some text'
+            '17.06'
+            '1' - Aktywny (Pole wyboru)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Menedżer wtyczek
-  labels:
-    name: Nazwa
-    namespace: Przestrzeń nazw
-    version: Wersja
-    installed_version: Zainstalowana wersja
-    active: Aktywny
-    actions:
-      reload: Przeładuj
-      activate: Aktywuj
-      deactivate: Dezaktywuj
-      update: Aktualizuj
+    title: Menedżer wtyczek
+    labels:
+        name: Nazwa
+        namespace: Przestrzeń nazw
+        version: Wersja
+        installed_version: Zainstalowana wersja
+        active: Aktywny
+        actions:
+            reload: Przeładuj
+            activate: Aktywuj
+            deactivate: Dezaktywuj
+            update: Aktualizuj
 user:
-  title: Użytkownicy
-  entity:
-    title: Użytkownik
-    title_plural: Użytkownicy
-  labels:
-    master_data: Dane podstawowe
-    password: Hasło
-    repeat_password: Powtórz hasło
-    username: Nazwa użytkownika
-    role: Rola
-    email: E-mail
-    first_name: Imię
-    last_name: Nazwisko
+    title: Użytkownicy
+    entity:
+        title: Użytkownik
+        title_plural: Użytkownicy
+    labels:
+        master_data: Dane podstawowe
+        password: Hasło
+        repeat_password: Powtórz hasło
+        username: Nazwa użytkownika
+        role: Rola
+        email: E-mail
+        first_name: Imię
+        last_name: Nazwisko
 types:
-  title: Typy
-  label:
-    identifier: Identyfikator
-    field: Pole
-    product: Produkt
+    title: Typy
+    label:
+        identifier: Identyfikator
+        field: Pole
+        product: Produkt
 identifier_type:
-  title: Typ identyfikatora
-  data_type:
-    string: Ciąg znaków
-    integer: Liczba całkowita
-  entity:
     title: Typ identyfikatora
-    title_plural: Typy identyfikatorów
-  labels:
-    title: Tytuł
-    data_type: Typ danych
+    data_type:
+        string: Ciąg znaków
+        integer: Liczba całkowita
+    entity:
+        title: Typ identyfikatora
+        title_plural: Typy identyfikatorów
+    labels:
+        title: Tytuł
+        data_type: Typ danych
 product_type:
-  title: Typ produktu
-  entity:
     title: Typ produktu
-    title_plural: Typy produktów
-  labels:
-    title: Tytuł
-    code: Kod
-    fields: Pola
+    entity:
+        title: Typ produktu
+        title_plural: Typy produktów
+    labels:
+        title: Tytuł
+        code: Kod
+        fields: Pola
 field_type:
-  title: Typ pola
-  input_type:
-    string: Ciąg znaków
-    integer: Liczba całkowita
-    checkbox: Pole wyboru
-    date: Data
-    file: Plik
-    section: Sekcja
-    text: Tekst
-    textarea: Obszar tekstowy
-    datetime: Data i czas
-    time: Czas
-    number: Liczba
-    color: Kolor
-    country: Kraj
-    telephone: Telefon
-    email: E-mail
-    language: Język
-    locale: Ustawienia regionalne
-    texteditor: Edytor tekstu
-    url: URL
-    select: Wybór
-    multiselect: Wybór wielokrotny
-    image: Obraz
-  entity:
     title: Typ pola
-    title_plural: Typy pól
-  labels:
-    title: Tytuł
-    code: Kod
-    translatable: Przetłumaczalne
-    filterable: Filtrowalne
-    input_type: Typ wejścia
-    decimal_separator: Separator dziesiętny
+    input_type:
+        string: Ciąg znaków
+        integer: Liczba całkowita
+        checkbox: Pole wyboru
+        date: Data
+        file: Plik
+        section: Sekcja
+        text: Tekst
+        textarea: Obszar tekstowy
+        datetime: Data i czas
+        time: Czas
+        number: Liczba
+        color: Kolor
+        country: Kraj
+        telephone: Telefon
+        email: E-mail
+        language: Język
+        locale: Ustawienia regionalne
+        texteditor: Edytor tekstu
+        url: URL
+        select: Wybór
+        multiselect: Wybór wielokrotny
+        image: Obraz
+    entity:
+        title: Typ pola
+        title_plural: Typy pól
+    labels:
+        title: Tytuł
+        code: Kod
+        translatable: Przetłumaczalne
+        filterable: Filtrowalne
+        input_type: Typ wejścia
+        decimal_separator: Separator dziesiętny
 locale:
-  title: Ustawienia regionalne
-  entity:
     title: Ustawienia regionalne
-    title_plural: Ustawienia regionalne
-  labels:
-    content_translation_enabled: 'Używaj do tłumaczeń treści'
-    default: Domyślne
-  actions:
-    set_as_default: Ustaw jako domyślne
+    entity:
+        title: Ustawienia regionalne
+        title_plural: Ustawienia regionalne
+    labels:
+        content_translation_enabled: 'Używaj do tłumaczeń treści'
+        default: Domyślne
+    actions:
+        set_as_default: Ustaw jako domyślne
 settings:
-  title: Ustawienia
+    title: Ustawienia
 product:
-  title: Produkty
-  entity:
-    title: Produkt
-    title_plural: Produkty
-  labels:
-    identifiers: Identyfikatory
-    product_type: Typ produktu
-    created_at: Utworzono
-    updated_at: Zaktualizowano
-    master_data: Dane podstawowe
-    fields: Pola
+    title: Produkty
+    entity:
+        title: Produkt
+        title_plural: Produkty
+    labels:
+        identifiers: Identyfikatory
+        product_type: Typ produktu
+        created_at: Utworzono
+        updated_at: Zaktualizowano
+        master_data: Dane podstawowe
+        fields: Pola
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Panel'
+    system_status:
+        title: 'Stan systemu'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Typ produktu „%productType%” wymaga %fieldCount% zmiennych wejściowych. Skonfigurowana wartość max_input_vars wynosi %maxInputVars%.'
+    products:
+        latest: 'Najnowsze produkty'
+
+filter:
+    is_set: '%name% jest ustawione'
 
 general:
-  labels:
-    translation: Tłumaczenie
-    locale: Ustawienia regionalne
-    language: Język
+    labels:
+        translation: Tłumaczenie
+        locale: Ustawienia regionalne
+        language: Język

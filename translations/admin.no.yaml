@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Felttype
-    default_value: Standardverdi
-    required: Påkrevd
-  alert:
-    duplicate_field_type: 'Denne felttypen er allerede i bruk.'
-  default_value:
-    help: |-
-      Standardverdi: Produkt.
+    labels:
+        field_type: Felttype
+        default_value: Standardverdi
+        required: Påkrevd
+    alert:
+        duplicate_field_type: 'Denne felttypen er allerede i bruk.'
+    default_value:
+        help: |-
+            Standardverdi: Produkt.
 
-      Typer:
-      'Some text'
-      '17.06'
-      '1' - Aktiv (Avkrysningsboks)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Typer:
+            'Some text'
+            '17.06'
+            '1' - Aktiv (Avkrysningsboks)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Programtilleggsbehandling
-  labels:
-    name: Navn
-    namespace: Navnerom
-    version: Versjon
-    installed_version: Installert versjon
-    active: Aktiv
-    actions:
-      reload: Last inn på nytt
-      activate: Aktiver
-      deactivate: Deaktiver
-      update: Oppdater
+    title: Programtilleggsbehandling
+    labels:
+        name: Navn
+        namespace: Navnerom
+        version: Versjon
+        installed_version: Installert versjon
+        active: Aktiv
+        actions:
+            reload: Last inn på nytt
+            activate: Aktiver
+            deactivate: Deaktiver
+            update: Oppdater
 user:
-  title: Brukere
-  entity:
-    title: Bruker
-    title_plural: Brukere
-  labels:
-    master_data: Grunndata
-    password: Passord
-    repeat_password: Gjenta passord
-    username: Brukernavn
-    role: Rolle
-    email: E-post
-    first_name: Fornavn
-    last_name: Etternavn
+    title: Brukere
+    entity:
+        title: Bruker
+        title_plural: Brukere
+    labels:
+        master_data: Grunndata
+        password: Passord
+        repeat_password: Gjenta passord
+        username: Brukernavn
+        role: Rolle
+        email: E-post
+        first_name: Fornavn
+        last_name: Etternavn
 types:
-  title: Typer
-  label:
-    identifier: Identifikator
-    field: Felt
-    product: Produkt
+    title: Typer
+    label:
+        identifier: Identifikator
+        field: Felt
+        product: Produkt
 identifier_type:
-  title: Identifikatortype
-  data_type:
-    string: Tekststreng
-    integer: Heltall
-  entity:
     title: Identifikatortype
-    title_plural: Identifikatortyper
-  labels:
-    title: Tittel
-    data_type: Datatype
+    data_type:
+        string: Tekststreng
+        integer: Heltall
+    entity:
+        title: Identifikatortype
+        title_plural: Identifikatortyper
+    labels:
+        title: Tittel
+        data_type: Datatype
 product_type:
-  title: Produkttype
-  entity:
     title: Produkttype
-    title_plural: Produkttyper
-  labels:
-    title: Tittel
-    code: Kode
-    fields: Felt
+    entity:
+        title: Produkttype
+        title_plural: Produkttyper
+    labels:
+        title: Tittel
+        code: Kode
+        fields: Felt
 field_type:
-  title: Felttype
-  input_type:
-    string: Tekststreng
-    integer: Heltall
-    checkbox: Avkrysningsboks
-    date: Dato
-    file: Fil
-    section: Seksjon
-    text: Tekst
-    textarea: Tekstområde
-    datetime: Dato og tid
-    time: Tid
-    number: Tall
-    color: Farge
-    country: Land
-    telephone: Telefon
-    email: E-post
-    language: Språk
-    locale: Lokale
-    texteditor: Tekstredigerer
-    url: URL
-    select: Valg
-    multiselect: Flervalg
-    image: Bilde
-  entity:
     title: Felttype
-    title_plural: Felttyper
-  labels:
-    title: Tittel
-    code: Kode
-    translatable: Oversettbar
-    filterable: Filtrerbar
-    input_type: Inndatatype
-    decimal_separator: Desimalskilletegn
+    input_type:
+        string: Tekststreng
+        integer: Heltall
+        checkbox: Avkrysningsboks
+        date: Dato
+        file: Fil
+        section: Seksjon
+        text: Tekst
+        textarea: Tekstområde
+        datetime: Dato og tid
+        time: Tid
+        number: Tall
+        color: Farge
+        country: Land
+        telephone: Telefon
+        email: E-post
+        language: Språk
+        locale: Lokale
+        texteditor: Tekstredigerer
+        url: URL
+        select: Valg
+        multiselect: Flervalg
+        image: Bilde
+    entity:
+        title: Felttype
+        title_plural: Felttyper
+    labels:
+        title: Tittel
+        code: Kode
+        translatable: Oversettbar
+        filterable: Filtrerbar
+        input_type: Inndatatype
+        decimal_separator: Desimalskilletegn
 locale:
-  title: Lokaler
-  entity:
-    title: Lokale
-    title_plural: Lokaler
-  labels:
-    content_translation_enabled: 'Bruk til innholdsoversettelser'
-    default: Standard
-  actions:
-    set_as_default: Angi som standard
+    title: Lokaler
+    entity:
+        title: Lokale
+        title_plural: Lokaler
+    labels:
+        content_translation_enabled: 'Bruk til innholdsoversettelser'
+        default: Standard
+    actions:
+        set_as_default: Angi som standard
 settings:
-  title: Innstillinger
+    title: Innstillinger
 product:
-  title: Produkter
-  entity:
-    title: Produkt
-    title_plural: Produkter
-  labels:
-    identifiers: Identifikatorer
-    product_type: Produkttype
-    created_at: Opprettet
-    updated_at: Oppdatert
-    master_data: Grunndata
-    fields: Felt
+    title: Produkter
+    entity:
+        title: Produkt
+        title_plural: Produkter
+    labels:
+        identifiers: Identifikatorer
+        product_type: Produkttype
+        created_at: Opprettet
+        updated_at: Oppdatert
+        master_data: Grunndata
+        fields: Felt
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Kontrollpanel'
+    system_status:
+        title: 'Systemstatus'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Produkttypen «%productType%» krever %fieldCount% inndatavariabler. Den konfigurerte verdien for max_input_vars er %maxInputVars%.'
+    products:
+        latest: 'Nyeste produkter'
+
+filter:
+    is_set: '%name% er angitt'
 
 general:
-  labels:
-    translation: Oversettelse
-    locale: Lokale
-    language: Språk
+    labels:
+        translation: Oversettelse
+        locale: Lokale
+        language: Språk

@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Vrsta polja
-    default_value: Privzeta vrednost
-    required: Obvezno
-  alert:
-    duplicate_field_type: 'Ta vrsta polja je že v uporabi.'
-  default_value:
-    help: |-
-      Privzeta vrednost: Izdelek.
+    labels:
+        field_type: Vrsta polja
+        default_value: Privzeta vrednost
+        required: Obvezno
+    alert:
+        duplicate_field_type: 'Ta vrsta polja je že v uporabi.'
+    default_value:
+        help: |-
+            Privzeta vrednost: Izdelek.
 
-      Vrste:
-      'Some text'
-      '17.06'
-      '1' - Aktivno (Potrditveno polje)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Vrste:
+            'Some text'
+            '17.06'
+            '1' - Aktivno (Potrditveno polje)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Upravitelj vtičnikov
-  labels:
-    name: Ime
-    namespace: Imenski prostor
-    version: Različica
-    installed_version: Nameščena različica
-    active: Aktivno
-    actions:
-      reload: Znova naloži
-      activate: Aktiviraj
-      deactivate: Deaktiviraj
-      update: Posodobi
+    title: Upravitelj vtičnikov
+    labels:
+        name: Ime
+        namespace: Imenski prostor
+        version: Različica
+        installed_version: Nameščena različica
+        active: Aktivno
+        actions:
+            reload: Znova naloži
+            activate: Aktiviraj
+            deactivate: Deaktiviraj
+            update: Posodobi
 user:
-  title: Uporabniki
-  entity:
-    title: Uporabnik
-    title_plural: Uporabniki
-  labels:
-    master_data: Matični podatki
-    password: Geslo
-    repeat_password: Ponovi geslo
-    username: Uporabniško ime
-    role: Vloga
-    email: E-pošta
-    first_name: Ime
-    last_name: Priimek
+    title: Uporabniki
+    entity:
+        title: Uporabnik
+        title_plural: Uporabniki
+    labels:
+        master_data: Matični podatki
+        password: Geslo
+        repeat_password: Ponovi geslo
+        username: Uporabniško ime
+        role: Vloga
+        email: E-pošta
+        first_name: Ime
+        last_name: Priimek
 types:
-  title: Vrste
-  label:
-    identifier: Identifikator
-    field: Polje
-    product: Izdelek
+    title: Vrste
+    label:
+        identifier: Identifikator
+        field: Polje
+        product: Izdelek
 identifier_type:
-  title: Vrsta identifikatorja
-  data_type:
-    string: Niz
-    integer: Celo število
-  entity:
     title: Vrsta identifikatorja
-    title_plural: Vrste identifikatorjev
-  labels:
-    title: Naslov
-    data_type: Vrsta podatkov
+    data_type:
+        string: Niz
+        integer: Celo število
+    entity:
+        title: Vrsta identifikatorja
+        title_plural: Vrste identifikatorjev
+    labels:
+        title: Naslov
+        data_type: Vrsta podatkov
 product_type:
-  title: Vrsta izdelka
-  entity:
     title: Vrsta izdelka
-    title_plural: Vrste izdelkov
-  labels:
-    title: Naslov
-    code: Koda
-    fields: Polja
+    entity:
+        title: Vrsta izdelka
+        title_plural: Vrste izdelkov
+    labels:
+        title: Naslov
+        code: Koda
+        fields: Polja
 field_type:
-  title: Vrsta polja
-  input_type:
-    string: Niz
-    integer: Celo število
-    checkbox: Potrditveno polje
-    date: Datum
-    file: Datoteka
-    section: Odsek
-    text: Besedilo
-    textarea: Besedilno polje
-    datetime: Datum in čas
-    time: Čas
-    number: Število
-    color: Barva
-    country: Država
-    telephone: Telefon
-    email: E-pošta
-    language: Jezik
-    locale: Področne nastavitve
-    texteditor: Urejevalnik besedila
-    url: URL
-    select: Izbira
-    multiselect: Večkratna izbira
-    image: Slika
-  entity:
     title: Vrsta polja
-    title_plural: Vrste polj
-  labels:
-    title: Naslov
-    code: Koda
-    translatable: Prevedljivo
-    filterable: Filtrirno
-    input_type: Vrsta vnosa
-    decimal_separator: Decimalno ločilo
+    input_type:
+        string: Niz
+        integer: Celo število
+        checkbox: Potrditveno polje
+        date: Datum
+        file: Datoteka
+        section: Odsek
+        text: Besedilo
+        textarea: Besedilno polje
+        datetime: Datum in čas
+        time: Čas
+        number: Število
+        color: Barva
+        country: Država
+        telephone: Telefon
+        email: E-pošta
+        language: Jezik
+        locale: Področne nastavitve
+        texteditor: Urejevalnik besedila
+        url: URL
+        select: Izbira
+        multiselect: Večkratna izbira
+        image: Slika
+    entity:
+        title: Vrsta polja
+        title_plural: Vrste polj
+    labels:
+        title: Naslov
+        code: Koda
+        translatable: Prevedljivo
+        filterable: Filtrirno
+        input_type: Vrsta vnosa
+        decimal_separator: Decimalno ločilo
 locale:
-  title: Področne nastavitve
-  entity:
     title: Področne nastavitve
-    title_plural: Področne nastavitve
-  labels:
-    content_translation_enabled: 'Uporabi za prevode vsebine'
-    default: Privzeto
-  actions:
-    set_as_default: Nastavi kot privzeto
+    entity:
+        title: Področne nastavitve
+        title_plural: Področne nastavitve
+    labels:
+        content_translation_enabled: 'Uporabi za prevode vsebine'
+        default: Privzeto
+    actions:
+        set_as_default: Nastavi kot privzeto
 settings:
-  title: Nastavitve
+    title: Nastavitve
 product:
-  title: Izdelki
-  entity:
-    title: Izdelek
-    title_plural: Izdelki
-  labels:
-    identifiers: Identifikatorji
-    product_type: Vrsta izdelka
-    created_at: Ustvarjeno
-    updated_at: Posodobljeno
-    master_data: Matični podatki
-    fields: Polja
+    title: Izdelki
+    entity:
+        title: Izdelek
+        title_plural: Izdelki
+    labels:
+        identifiers: Identifikatorji
+        product_type: Vrsta izdelka
+        created_at: Ustvarjeno
+        updated_at: Posodobljeno
+        master_data: Matični podatki
+        fields: Polja
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Nadzorna plošča'
+    system_status:
+        title: 'Stanje sistema'
+        all_ok: 'V redu'
+        input_vars:
+            message: 'Vrsta izdelka »%productType%« zahteva %fieldCount% vhodnih spremenljivk. Nastavljena vrednost max_input_vars je %maxInputVars%.'
+    products:
+        latest: 'Najnovejši izdelki'
+
+filter:
+    is_set: '%name% je nastavljen'
 
 general:
-  labels:
-    translation: Prevod
-    locale: Področne nastavitve
-    language: Jezik
+    labels:
+        translation: Prevod
+        locale: Področne nastavitve
+        language: Jezik

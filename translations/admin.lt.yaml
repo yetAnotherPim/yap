@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: Lauko tipas
-    default_value: Numatytoji reikšmė
-    required: Privaloma
-  alert:
-    duplicate_field_type: 'Šis lauko tipas jau naudojamas.'
-  default_value:
-    help: |-
-      Numatytoji reikšmė: Produktas.
+    labels:
+        field_type: Lauko tipas
+        default_value: Numatytoji reikšmė
+        required: Privaloma
+    alert:
+        duplicate_field_type: 'Šis lauko tipas jau naudojamas.'
+    default_value:
+        help: |-
+            Numatytoji reikšmė: Produktas.
 
-      Tipai:
-      'Some text'
-      '17.06'
-      '1' - Aktyvus (Žymimasis langelis)
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            Tipai:
+            'Some text'
+            '17.06'
+            '1' - Aktyvus (Žymimasis langelis)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: Papildinių tvarkyklė
-  labels:
-    name: Pavadinimas
-    namespace: Vardų sritis
-    version: Versija
-    installed_version: Įdiegta versija
-    active: Aktyvus
-    actions:
-      reload: Įkelti iš naujo
-      activate: Aktyvuoti
-      deactivate: Deaktyvuoti
-      update: Atnaujinti
+    title: Papildinių tvarkyklė
+    labels:
+        name: Pavadinimas
+        namespace: Vardų sritis
+        version: Versija
+        installed_version: Įdiegta versija
+        active: Aktyvus
+        actions:
+            reload: Įkelti iš naujo
+            activate: Aktyvuoti
+            deactivate: Deaktyvuoti
+            update: Atnaujinti
 user:
-  title: Naudotojai
-  entity:
-    title: Naudotojas
-    title_plural: Naudotojai
-  labels:
-    master_data: Pagrindiniai duomenys
-    password: Slaptažodis
-    repeat_password: Pakartokite slaptažodį
-    username: Naudotojo vardas
-    role: Vaidmuo
-    email: El. paštas
-    first_name: Vardas
-    last_name: Pavardė
+    title: Naudotojai
+    entity:
+        title: Naudotojas
+        title_plural: Naudotojai
+    labels:
+        master_data: Pagrindiniai duomenys
+        password: Slaptažodis
+        repeat_password: Pakartokite slaptažodį
+        username: Naudotojo vardas
+        role: Vaidmuo
+        email: El. paštas
+        first_name: Vardas
+        last_name: Pavardė
 types:
-  title: Tipai
-  label:
-    identifier: Identifikatorius
-    field: Laukas
-    product: Produktas
+    title: Tipai
+    label:
+        identifier: Identifikatorius
+        field: Laukas
+        product: Produktas
 identifier_type:
-  title: Identifikatoriaus tipas
-  data_type:
-    string: Eilutė
-    integer: Sveikasis skaičius
-  entity:
     title: Identifikatoriaus tipas
-    title_plural: Identifikatorių tipai
-  labels:
-    title: Pavadinimas
-    data_type: Duomenų tipas
+    data_type:
+        string: Eilutė
+        integer: Sveikasis skaičius
+    entity:
+        title: Identifikatoriaus tipas
+        title_plural: Identifikatorių tipai
+    labels:
+        title: Pavadinimas
+        data_type: Duomenų tipas
 product_type:
-  title: Produkto tipas
-  entity:
     title: Produkto tipas
-    title_plural: Produktų tipai
-  labels:
-    title: Pavadinimas
-    code: Kodas
-    fields: Laukai
+    entity:
+        title: Produkto tipas
+        title_plural: Produktų tipai
+    labels:
+        title: Pavadinimas
+        code: Kodas
+        fields: Laukai
 field_type:
-  title: Lauko tipas
-  input_type:
-    string: Eilutė
-    integer: Sveikasis skaičius
-    checkbox: Žymimasis langelis
-    date: Data
-    file: Failas
-    section: Skyrius
-    text: Tekstas
-    textarea: Teksto sritis
-    datetime: Data ir laikas
-    time: Laikas
-    number: Skaičius
-    color: Spalva
-    country: Šalis
-    telephone: Telefonas
-    email: El. paštas
-    language: Kalba
-    locale: Lokalė
-    texteditor: Teksto redaktorius
-    url: URL
-    select: Pasirinkimas
-    multiselect: Keli pasirinkimai
-    image: Vaizdas
-  entity:
     title: Lauko tipas
-    title_plural: Laukų tipai
-  labels:
-    title: Pavadinimas
-    code: Kodas
-    translatable: Verčiamas
-    filterable: Filtruojamas
-    input_type: Įvesties tipas
-    decimal_separator: Dešimtainis skirtukas
+    input_type:
+        string: Eilutė
+        integer: Sveikasis skaičius
+        checkbox: Žymimasis langelis
+        date: Data
+        file: Failas
+        section: Skyrius
+        text: Tekstas
+        textarea: Teksto sritis
+        datetime: Data ir laikas
+        time: Laikas
+        number: Skaičius
+        color: Spalva
+        country: Šalis
+        telephone: Telefonas
+        email: El. paštas
+        language: Kalba
+        locale: Lokalė
+        texteditor: Teksto redaktorius
+        url: URL
+        select: Pasirinkimas
+        multiselect: Keli pasirinkimai
+        image: Vaizdas
+    entity:
+        title: Lauko tipas
+        title_plural: Laukų tipai
+    labels:
+        title: Pavadinimas
+        code: Kodas
+        translatable: Verčiamas
+        filterable: Filtruojamas
+        input_type: Įvesties tipas
+        decimal_separator: Dešimtainis skirtukas
 locale:
-  title: Lokalės
-  entity:
-    title: Lokalė
-    title_plural: Lokalės
-  labels:
-    content_translation_enabled: 'Naudoti turinio vertimams'
-    default: Numatytasis
-  actions:
-    set_as_default: Nustatyti kaip numatytąjį
+    title: Lokalės
+    entity:
+        title: Lokalė
+        title_plural: Lokalės
+    labels:
+        content_translation_enabled: 'Naudoti turinio vertimams'
+        default: Numatytasis
+    actions:
+        set_as_default: Nustatyti kaip numatytąjį
 settings:
-  title: Nustatymai
+    title: Nustatymai
 product:
-  title: Produktai
-  entity:
-    title: Produktas
-    title_plural: Produktai
-  labels:
-    identifiers: Identifikatoriai
-    product_type: Produkto tipas
-    created_at: Sukurta
-    updated_at: Atnaujinta
-    master_data: Pagrindiniai duomenys
-    fields: Laukai
+    title: Produktai
+    entity:
+        title: Produktas
+        title_plural: Produktai
+    labels:
+        identifiers: Identifikatoriai
+        product_type: Produkto tipas
+        created_at: Sukurta
+        updated_at: Atnaujinta
+        master_data: Pagrindiniai duomenys
+        fields: Laukai
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: 'Valdymo skydelis'
+    system_status:
+        title: 'Sistemos būsena'
+        all_ok: 'Gerai'
+        input_vars:
+            message: 'Produkto tipui „%productType%“ reikia %fieldCount% įvesties kintamųjų. Sukonfigūruota max_input_vars reikšmė yra %maxInputVars%.'
+    products:
+        latest: 'Naujausi produktai'
+
+filter:
+    is_set: '%name% yra nustatytas'
 
 general:
-  labels:
-    translation: Vertimas
-    locale: Lokalė
-    language: Kalba
+    labels:
+        translation: Vertimas
+        locale: Lokalė
+        language: Kalba

@@ -1,142 +1,146 @@
 product_type_field_configuration:
-  labels:
-    field_type: 欄位類型
-    default_value: 預設值
-    required: 必填
-  alert:
-    duplicate_field_type: '此欄位類型已被使用。'
-  default_value:
-    help: |-
-      預設值會在建立產品時套用。
+    labels:
+        field_type: 欄位類型
+        default_value: 預設值
+        required: 必填
+    alert:
+        duplicate_field_type: '此欄位類型已被使用。'
+    default_value:
+        help: |-
+            預設值會在建立產品時套用。
 
-      可用值包括：
-      'Some text'
-      '17.06'
-      '1' - 在核取方塊欄位中解讀為啟用
-      '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+            可用值包括：
+            'Some text'
+            '17.06'
+            '1' - 在核取方塊欄位中解讀為啟用
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
 plugin_manager:
-  title: 外掛管理器
-  labels:
-    name: 名稱
-    namespace: 命名空間
-    version: 版本
-    installed_version: 已安裝版本
-    active: 啟用
-    actions:
-      reload: 重新載入
-      activate: 啟用
-      deactivate: 停用
-      update: 更新
+    title: 外掛管理器
+    labels:
+        name: 名稱
+        namespace: 命名空間
+        version: 版本
+        installed_version: 已安裝版本
+        active: 啟用
+        actions:
+            reload: 重新載入
+            activate: 啟用
+            deactivate: 停用
+            update: 更新
 user:
-  title: 使用者
-  entity:
     title: 使用者
-    title_plural: 使用者
-  labels:
-    master_data: 主資料
-    password: 密碼
-    repeat_password: 重複密碼
-    username: 使用者名稱
-    role: 角色
-    email: 電子郵件
-    first_name: 名字
-    last_name: 姓氏
+    entity:
+        title: 使用者
+        title_plural: 使用者
+    labels:
+        master_data: 主資料
+        password: 密碼
+        repeat_password: 重複密碼
+        username: 使用者名稱
+        role: 角色
+        email: 電子郵件
+        first_name: 名字
+        last_name: 姓氏
 types:
-  title: 類型
-  label:
-    identifier: 識別碼
-    field: 欄位
-    product: 產品
+    title: 類型
+    label:
+        identifier: 識別碼
+        field: 欄位
+        product: 產品
 identifier_type:
-  title: 識別碼類型
-  data_type:
-    string: 字串
-    integer: 整數
-  entity:
     title: 識別碼類型
-    title_plural: 識別碼類型
-  labels:
-    title: 標題
-    data_type: 資料類型
+    data_type:
+        string: 字串
+        integer: 整數
+    entity:
+        title: 識別碼類型
+        title_plural: 識別碼類型
+    labels:
+        title: 標題
+        data_type: 資料類型
 product_type:
-  title: 產品類型
-  entity:
     title: 產品類型
-    title_plural: 產品類型
-  labels:
-    title: 標題
-    code: 代碼
-    fields: 欄位
+    entity:
+        title: 產品類型
+        title_plural: 產品類型
+    labels:
+        title: 標題
+        code: 代碼
+        fields: 欄位
 field_type:
-  title: 欄位類型
-  input_type:
-    string: 字串
-    integer: 整數
-    checkbox: 核取方塊
-    date: 日期
-    file: 檔案
-    section: 區段
-    text: 文字
-    textarea: 文字區域
-    datetime: 日期與時間
-    time: 時間
-    number: 數字
-    color: 顏色
-    country: 國家
-    telephone: 電話
-    email: 電子郵件
-    language: 語言
-    locale: 地區設定
-    texteditor: 文字編輯器
-    url: URL
-    select: 選擇
-    multiselect: 多選
-    image: 圖片
-  entity:
     title: 欄位類型
-    title_plural: 欄位類型
-  labels:
-    title: 標題
-    code: 代碼
-    translatable: 可翻譯
-    filterable: 可篩選
-    input_type: 輸入類型
-    decimal_separator: 小數分隔符
+    input_type:
+        string: 字串
+        integer: 整數
+        checkbox: 核取方塊
+        date: 日期
+        file: 檔案
+        section: 區段
+        text: 文字
+        textarea: 文字區域
+        datetime: 日期與時間
+        time: 時間
+        number: 數字
+        color: 顏色
+        country: 國家
+        telephone: 電話
+        email: 電子郵件
+        language: 語言
+        locale: 地區設定
+        texteditor: 文字編輯器
+        url: URL
+        select: 選擇
+        multiselect: 多選
+        image: 圖片
+    entity:
+        title: 欄位類型
+        title_plural: 欄位類型
+    labels:
+        title: 標題
+        code: 代碼
+        translatable: 可翻譯
+        filterable: 可篩選
+        input_type: 輸入類型
+        decimal_separator: 小數分隔符
 locale:
-  title: 地區設定
-  entity:
     title: 地區設定
-    title_plural: 地區設定
-  labels:
-    content_translation_enabled: '用於內容翻譯'
-    default: 預設
-  actions:
-    set_as_default: 設為預設
+    entity:
+        title: 地區設定
+        title_plural: 地區設定
+    labels:
+        content_translation_enabled: '用於內容翻譯'
+        default: 預設
+    actions:
+        set_as_default: 設為預設
 settings:
-  title: 設定
+    title: 設定
 product:
-  title: 產品
-  entity:
     title: 產品
-    title_plural: 產品
-  labels:
-    identifiers: 識別碼
-    product_type: 產品類型
-    created_at: 建立時間
-    updated_at: 更新時間
-    master_data: 主資料
-    fields: 欄位
+    entity:
+        title: 產品
+        title_plural: 產品
+    labels:
+        identifiers: 識別碼
+        product_type: 產品類型
+        created_at: 建立時間
+        updated_at: 更新時間
+        master_data: 主資料
+        fields: 欄位
 dashboard:
-  title: 'Dashboard'
-  system_status:
-    title: 'System status'
-    input_vars:
-      message: 'Product type "%productType%" requires %fieldCount% input variables. The configured max_input_vars value is %maxInputVars%.'
-  products:
-    latest: 'Latest products'
+    title: '儀表板'
+    system_status:
+        title: '系統狀態'
+        all_ok: '正常'
+        input_vars:
+            message: '產品類型「%productType%」需要 %fieldCount% 個輸入變數。已設定的 max_input_vars 值為 %maxInputVars%。'
+    products:
+        latest: '最新產品'
+
+filter:
+    is_set: '已設定 %name%'
 
 general:
-  labels:
-    translation: 翻譯
-    locale: 地區設定
-    language: 語言
+    labels:
+        translation: 翻譯
+        locale: 地區設定
+        language: 語言
