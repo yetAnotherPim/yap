@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% är angivet'
+    labels:
+        translations: 'Översättningar'
+        identifiers: 'Identifierare'
+        fields: 'Fält'
+        general: 'Allmänt'
 
 general:
     labels:

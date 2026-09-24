@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% on asetettu'
+    labels:
+        translations: 'Käännökset'
+        identifiers: 'Tunnisteet'
+        fields: 'Kentät'
+        general: 'Yleiset'
 
 general:
     labels:

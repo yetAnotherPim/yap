@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% telah diatur'
+    labels:
+        translations: 'Terjemahan'
+        identifiers: 'Pengidentifikasi'
+        fields: 'Bidang'
+        general: 'Umum'
 
 general:
     labels:

@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Form\Product\Filter\Composer;
 
+use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Filter\Composer\ProductFilterComposer;
-use App\Form\Product\Filter\Identifier\IdentifierExistsFilter;
-use App\Form\Product\Filter\Identifier\IdentifierFilter;
+use App\Form\Product\Filter\Element\Category\FilterCategory;
+use App\Form\Product\Filter\Element\Field\FieldFilter;
+use App\Form\Product\Filter\Element\Field\Handler\FieldFilterHandlerInterface;
+use App\Form\Product\Filter\Element\Field\Registry\FieldFilterHandlerRegistry;
+use App\Form\Product\Filter\Element\Identifier\IdentifierExistsFilter;
+use App\Form\Product\Filter\Element\Identifier\IdentifierFilter;
+use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
@@ -21,6 +27,8 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(ProductFilterComposer::class)]
+#[UsesClass(FilterCategory::class)]
+#[UsesClass(FieldFilter::class)]
 #[UsesClass(IdentifierFilter::class)]
 #[UsesClass(IdentifierExistsFilter::class)]
 class ProductFilterComposerTest extends MockeryTestCase
@@ -28,8 +36,14 @@ class ProductFilterComposerTest extends MockeryTestCase
     /** @var IdentifierTypeRepository&MockInterface */
     private IdentifierTypeRepository $identifierTypeRepository;
 
+    /** @var FieldTypeRepository&MockInterface */
+    private FieldTypeRepository $fieldTypeRepository;
+
     /** @var TranslatorInterface&MockInterface */
     private TranslatorInterface $translator;
+
+    /** @var FieldFilterHandlerRegistry&MockInterface */
+    private FieldFilterHandlerRegistry $fieldFilterHandlerRegistry;
 
     private ProductFilterComposer $composer;
 
@@ -37,16 +51,16 @@ class ProductFilterComposerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->identifierTypeRepository = \Mockery::mock(
-            IdentifierTypeRepository::class,
-        );
-        $this->translator = \Mockery::mock(
-            TranslatorInterface::class,
-        );
+        $this->identifierTypeRepository = \Mockery::mock(IdentifierTypeRepository::class);
+        $this->translator = \Mockery::mock(TranslatorInterface::class);
+        $this->fieldTypeRepository = \Mockery::mock(FieldTypeRepository::class);
+        $this->fieldFilterHandlerRegistry = \Mockery::mock(FieldFilterHandlerRegistry::class);
 
         $this->composer = new ProductFilterComposer(
             $this->identifierTypeRepository,
+            $this->fieldTypeRepository,
             $this->translator,
+            $this->fieldFilterHandlerRegistry,
         );
     }
 
@@ -76,6 +90,45 @@ class ProductFilterComposerTest extends MockeryTestCase
                 $identifierType1,
                 $identifierType2,
             ]);
+
+        $fieldType = \Mockery::mock(FieldType::class);
+        $fieldFilterHandler = \Mockery::mock(FieldFilterHandlerInterface::class);
+
+        $this->translator
+            ->shouldReceive('getLocale')
+            ->once()
+            ->andReturn('de_DE');
+
+        $fieldType
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn(Uuid::v7());
+
+        $fieldType
+            ->shouldReceive('getTranslatedTitleByLocale')
+            ->once()
+            ->with('de_DE')
+            ->andReturn('translated title');
+
+        $fieldFilterHandler
+            ->shouldReceive('getFormType')
+            ->once();
+
+        $fieldFilterHandler
+            ->shouldReceive('getFormTypeOptions')
+            ->once();
+
+        $this->fieldTypeRepository
+            ->shouldReceive('findBy')
+            ->once()
+            ->with(['filterable' => true])
+            ->andReturn([$fieldType]);
+
+        $this->fieldFilterHandlerRegistry
+            ->shouldReceive('get')
+            ->once()
+            ->with(\Mockery::type(FieldType::class))
+            ->andReturn($fieldFilterHandler);
 
         $filters = $this->composer->compose(
             Filters::new(),
@@ -144,6 +197,12 @@ class ProductFilterComposerTest extends MockeryTestCase
         $this->identifierTypeRepository
             ->shouldReceive('findAll')
             ->once()
+            ->andReturn([]);
+
+        $this->fieldTypeRepository
+            ->shouldReceive('findBy')
+            ->once()
+            ->with(['filterable' => true])
             ->andReturn([]);
 
         $this->translator

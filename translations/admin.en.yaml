@@ -148,6 +148,11 @@ dashboard:
 
 filter:
     is_set: '%name% is set'
+    labels:
+        translations: 'Translations'
+        identifiers: 'Identifiers'
+        fields: 'Fields'
+        general: 'General'
 
 general:
     labels:

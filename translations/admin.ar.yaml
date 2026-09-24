@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: 'تم تعيين %name%'
+    labels:
+        translations: 'الترجمات'
+        identifiers: 'المعرّفات'
+        fields: 'الحقول'
+        general: 'عام'
 
 general:
     labels:

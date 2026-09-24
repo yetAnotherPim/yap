@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% is ingesteld'
+    labels:
+        translations: 'Vertalingen'
+        identifiers: 'Identificatoren'
+        fields: 'Velden'
+        general: 'Algemeen'
 
 general:
     labels:

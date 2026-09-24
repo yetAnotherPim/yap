@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% מוגדר'
+    labels:
+        translations: 'תרגומים'
+        identifiers: 'מזהים'
+        fields: 'שדות'
+        general: 'כללי'
 
 general:
     labels:

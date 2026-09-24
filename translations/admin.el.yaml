@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: 'Το %name% έχει οριστεί'
+    labels:
+        translations: 'Μεταφράσεις'
+        identifiers: 'Αναγνωριστικά'
+        fields: 'Πεδία'
+        general: 'Γενικά'
 
 general:
     labels:

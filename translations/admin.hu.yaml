@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% be van állítva'
+    labels:
+        translations: 'Fordítások'
+        identifiers: 'Azonosítók'
+        fields: 'Mezők'
+        general: 'Általános'
 
 general:
     labels:

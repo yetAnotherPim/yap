@@ -138,7 +138,12 @@ dashboard:
 
 filter:
     is_set: '%name%-ը սահմանված է'
-    
+    labels:
+        translations: 'Թարգմանություններ'
+        identifiers: 'Նույնացուցիչներ'
+        fields: 'Դաշտեր'
+        general: 'Ընդհանուր'
+
 general:
     labels:
         translation: Թարգմանություն

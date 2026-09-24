@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% este setat'
+    labels:
+        translations: 'Traduceri'
+        identifiers: 'Identificatori'
+        fields: 'Câmpuri'
+        general: 'General'
 
 general:
     labels:

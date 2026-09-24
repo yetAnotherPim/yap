@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% yra nustatytas'
+    labels:
+        translations: 'Vertimai'
+        identifiers: 'Identifikatoriai'
+        fields: 'Laukai'
+        general: 'Bendra'
 
 general:
     labels:

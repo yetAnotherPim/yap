@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Product\Filter\Identifier;
+namespace App\Form\Product\Filter\Element\Identifier;
 
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use Doctrine\ORM\QueryBuilder;

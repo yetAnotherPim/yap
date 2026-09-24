@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% jest ustawione'
+    labels:
+        translations: 'Tłumaczenia'
+        identifiers: 'Identyfikatory'
+        fields: 'Pola'
+        general: 'Ogólne'
 
 general:
     labels:

@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% تنظیم شده است'
+    labels:
+        translations: 'ترجمه‌ها'
+        identifiers: 'شناسه‌ها'
+        fields: 'فیلدها'
+        general: 'عمومی'
 
 general:
     labels:

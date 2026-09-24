@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% je nastavené'
+    labels:
+        translations: 'Preklady'
+        identifiers: 'Identifikátory'
+        fields: 'Polia'
+        general: 'Všeobecné'
 
 general:
     labels:

@@ -72,3 +72,27 @@ div.field-collection-item > div.accordion-item * .col-form-label.required:after 
 .translation-locale-spacer, .translation-field-spacer {
     visibility: hidden;
 }
+
+.filter-heading:has(> .filter-category) {
+    pointer-events: none;
+}
+
+.filter-heading:has(> .filter-category) > .filter-checkbox {
+    display: none;
+}
+
+.filter-category {
+    display: block;
+    width: 100%;
+    padding-bottom: .5rem;
+    font-weight: 600;
+}
+
+.filter-field:has(.filter-category) > .filter-content {
+    display: none;
+}
+
+.filter-field:has(.filter-category) {
+    padding-top: .75rem;
+    cursor: default;
+}

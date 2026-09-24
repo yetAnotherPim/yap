@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% ayarlanmış'
+    labels:
+        translations: 'Çeviriler'
+        identifiers: 'Tanımlayıcılar'
+        fields: 'Alanlar'
+        general: 'Genel'
 
 general:
     labels:

@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% ezarrita dago'
+    labels:
+        translations: 'Itzulpenak'
+        identifiers: 'Identifikatzaileak'
+        fields: 'Eremuak'
+        general: 'Orokorra'
 
 general:
     labels:

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Form\Product\Filter\Identifier;
+namespace App\Tests\unit\Form\Product\Filter\Element\Identifier;
 
 use App\Entity\Product\Identifier\Type\IdentifierType;
-use App\Form\Product\Filter\Identifier\IdentifierFilter;
+use App\Form\Product\Filter\Element\Identifier\IdentifierFilter;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FilterDataDto;

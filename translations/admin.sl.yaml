@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '%name% je nastavljen'
+    labels:
+        translations: 'Prevodi'
+        identifiers: 'Identifikatorji'
+        fields: 'Polja'
+        general: 'Splošno'
 
 general:
     labels:

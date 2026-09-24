@@ -138,6 +138,11 @@ dashboard:
 
 filter:
     is_set: '已設定 %name%'
+    labels:
+        translations: '翻譯'
+        identifiers: '識別碼'
+        fields: '欄位'
+        general: '一般'
 
 general:
     labels:
