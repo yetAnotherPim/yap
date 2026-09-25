@@ -7,6 +7,7 @@ namespace App\Form\Product\Filter\Composer;
 use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Filter\Element\Category\FilterCategory;
 use App\Form\Product\Filter\Element\Field\FieldFilter;
+use App\Form\Product\Filter\Element\Field\FieldTranslationFilter;
 use App\Form\Product\Filter\Element\Field\Registry\FieldFilterHandlerRegistry;
 use App\Form\Product\Filter\Element\Identifier\IdentifierExistsFilter;
 use App\Form\Product\Filter\Element\Identifier\IdentifierFilter;
@@ -31,18 +32,8 @@ class ProductFilterComposer
     public function compose(Filters $filters): Filters
     {
         $this->addIdentifierFilter($filters);
-
         $this->addFieldFilter($filters);
-
-        $filters->add(
-            FilterCategory::new(
-                '_field_translations',
-                new TranslatableMessage(
-                    'filter.labels.translations',
-                    domain: 'admin',
-                ),
-            ),
-        );
+        $this->addFieldTranslationFilter($filters);
 
         $filters->add(
             FilterCategory::new(
@@ -92,6 +83,38 @@ class ProductFilterComposer
             $filters
                 ->add(IdentifierExistsFilter::new($identifierType))
                 ->add(IdentifierFilter::new($identifierType));
+        }
+    }
+
+    private function addFieldTranslationFilter(Filters $filters): void
+    {
+        $fieldTypes = $this->fieldTypeRepository->findBy([
+            'filterable' => true,
+            'translatable' => true,
+        ]);
+
+        if (true === empty($fieldTypes)) {
+            return;
+        }
+
+        $filters->add(
+            FilterCategory::new(
+                '_field_translations',
+                new TranslatableMessage(
+                    'filter.labels.translations',
+                    domain: 'admin',
+                ),
+            ),
+        );
+
+        foreach ($fieldTypes as $fieldType) {
+            $filters->add(
+                FieldTranslationFilter::new(
+                    $fieldType,
+                    $this->fieldFilterHandlerRegistry->get($fieldType),
+                    $this->translator->getLocale(),
+                )
+            );
         }
     }
 

@@ -10,6 +10,7 @@ use App\Entity\Product\Type\ProductType;
 use App\Form\Product\Filter\Composer\ProductFilterComposer;
 use App\Form\Product\Filter\Element\Category\FilterCategory;
 use App\Form\Product\Filter\Element\Field\FieldFilter;
+use App\Form\Product\Filter\Element\Field\FieldTranslationFilter;
 use App\Form\Product\Filter\Element\Field\Handler\FieldFilterHandlerInterface;
 use App\Form\Product\Filter\Element\Field\Registry\FieldFilterHandlerRegistry;
 use App\Form\Product\Filter\Element\Identifier\IdentifierExistsFilter;
@@ -29,6 +30,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[CoversClass(ProductFilterComposer::class)]
 #[UsesClass(FilterCategory::class)]
 #[UsesClass(FieldFilter::class)]
+#[UsesClass(FieldTranslationFilter::class)]
 #[UsesClass(IdentifierFilter::class)]
 #[UsesClass(IdentifierExistsFilter::class)]
 class ProductFilterComposerTest extends MockeryTestCase
@@ -96,27 +98,27 @@ class ProductFilterComposerTest extends MockeryTestCase
 
         $this->translator
             ->shouldReceive('getLocale')
-            ->once()
+            ->twice()
             ->andReturn('de_DE');
 
         $fieldType
             ->shouldReceive('getId')
-            ->once()
+            ->twice()
             ->andReturn(Uuid::v7());
 
         $fieldType
             ->shouldReceive('getTranslatedTitleByLocale')
-            ->once()
+            ->twice()
             ->with('de_DE')
             ->andReturn('translated title');
 
         $fieldFilterHandler
             ->shouldReceive('getFormType')
-            ->once();
+            ->twice();
 
         $fieldFilterHandler
             ->shouldReceive('getFormTypeOptions')
-            ->once();
+            ->twice();
 
         $this->fieldTypeRepository
             ->shouldReceive('findBy')
@@ -124,9 +126,15 @@ class ProductFilterComposerTest extends MockeryTestCase
             ->with(['filterable' => true])
             ->andReturn([$fieldType]);
 
+        $this->fieldTypeRepository
+            ->shouldReceive('findBy')
+            ->once()
+            ->with(['filterable' => true, 'translatable' => true])
+            ->andReturn([$fieldType]);
+
         $this->fieldFilterHandlerRegistry
             ->shouldReceive('get')
-            ->once()
+            ->twice()
             ->with(\Mockery::type(FieldType::class))
             ->andReturn($fieldFilterHandler);
 
@@ -203,6 +211,12 @@ class ProductFilterComposerTest extends MockeryTestCase
             ->shouldReceive('findBy')
             ->once()
             ->with(['filterable' => true])
+            ->andReturn([]);
+
+        $this->fieldTypeRepository
+            ->shouldReceive('findBy')
+            ->once()
+            ->with(['filterable' => true, 'translatable' => true])
             ->andReturn([]);
 
         $this->translator

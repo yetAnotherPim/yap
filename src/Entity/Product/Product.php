@@ -77,6 +77,11 @@ use Symfony\Component\Uid\Uuid;
             ),
             description: 'Serializer groups. Use "product:read:without-translations" to return products without field value translations.',
         ),
+        'productType' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'productType.id',
+            description: 'Filter products by product type ID',
+        ),
         'createdAt' => new QueryParameter(
             filter: new ComparisonFilter(new ExactFilter()),
             property: 'createdAt',

@@ -28,6 +28,10 @@ use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
+use App\Form\Product\Filter\Composer\ProductFilterComposer;
+use App\Form\Product\Filter\Element\Field\Registry\FieldFilterHandlerRegistry;
+use App\Form\Product\Identifier\IdentifierManager;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Localisation\Event\EventListener\LocaleListener;
@@ -100,6 +104,10 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductTypeRepository::class)]
 #[UsesClass(FieldTypeRepository::class)]
+#[UsesClass(DefaultTranslationSynchronizer::class)]
+#[UsesClass(ProductFilterComposer::class)]
+#[UsesClass(FieldFilterHandlerRegistry::class)]
+#[UsesClass(IdentifierManager::class)]
 #[ResetDatabase]
 class PluginTest extends ApiTestCase
 {

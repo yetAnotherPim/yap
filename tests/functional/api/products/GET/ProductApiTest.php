@@ -24,6 +24,7 @@ use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Tests\helper\Trait\Api\AuthTrait;
 use App\Tests\TestData\Factory\Product\ProductFactory;
+use App\Tests\TestData\Factory\Product\Type\ProductTypeFactory;
 use App\Tests\TestData\Story\MultipleProductsStory;
 use App\Tests\TestData\Story\ProductsSharingIdentifierStory;
 use App\Tests\TestData\Story\ProductsWithFieldsAndTranslationsStory;
@@ -901,5 +902,69 @@ class ProductApiTest extends ApiTestCase
         $this->assertSame(0, $fields['integer_unexpected']['translations'][0]['typedValue']);
 
         $this->assertResponseStatusCodeSame(200);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function testGetProductsWithTypeFilter(): void
+    {
+        $productType1 = ProductTypeFactory::createOne(['code' => 'product_type_1']);
+        $productType2 = ProductTypeFactory::createOne(['code' => 'product_type_2']);
+        $productType3 = ProductTypeFactory::createOne(['code' => 'product_type_3']);
+
+        ProductFactory::createOne(['productType' => $productType1]);
+        ProductFactory::createOne(['productType' => $productType1]);
+        ProductFactory::createOne(['productType' => $productType2]);
+        ProductFactory::createOne(['productType' => $productType3]);
+
+        $this->client->request(
+            'GET',
+            '/api/products',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]);
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertJsonContains(['totalItems' => 4]);
+
+        $this->client->request(
+            'GET',
+            '/api/products?productType='.$productType1->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $this->assertJsonContains(['totalItems' => 2]);
+
+        $this->client->request(
+            'GET',
+            '/api/products?productType='.$productType2->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $this->assertJsonContains(['totalItems' => 1]);
+
+        $this->client->request(
+            'GET',
+            '/api/products?productType[]='.$productType1->getId().'&productType[]='.$productType2->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+            ]
+        );
+        $this->assertJsonContains(['totalItems' => 3]);
     }
 }
