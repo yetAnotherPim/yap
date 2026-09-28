@@ -7,6 +7,7 @@ namespace App\Controller\Admin\Products;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Filter\Composer\ProductFilterComposer;
@@ -15,6 +16,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -24,6 +28,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -51,6 +56,7 @@ class ProductCrudController extends AbstractCrudController
         private readonly FieldSynchronizer $fieldSynchronizer,
         private readonly TranslatorInterface $translator,
         private readonly ProductFilterComposer $productFilterComposer,
+        private readonly ProductColumnsComposer $productColumnsComposer,
     ) {
     }
 
@@ -76,6 +82,7 @@ class ProductCrudController extends AbstractCrudController
         return $crud
             ->setEntityLabelInSingular(new TranslatableMessage('product.entity.title', [], 'admin'))
             ->setEntityLabelInPlural(new TranslatableMessage('product.entity.title_plural', [], 'admin'))
+            ->setPaginatorUseOutputWalkers(true)
             ->hideNullValues()
             ->setSearchFields([
                 'fields.value',
@@ -106,6 +113,7 @@ class ProductCrudController extends AbstractCrudController
                     ->formatValue(
                         fn (ProductType $productType): string => $productType->getTranslatedTitleByLocale($this->translator->getLocale())
                     ),
+                ...$this->productColumnsComposer->compose(),
                 DateTimeField::new('createdAt', new TranslatableMessage('product.labels.created_at', [], 'admin')),
                 DateTimeField::new('updatedAt', new TranslatableMessage('product.labels.updated_at', [], 'admin')),
             ];
@@ -179,6 +187,25 @@ class ProductCrudController extends AbstractCrudController
         $this->identfierManager->initializeIdentifiers($product);
 
         return parent::createEditForm($entityDto, $formOptions, $context);
+    }
+
+    public function createIndexQueryBuilder(
+        SearchDto $searchDto,
+        EntityDto $entityDto,
+        FieldCollection $fields,
+        FilterCollection $filters,
+    ): QueryBuilder {
+        $queryBuilder = parent::createIndexQueryBuilder(
+            $searchDto,
+            $entityDto,
+            $fields,
+            $filters,
+        );
+
+        return $this->productColumnsComposer->composeQuery(
+            $queryBuilder,
+            $searchDto,
+        );
     }
 
     /**

@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Repository;
+
+use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
+use App\Entity\User\Configuration\ProductColumnConfiguration;
+use App\Entity\User\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<ProductColumnConfiguration>
+ */
+class ProductColumnConfigurationRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, ProductColumnConfiguration::class);
+    }
+
+    /**
+     * @return list<ProductColumnConfiguration>
+     */
+    public function getColumnsForUser(User $user): array
+    {
+        return $this->findBy(
+            ['user' => $user],
+            ['position' => 'ASC'],
+        );
+    }
+}
