@@ -8,12 +8,17 @@ use App\Controller\Admin\Products\ProductCrudController;
 use App\Entity\Abstract\TimestampableEntity;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
+use App\Entity\User\User;
+use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Filter\Composer\ProductFilterComposer;
 use App\Form\Product\Identifier\IdentifierManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -22,7 +27,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Orm\EntityRepositoryInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -33,6 +40,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
@@ -60,6 +68,9 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     /** @var ProductFilterComposer&MockInterface */
     private ProductFilterComposer $productFilterComposer;
+
+    /** @var ProductColumnsComposer&MockInterface */
+    private ProductColumnsComposer $productColumnsComposer;
     private ProductCrudController $controller;
 
     public function setUp(): void
@@ -69,13 +80,15 @@ class ProductCrudControllerTest extends MockeryTestCase
         $this->fieldSynchronizer = \Mockery::mock(FieldSynchronizer::class);
         $this->translator = \Mockery::mock(TranslatorInterface::class);
         $this->productFilterComposer = \Mockery::mock(ProductFilterComposer::class);
+        $this->productColumnsComposer = \Mockery::mock(ProductColumnsComposer::class);
 
         $this->controller = new ProductCrudController(
             $this->identifierManager,
             $this->productFieldsRenderer,
             $this->fieldSynchronizer,
             $this->translator,
-            $this->productFilterComposer
+            $this->productFilterComposer,
+            $this->productColumnsComposer,
         );
 
         parent::setUp();
@@ -140,7 +153,14 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierManager, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator, $this->productFilterComposer]
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ]
         )->makePartial();
 
         /** @phpstan-var AdminContext<Product> $context */
@@ -174,7 +194,14 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierManager, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator, $this->productFilterComposer]
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ]
         )->makePartial();
 
         $this->expectException(\Error::class);
@@ -256,7 +283,8 @@ class ProductCrudControllerTest extends MockeryTestCase
                 $this->fieldSynchronizer,
                 $this->translator,
                 $this->productFilterComposer,
-            ],
+                $this->productColumnsComposer,
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -315,7 +343,8 @@ class ProductCrudControllerTest extends MockeryTestCase
                 $this->fieldSynchronizer,
                 $this->translator,
                 $this->productFilterComposer,
-            ],
+                $this->productColumnsComposer,
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -330,18 +359,36 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testConfigureFieldsForIndexPageReturnsExpectedFields(): void
     {
-        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
+        $user = \Mockery::mock(User::class);
 
-        $this->assertCount(4, $fields);
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        $this->assertInstanceOf(CollectionField::class, $fields[0]);
-        $this->assertEquals('identifiers', $fields[0]->getAsDto()->getProperty());
-        $this->assertInstanceOf(AssociationField::class, $fields[1]);
-        $this->assertEquals('productType', $fields[1]->getAsDto()->getProperty());
-        $this->assertInstanceOf(DateTimeField::class, $fields[2]);
-        $this->assertEquals('createdAt', $fields[2]->getAsDto()->getProperty());
-        $this->assertInstanceOf(DateTimeField::class, $fields[3]);
-        $this->assertEquals('updatedAt', $fields[3]->getAsDto()->getProperty());
+        $controller
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn($user);
+
+        $this->productColumnsComposer
+            ->shouldReceive('compose')
+            ->once()
+            ->with($user)
+            ->andReturn([]);
+
+        $result = $controller->configureFields(Crud::PAGE_INDEX);
+
+        $this->assertSame([], $result);
     }
 
     public function testConfigureFieldsForFormPageReturnsExpectedFields(): void
@@ -392,7 +439,14 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierManager, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator, $this->productFilterComposer]
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ]
         )->makePartial()
         ->shouldAllowMockingProtectedMethods();
 
@@ -430,7 +484,14 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $controller = \Mockery::mock(
             ProductCrudController::class,
-            [$this->identifierManager, $this->productFieldsRenderer, $this->fieldSynchronizer, $this->translator, $this->productFilterComposer]
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -563,8 +624,98 @@ class ProductCrudControllerTest extends MockeryTestCase
         $this->assertSame(['field_file' => ''], $this->getUploadedFilePaths());
     }
 
+    public function testCreateIndexQueryBuilder(): void
+    {
+        $searchDto = new SearchDto(
+            new Request(),
+            null,
+            null,
+            [],
+            [],
+            null,
+        );
+
+        /** @var EntityDto<Product> $entityDto */
+        $entityDto = new EntityDto(
+            Product::class,
+            \Mockery::mock(ClassMetadata::class),
+            null,
+        );
+
+        $fields = new FieldCollection([]);
+        $filters = new FilterCollection([]);
+
+        $queryBuilder = \Mockery::mock(QueryBuilder::class);
+
+        /** @var EntityRepositoryInterface&MockInterface $entityRepository */
+        $entityRepository = \Mockery::mock(EntityRepositoryInterface::class);
+
+        $entityRepository
+            ->shouldReceive('createQueryBuilder')
+            ->once()
+            ->with(
+                $searchDto,
+                $entityDto,
+                $fields,
+                $filters,
+            )
+            ->andReturn($queryBuilder);
+
+        $container = \Mockery::mock(ContainerInterface::class);
+
+        $container
+            ->shouldReceive('get')
+            ->once()
+            ->with(EntityRepositoryInterface::class)
+            ->andReturn($entityRepository);
+
+        $user = \Mockery::mock(User::class);
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn($user);
+
+        $this->productColumnsComposer
+            ->shouldReceive('composeQuery')
+            ->once()
+            ->with(
+                $queryBuilder,
+                $searchDto,
+                $user,
+            )
+            ->andReturn($queryBuilder);
+
+        $controller->setContainer($container);
+
+        $result = $controller->createIndexQueryBuilder(
+            $searchDto,
+            $entityDto,
+            $fields,
+            $filters,
+        );
+
+        $this->assertSame($queryBuilder, $result);
+    }
+
     /**
      * @param FormInterface<Product> $form
+     *
+     * @throws \ReflectionException
      */
     private function invokeCollectUploadedFilePaths(FormInterface $form): void
     {

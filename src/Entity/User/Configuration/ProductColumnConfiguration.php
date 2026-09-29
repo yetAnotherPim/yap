@@ -51,6 +51,7 @@ class ProductColumnConfiguration
     public function setUser(User $user): ProductColumnConfiguration
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -62,6 +63,7 @@ class ProductColumnConfiguration
     public function setFieldType(FieldType $fieldType): ProductColumnConfiguration
     {
         $this->fieldType = $fieldType;
+
         return $this;
     }
 
@@ -73,6 +75,7 @@ class ProductColumnConfiguration
     public function setPosition(int $position): ProductColumnConfiguration
     {
         $this->position = $position;
+
         return $this;
     }
 }

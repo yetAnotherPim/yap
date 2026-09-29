@@ -22,6 +22,7 @@ use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\Plugin\Plugin;
 use App\Entity\User\User;
+use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Composer\Translation\ProductFieldTranslationComposer;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
@@ -50,6 +51,7 @@ use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\ProductColumnConfigurationRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductTypeRepository;
 use App\Repository\UserRepository;
@@ -108,6 +110,8 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(ProductFilterComposer::class)]
 #[UsesClass(FieldFilterHandlerRegistry::class)]
 #[UsesClass(IdentifierManager::class)]
+#[UsesClass(ProductColumnsComposer::class)]
+#[UsesClass(ProductColumnConfigurationRepository::class)]
 #[ResetDatabase]
 class PluginTest extends ApiTestCase
 {

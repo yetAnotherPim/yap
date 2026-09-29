@@ -4,45 +4,68 @@ declare(strict_types=1);
 
 namespace App\Form\Product\Columns\Composer;
 
-use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Entity\User\User;
+use App\Form\Product\Columns\Renderer\ColumnValueRenderer;
 use App\Repository\ProductColumnConfigurationRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class ProductColumnsComposer
+class ProductColumnsComposer
 {
     public function __construct(
         private readonly ProductColumnConfigurationRepository $productColumnConfigurationRepository,
-        private readonly Security $security,
         private readonly TranslatorInterface $translator,
+        private readonly ColumnValueRenderer $columnValueRenderer,
     ) {
     }
 
     /**
      * @return list<FieldInterface>
      */
-    public function compose(): array
+    public function compose(?User $user): array
     {
-        $user = $this->security->getUser();
-
-        if (!$user instanceof User) {
+        if (null === $user) {
             return [];
         }
 
-        $fields = [];
+        $fields = [
+            CollectionField::new('identifiers', new TranslatableMessage('product.labels.identifiers', [], 'admin'))
+                ->formatValue(
+                    fn (Collection $identifiers): string => $identifiers
+                        ->matching(
+                            Criteria::create()
+                                ->orderBy(['type.title' => Order::Ascending])
+                        )
+                        ->reduce(
+                            /** @phpstan-ignore-next-line */
+                            static fn (string $formattedValue, Identifier $identifier): string => $formattedValue .= '<b>'.$identifier->getType()->getTitle().':</b> '.$identifier->getValue().'<br/>',
+                            ''
+                        )
+                ),
+            AssociationField::new('productType', new TranslatableMessage('product.labels.product_type', [], 'admin'))
+                ->formatValue(
+                    fn (ProductType $productType): string => $productType->getTranslatedTitleByLocale($this->translator->getLocale())
+                ),
+        ];
 
         foreach ($this->productColumnConfigurationRepository->getColumnsForUser($user) as $column) {
             $fieldType = $column->getFieldType();
             $alias = $this->getFieldAlias($fieldType);
 
-            // TODO: use existing renderer
             $fields[] = TextField::new(
                 $alias,
                 $fieldType->getTranslatedTitleByLocale(
@@ -52,24 +75,22 @@ final class ProductColumnsComposer
                 ->setValue('')
                 ->setSortable(true)
                 ->formatValue(
-                    static function (
-                        mixed $value,
-                        Product $product,
-                    ) use ($fieldType): ?string {
-                        foreach ($product->getFields() as $field) {
-                            if (!$field instanceof Field) {
-                                continue;
-                            }
-
-                            if ($field->getType()->getId()->equals($fieldType->getId())) {
-                                return $field->getValue();
-                            }
-                        }
-
-                        return null;
-                    },
+                    fn (mixed $value, Product $product): ?string => $this->columnValueRenderer->render(
+                        $product,
+                        $fieldType,
+                    ),
                 );
         }
+
+        $fields[] = DateTimeField::new(
+            'createdAt',
+            new TranslatableMessage('product.labels.created_at', [], 'admin'),
+        );
+
+        $fields[] = DateTimeField::new(
+            'updatedAt',
+            new TranslatableMessage('product.labels.updated_at', [], 'admin'),
+        );
 
         return $fields;
     }
@@ -77,9 +98,8 @@ final class ProductColumnsComposer
     public function composeQuery(
         QueryBuilder $queryBuilder,
         SearchDto $searchDto,
+        ?User $user,
     ): QueryBuilder {
-        $user = $this->security->getUser();
-
         if (!$user instanceof User) {
             return $queryBuilder;
         }
@@ -138,9 +158,9 @@ final class ProductColumnsComposer
     private function getFieldAlias(FieldType $fieldType): string
     {
         return 'field_'.str_replace(
-                '-',
-                '_',
-                (string) $fieldType->getId(),
-            );
+            '-',
+            '_',
+            (string) $fieldType->getId(),
+        );
     }
 }

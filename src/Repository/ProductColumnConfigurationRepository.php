@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Product\Product;
-use App\Entity\Product\Type\ProductType;
 use App\Entity\User\Configuration\ProductColumnConfiguration;
 use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

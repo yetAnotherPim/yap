@@ -23,12 +23,17 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
 use App\Entity\User\User;
+use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Composer\Translation\ProductFieldTranslationComposer;
 use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
+use App\Form\Product\Filter\Composer\ProductFilterComposer;
+use App\Form\Product\Filter\Element\Field\Registry\FieldFilterHandlerRegistry;
+use App\Form\Product\Identifier\IdentifierManager;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Localisation\Event\EventListener\LocaleListener;
@@ -40,6 +45,7 @@ use App\Repository\FieldTypeTitleTranslationRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\ProductColumnConfigurationRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductTypeRepository;
 use App\Repository\UserRepository;
@@ -94,6 +100,12 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(FieldTranslationSynchronizer::class)]
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductTypeRepository::class)]
+#[UsesClass(DefaultTranslationSynchronizer::class)]
+#[UsesClass(ProductColumnsComposer::class)]
+#[UsesClass(ProductFilterComposer::class)]
+#[UsesClass(IdentifierManager::class)]
+#[UsesClass(FieldFilterHandlerRegistry::class)]
+#[UsesClass(ProductColumnConfigurationRepository::class)]
 #[ResetDatabase]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {

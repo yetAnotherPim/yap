@@ -7,14 +7,12 @@ namespace App\Controller\Admin\Products;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
+use App\Entity\User\User;
 use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Filter\Composer\ProductFilterComposer;
 use App\Form\Product\Identifier\IdentifierManager;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -95,28 +93,10 @@ class ProductCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         if (Crud::PAGE_INDEX === $pageName) {
-            return [
-                CollectionField::new('identifiers', new TranslatableMessage('product.labels.identifiers', [], 'admin'))
-                    ->formatValue(
-                        fn (Collection $identifiers): string => $identifiers
-                                ->matching(
-                                    Criteria::create()
-                                     ->orderBy(['type.title' => Order::Ascending])
-                                )
-                                ->reduce(
-                                    /** @phpstan-ignore-next-line */
-                                    static fn (string $formattedValue, Identifier $identifier): string => $formattedValue .= '<b>'.$identifier->getType()->getTitle().':</b> '.$identifier->getValue().'<br/>',
-                                    ''
-                                )
-                    ),
-                AssociationField::new('productType', new TranslatableMessage('product.labels.product_type', [], 'admin'))
-                    ->formatValue(
-                        fn (ProductType $productType): string => $productType->getTranslatedTitleByLocale($this->translator->getLocale())
-                    ),
-                ...$this->productColumnsComposer->compose(),
-                DateTimeField::new('createdAt', new TranslatableMessage('product.labels.created_at', [], 'admin')),
-                DateTimeField::new('updatedAt', new TranslatableMessage('product.labels.updated_at', [], 'admin')),
-            ];
+            /** @phpstan-var User $user */
+            $user = $this->getUser();
+
+            return $this->productColumnsComposer->compose($user);
         }
 
         /** @var array<FieldInterface> $fields */
@@ -202,9 +182,13 @@ class ProductCrudController extends AbstractCrudController
             $filters,
         );
 
+        /** @phpstan-var User $user */
+        $user = $this->getUser();
+
         return $this->productColumnsComposer->composeQuery(
             $queryBuilder,
             $searchDto,
+            $user,
         );
     }
 
