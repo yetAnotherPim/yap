@@ -149,3 +149,11 @@ general:
         translation: Prevod
         locale: Področne nastavitve
         language: Jezik
+
+account:
+    labels:
+        current_password: 'Trenutno geslo'
+        account: 'Račun'
+        change_password: 'Spremeni geslo'
+    messages:
+        invalid_current_password: 'Trenutno geslo ni veljavno.'

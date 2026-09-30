@@ -149,3 +149,11 @@ general:
         translation: 翻譯
         locale: 地區設定
         language: 語言
+
+account:
+    labels:
+        current_password: '目前密碼'
+        account: '帳戶'
+        change_password: '修改密碼'
+    messages:
+        invalid_current_password: '目前密碼無效。'

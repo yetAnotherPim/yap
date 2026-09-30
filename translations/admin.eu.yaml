@@ -149,3 +149,11 @@ general:
         translation: Itzulpena
         locale: Eskualde-ezarpena
         language: Hizkuntza
+
+account:
+    labels:
+        current_password: 'Uneko pasahitza'
+        account: 'Kontua'
+        change_password: 'Pasahitza aldatu'
+    messages:
+        invalid_current_password: 'Uneko pasahitza ez da baliozkoa.'

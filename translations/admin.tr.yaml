@@ -149,3 +149,11 @@ general:
         translation: Çeviri
         locale: Yerel ayar
         language: Dil
+
+account:
+    labels:
+        current_password: 'Mevcut şifre'
+        account: 'Hesap'
+        change_password: 'Şifreyi değiştir'
+    messages:
+        invalid_current_password: 'Mevcut şifre geçersiz.'

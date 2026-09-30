@@ -149,3 +149,11 @@ general:
         translation: תרגום
         locale: אזור
         language: שפה
+
+account:
+    labels:
+        current_password: 'סיסמה נוכחית'
+        account: 'חשבון'
+        change_password: 'שינוי סיסמה'
+    messages:
+        invalid_current_password: 'הסיסמה הנוכחית אינה תקינה.'

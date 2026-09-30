@@ -149,3 +149,11 @@ general:
         translation: Iwwersetzung
         locale: Locale
         language: Sprooch
+
+account:
+    labels:
+        current_password: 'Aktuellt Passwuert'
+        account: 'Kont'
+        change_password: 'Passwuert änneren'
+    messages:
+        invalid_current_password: 'D'aktuell Passwuert ass ongëlteg.'

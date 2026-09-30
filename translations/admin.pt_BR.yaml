@@ -149,3 +149,11 @@ general:
         translation: Tradução
         locale: Localidade
         language: Idioma
+
+account:
+    labels:
+        current_password: 'Senha atual'
+        account: 'Conta'
+        change_password: 'Alterar senha'
+    messages:
+        invalid_current_password: 'A senha atual é inválida.'

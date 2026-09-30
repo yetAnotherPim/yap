@@ -149,3 +149,11 @@ general:
         translation: Traducció
         locale: Configuració regional
         language: Idioma
+
+account:
+    labels:
+        current_password: 'Contrasenya actual'
+        account: 'Compte'
+        change_password: 'Canviar la contrasenya'
+    messages:
+        invalid_current_password: 'La contrasenya actual no és vàlida.'

@@ -149,3 +149,11 @@ general:
         translation: Oversættelse
         locale: Landestandard
         language: Sprog
+
+account:
+    labels:
+        current_password: 'Nuværende adgangskode'
+        account: 'Konto'
+        change_password: 'Skift adgangskode'
+    messages:
+        invalid_current_password: 'Den nuværende adgangskode er ugyldig.'

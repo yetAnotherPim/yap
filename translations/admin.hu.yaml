@@ -149,3 +149,11 @@ general:
         translation: Fordítás
         locale: Területi beállítás
         language: Nyelv
+
+account:
+    labels:
+        current_password: 'Jelenlegi jelszó'
+        account: 'Fiók'
+        change_password: 'Jelszó módosítása'
+    messages:
+        invalid_current_password: 'A jelenlegi jelszó érvénytelen.'

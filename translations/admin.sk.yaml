@@ -149,3 +149,11 @@ general:
         translation: Preklad
         locale: Miestne nastavenie
         language: Jazyk
+
+account:
+    labels:
+        current_password: 'Aktuálne heslo'
+        account: 'Účet'
+        change_password: 'Zmeniť heslo'
+    messages:
+        invalid_current_password: 'Aktuálne heslo nie je platné.'

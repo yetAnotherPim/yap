@@ -149,3 +149,11 @@ general:
         translation: Terjemahan
         locale: Lokal
         language: Bahasa
+
+account:
+    labels:
+        current_password: 'Kata sandi saat ini'
+        account: 'Akun'
+        change_password: 'Ubah kata sandi'
+    messages:
+        invalid_current_password: 'Kata sandi saat ini tidak valid.'

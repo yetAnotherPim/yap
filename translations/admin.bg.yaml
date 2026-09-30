@@ -149,3 +149,11 @@ general:
         translation: Превод
         locale: Локал
         language: Език
+
+account:
+    labels:
+        current_password: 'Текуща парола'
+        account: 'Акаунт'
+        change_password: 'Промяна на паролата'
+    messages:
+        invalid_current_password: 'Текущата парола е невалидна.'

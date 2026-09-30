@@ -159,3 +159,11 @@ general:
         translation: 'Translation'
         locale: 'Locale'
         language: 'Language'
+
+account:
+    labels:
+        current_password: 'Current password'
+        account: 'Account'
+        change_password: 'Change password'
+    messages:
+        invalid_current_password: 'The current password is invalid.'

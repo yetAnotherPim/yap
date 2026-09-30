@@ -149,3 +149,11 @@ general:
         translation: Перевод
         locale: Локаль
         language: Язык
+
+account:
+    labels:
+        current_password: 'Текущий пароль'
+        account: 'Учётная запись'
+        change_password: 'Изменить пароль'
+    messages:
+        invalid_current_password: 'Текущий пароль недействителен.'

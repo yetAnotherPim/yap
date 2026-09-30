@@ -149,3 +149,11 @@ general:
         translation: Traduzione
         locale: Impostazioni locali
         language: Lingua
+
+account:
+    labels:
+        current_password: 'Password attuale'
+        account: 'Account'
+        change_password: 'Cambia password'
+    messages:
+        invalid_current_password: 'La password attuale non è valida.'

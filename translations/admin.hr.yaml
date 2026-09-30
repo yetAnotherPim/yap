@@ -149,3 +149,11 @@ general:
         translation: Prijevod
         locale: Lokalne postavke
         language: Jezik
+
+account:
+    labels:
+        current_password: 'Trenutna lozinka'
+        account: 'Račun'
+        change_password: 'Promijeni lozinku'
+    messages:
+        invalid_current_password: 'Trenutna lozinka nije valjana.'

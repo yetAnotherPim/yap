@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Tests\unit\Controller\Admin;
 
 use App\Controller\Admin\IndexController;
+use App\Controller\Admin\User\AccountCrudController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
+use App\Entity\User\User;
 use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\Repository\LocaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -27,6 +31,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(IndexController::class)]
 #[UsesClass(MenuItemsConfiguredEvent::class)]
@@ -133,17 +138,86 @@ class IndexControllerTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $user = \Mockery::mock(UserInterface::class);
+        $user = \Mockery::mock(User::class);
+        $userId = UuidV7::v7();
+
+        $adminUrlGenerator = \Mockery::mock(\stdClass::class);
+        $adminUrlGenerator
+            ->shouldReceive('setController')
+            ->once()
+            ->with(AccountCrudController::class)
+            ->andReturnSelf();
+
+        $adminUrlGenerator
+            ->shouldReceive('setAction')
+            ->once()
+            ->with(Action::EDIT)
+            ->andReturnSelf();
+
+        $adminUrlGenerator
+            ->shouldReceive('setEntityId')
+            ->once()
+            ->with($userId)
+            ->andReturnSelf();
+
+        $adminUrlGenerator
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('/admin?crudAction=index');
+
+        $containerMock->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGenerator);
+
+        $user
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn($userId);
 
         $menu = $this->controller->configureUserMenu($user);
 
         $items = iterator_to_array($menu->getAsDto()->getItems());
 
         $this->assertInstanceOf(TranslatableMessage::class, $items[0]->getLabel());
-        $this->assertSame('de_DE (default)', $items[1]->getLabel());
-        $this->assertSame('fa fa-check text-success', $items[1]->getIcon());
-        $this->assertSame('en_GB', $items[2]->getLabel());
-        $this->assertSame('fa fa-language', $items[2]->getIcon());
+        $this->assertInstanceOf(TranslatableMessage::class, $items[1]->getLabel());
+
+        $this->assertInstanceOf(TranslatableMessage::class, $items[2]->getLabel());
+        $this->assertSame('de_DE (default)', $items[3]->getLabel());
+        $this->assertSame('fa fa-check text-success', $items[3]->getIcon());
+        $this->assertSame('en_GB', $items[4]->getLabel());
+        $this->assertSame('fa fa-language', $items[4]->getIcon());
+    }
+
+    public function testConfigureUserMenuWithInvalidUser(): void
+    {
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $securityCheckerMock = \Mockery::mock(AuthorizationCheckerInterface::class);
+
+        $this->controller->setContainer($containerMock);
+        $user = \Mockery::mock(UserInterface::class);
+
+        $containerMock
+            ->shouldReceive('has')
+            ->with('security.authorization_checker')
+            ->andReturn(true);
+
+        $containerMock
+            ->shouldReceive('get')
+            ->with('security.authorization_checker')
+            ->andReturn($securityCheckerMock);
+
+        $securityCheckerMock
+            ->shouldReceive('isGranted')
+            ->once()
+            ->andReturn(true);
+
+        $menu = $this->controller->configureUserMenu($user);
+
+        $items = iterator_to_array($menu->getAsDto()->getItems());
+
+        $this->assertInstanceOf(TranslatableMessage::class, $items[1]->getLabel());
+        $this->assertSame('user.sign_out', $items[1]->getLabel()->getMessage());
     }
 
     public function testSwitchLocaleStoresLocaleInSessionAndRedirectsToReferer(): void

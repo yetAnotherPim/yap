@@ -149,3 +149,11 @@ general:
         translation: Μετάφραση
         locale: Τοπικές ρυθμίσεις
         language: Γλώσσα
+
+account:
+    labels:
+        current_password: 'Τρέχων κωδικός πρόσβασης'
+        account: 'Λογαριασμός'
+        change_password: 'Αλλαγή κωδικού πρόσβασης'
+    messages:
+        invalid_current_password: 'Ο τρέχων κωδικός πρόσβασης δεν είναι έγκυρος.'

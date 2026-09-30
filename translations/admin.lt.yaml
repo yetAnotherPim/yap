@@ -149,3 +149,11 @@ general:
         translation: Vertimas
         locale: Lokalė
         language: Kalba
+
+account:
+    labels:
+        current_password: 'Dabartinis slaptažodis'
+        account: 'Paskyra'
+        change_password: 'Keisti slaptažodį'
+    messages:
+        invalid_current_password: 'Dabartinis slaptažodis negalioja.'

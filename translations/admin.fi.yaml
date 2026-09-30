@@ -149,3 +149,11 @@ general:
         translation: Käännös
         locale: Alueasetus
         language: Kieli
+
+account:
+    labels:
+        current_password: 'Nykyinen salasana'
+        account: 'Tili'
+        change_password: 'Vaihda salasana'
+    messages:
+        invalid_current_password: 'Nykyinen salasana ei kelpaa.'

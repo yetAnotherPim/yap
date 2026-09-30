@@ -149,3 +149,11 @@ general:
         translation: Tradución
         locale: Configuración rexional
         language: Idioma
+
+account:
+    labels:
+        current_password: 'Contrasinal actual'
+        account: 'Conta'
+        change_password: 'Cambiar o contrasinal'
+    messages:
+        invalid_current_password: 'O contrasinal actual non é válido.'

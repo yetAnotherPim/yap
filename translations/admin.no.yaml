@@ -149,3 +149,11 @@ general:
         translation: Oversettelse
         locale: Lokale
         language: Språk
+
+account:
+    labels:
+        current_password: 'Gjeldende passord'
+        account: 'Konto'
+        change_password: 'Endre passord'
+    messages:
+        invalid_current_password: 'Det gjeldende passordet er ugyldig.'

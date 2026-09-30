@@ -149,3 +149,11 @@ general:
         translation: Превод
         locale: Локал
         language: Јазик
+
+account:
+    labels:
+        current_password: 'Тековна лозинка'
+        account: 'Сметка'
+        change_password: 'Промени лозинка'
+    messages:
+        invalid_current_password: 'Тековната лозинка не е валидна.'

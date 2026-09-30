@@ -6,6 +6,7 @@ namespace App\Tests\unit\Controller\Admin\Settings;
 
 use App\Controller\Admin\Settings\UserCrudController;
 use App\Entity\User\User;
+use App\Form\User\PasswordFormConfigurator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
@@ -21,8 +22,6 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Translation\TranslatableMessage;
 
 #[CoversClass(UserCrudController::class)]
@@ -30,20 +29,28 @@ class UserCrudControllerTest extends MockeryTestCase
 {
     private UserCrudController $controller;
 
-    /** @phpstan-var UserPasswordHasherInterface|MockInterface  */
-    private UserPasswordHasherInterface $passwordHasherMock;
+    /** @phpstan-var PasswordFormConfigurator|MockInterface  */
+    private PasswordFormConfigurator $passwordFormConfigurator;
 
     public function setUp(): void
     {
-        $this->passwordHasherMock = \Mockery::mock(UserPasswordHasherInterface::class);
+        $this->passwordFormConfigurator = \Mockery::mock(PasswordFormConfigurator::class);
 
-        $this->controller = new UserCrudController($this->passwordHasherMock);
+        $this->controller = new UserCrudController($this->passwordFormConfigurator);
 
         parent::setUp();
     }
 
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
+        $passwordField = TextField::new('password');
+
+        $this->passwordFormConfigurator
+            ->shouldReceive('configureField')
+            ->once()
+            ->with(false)
+            ->andReturn($passwordField);
+
         $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
         $this->assertCount(8, $fields);
 
@@ -70,45 +77,48 @@ class UserCrudControllerTest extends MockeryTestCase
 
     public function testCreateNewFormBuilderAddsPasswordEventListener(): void
     {
-        /** @phpstan-var  EntityDto<User> $entityDto */
+        /** @phpstan-var EntityDto<User> $entityDto */
         $entityDto = new EntityDto(
             User::class,
-            \Mockery::mock(ClassMetadata::class)
+            \Mockery::mock(ClassMetadata::class),
         );
+
         $formOptions = KeyValueStore::new();
-        /** @phpstan-var  AdminContext<User> $context */
+
+        /** @phpstan-var AdminContext<User> $context */
         $context = AdminContext::forTesting();
 
+        /** @var FormBuilderInterface<User>&MockInterface $builder */
         $builder = \Mockery::mock(FormBuilderInterface::class);
-
-        $builder->shouldReceive('addEventListener')
-            ->once()
-            ->with(
-                FormEvents::POST_SUBMIT,
-                \Mockery::type(\Closure::class)
-            )
-            ->andReturnSelf();
 
         $formFactory = \Mockery::mock(\stdClass::class);
 
-        $formFactory->shouldReceive('createNewFormBuilder')
+        $formFactory
+            ->shouldReceive('createNewFormBuilder')
             ->once()
             ->with($entityDto, $formOptions, $context)
             ->andReturn($builder);
 
         $container = \Mockery::mock(ContainerInterface::class);
 
-        $container->shouldReceive('get')
+        $container
+            ->shouldReceive('get')
             ->once()
             ->with(FormFactory::class)
             ->andReturn($formFactory);
 
         $this->controller->setContainer($container);
 
+        $this->passwordFormConfigurator
+            ->shouldReceive('addPasswordEventListener')
+            ->once()
+            ->with($builder)
+            ->andReturn($builder);
+
         $result = $this->controller->createNewFormBuilder(
             $entityDto,
             $formOptions,
-            $context
+            $context,
         );
 
         $this->assertSame($builder, $result);
@@ -116,45 +126,48 @@ class UserCrudControllerTest extends MockeryTestCase
 
     public function testCreateEditFormBuilderAddsPasswordEventListener(): void
     {
-        /** @phpstan-var  EntityDto<User> $entityDto */
+        /** @phpstan-var EntityDto<User> $entityDto */
         $entityDto = new EntityDto(
             User::class,
-            \Mockery::mock(ClassMetadata::class)
+            \Mockery::mock(ClassMetadata::class),
         );
+
         $formOptions = KeyValueStore::new();
-        /** @phpstan-var  AdminContext<User> $context */
+
+        /** @phpstan-var AdminContext<User> $context */
         $context = AdminContext::forTesting();
 
+        /** @var FormBuilderInterface<User>&MockInterface $builder */
         $builder = \Mockery::mock(FormBuilderInterface::class);
-
-        $builder->shouldReceive('addEventListener')
-            ->once()
-            ->with(
-                FormEvents::POST_SUBMIT,
-                \Mockery::type(\Closure::class)
-            )
-            ->andReturnSelf();
 
         $formFactory = \Mockery::mock(\stdClass::class);
 
-        $formFactory->shouldReceive('createEditFormBuilder')
+        $formFactory
+            ->shouldReceive('createEditFormBuilder')
             ->once()
             ->with($entityDto, $formOptions, $context)
             ->andReturn($builder);
 
         $container = \Mockery::mock(ContainerInterface::class);
 
-        $container->shouldReceive('get')
+        $container
+            ->shouldReceive('get')
             ->once()
             ->with(FormFactory::class)
             ->andReturn($formFactory);
 
         $this->controller->setContainer($container);
 
+        $this->passwordFormConfigurator
+            ->shouldReceive('addPasswordEventListener')
+            ->once()
+            ->with($builder)
+            ->andReturn($builder);
+
         $result = $this->controller->createEditFormBuilder(
             $entityDto,
             $formOptions,
-            $context
+            $context,
         );
 
         $this->assertSame($builder, $result);

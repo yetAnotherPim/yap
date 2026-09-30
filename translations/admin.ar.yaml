@@ -149,3 +149,11 @@ general:
         translation: الترجمة
         locale: الإعدادات المحلية
         language: اللغة
+
+account:
+    labels:
+        current_password: 'كلمة المرور الحالية'
+        account: 'الحساب'
+        change_password: 'تغيير كلمة المرور'
+    messages:
+        invalid_current_password: 'كلمة المرور الحالية غير صحيحة.'

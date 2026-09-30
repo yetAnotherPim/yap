@@ -149,3 +149,11 @@ general:
         translation: Թարգմանություն
         locale: Լոկալ
         language: Լեզու
+
+account:
+    labels:
+        current_password: 'Ընթացիկ գաղտնաբառ'
+        account: 'Հաշիվ'
+        change_password: 'Փոխել գաղտնաբառը'
+    messages:
+        invalid_current_password: 'Ընթացիկ գաղտնաբառը վավեր չէ։'

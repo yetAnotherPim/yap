@@ -149,3 +149,11 @@ general:
         translation: Traducere
         locale: Setări regionale
         language: Limbă
+
+account:
+    labels:
+        current_password: 'Parola curentă'
+        account: 'Cont'
+        change_password: 'Schimbă parola'
+    messages:
+        invalid_current_password: 'Parola curentă nu este validă.'

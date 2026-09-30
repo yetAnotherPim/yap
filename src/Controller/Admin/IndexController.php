@@ -11,17 +11,21 @@ use App\Controller\Admin\Settings\LocaleCrudController;
 use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Controller\Admin\User\AccountCrudController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
+use App\Entity\User\User;
 use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\Repository\LocaleRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -57,6 +61,26 @@ class IndexController extends AbstractDashboardController
 
     public function configureUserMenu(UserInterface $user): UserMenu
     {
+        if (!$user instanceof User) {
+            return parent::configureUserMenu($user);
+        }
+
+        /** @var AdminUrlGeneratorInterface $adminUrlGenerator */
+        $adminUrlGenerator = $this->container->get(AdminUrlGeneratorInterface::class);
+
+        $url = $adminUrlGenerator
+            ->setController(AccountCrudController::class)
+            ->setAction(Action::EDIT)
+            ->setEntityId($user->getId())
+            ->generateUrl();
+
+        $userMenuItems[] = MenuItem::section(new TranslatableMessage('account.labels.account', [], 'admin'), 'fa fa-user');
+        $userMenuItems[] = MenuItem::linkToUrl(
+            new TranslatableMessage('account.labels.change_password', [], 'admin'),
+            'fa fa-key',
+            $url
+        );
+
         $currentLocale = $this->requestStack->getCurrentRequest()?->getLocale() ?? 'default';
 
         $locales = $this->localeRepository->getAvailableLocales();
@@ -76,7 +100,10 @@ class IndexController extends AbstractDashboardController
         }
 
         return parent::configureUserMenu($user)
-            ->addMenuItems($localeMenuItems);
+            ->addMenuItems([
+                ...$userMenuItems,
+                ...$localeMenuItems,
+            ]);
     }
 
     #[Route('/admin/switch-locale/{localeId}', name: 'admin_switch_locale')]

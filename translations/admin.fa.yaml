@@ -149,3 +149,11 @@ general:
         translation: ترجمه
         locale: محلی
         language: زبان
+
+account:
+    labels:
+        current_password: 'رمز عبور فعلی'
+        account: 'حساب کاربری'
+        change_password: 'تغییر رمز عبور'
+    messages:
+        invalid_current_password: 'رمز عبور فعلی نامعتبر است.'
