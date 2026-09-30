@@ -156,4 +156,4 @@ account:
         account: 'Kont'
         change_password: 'Passwuert änneren'
     messages:
-        invalid_current_password: 'D'aktuell Passwuert ass ongëlteg.'
+        invalid_current_password: "D'aktuell Passwuert ass ongëlteg."
