@@ -7,9 +7,11 @@ namespace App\Tests\unit\Repository;
 use App\Entity\User\Configuration\ProductColumnConfiguration;
 use App\Entity\User\User;
 use App\Repository\ProductColumnConfigurationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(ProductColumnConfigurationRepository::class)]
 class ProductColumnConfigurationRepositoryTest extends MockeryTestCase
@@ -38,13 +40,13 @@ class ProductColumnConfigurationRepositoryTest extends MockeryTestCase
         $repository->shouldReceive('findBy')
             ->once()
             ->with(['user' => $user], ['position' => 'ASC'])
-            ->andReturn([$productColumnConfiguration1, $productColumnConfiguration2]);
+            ->andReturn(new ArrayCollection([UuidV7::v7()->toString() => $productColumnConfiguration1, UuidV7::v7()->toString() => $productColumnConfiguration2]));
 
         $result = $repository->getColumnsForUser($user);
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
-        $this->assertSame($productColumnConfiguration1, $result[0]);
-        $this->assertSame($productColumnConfiguration2, $result[1]);
+        $this->assertSame($productColumnConfiguration1, $result->first());
+        $this->assertSame($productColumnConfiguration2, $result->last());
     }
 }

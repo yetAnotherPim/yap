@@ -7,6 +7,7 @@ namespace App\Tests\unit\Controller\Admin\User;
 use App\Controller\Admin\User\AccountCrudController;
 use App\Entity\User\User;
 use App\Form\User\PasswordFormConfigurator;
+use App\Repository\ProductColumnConfigurationRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -39,6 +40,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
     private UserPasswordHasherInterface&MockInterface $passwordHasher;
 
     private TranslatorInterface&MockInterface $translator;
+    private ProductColumnConfigurationRepository&MockInterface $productColumnConfigurationRepository;
 
     private AccountCrudController $controller;
 
@@ -49,11 +51,13 @@ final class AccountCrudControllerTest extends MockeryTestCase
         $this->passwordFormConfigurator = \Mockery::mock(PasswordFormConfigurator::class);
         $this->passwordHasher = \Mockery::mock(UserPasswordHasherInterface::class);
         $this->translator = \Mockery::mock(TranslatorInterface::class);
+        $this->productColumnConfigurationRepository = \Mockery::mock(ProductColumnConfigurationRepository::class);
 
         $this->controller = new AccountCrudController(
             $this->passwordFormConfigurator,
             $this->passwordHasher,
             $this->translator,
+            $this->productColumnConfigurationRepository,
         );
     }
 
@@ -132,6 +136,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordFormConfigurator,
                 $this->passwordHasher,
                 $this->translator,
+                $this->productColumnConfigurationRepository,
             ],
         )
             ->makePartial()
@@ -158,6 +163,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordFormConfigurator,
                 $this->passwordHasher,
                 $this->translator,
+                $this->productColumnConfigurationRepository,
             ],
         )
             ->makePartial()
@@ -197,6 +203,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordFormConfigurator,
                 $this->passwordHasher,
                 $this->translator,
+                $this->productColumnConfigurationRepository,
             ],
         )
             ->makePartial()
@@ -242,6 +249,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordFormConfigurator,
                 $this->passwordHasher,
                 $this->translator,
+                $this->productColumnConfigurationRepository,
             ],
         )
             ->makePartial()
@@ -259,6 +267,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
             $this->passwordFormConfigurator,
             $this->passwordHasher,
             $this->translator,
+            $this->productColumnConfigurationRepository,
         );
 
         $container = \Mockery::mock(ContainerInterface::class);
@@ -342,6 +351,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordFormConfigurator,
                 $this->passwordHasher,
                 $this->translator,
+                $this->productColumnConfigurationRepository,
             ],
         )
             ->makePartial()
@@ -551,6 +561,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordFormConfigurator,
                 $this->passwordHasher,
                 $this->translator,
+                $this->productColumnConfigurationRepository,
             ],
         )
             ->makePartial()

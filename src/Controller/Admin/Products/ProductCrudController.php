@@ -61,6 +61,19 @@ class ProductCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
+            ->add(Crud::PAGE_INDEX,
+                Action::new(
+                    'configureColumns',
+                    new TranslatableMessage('product.actions.configure_columns', [], 'admin'),
+                )
+                    ->linkToUrl($this->generateUrl('admin_product_columns'))
+                    ->setHtmlAttributes([
+                        'data-controller' => 'product-column-configuration',
+                        'data-action' => 'click->product-column-configuration#load',
+                    ])
+                    ->setIcon('fa fa-columns')
+                    ->createAsGlobalAction()
+            )
             ->add(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE)
             ->update(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE,
                 static fn (Action $action) => $action->asPrimaryAction()

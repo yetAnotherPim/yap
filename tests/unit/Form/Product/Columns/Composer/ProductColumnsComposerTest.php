@@ -10,6 +10,7 @@ use App\Entity\User\User;
 use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Columns\Renderer\ColumnValueRenderer;
 use App\Repository\ProductColumnConfigurationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -103,7 +104,7 @@ class ProductColumnsComposerTest extends MockeryTestCase
             ->shouldReceive('getColumnsForUser')
             ->once()
             ->with($user)
-            ->andReturn([$configuration]);
+            ->andReturn(new ArrayCollection([$fieldTypeId->toString() => $configuration]));
 
         $fields = $this->composer->compose($user);
 
@@ -165,7 +166,7 @@ class ProductColumnsComposerTest extends MockeryTestCase
             ->shouldReceive('getColumnsForUser')
             ->once()
             ->with($user)
-            ->andReturn([$configuration]);
+            ->andReturn(new ArrayCollection([$fieldTypeId->toString() => $configuration]));
 
         $queryBuilder
             ->shouldReceive('leftJoin')
@@ -225,7 +226,7 @@ class ProductColumnsComposerTest extends MockeryTestCase
             ->shouldReceive('getColumnsForUser')
             ->once()
             ->with($user)
-            ->andReturn([$configuration]);
+            ->andReturn(new ArrayCollection([$fieldTypeId->toString() => $configuration]));
 
         $queryBuilder
             ->shouldReceive('leftJoin')
@@ -274,7 +275,7 @@ class ProductColumnsComposerTest extends MockeryTestCase
             ->shouldReceive('getColumnsForUser')
             ->once()
             ->with($user)
-            ->andReturn([]);
+            ->andReturn(new ArrayCollection([]));
 
         $queryBuilder
             ->shouldReceive('resetDQLPart')
