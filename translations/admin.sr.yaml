@@ -157,3 +157,11 @@ account:
         change_password: 'Промени лозинку'
     messages:
         invalid_current_password: 'Тренутна лозинка није важећа.'
+
+product_column_configuration:
+    title: 'Конфигуриши колоне'
+    labels:
+        configured: 'Конфигурисане колоне'
+        available: 'Доступне колоне'
+    errors:
+        save_error: 'Дошло је до грешке приликом чувања конфигурације колона.'

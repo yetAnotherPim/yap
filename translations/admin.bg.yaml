@@ -157,3 +157,11 @@ account:
         change_password: 'Промяна на паролата'
     messages:
         invalid_current_password: 'Текущата парола е невалидна.'
+
+product_column_configuration:
+    title: 'Конфигуриране на колони'
+    labels:
+        configured: 'Конфигурирани колони'
+        available: 'Налични колони'
+    errors:
+        save_error: 'Възникна грешка при запазването на конфигурацията на колоните.'

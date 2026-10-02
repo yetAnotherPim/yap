@@ -7,6 +7,7 @@ namespace App\Controller\Admin\User;
 use App\Entity\User\User;
 use App\Form\User\PasswordFormConfigurator;
 use App\Repository\ProductColumnConfigurationRepository;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\Query\QueryException;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -21,9 +22,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -39,6 +43,7 @@ class AccountCrudController extends AbstractCrudController
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly TranslatorInterface $translator,
         private readonly ProductColumnConfigurationRepository $productColumnConfigurationRepository,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
     }
 
@@ -66,6 +71,57 @@ class AccountCrudController extends AbstractCrudController
             'unconfiguredFieldTypes' => $unconfiguredFieldTypes,
             'locale' => $this->translator->getLocale(),
         ]);
+    }
+
+    #[Route(
+        '/admin/product-column-configuration',
+        name: 'admin_product_columns_save',
+        methods: ['POST'],
+    )]
+    public function saveColumns(Request $request): Response
+    {
+        $csrfToken = $request->headers->get('csrf-token');
+
+        if (!$this->csrfTokenManager->isTokenValid(
+            new CsrfToken('product_column_configuration', $csrfToken),
+        )) {
+            $this->addFlash(
+                'danger',
+                $this->translator->trans(
+                    'product_column_configuration.errors.save_error',
+                    [],
+                    'admin',
+                ),
+            );
+
+            return new Response(status: Response::HTTP_BAD_REQUEST);
+        }
+
+        /** @phpstan-var User $user */
+        $user = $this->getUser();
+
+        /** @var array{fieldTypeIds?: list<string>} $data */
+        $data = $request->toArray();
+
+        try {
+            $this->productColumnConfigurationRepository->synchronizeColumns(
+                $user,
+                $data['fieldTypeIds'] ?? [],
+            );
+        } catch (ORMException $exception) {
+            $this->addFlash(
+                'danger',
+                $this->translator->trans(
+                    'product_column_configuration.errors.save_error',
+                    [],
+                    'admin',
+                ),
+            );
+
+            return new Response(status: Response::HTTP_BAD_REQUEST);
+        }
+
+        return new Response(status: Response::HTTP_NO_CONTENT);
     }
 
     protected function getRedirectResponseAfterSave(

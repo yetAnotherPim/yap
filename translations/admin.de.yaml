@@ -167,3 +167,11 @@ account:
         change_password: 'Passwort ändern'
     messages:
         invalid_current_password: 'Das aktuelle Passwort ist ungültig.'
+
+product_column_configuration:
+    title: 'Spalten konfigurieren'
+    labels:
+        configured: 'Konfigurierte Spalten'
+        available: 'Verfügbare Spalten'
+    errors:
+        save_error: 'Beim Speichern Ihrer Spaltenkonfiguration ist ein Fehler aufgetreten.'

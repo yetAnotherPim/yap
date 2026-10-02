@@ -157,3 +157,11 @@ account:
         change_password: 'Αλλαγή κωδικού πρόσβασης'
     messages:
         invalid_current_password: 'Ο τρέχων κωδικός πρόσβασης δεν είναι έγκυρος.'
+
+product_column_configuration:
+    title: 'Διαμόρφωση στηλών'
+    labels:
+        configured: 'Διαμορφωμένες στήλες'
+        available: 'Διαθέσιμες στήλες'
+    errors:
+        save_error: 'Παρουσιάστηκε σφάλμα κατά την αποθήκευση της διαμόρφωσης των στηλών σας.'

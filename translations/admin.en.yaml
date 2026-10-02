@@ -167,3 +167,11 @@ account:
         change_password: 'Change password'
     messages:
         invalid_current_password: 'The current password is invalid.'
+
+product_column_configuration:
+    title: 'Configure Columns'
+    labels:
+        configured: 'Configured Columns'
+        available: 'Available Columns'
+    errors:
+        save_error: 'An error occurred while saving your column configuration.'

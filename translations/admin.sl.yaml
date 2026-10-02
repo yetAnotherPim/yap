@@ -157,3 +157,11 @@ account:
         change_password: 'Spremeni geslo'
     messages:
         invalid_current_password: 'Trenutno geslo ni veljavno.'
+
+product_column_configuration:
+    title: 'Konfiguriraj stolpce'
+    labels:
+        configured: 'Konfigurirani stolpci'
+        available: 'Razpoložljivi stolpci'
+    errors:
+        save_error: 'Pri shranjevanju konfiguracije stolpcev je prišlo do napake.'

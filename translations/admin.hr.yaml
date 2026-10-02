@@ -157,3 +157,11 @@ account:
         change_password: 'Promijeni lozinku'
     messages:
         invalid_current_password: 'Trenutna lozinka nije valjana.'
+
+product_column_configuration:
+    title: 'Konfiguriraj stupce'
+    labels:
+        configured: 'Konfigurirani stupci'
+        available: 'Dostupni stupci'
+    errors:
+        save_error: 'Došlo je do pogreške prilikom spremanja konfiguracije stupaca.'

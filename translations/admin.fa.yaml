@@ -157,3 +157,11 @@ account:
         change_password: 'تغییر رمز عبور'
     messages:
         invalid_current_password: 'رمز عبور فعلی نامعتبر است.'
+
+product_column_configuration:
+    title: 'پیکربندی ستون‌ها'
+    labels:
+        configured: 'ستون‌های پیکربندی‌شده'
+        available: 'ستون‌های موجود'
+    errors:
+        save_error: 'هنگام ذخیره پیکربندی ستون‌ها خطایی رخ داد.'

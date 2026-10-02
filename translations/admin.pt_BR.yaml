@@ -157,3 +157,11 @@ account:
         change_password: 'Alterar senha'
     messages:
         invalid_current_password: 'A senha atual é inválida.'
+
+product_column_configuration:
+    title: 'Configurar colunas'
+    labels:
+        configured: 'Colunas configuradas'
+        available: 'Colunas disponíveis'
+    errors:
+        save_error: 'Ocorreu um erro ao salvar a configuração das colunas.'

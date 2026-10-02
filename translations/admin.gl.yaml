@@ -157,3 +157,11 @@ account:
         change_password: 'Cambiar o contrasinal'
     messages:
         invalid_current_password: 'O contrasinal actual non é válido.'
+
+product_column_configuration:
+    title: 'Configurar columnas'
+    labels:
+        configured: 'Columnas configuradas'
+        available: 'Columnas dispoñibles'
+    errors:
+        save_error: 'Produciuse un erro ao gardar a configuración das columnas.'

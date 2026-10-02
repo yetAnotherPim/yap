@@ -157,3 +157,11 @@ account:
         change_password: 'Ändra lösenord'
     messages:
         invalid_current_password: 'Det nuvarande lösenordet är ogiltigt.'
+
+product_column_configuration:
+    title: 'Konfigurera kolumner'
+    labels:
+        configured: 'Konfigurerade kolumner'
+        available: 'Tillgängliga kolumner'
+    errors:
+        save_error: 'Ett fel uppstod när kolumnkonfigurationen skulle sparas.'

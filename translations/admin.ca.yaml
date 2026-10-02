@@ -157,3 +157,11 @@ account:
         change_password: 'Canviar la contrasenya'
     messages:
         invalid_current_password: 'La contrasenya actual no és vàlida.'
+
+product_column_configuration:
+    title: 'Configura les columnes'
+    labels:
+        configured: 'Columnes configurades'
+        available: 'Columnes disponibles'
+    errors:
+        save_error: 'S’ha produït un error en desar la configuració de les columnes.'

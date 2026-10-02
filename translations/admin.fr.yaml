@@ -157,3 +157,11 @@ account:
         change_password: 'Modifier le mot de passe'
     messages:
         invalid_current_password: 'Le mot de passe actuel n’est pas valide.'
+
+product_column_configuration:
+    title: 'Configurer les colonnes'
+    labels:
+        configured: 'Colonnes configurées'
+        available: 'Colonnes disponibles'
+    errors:
+        save_error: 'Une erreur est survenue lors de l’enregistrement de votre configuration des colonnes.'

@@ -8,7 +8,9 @@ use App\Controller\Admin\User\AccountCrudController;
 use App\Entity\User\User;
 use App\Form\User\PasswordFormConfigurator;
 use App\Repository\ProductColumnConfigurationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\OptimisticLockException;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -27,8 +29,12 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Uid\UuidV7;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -42,6 +48,8 @@ final class AccountCrudControllerTest extends MockeryTestCase
     private TranslatorInterface&MockInterface $translator;
     private ProductColumnConfigurationRepository&MockInterface $productColumnConfigurationRepository;
 
+    private CsrfTokenManagerInterface&MockInterface $csrfTokenManager;
+
     private AccountCrudController $controller;
 
     protected function setUp(): void
@@ -52,12 +60,14 @@ final class AccountCrudControllerTest extends MockeryTestCase
         $this->passwordHasher = \Mockery::mock(UserPasswordHasherInterface::class);
         $this->translator = \Mockery::mock(TranslatorInterface::class);
         $this->productColumnConfigurationRepository = \Mockery::mock(ProductColumnConfigurationRepository::class);
+        $this->csrfTokenManager = \Mockery::mock(CsrfTokenManagerInterface::class);
 
         $this->controller = new AccountCrudController(
             $this->passwordFormConfigurator,
             $this->passwordHasher,
             $this->translator,
             $this->productColumnConfigurationRepository,
+            $this->csrfTokenManager,
         );
     }
 
@@ -137,6 +147,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordHasher,
                 $this->translator,
                 $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
             ],
         )
             ->makePartial()
@@ -164,6 +175,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordHasher,
                 $this->translator,
                 $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
             ],
         )
             ->makePartial()
@@ -204,6 +216,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordHasher,
                 $this->translator,
                 $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
             ],
         )
             ->makePartial()
@@ -250,6 +263,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordHasher,
                 $this->translator,
                 $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
             ],
         )
             ->makePartial()
@@ -268,6 +282,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
             $this->passwordHasher,
             $this->translator,
             $this->productColumnConfigurationRepository,
+            $this->csrfTokenManager,
         );
 
         $container = \Mockery::mock(ContainerInterface::class);
@@ -352,6 +367,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordHasher,
                 $this->translator,
                 $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
             ],
         )
             ->makePartial()
@@ -562,6 +578,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
                 $this->passwordHasher,
                 $this->translator,
                 $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
             ],
         )
             ->makePartial()
@@ -585,6 +602,272 @@ final class AccountCrudControllerTest extends MockeryTestCase
         }
 
         return $listener;
+    }
+
+    public function testConfigureColumns(): void
+    {
+        $user = \Mockery::mock(User::class);
+        $configurations = new ArrayCollection();
+        $unconfiguredFieldTypes = new ArrayCollection();
+
+        $this->productColumnConfigurationRepository
+            ->shouldReceive('getColumnsForUser')
+            ->once()
+            ->with($user)
+            ->andReturn($configurations);
+
+        $this->productColumnConfigurationRepository
+            ->shouldReceive('getNotConfiguredFieldTypes')
+            ->once()
+            ->with($configurations)
+            ->andReturn($unconfiguredFieldTypes);
+
+        $this->translator
+            ->shouldReceive('getLocale')
+            ->once()
+            ->andReturn('de');
+
+        $controller = \Mockery::mock(
+            AccountCrudController::class,
+            [
+                $this->passwordFormConfigurator,
+                $this->passwordHasher,
+                $this->translator,
+                $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn($user);
+
+        $response = new Response('rendered content');
+
+        $controller
+            ->shouldReceive('render')
+            ->once()
+            ->with(
+                'easyadmin/page/product_column_configuration/product_column_configuration.html.twig',
+                [
+                    'configurations' => $configurations,
+                    'unconfiguredFieldTypes' => $unconfiguredFieldTypes,
+                    'locale' => 'de',
+                ],
+            )
+            ->andReturn($response);
+
+        $result = $controller->configureColumns();
+
+        $this->assertSame($response, $result);
+    }
+
+    public function testSaveColumnsReturnsBadRequestForInvalidCsrfToken(): void
+    {
+        $request = new Request(
+            server: [
+                'HTTP_CSRF-TOKEN' => 'invalid-token',
+            ],
+        );
+
+        $this->csrfTokenManager
+            ->shouldReceive('isTokenValid')
+            ->once()
+            ->with(
+                \Mockery::on(
+                    static fn (CsrfToken $token): bool => 'product_column_configuration' === $token->getId()
+                        && 'invalid-token' === $token->getValue(),
+                ),
+            )
+            ->andReturnFalse();
+
+        $this->translator
+            ->shouldReceive('trans')
+            ->once()
+            ->with(
+                'product_column_configuration.errors.save_error',
+                [],
+                'admin',
+            )
+            ->andReturn('An error occurred while saving your column configuration.');
+
+        $controller = \Mockery::mock(
+            AccountCrudController::class,
+            [
+                $this->passwordFormConfigurator,
+                $this->passwordHasher,
+                $this->translator,
+                $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('addFlash')
+            ->once()
+            ->with(
+                'danger',
+                'An error occurred while saving your column configuration.',
+            );
+
+        $this->productColumnConfigurationRepository
+            ->shouldNotReceive('synchronizeColumns');
+
+        $response = $controller->saveColumns($request);
+
+        $this->assertSame(
+            Response::HTTP_BAD_REQUEST,
+            $response->getStatusCode(),
+        );
+    }
+
+    public function testSaveColumnsReturnsNoContentAfterSuccessfulSave(): void
+    {
+        $user = \Mockery::mock(User::class);
+
+        $request = Request::create(
+            '/admin/product-column-configuration',
+            'POST',
+            server: [
+                'HTTP_CSRF-TOKEN' => 'valid-token',
+            ],
+            content: json_encode([
+                'fieldTypeIds' => [
+                    'field-type-1',
+                    'field-type-2',
+                ],
+            ], JSON_THROW_ON_ERROR),
+        );
+
+        $this->csrfTokenManager
+            ->shouldReceive('isTokenValid')
+            ->once()
+            ->with(
+                \Mockery::on(
+                    static fn (CsrfToken $token): bool => 'product_column_configuration' === $token->getId()
+                        && 'valid-token' === $token->getValue(),
+                ),
+            )
+            ->andReturnTrue();
+
+        $this->productColumnConfigurationRepository
+            ->shouldReceive('synchronizeColumns')
+            ->once()
+            ->with(
+                $user,
+                [
+                    'field-type-1',
+                    'field-type-2',
+                ],
+            );
+
+        $controller = \Mockery::mock(
+            AccountCrudController::class,
+            [
+                $this->passwordFormConfigurator,
+                $this->passwordHasher,
+                $this->translator,
+                $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn($user);
+
+        $response = $controller->saveColumns($request);
+
+        $this->assertSame(
+            Response::HTTP_NO_CONTENT,
+            $response->getStatusCode(),
+        );
+    }
+
+    public function testSaveColumnsReturnsBadRequestWhenSavingFails(): void
+    {
+        $user = \Mockery::mock(User::class);
+
+        $request = Request::create(
+            '/admin/product-column-configuration',
+            'POST',
+            server: [
+                'HTTP_CSRF-TOKEN' => 'valid-token',
+            ],
+            content: json_encode([
+                'fieldTypeIds' => ['field-type-1'],
+            ], JSON_THROW_ON_ERROR),
+        );
+
+        $this->csrfTokenManager
+            ->shouldReceive('isTokenValid')
+            ->once()
+            ->with(
+                \Mockery::on(
+                    static fn (CsrfToken $token): bool => 'product_column_configuration' === $token->getId()
+                        && 'valid-token' === $token->getValue(),
+                ),
+            )
+            ->andReturnTrue();
+
+        $this->productColumnConfigurationRepository
+            ->shouldReceive('synchronizeColumns')
+            ->once()
+            ->with($user, ['field-type-1'])
+            ->andThrow(new OptimisticLockException('error', null));
+
+        $this->translator
+            ->shouldReceive('trans')
+            ->once()
+            ->with(
+                'product_column_configuration.errors.save_error',
+                [],
+                'admin',
+            )
+            ->andReturn(
+                'An error occurred while saving your column configuration.',
+            );
+
+        $controller = \Mockery::mock(
+            AccountCrudController::class,
+            [
+                $this->passwordFormConfigurator,
+                $this->passwordHasher,
+                $this->translator,
+                $this->productColumnConfigurationRepository,
+                $this->csrfTokenManager,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('getUser')
+            ->once()
+            ->andReturn($user);
+
+        $controller
+            ->shouldReceive('addFlash')
+            ->once()
+            ->with(
+                'danger',
+                'An error occurred while saving your column configuration.',
+            );
+
+        $response = $controller->saveColumns($request);
+
+        $this->assertSame(
+            Response::HTTP_BAD_REQUEST,
+            $response->getStatusCode(),
+        );
     }
 }
 

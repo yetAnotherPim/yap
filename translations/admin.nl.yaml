@@ -157,3 +157,11 @@ account:
         change_password: 'Wachtwoord wijzigen'
     messages:
         invalid_current_password: 'Het huidige wachtwoord is ongeldig.'
+
+product_column_configuration:
+    title: 'Kolommen configureren'
+    labels:
+        configured: 'Geconfigureerde kolommen'
+        available: 'Beschikbare kolommen'
+    errors:
+        save_error: 'Er is een fout opgetreden bij het opslaan van uw kolomconfiguratie.'

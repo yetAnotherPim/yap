@@ -157,3 +157,11 @@ account:
         change_password: 'Keisti slaptažodį'
     messages:
         invalid_current_password: 'Dabartinis slaptažodis negalioja.'
+
+product_column_configuration:
+    title: 'Konfigūruoti stulpelius'
+    labels:
+        configured: 'Sukonfigūruoti stulpeliai'
+        available: 'Galimi stulpeliai'
+    errors:
+        save_error: 'Įrašant stulpelių konfigūraciją įvyko klaida.'

@@ -157,3 +157,11 @@ account:
         change_password: 'Змінити пароль'
     messages:
         invalid_current_password: 'Поточний пароль недійсний.'
+
+product_column_configuration:
+    title: 'Налаштувати стовпці'
+    labels:
+        configured: 'Налаштовані стовпці'
+        available: 'Доступні стовпці'
+    errors:
+        save_error: 'Під час збереження конфігурації стовпців сталася помилка.'

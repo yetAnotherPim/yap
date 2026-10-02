@@ -157,3 +157,11 @@ account:
         change_password: 'Изменить пароль'
     messages:
         invalid_current_password: 'Текущий пароль недействителен.'
+
+product_column_configuration:
+    title: 'Настроить столбцы'
+    labels:
+        configured: 'Настроенные столбцы'
+        available: 'Доступные столбцы'
+    errors:
+        save_error: 'Произошла ошибка при сохранении конфигурации столбцов.'

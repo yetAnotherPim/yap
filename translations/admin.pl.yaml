@@ -157,3 +157,11 @@ account:
         change_password: 'Zmień hasło'
     messages:
         invalid_current_password: 'Aktualne hasło jest nieprawidłowe.'
+
+product_column_configuration:
+    title: 'Konfiguruj kolumny'
+    labels:
+        configured: 'Skonfigurowane kolumny'
+        available: 'Dostępne kolumny'
+    errors:
+        save_error: 'Wystąpił błąd podczas zapisywania konfiguracji kolumn.'

@@ -46,6 +46,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -112,6 +113,34 @@ class ProductCrudControllerTest extends MockeryTestCase
 
     public function testConfigureActions(): void
     {
+        $container = \Mockery::mock(ContainerInterface::class);
+        $router = \Mockery::mock(RouterInterface::class);
+
+        $this->controller->setContainer($container);
+
+        $container
+            ->shouldReceive('get')
+            ->with('router')
+            ->andReturn($router);
+
+        $router
+            ->shouldReceive('generate')
+            ->once()
+            ->with('admin_product_index', [], 1)
+            ->andReturn('/admin/products');
+
+        $router
+            ->shouldReceive('generate')
+            ->once()
+            ->with('admin_product_columns', [], 1)
+            ->andReturn('/admin/product-column-configuration');
+
+        $router
+            ->shouldReceive('generate')
+            ->once()
+            ->with('admin_product_columns_save', [], 1)
+            ->andReturn('/admin/product-column-configuration');
+
         $actions = Actions::new()
             ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
             ->add(Crud::PAGE_NEW, Action::SAVE_AND_RETURN);

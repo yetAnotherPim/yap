@@ -157,3 +157,11 @@ account:
         change_password: 'Փոխել գաղտնաբառը'
     messages:
         invalid_current_password: 'Ընթացիկ գաղտնաբառը վավեր չէ։'
+
+product_column_configuration:
+    title: 'Կազմաձևել սյունակները'
+    labels:
+        configured: 'Կազմաձևված սյունակներ'
+        available: 'Հասանելի սյունակներ'
+    errors:
+        save_error: 'Սյունակների կազմաձևումը պահպանելիս սխալ տեղի ունեցավ։'

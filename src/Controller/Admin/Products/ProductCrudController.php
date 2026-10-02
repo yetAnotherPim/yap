@@ -64,12 +64,14 @@ class ProductCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX,
                 Action::new(
                     'configureColumns',
-                    new TranslatableMessage('product.actions.configure_columns', [], 'admin'),
+                    new TranslatableMessage('product_column_configuration.title', [], 'admin'),
                 )
                     ->linkToUrl($this->generateUrl('admin_product_columns'))
                     ->setHtmlAttributes([
                         'data-controller' => 'product-column-configuration',
                         'data-action' => 'click->product-column-configuration#load',
+                        'data-save-url' => $this->generateUrl('admin_product_columns_save'),
+                        'data-target-url' => $this->generateUrl('admin_product_index'),
                     ])
                     ->setIcon('fa fa-columns')
                     ->createAsGlobalAction()

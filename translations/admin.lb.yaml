@@ -157,3 +157,11 @@ account:
         change_password: 'Passwuert änneren'
     messages:
         invalid_current_password: "D'aktuell Passwuert ass ongëlteg."
+
+product_column_configuration:
+    title: 'Kolonnen konfiguréieren'
+    labels:
+        configured: 'Konfiguréiert Kolonnen'
+        available: 'Verfügbar Kolonnen'
+    errors:
+        save_error: 'Beim Späichere vun Ärer Kolonnekonfiguratioun ass e Feeler opgetrueden.'

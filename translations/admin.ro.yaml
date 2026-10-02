@@ -157,3 +157,11 @@ account:
         change_password: 'Schimbă parola'
     messages:
         invalid_current_password: 'Parola curentă nu este validă.'
+
+product_column_configuration:
+    title: 'Configurare coloane'
+    labels:
+        configured: 'Coloane configurate'
+        available: 'Coloane disponibile'
+    errors:
+        save_error: 'A apărut o eroare la salvarea configurației coloanelor.'

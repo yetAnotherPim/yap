@@ -157,3 +157,11 @@ account:
         change_password: 'تغيير كلمة المرور'
     messages:
         invalid_current_password: 'كلمة المرور الحالية غير صحيحة.'
+
+product_column_configuration:
+    title: 'تكوين الأعمدة'
+    labels:
+        configured: 'الأعمدة المكونة'
+        available: 'الأعمدة المتاحة'
+    errors:
+        save_error: 'حدث خطأ أثناء حفظ تكوين الأعمدة.'

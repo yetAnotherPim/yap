@@ -157,3 +157,11 @@ account:
         change_password: '修改密碼'
     messages:
         invalid_current_password: '目前密碼無效。'
+
+product_column_configuration:
+    title: '設定欄位'
+    labels:
+        configured: '已設定的欄位'
+        available: '可用欄位'
+    errors:
+        save_error: '儲存欄位設定時發生錯誤。'

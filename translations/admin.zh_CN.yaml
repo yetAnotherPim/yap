@@ -157,3 +157,11 @@ account:
         change_password: '修改密码'
     messages:
         invalid_current_password: '当前密码无效。'
+
+product_column_configuration:
+    title: '配置列'
+    labels:
+        configured: '已配置的列'
+        available: '可用列'
+    errors:
+        save_error: '保存列配置时发生错误。'

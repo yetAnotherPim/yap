@@ -157,3 +157,11 @@ account:
         change_password: 'Skift adgangskode'
     messages:
         invalid_current_password: 'Den nuværende adgangskode er ugyldig.'
+
+product_column_configuration:
+    title: 'Konfigurer kolonner'
+    labels:
+        configured: 'Konfigurerede kolonner'
+        available: 'Tilgængelige kolonner'
+    errors:
+        save_error: 'Der opstod en fejl under lagring af din kolonnekonfiguration.'

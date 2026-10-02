@@ -157,3 +157,11 @@ account:
         change_password: 'Ubah kata sandi'
     messages:
         invalid_current_password: 'Kata sandi saat ini tidak valid.'
+
+product_column_configuration:
+    title: 'Konfigurasikan Kolom'
+    labels:
+        configured: 'Kolom yang Dikonfigurasi'
+        available: 'Kolom yang Tersedia'
+    errors:
+        save_error: 'Terjadi kesalahan saat menyimpan konfigurasi kolom Anda.'

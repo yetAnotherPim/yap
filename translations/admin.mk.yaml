@@ -157,3 +157,11 @@ account:
         change_password: 'Промени лозинка'
     messages:
         invalid_current_password: 'Тековната лозинка не е валидна.'
+
+product_column_configuration:
+    title: 'Конфигурирај колони'
+    labels:
+        configured: 'Конфигурирани колони'
+        available: 'Достапни колони'
+    errors:
+        save_error: 'Се појави грешка при зачувувањето на конфигурацијата на колоните.'

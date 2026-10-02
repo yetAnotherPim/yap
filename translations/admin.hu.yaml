@@ -157,3 +157,11 @@ account:
         change_password: 'Jelszó módosítása'
     messages:
         invalid_current_password: 'A jelenlegi jelszó érvénytelen.'
+
+product_column_configuration:
+    title: 'Oszlopok konfigurálása'
+    labels:
+        configured: 'Konfigurált oszlopok'
+        available: 'Elérhető oszlopok'
+    errors:
+        save_error: 'Hiba történt az oszlopkonfiguráció mentésekor.'

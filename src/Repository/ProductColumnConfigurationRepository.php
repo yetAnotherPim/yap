@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\User\Configuration\ProductColumnConfiguration;
 use App\Entity\User\User;
@@ -52,7 +53,9 @@ class ProductColumnConfigurationRepository extends ServiceEntityRepository
         $fieldTypeRepository = $this->getEntityManager()
             ->getRepository(FieldType::class);
 
-        $queryBuilder = $fieldTypeRepository->createQueryBuilder('fieldType');
+        $queryBuilder = $fieldTypeRepository->createQueryBuilder('fieldType')
+            ->andWhere('fieldType.inputType != :inputType')
+            ->setParameter('inputType', InputType::Section);
 
         if (!$configurations->isEmpty()) {
             $queryBuilder
@@ -65,5 +68,48 @@ class ProductColumnConfigurationRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult(),
         );
+    }
+
+    /**
+     * @param array<int, string> $fieldTypeIds
+     *
+     * @throws QueryException
+     */
+    public function synchronizeColumns(
+        User $user,
+        array $fieldTypeIds,
+    ): void {
+        $entityManager = $this->getEntityManager();
+
+        foreach ($this->getColumnsForUser($user) as $configuration) {
+            $entityManager->remove($configuration);
+        }
+
+        $entityManager->flush();
+
+        $fieldTypes = new ArrayCollection(
+            $entityManager
+                ->getRepository(FieldType::class)
+                ->findBy(['id' => $fieldTypeIds]),
+        );
+
+        foreach ($fieldTypeIds as $position => $fieldTypeId) {
+            $fieldType = $fieldTypes->findFirst(
+                static fn (int|string $key, FieldType $fieldType): bool => (string) $fieldType->getId() === $fieldTypeId,
+            );
+
+            if (null === $fieldType) {
+                continue;
+            }
+
+            $entityManager->persist(
+                new ProductColumnConfiguration()
+                    ->setUser($user)
+                    ->setFieldType($fieldType)
+                    ->setPosition($position),
+            );
+        }
+
+        $entityManager->flush();
     }
 }

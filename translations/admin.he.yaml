@@ -157,3 +157,11 @@ account:
         change_password: 'שינוי סיסמה'
     messages:
         invalid_current_password: 'הסיסמה הנוכחית אינה תקינה.'
+
+product_column_configuration:
+    title: 'הגדרת עמודות'
+    labels:
+        configured: 'עמודות מוגדרות'
+        available: 'עמודות זמינות'
+    errors:
+        save_error: 'אירעה שגיאה בעת שמירת הגדרות העמודות שלך.'

@@ -157,3 +157,11 @@ account:
         change_password: 'Pasahitza aldatu'
     messages:
         invalid_current_password: 'Uneko pasahitza ez da baliozkoa.'
+
+product_column_configuration:
+    title: 'Konfiguratu zutabeak'
+    labels:
+        configured: 'Konfiguratutako zutabeak'
+        available: 'Zutabe erabilgarriak'
+    errors:
+        save_error: 'Errore bat gertatu da zutabeen konfigurazioa gordetzean.'

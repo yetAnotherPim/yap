@@ -157,3 +157,11 @@ account:
         change_password: 'Změnit heslo'
     messages:
         invalid_current_password: 'Aktuální heslo není platné.'
+
+product_column_configuration:
+    title: 'Konfigurovat sloupce'
+    labels:
+        configured: 'Konfigurované sloupce'
+        available: 'Dostupné sloupce'
+    errors:
+        save_error: 'Při ukládání konfigurace sloupců došlo k chybě.'

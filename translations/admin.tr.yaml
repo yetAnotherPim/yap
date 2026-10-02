@@ -157,3 +157,11 @@ account:
         change_password: 'Şifreyi değiştir'
     messages:
         invalid_current_password: 'Mevcut şifre geçersiz.'
+
+product_column_configuration:
+    title: 'Sütunları Yapılandır'
+    labels:
+        configured: 'Yapılandırılmış Sütunlar'
+        available: 'Kullanılabilir Sütunlar'
+    errors:
+        save_error: 'Sütun yapılandırmanız kaydedilirken bir hata oluştu.'
