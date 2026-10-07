@@ -96,3 +96,38 @@ div.field-collection-item > div.accordion-item * .col-form-label.required:after 
     padding-top: .75rem;
     cursor: default;
 }
+
+.product-batch-selection {
+    flex-basis: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.35rem;
+}
+
+.product-batch-selection__message {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--bs-secondary-color);
+    font-size: 0.8rem;
+}
+
+.product-batch-selection__message .btn-link {
+    padding: 0;
+    color: var(--bs-secondary-color);
+    font-size: 0.8rem;
+    text-decoration: underline;
+}
+
+.batch-edit-textarea {
+    width: 75%;
+    min-height: 100px;
+    resize: vertical;
+}
+
+@media (max-width: 768px) {
+    .batch-edit-textarea {
+        width: 100%;
+    }
+}

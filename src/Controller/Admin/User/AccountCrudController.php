@@ -66,7 +66,7 @@ class AccountCrudController extends AbstractCrudController
         $unconfiguredFieldTypes = $this->productColumnConfigurationRepository
             ->getNotConfiguredFieldTypes($configurations);
 
-        return $this->render('easyadmin/page/product_column_configuration/product_column_configuration.html.twig', [
+        return $this->render('easyadmin/page/product/column_configuration/product_column_configuration.html.twig', [
             'configurations' => $configurations,
             'unconfiguredFieldTypes' => $unconfiguredFieldTypes,
             'locale' => $this->translator->getLocale(),

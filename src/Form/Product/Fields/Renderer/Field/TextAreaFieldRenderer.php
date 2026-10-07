@@ -10,11 +10,13 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\Trait\TranslationTrait;
+use App\Form\Product\Fields\Renderer\Registry\BatchEditFieldRendererInterface;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
-final class TextAreaFieldRenderer implements FieldRendererInterface
+final class TextAreaFieldRenderer implements FieldRendererInterface, BatchEditFieldRendererInterface
 {
     use TranslationTrait;
 
@@ -37,5 +39,11 @@ final class TextAreaFieldRenderer implements FieldRendererInterface
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);
+    }
+
+    public function getBatchEditFormType(
+        FieldType $fieldType,
+    ): string {
+        return TextareaType::class;
     }
 }

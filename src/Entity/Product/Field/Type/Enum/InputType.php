@@ -73,12 +73,20 @@ enum InputType: string implements TranslatableInterface
         }
 
         if (InputType::Date === $inputType || InputType::DateTime === $inputType || InputType::Time === $inputType) {
-            return (false === empty($value)) ? new \DateTime($value) : null;
+            try {
+                return false === empty($value) ? new \DateTime($value) : null;
+            } catch (\DateMalformedStringException) {
+                return null;
+            }
         }
 
         if (InputType::MultiSelect === $inputType) {
             /** @phpstan-var non-empty-string $separator */
             return (null !== $value && false === empty($separator)) ? explode($separator, $value) : [];
+        }
+
+        if (InputType::Integer === $inputType) {
+            return (int) $value;
         }
 
         if (InputType::Number === $inputType) {

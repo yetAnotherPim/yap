@@ -10,14 +10,16 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\Trait\TranslationTrait;
+use App\Form\Product\Fields\Renderer\Registry\BatchEditFieldRendererInterface;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
 use App\Form\Product\Fields\Resolver\Enum\FileType;
 use App\Form\Product\Fields\Resolver\FileResolver;
 use App\Form\ProductType\DefaultTranslation\Resolver\DefaultTranslationResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-final class ImageFieldRenderer implements FieldRendererInterface
+final class ImageFieldRenderer implements FieldRendererInterface, BatchEditFieldRendererInterface
 {
     use TranslationTrait;
 
@@ -45,5 +47,11 @@ final class ImageFieldRenderer implements FieldRendererInterface
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);
+    }
+
+    public function getBatchEditFormType(
+        FieldType $fieldType,
+    ): string {
+        return TextType::class;
     }
 }

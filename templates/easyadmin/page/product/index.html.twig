@@ -1,0 +1,50 @@
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+
+{% block batch_actions %}
+    {{ parent() }}
+
+    {% if has_batch_actions and entities|length > 0 %}
+        <div class="product-batch-selection">
+            <div
+                data-controller="product-batch-selection"
+                data-product-batch-selection-total-count-value="{{ paginator.numResults }}"
+            >
+                <div
+                    data-product-batch-selection-target="allSelected"
+                    class="product-batch-selection__message d-none"
+                >
+                    <span>
+                        {{ 'product.batch_selection.all_selected'|trans(
+                            {'%count%': paginator.numResults|format},
+                            'admin'
+                        ) }}
+                    </span>
+
+                    <button
+                        type="button"
+                        class="btn btn-link"
+                        data-action="product-batch-selection#clearSelection"
+                    >
+                        {{ 'product.batch_selection.clear_selection'|trans({}, 'admin') }}
+                    </button>
+                </div>
+
+                <div
+                    data-product-batch-selection-target="selectAll"
+                    class="product-batch-selection__message d-none"
+                >
+                    <button
+                        type="button"
+                        class="btn btn-link"
+                        data-action="product-batch-selection#selectAll"
+                    >
+                        {{ 'product.batch_selection.select_all'|trans(
+                            {'%count%': paginator.numResults|format},
+                            'admin'
+                        ) }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

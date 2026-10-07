@@ -135,6 +135,12 @@ product:
         updated_at: 'Aktualisiert'
         master_data: 'Stammdaten'
         fields: 'Felder'
+        batch_edit: 'Produkte bearbeiten'
+    batch_selection:
+        page_selected: '%count% Produkte zum Bearbeiten ausgewählt.'
+        select_all: 'Alle %count% passenden Produkte zum Bearbeiten auswählen'
+        all_selected: 'Alle %count% passenden Produkte zum Bearbeiten ausgewählt.'
+        clear_selection: 'Auswahl aufheben'
 
 dashboard:
     title: 'Dashboard'
@@ -157,8 +163,10 @@ filter:
 general:
     labels:
         translation: 'Übersetzung'
+        translations: 'Übersetzungen'
         locale: 'Sprache'
         language: 'Sprache'
+        value: 'Wert'
 
 account:
     labels:

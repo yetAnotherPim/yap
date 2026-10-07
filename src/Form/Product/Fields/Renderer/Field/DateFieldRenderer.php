@@ -10,11 +10,13 @@ use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
 use App\Form\Product\Fields\Renderer\Field\Trait\TranslationTrait;
+use App\Form\Product\Fields\Renderer\Registry\BatchEditFieldRendererInterface;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-final class DateFieldRenderer implements FieldRendererInterface
+final class DateFieldRenderer implements FieldRendererInterface, BatchEditFieldRendererInterface
 {
     use TranslationTrait;
 
@@ -37,5 +39,11 @@ final class DateFieldRenderer implements FieldRendererInterface
             ]);
 
         return $this->addTranslationOptions($element, $field, $locale);
+    }
+
+    public function getBatchEditFormType(
+        FieldType $fieldType,
+    ): string {
+        return DateType::class;
     }
 }

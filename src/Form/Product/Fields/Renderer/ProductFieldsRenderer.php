@@ -41,7 +41,7 @@ class ProductFieldsRenderer
             );
 
             $fields[] = $this->rendererRegistry
-                ->getRenderer($field)
+                ->getRenderer($field->getType())
                 ->render(
                     $field,
                     $productTypeFieldConfiguration,

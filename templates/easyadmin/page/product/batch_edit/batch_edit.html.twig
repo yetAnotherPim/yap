@@ -1,0 +1,65 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    {{ 'product.labels.batch_edit'|trans({}, 'admin') }}
+{% endblock %}
+
+{% block main %}
+    {{ form_start(form) }}
+
+    <div
+        data-controller="batch-edit"
+        data-batch-edit-field-url-value="{{ path('admin_product_batch_edit_field', { id: '__id__' }) }}"
+    >
+        <div class="row g-3 align-items-end mb-4">
+            <div class="col-md-6 col-lg-5">
+                <div>
+                    <label class="form-label">
+                        {{ 'field_type.title'|trans({}, 'admin') }}
+                    </label>
+
+                    {{ form_widget(form.fieldType, {
+                        attr: {
+                            'data-batch-edit-target': 'fieldType'
+                        }
+                    }) }}
+
+                    {{ form_errors(form.fieldType) }}
+                </div>
+            </div>
+
+            <div class="col-auto">
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    data-action="batch-edit#add"
+                >
+                    <i class="fa fa-plus"></i>
+                    {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
+                </button>
+            </div>
+        </div>
+
+        <div
+            class="vstack gap-4"
+            data-batch-edit-target="items"
+        >
+            {% for field in form.fields %}
+                {% include 'easyadmin/page/product/batch_edit/field.html.twig' with {
+                    field: field,
+                } %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            {{ 'action.save'|trans({}, 'EasyAdminBundle') }}
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}

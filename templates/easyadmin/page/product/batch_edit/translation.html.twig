@@ -1,0 +1,34 @@
+<div
+    class="row g-3 align-items-end"
+    data-batch-edit-item
+>
+    <div class="col-md-4">
+        {{ form_row(translation.locale, {
+            row_attr: {
+                class: 'mb-0'
+            }
+        }) }}
+    </div>
+
+    <div class="col">
+        {{ form_row(translation.value, {
+            label_attr: {
+                class: 'd-block mb-2'
+            },
+            row_attr: {
+                class: 'mb-0'
+            }
+        }) }}
+    </div>
+
+    <div class="col-auto">
+        <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            data-action="batch-edit#remove"
+            title="{{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}"
+        >
+            <i class="fa fa-trash"></i>
+        </button>
+    </div>
+</div>

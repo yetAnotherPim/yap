@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Products;
 
+use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\User\User;
+use App\Form\Product\BatchEdit\Dto\BatchEditData;
+use App\Form\Product\BatchEdit\Dto\BatchEditFieldData;
+use App\Form\Product\BatchEdit\Type\BatchEditType;
 use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
@@ -15,6 +19,7 @@ use App\Form\Product\Filter\Composer\ProductFilterComposer;
 use App\Form\Product\Identifier\IdentifierManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -25,16 +30,22 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Component\Uid\UuidV7;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -61,6 +72,13 @@ class ProductCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
+            ->update(
+                Crud::PAGE_INDEX,
+                Action::BATCH_DELETE,
+                static fn (Action $action) => $action->setHtmlAttributes([
+                    'data-product-batch-count-action' => 'delete',
+                ]),
+            )
             ->add(Crud::PAGE_INDEX,
                 Action::new(
                     'configureColumns',
@@ -76,6 +94,20 @@ class ProductCrudController extends AbstractCrudController
                     ->setIcon('fa fa-columns')
                     ->createAsGlobalAction()
             )
+            ->addBatchAction(
+                Action::new(
+                    'batch_edit',
+                    new TranslatableMessage('action.edit', domain: 'EasyAdminBundle'),
+                )
+                ->linkToCrudAction('batchEdit')
+                ->askConfirmation(false)
+                ->setIcon('fa fa-edit')
+                ->setHtmlAttributes([
+                        'data-action-batch-no-confirm' => 'true',
+                        'data-product-batch-selection-action' => 'true',
+                        'data-product-batch-count-action' => 'edit',
+                    ]),
+            )
             ->add(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE)
             ->update(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE,
                 static fn (Action $action) => $action->asPrimaryAction()
@@ -83,6 +115,148 @@ class ProductCrudController extends AbstractCrudController
             ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN,
                 static fn (Action $action) => $action->asDefaultAction()
             );
+    }
+
+    #[AdminRoute(
+        '/batch-edit',
+        'batch_edit',
+        options: ['methods' => ['POST']],
+    )]
+    public function batchEdit(
+        AdminContext $context,
+        BatchActionDto $batchActionDto,
+    ): Response {
+        $request = $context->getRequest();
+
+        if ($request->request->getBoolean('batchActionAll')) {
+            return $this->redirectToRoute(
+                'admin_product_batch_edit_form',
+                [
+                    ...$request->query->all(),
+                    'batchActionAll' => '1',
+                ],
+            );
+        }
+
+        return $this->redirect(
+            $this->generateUrl('admin_product_batch_edit_form')
+            .'?'
+            .http_build_query([
+                'ids' => $batchActionDto->getEntityIds(),
+            ]),
+        );
+    }
+
+    #[AdminRoute('/batch-edit-form', 'batch_edit_form', options: ['methods' => ['GET']])]
+    public function batchEditForm(
+        AdminContext $context,
+    ): Response {
+        $data = new BatchEditData();
+        $data->addField(new BatchEditFieldData(null));
+
+        $form = $this->createForm(BatchEditType::class, $data);
+
+        return $this->render('easyadmin/page/product/batch_edit/batch_edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route(
+        '/admin/product/batch-edit/field/{id}',
+        name: 'admin_product_batch_edit_field',
+        methods: ['GET'],
+    )]
+    public function ajaxGetBatchEditField(
+        FieldType $fieldType,
+    ): Response {
+        $data = new BatchEditData();
+
+        $data->addField(
+            new BatchEditFieldData($fieldType),
+        );
+
+        $form = $this->createForm(
+            BatchEditType::class,
+            $data,
+        );
+
+        return $this->render(
+            'easyadmin/page/product/batch_edit/field.html.twig',
+            [
+                'field' => $form
+                    ->get('fields')
+                    ->get($fieldType->getCode())
+                    ->createView(),
+            ],
+        );
+    }
+
+    /**
+     * TODO: Move.
+     *
+     * @return iterable<UuidV7>
+     */
+    private function getSelectedProductIds(
+        BatchActionDto $batchActionDto,
+        AdminContext $context,
+    ): iterable {
+        $request = $context->getRequest();
+
+        if (false === $request->query->getBoolean('batchActionAll')) {
+            return $batchActionDto->getEntityIds();
+        }
+
+        $fields = new FieldCollection(
+            $this->configureFields(Crud::PAGE_INDEX),
+        );
+
+        $filters = $this->container
+            ->get(FilterFactory::class)
+            ->create(
+                $context->getCrud()->getFiltersConfig(),
+                $fields,
+                $context->getEntity(),
+            );
+
+        $queryBuilder = $this->createIndexQueryBuilderForBatchAction(
+            $request,
+            $context->getSearch(),
+            $context->getEntity(),
+            $fields,
+            $filters,
+        );
+
+        $queryBuilder
+            ->resetDQLPart('orderBy')
+            ->resetDQLPart('select')
+            ->select('DISTINCT entity.id');
+
+        foreach ($queryBuilder->getQuery()->toIterable() as $row) {
+            yield $row['id'];
+        }
+    }
+
+    private function createIndexQueryBuilderForBatchAction(
+        Request $request,
+        SearchDto $searchDto,
+        EntityDto $entityDto,
+        FieldCollection $fields,
+        FilterCollection $filters,
+    ): QueryBuilder {
+        $originalMethod = $request->getMethod();
+
+        try {
+            $request->setMethod(Request::METHOD_GET);
+
+            return $this->createIndexQueryBuilder(
+                $searchDto,
+                $entityDto,
+                $fields,
+                $filters,
+            );
+        } finally {
+            $request->setMethod($originalMethod);
+        }
     }
 
     public static function getEntityFqcn(): string
@@ -102,7 +276,11 @@ class ProductCrudController extends AbstractCrudController
                 'fields.translations.value',
                 'identifiers.value',
             ])
-            ->setFormThemes(['easyadmin/fields/identifier/identifier_collection.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
+            ->overrideTemplate(
+                'crud/index',
+                'easyadmin/page/product/index.html.twig',
+            )
+            ->setFormThemes(['easyadmin/identifier/identifier_collection.html.twig', '@EasyAdmin/crud/form_theme.html.twig']);
     }
 
     public function configureFields(string $pageName): iterable
