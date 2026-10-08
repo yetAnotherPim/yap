@@ -7,6 +7,7 @@ namespace App\plugins\Scheduler\Provider\SystemStatus;
 use App\Controller\Provider\SystemStatus\Message\Enum\MessageType;
 use App\Controller\Provider\SystemStatus\Message\SystemStatusMessage;
 use App\Controller\Provider\SystemStatus\SystemCheckInterface;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\TranslatableMessage;
 
@@ -40,10 +41,14 @@ class TaskExecution implements SystemCheckInterface
 
     private function wereTasksExecutedRecently(): bool
     {
-        /** @phpstan-var string|false|null $lastRun */
-        $lastRun = $this->entityManager
-            ->getConnection()
-            ->fetchOne('SELECT last_run FROM yap_scheduler LIMIT 1');
+        try {
+            /** @phpstan-var string|false|null $lastRun */
+            $lastRun = $this->entityManager
+                ->getConnection()
+                ->fetchOne('SELECT last_run FROM yap_scheduler LIMIT 1');
+        } catch (Exception) {
+            return false;
+        }
 
         if (false === $lastRun || null === $lastRun) {
             return false;

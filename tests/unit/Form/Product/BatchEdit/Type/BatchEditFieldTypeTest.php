@@ -64,6 +64,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             ->shouldNotReceive('getRenderer');
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
+        /** @var \Closure|null $listener */
         $listener = null;
 
         $builder
@@ -83,6 +84,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             null,
         );
 
+        $this->assertInstanceOf(\Closure::class, $listener);
         $listener($event);
     }
 
@@ -101,6 +103,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
         $form = \Mockery::mock(FormInterface::class);
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
+        /** @var \Closure|null $listener */
         $listener = null;
 
         $builder
@@ -118,6 +121,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             $fieldData,
         );
 
+        $this->assertInstanceOf(\Closure::class, $listener);
         $listener($event);
     }
 
@@ -146,6 +150,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             ->shouldNotReceive('add');
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
+        /** @var \Closure|null $listener */
         $listener = null;
 
         $builder
@@ -163,6 +168,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             $fieldData,
         );
 
+        $this->assertInstanceOf(\Closure::class, $listener);
         $listener($event);
     }
 
@@ -229,6 +235,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             ->andReturn($form);
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
+        /** @var \Closure|null $listener */
         $listener = null;
 
         $builder
@@ -246,6 +253,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             $fieldData,
         );
 
+        $this->assertInstanceOf(\Closure::class, $listener);
         $listener($event);
     }
 
@@ -336,6 +344,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             ->andReturn($form);
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
+        /** @var \Closure|null $listener */
         $listener = null;
 
         $builder
@@ -353,6 +362,7 @@ class BatchEditFieldTypeTest extends MockeryTestCase
             $fieldData,
         );
 
+        $this->assertInstanceOf(\Closure::class, $listener);
         $listener($event);
     }
 

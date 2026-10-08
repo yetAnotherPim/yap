@@ -124,6 +124,7 @@ class IntegerFieldRendererTest extends MockeryTestCase
             $result->getAsDto()->getProperty()
         );
 
+        /** @var array<string, string|int|float|bool> $formTypeOptions */
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
         $this->assertSame('label', $formTypeOptions['label']);
@@ -223,9 +224,12 @@ class IntegerFieldRendererTest extends MockeryTestCase
             $locale,
         );
 
+        /** @var int|string|float $data */
+        $data = $result->getAsDto()->getFormTypeOptions()['data'];
+
         $this->assertSame(
             100,
-            (int) $result->getAsDto()->getFormTypeOptions()['data'],
+            (int) $data,
         );
     }
 

@@ -788,6 +788,7 @@ class ProductCrudControllerTest extends MockeryTestCase
             ->with('admin_batch_edit_product_batch_edit_form')
             ->andReturn('/admin/product/batch-edit/form');
 
+        /** @var RedirectResponse $result */
         $result = $controller->batchEdit($context, $batchActionDto);
 
         $this->assertSame(
@@ -840,6 +841,7 @@ class ProductCrudControllerTest extends MockeryTestCase
             )
             ->andReturn(new RedirectResponse('/admin/product/batch-edit/form'));
 
+        /** @var RedirectResponse $result */
         $result = $controller->batchEdit(
             $context,
             new BatchActionDto(

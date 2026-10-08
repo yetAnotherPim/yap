@@ -15,17 +15,24 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Controller\Provider\DashboardStatisticsProvider;
+use App\Controller\Provider\DashboardSystemStatusProvider;
+use App\Controller\Provider\SystemStatus\InputVarsConfig;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\User\User;
+use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Localisation\Exception\DefaultLocaleIsNotDefinedException;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\PluginManager;
+use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\ProductRepository;
+use App\Repository\ProductTypeRepository;
 use App\Repository\UserRepository;
 use App\Tests\helper\Trait\Frontend\LoginTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -57,6 +64,13 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(IndexController::class)]
 #[UsesClass(LoginController::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
+#[UsesClass(DashboardStatisticsProvider::class)]
+#[UsesClass(DashboardSystemStatusProvider::class)]
+#[UsesClass(InputVarsConfig::class)]
+#[UsesClass(MenuItemsConfiguredEvent::class)]
+#[UsesClass(FieldTypeRepository::class)]
+#[UsesClass(ProductRepository::class)]
+#[UsesClass(ProductTypeRepository::class)]
 class LocaleCrudControllerTest extends WebTestCase
 {
     use Factories;

@@ -107,6 +107,7 @@ class BatchEditTypeTest extends MockeryTestCase
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
 
+        /** @var callable(FieldType): string|null $choiceLabel */
         $choiceLabel = null;
 
         $builder
@@ -145,6 +146,7 @@ class BatchEditTypeTest extends MockeryTestCase
             ->with('de')
             ->andReturn('Lagerbestand');
 
+        $this->assertIsCallable($choiceLabel);
         $this->assertSame(
             'Lagerbestand',
             $choiceLabel($fieldType),
@@ -160,6 +162,7 @@ class BatchEditTypeTest extends MockeryTestCase
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
 
+        /** @var callable(FieldType): string|null $choiceFilter */
         $choiceFilter = null;
 
         $builder
@@ -197,6 +200,7 @@ class BatchEditTypeTest extends MockeryTestCase
             ->once()
             ->andReturn(InputType::Section);
 
+        $this->assertIsCallable($choiceFilter);
         $this->assertFalse($choiceFilter($section));
     }
 
@@ -209,6 +213,7 @@ class BatchEditTypeTest extends MockeryTestCase
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
 
+        /** @var callable(FieldType): string|null $choiceFilter */
         $choiceFilter = null;
 
         $builder
@@ -246,6 +251,7 @@ class BatchEditTypeTest extends MockeryTestCase
             ->once()
             ->andReturn(InputType::String);
 
+        $this->assertIsCallable($choiceFilter);
         $this->assertTrue($choiceFilter($fieldType));
     }
 
@@ -257,7 +263,7 @@ class BatchEditTypeTest extends MockeryTestCase
             ->andReturn('de');
 
         $builder = \Mockery::mock(FormBuilderInterface::class);
-
+        /** @var callable(FieldType): string|null $choiceFilter */
         $choiceFilter = null;
 
         $builder
@@ -288,6 +294,7 @@ class BatchEditTypeTest extends MockeryTestCase
 
         $this->type->buildForm($builder, []);
 
+        $this->assertIsCallable($choiceFilter);
         $this->assertFalse($choiceFilter(null));
     }
 
