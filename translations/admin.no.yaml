@@ -126,6 +126,14 @@ product:
         updated_at: Oppdatert
         master_data: Grunndata
         fields: Felt
+        batch_edit: 'Masseredigering'
+    batch_selection:
+        page_selected: 'Elementene på denne siden er valgt.'
+        select_all: 'Velg alle'
+        all_selected: 'Alle elementene er valgt.'
+        clear_selection: 'Tøm utvalg'
+    batch_edit:
+        notice: 'Endringene behandles asynkront. MessageConsumer må være aktiv, eller alternativt må JS Consumer-modulen aktiveres.'
 dashboard:
     title: 'Kontrollpanel'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Oversettelse
         locale: Lokale
         language: Språk
-
+        translations: 'Oversettelser'
+        value: 'Verdi'
 account:
     labels:
         current_password: 'Gjeldende passord'

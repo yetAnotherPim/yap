@@ -126,6 +126,14 @@ product:
         updated_at: Ενημερώθηκε
         master_data: Βασικά δεδομένα
         fields: Πεδία
+        batch_edit: 'Μαζική επεξεργασία'
+    batch_selection:
+        page_selected: 'Τα στοιχεία αυτής της σελίδας έχουν επιλεγεί.'
+        select_all: 'Επιλογή όλων'
+        all_selected: 'Έχουν επιλεγεί όλα τα στοιχεία.'
+        clear_selection: 'Εκκαθάριση επιλογής'
+    batch_edit:
+        notice: 'Οι αλλαγές υποβάλλονται σε ασύγχρονη επεξεργασία. Το MessageConsumer πρέπει να είναι ενεργό ή, εναλλακτικά, να έχει ενεργοποιηθεί η λειτουργική μονάδα JS Consumer.'
 dashboard:
     title: 'Πίνακας ελέγχου'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Μετάφραση
         locale: Τοπικές ρυθμίσεις
         language: Γλώσσα
-
+        translations: 'Μεταφράσεις'
+        value: 'Τιμή'
 account:
     labels:
         current_password: 'Τρέχων κωδικός πρόσβασης'

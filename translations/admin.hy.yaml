@@ -126,6 +126,14 @@ product:
         updated_at: Թարմացվել է
         master_data: Հիմնական տվյալներ
         fields: Դաշտեր
+        batch_edit: 'Խմբաքանակային խմբագրում'
+    batch_selection:
+        page_selected: 'Այս էջի տարրերն ընտրված են։'
+        select_all: 'Ընտրել բոլորը'
+        all_selected: 'Բոլոր տարրերն ընտրված են։'
+        clear_selection: 'Մաքրել ընտրությունը'
+    batch_edit:
+        notice: 'Փոփոխությունները մշակվում են ասինխրոն կերպով։ MessageConsumer-ը պետք է ակտիվ լինի կամ, այլընտրանք, պետք է միացված լինի JS Consumer մոդուլը։'
 dashboard:
     title: 'Կառավարման վահանակ'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Թարգմանություն
         locale: Լոկալ
         language: Լեզու
-
+        translations: 'Թարգմանություններ'
+        value: 'Արժեք'
 account:
     labels:
         current_password: 'Ընթացիկ գաղտնաբառ'

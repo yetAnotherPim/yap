@@ -126,6 +126,14 @@ product:
         updated_at: Ажурирано
         master_data: Основни податоци
         fields: Полиња
+        batch_edit: 'Групно уредување'
+    batch_selection:
+        page_selected: 'Ставките на оваа страница се избрани.'
+        select_all: 'Избери ги сите'
+        all_selected: 'Сите ставки се избрани.'
+        clear_selection: 'Исчисти избор'
+    batch_edit:
+        notice: 'Промените се обработуваат асинхроно. MessageConsumer мора да биде активен или алтернативно да биде овозможен модулот JS Consumer.'
 dashboard:
     title: 'Контролна табла'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Превод
         locale: Локал
         language: Јазик
-
+        translations: 'Преводи'
+        value: 'Вредност'
 account:
     labels:
         current_password: 'Тековна лозинка'

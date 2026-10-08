@@ -126,6 +126,14 @@ product:
         updated_at: Aktualiséiert
         master_data: Stammdaten
         fields: Felder
+        batch_edit: 'Massebearbechtung'
+    batch_selection:
+        page_selected: 'D''Elementer op dëser Säit sinn ausgewielt.'
+        select_all: 'Alles auswielen'
+        all_selected: 'All Elementer sinn ausgewielt.'
+        clear_selection: 'Auswiel läschen'
+    batch_edit:
+        notice: 'D''Ännerunge ginn asynchron veraarbecht. De MessageConsumer muss aktiv sinn oder alternativ muss de JS Consumer Modul aktivéiert sinn.'
 dashboard:
     title: 'Dashboard'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Iwwersetzung
         locale: Locale
         language: Sprooch
-
+        translations: 'Iwwersetzungen'
+        value: 'Wäert'
 account:
     labels:
         current_password: 'Aktuellt Passwuert'

@@ -126,6 +126,14 @@ product:
         updated_at: Актуализирано на
         master_data: Основни данни
         fields: Полета
+        batch_edit: 'Пакетно редактиране'
+    batch_selection:
+        page_selected: 'Елементите на тази страница са избрани.'
+        select_all: 'Избери всички'
+        all_selected: 'Всички елементи са избрани.'
+        clear_selection: 'Изчисти избора'
+    batch_edit:
+        notice: 'Промените се обработват асинхронно. MessageConsumer трябва да е активен или алтернативно да е активиран модулът JS Consumer.'
 dashboard:
     title: 'Табло'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Превод
         locale: Локал
         language: Език
-
+        translations: 'Преводи'
+        value: 'Стойност'
 account:
     labels:
         current_password: 'Текуща парола'

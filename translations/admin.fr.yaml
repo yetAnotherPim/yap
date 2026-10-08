@@ -126,6 +126,14 @@ product:
         updated_at: Mis à jour le
         master_data: Données de base
         fields: Champs
+        batch_edit: 'Modification groupée'
+    batch_selection:
+        page_selected: 'Les éléments de cette page sont sélectionnés.'
+        select_all: 'Tout sélectionner'
+        all_selected: 'Tous les éléments sont sélectionnés.'
+        clear_selection: 'Effacer la sélection'
+    batch_edit:
+        notice: 'Les modifications sont traitées de manière asynchrone. Le MessageConsumer doit être actif ou, à défaut, le module JS Consumer doit être activé.'
 dashboard:
     title: 'Tableau de bord'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Traduction
         locale: Paramètres régionaux
         language: Langue
-
+        translations: 'Traductions'
+        value: 'Valeur'
 account:
     labels:
         current_password: 'Mot de passe actuel'

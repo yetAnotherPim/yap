@@ -126,6 +126,14 @@ product:
         updated_at: Diperbarui pada
         master_data: Data utama
         fields: Bidang
+        batch_edit: 'Pengeditan massal'
+    batch_selection:
+        page_selected: 'Item di halaman ini telah dipilih.'
+        select_all: 'Pilih semua'
+        all_selected: 'Semua item telah dipilih.'
+        clear_selection: 'Hapus pilihan'
+    batch_edit:
+        notice: 'Perubahan diproses secara asinkron. MessageConsumer harus aktif atau sebagai alternatif modul JS Consumer harus diaktifkan.'
 dashboard:
     title: 'Dasbor'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Terjemahan
         locale: Lokal
         language: Bahasa
-
+        translations: 'Terjemahan'
+        value: 'Nilai'
 account:
     labels:
         current_password: 'Kata sandi saat ini'

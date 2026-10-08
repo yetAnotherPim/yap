@@ -126,6 +126,14 @@ product:
         updated_at: Eguneratua
         master_data: Datu nagusiak
         fields: Eremuak
+        batch_edit: 'Multzoko edizioa'
+    batch_selection:
+        page_selected: 'Orrialde honetako elementuak hautatu dira.'
+        select_all: 'Hautatu dena'
+        all_selected: 'Elementu guztiak hautatu dira.'
+        clear_selection: 'Garbitu hautapena'
+    batch_edit:
+        notice: 'Aldaketak modu asinkronoan prozesatzen dira. MessageConsumer aktibo egon behar du, edo bestela JS Consumer modulua gaitu behar da.'
 dashboard:
     title: 'Aginte-panela'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Itzulpena
         locale: Eskualde-ezarpena
         language: Hizkuntza
-
+        translations: 'Itzulpenak'
+        value: 'Balioa'
 account:
     labels:
         current_password: 'Uneko pasahitza'

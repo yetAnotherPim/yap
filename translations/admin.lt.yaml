@@ -126,6 +126,14 @@ product:
         updated_at: Atnaujinta
         master_data: Pagrindiniai duomenys
         fields: Laukai
+        batch_edit: 'Masinis redagavimas'
+    batch_selection:
+        page_selected: 'Šio puslapio elementai pasirinkti.'
+        select_all: 'Pasirinkti viską'
+        all_selected: 'Visi elementai pasirinkti.'
+        clear_selection: 'Išvalyti pasirinkimą'
+    batch_edit:
+        notice: 'Pakeitimai apdorojami asinchroniškai. MessageConsumer turi būti aktyvus arba, alternatyviai, turi būti įjungtas JS Consumer modulis.'
 dashboard:
     title: 'Valdymo skydelis'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Vertimas
         locale: Lokalė
         language: Kalba
-
+        translations: 'Vertimai'
+        value: 'Reikšmė'
 account:
     labels:
         current_password: 'Dabartinis slaptažodis'

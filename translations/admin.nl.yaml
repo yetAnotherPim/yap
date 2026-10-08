@@ -126,6 +126,14 @@ product:
         updated_at: Bijgewerkt op
         master_data: Stamgegevens
         fields: Velden
+        batch_edit: 'Batchbewerking'
+    batch_selection:
+        page_selected: 'De items op deze pagina zijn geselecteerd.'
+        select_all: 'Alles selecteren'
+        all_selected: 'Alle items zijn geselecteerd.'
+        clear_selection: 'Selectie wissen'
+    batch_edit:
+        notice: 'De wijzigingen worden asynchroon verwerkt. De MessageConsumer moet actief zijn of als alternatief moet de JS Consumer-module worden ingeschakeld.'
 dashboard:
     title: 'Dashboard'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Vertaling
         locale: Landinstelling
         language: Taal
-
+        translations: 'Vertalingen'
+        value: 'Waarde'
 account:
     labels:
         current_password: 'Huidig wachtwoord'

@@ -126,6 +126,14 @@ product:
         updated_at: Frissítve
         master_data: Törzsadatok
         fields: Mezők
+        batch_edit: 'Csoportos szerkesztés'
+    batch_selection:
+        page_selected: 'Az oldal elemei ki vannak jelölve.'
+        select_all: 'Összes kijelölése'
+        all_selected: 'Minden elem ki van jelölve.'
+        clear_selection: 'Kijelölés törlése'
+    batch_edit:
+        notice: 'A módosítások aszinkron módon kerülnek feldolgozásra. A MessageConsumernek aktívnak kell lennie, vagy alternatívaként engedélyezni kell a JS Consumer modult.'
 dashboard:
     title: 'Vezérlőpult'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Fordítás
         locale: Területi beállítás
         language: Nyelv
-
+        translations: 'Fordítások'
+        value: 'Érték'
 account:
     labels:
         current_password: 'Jelenlegi jelszó'

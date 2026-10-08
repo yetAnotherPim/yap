@@ -126,6 +126,14 @@ product:
         updated_at: تاريخ التحديث
         master_data: البيانات الأساسية
         fields: الحقول
+        batch_edit: 'تعديل دفعي'
+    batch_selection:
+        page_selected: 'تم تحديد العناصر في هذه الصفحة.'
+        select_all: 'تحديد الكل'
+        all_selected: 'تم تحديد جميع العناصر.'
+        clear_selection: 'إلغاء تحديد الكل'
+    batch_edit:
+        notice: 'تتم معالجة التغييرات بشكل غير متزامن. يجب أن يكون MessageConsumer نشطًا، أو يجب تفعيل وحدة JS Consumer بدلاً من ذلك.'
 dashboard:
     title: 'لوحة التحكم'
     system_status:
@@ -150,6 +158,8 @@ general:
         locale: الإعدادات المحلية
         language: اللغة
 
+        translations: 'الترجمات'
+        value: 'القيمة'
 account:
     labels:
         current_password: 'كلمة المرور الحالية'

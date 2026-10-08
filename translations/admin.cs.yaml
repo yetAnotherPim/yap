@@ -126,6 +126,14 @@ product:
         updated_at: Aktualizováno
         master_data: Kmenová data
         fields: Pole
+        batch_edit: 'Hromadná úprava'
+    batch_selection:
+        page_selected: 'Položky na této stránce jsou vybrány.'
+        select_all: 'Vybrat vše'
+        all_selected: 'Všechny položky jsou vybrány.'
+        clear_selection: 'Zrušit výběr'
+    batch_edit:
+        notice: 'Změny se zpracovávají asynchronně. MessageConsumer musí být aktivní, případně musí být aktivován modul JS Consumer.'
 dashboard:
     title: 'Přehled'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Překlad
         locale: Národní prostředí
         language: Jazyk
-
+        translations: 'Překlady'
+        value: 'Hodnota'
 account:
     labels:
         current_password: 'Aktuální heslo'

@@ -126,6 +126,14 @@ product:
         updated_at: Güncellenme
         master_data: Ana veriler
         fields: Alanlar
+        batch_edit: 'Toplu düzenleme'
+    batch_selection:
+        page_selected: 'Bu sayfadaki öğeler seçildi.'
+        select_all: 'Tümünü seç'
+        all_selected: 'Tüm öğeler seçildi.'
+        clear_selection: 'Seçimi temizle'
+    batch_edit:
+        notice: 'Değişiklikler eşzamansız olarak işlenir. MessageConsumer etkin olmalı veya alternatif olarak JS Consumer modülü etkinleştirilmelidir.'
 dashboard:
     title: 'Kontrol paneli'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Çeviri
         locale: Yerel ayar
         language: Dil
-
+        translations: 'Çeviriler'
+        value: 'Değer'
 account:
     labels:
         current_password: 'Mevcut şifre'

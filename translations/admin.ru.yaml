@@ -126,6 +126,14 @@ product:
         updated_at: Обновлено
         master_data: Основные данные
         fields: Поля
+        batch_edit: 'Массовое редактирование'
+    batch_selection:
+        page_selected: 'Элементы на этой странице выбраны.'
+        select_all: 'Выбрать все'
+        all_selected: 'Все элементы выбраны.'
+        clear_selection: 'Сбросить выбор'
+    batch_edit:
+        notice: 'Изменения обрабатываются асинхронно. MessageConsumer должен быть активен или, в качестве альтернативы, должен быть включён модуль JS Consumer.'
 dashboard:
     title: 'Панель управления'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Перевод
         locale: Локаль
         language: Язык
-
+        translations: 'Переводы'
+        value: 'Значение'
 account:
     labels:
         current_password: 'Текущий пароль'

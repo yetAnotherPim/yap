@@ -126,6 +126,14 @@ product:
         updated_at: Uppdaterad
         master_data: Grunddata
         fields: Fält
+        batch_edit: 'Massredigering'
+    batch_selection:
+        page_selected: 'Objekten på den här sidan är markerade.'
+        select_all: 'Markera alla'
+        all_selected: 'Alla objekt är markerade.'
+        clear_selection: 'Rensa markering'
+    batch_edit:
+        notice: 'Ändringarna behandlas asynkront. MessageConsumer måste vara aktiv eller alternativt måste JS Consumer-modulen aktiveras.'
 dashboard:
     title: 'Instrumentpanel'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Översättning
         locale: Språkinställning
         language: Språk
-
+        translations: 'Översättningar'
+        value: 'Värde'
 account:
     labels:
         current_password: 'Nuvarande lösenord'

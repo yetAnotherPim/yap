@@ -126,6 +126,14 @@ product:
         updated_at: 更新時間
         master_data: 主資料
         fields: 欄位
+        batch_edit: '批次編輯'
+    batch_selection:
+        page_selected: '已選取此頁面的項目。'
+        select_all: '全選'
+        all_selected: '已選取所有項目。'
+        clear_selection: '清除選取'
+    batch_edit:
+        notice: '變更會以非同步方式處理。必須啟用 MessageConsumer，或啟用 JS Consumer 模組。'
 dashboard:
     title: '儀表板'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: 翻譯
         locale: 地區設定
         language: 語言
-
+        translations: '翻譯'
+        value: '值'
 account:
     labels:
         current_password: '目前密碼'

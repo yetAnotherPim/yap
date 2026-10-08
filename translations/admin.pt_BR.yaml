@@ -126,6 +126,14 @@ product:
         updated_at: Atualizado em
         master_data: Dados mestres
         fields: Campos
+        batch_edit: 'Edição em massa'
+    batch_selection:
+        page_selected: 'Os itens desta página foram selecionados.'
+        select_all: 'Selecionar tudo'
+        all_selected: 'Todos os itens foram selecionados.'
+        clear_selection: 'Limpar seleção'
+    batch_edit:
+        notice: 'As alterações são processadas de forma assíncrona. O MessageConsumer deve estar ativo ou, alternativamente, o módulo JS Consumer deve estar habilitado.'
 dashboard:
     title: 'Painel'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Tradução
         locale: Localidade
         language: Idioma
-
+        translations: 'Traduções'
+        value: 'Valor'
 account:
     labels:
         current_password: 'Senha atual'

@@ -126,6 +126,14 @@ product:
         updated_at: Actualitzat el
         master_data: Dades mestres
         fields: Camps
+        batch_edit: 'Edició per lots'
+    batch_selection:
+        page_selected: 'S''han seleccionat els elements d''aquesta pàgina.'
+        select_all: 'Selecciona-ho tot'
+        all_selected: 'S''han seleccionat tots els elements.'
+        clear_selection: 'Neteja la selecció'
+    batch_edit:
+        notice: 'Els canvis es processen de manera asíncrona. El MessageConsumer ha d''estar actiu o, alternativament, cal activar el mòdul JS Consumer.'
 dashboard:
     title: 'Tauler'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Traducció
         locale: Configuració regional
         language: Idioma
-
+        translations: 'Traduccions'
+        value: 'Valor'
 account:
     labels:
         current_password: 'Contrasenya actual'

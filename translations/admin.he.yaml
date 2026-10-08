@@ -126,6 +126,14 @@ product:
         updated_at: עודכן בתאריך
         master_data: נתוני אב
         fields: שדות
+        batch_edit: 'עריכה מרוכזת'
+    batch_selection:
+        page_selected: 'הפריטים בדף זה נבחרו.'
+        select_all: 'בחר הכול'
+        all_selected: 'כל הפריטים נבחרו.'
+        clear_selection: 'נקה בחירה'
+    batch_edit:
+        notice: 'השינויים מעובדים באופן אסינכרוני. ה-MessageConsumer חייב להיות פעיל, או לחלופין יש להפעיל את מודול JS Consumer.'
 dashboard:
     title: 'לוח בקרה'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: תרגום
         locale: אזור
         language: שפה
-
+        translations: 'תרגומים'
+        value: 'ערך'
 account:
     labels:
         current_password: 'סיסמה נוכחית'

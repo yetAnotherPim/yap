@@ -126,6 +126,14 @@ product:
         updated_at: Aktualizované
         master_data: Kmeňové údaje
         fields: Polia
+        batch_edit: 'Hromadná úprava'
+    batch_selection:
+        page_selected: 'Položky na tejto stránke sú vybrané.'
+        select_all: 'Vybrať všetko'
+        all_selected: 'Všetky položky sú vybrané.'
+        clear_selection: 'Zrušiť výber'
+    batch_edit:
+        notice: 'Zmeny sa spracúvajú asynchrónne. MessageConsumer musí byť aktívny alebo alternatívne musí byť aktivovaný modul JS Consumer.'
 dashboard:
     title: 'Prehľad'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Preklad
         locale: Miestne nastavenie
         language: Jazyk
-
+        translations: 'Preklady'
+        value: 'Hodnota'
 account:
     labels:
         current_password: 'Aktuálne heslo'

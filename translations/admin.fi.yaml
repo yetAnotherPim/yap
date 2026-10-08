@@ -126,6 +126,14 @@ product:
         updated_at: Päivitetty
         master_data: Perustiedot
         fields: Kentät
+        batch_edit: 'Joukkokäsittely'
+    batch_selection:
+        page_selected: 'Tämän sivun kohteet on valittu.'
+        select_all: 'Valitse kaikki'
+        all_selected: 'Kaikki kohteet on valittu.'
+        clear_selection: 'Tyhjennä valinta'
+    batch_edit:
+        notice: 'Muutokset käsitellään asynkronisesti. MessageConsumerin on oltava aktiivinen tai vaihtoehtoisesti JS Consumer -moduuli on otettava käyttöön.'
 dashboard:
     title: 'Hallintapaneeli'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Käännös
         locale: Alueasetus
         language: Kieli
-
+        translations: 'Käännökset'
+        value: 'Arvo'
 account:
     labels:
         current_password: 'Nykyinen salasana'

@@ -126,6 +126,14 @@ product:
         updated_at: Actualizat la
         master_data: Date de bază
         fields: Câmpuri
+        batch_edit: 'Editare în masă'
+    batch_selection:
+        page_selected: 'Elementele de pe această pagină sunt selectate.'
+        select_all: 'Selectează tot'
+        all_selected: 'Toate elementele sunt selectate.'
+        clear_selection: 'Șterge selecția'
+    batch_edit:
+        notice: 'Modificările sunt procesate asincron. MessageConsumer trebuie să fie activ sau, alternativ, trebuie activat modulul JS Consumer.'
 dashboard:
     title: 'Panou de control'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Traducere
         locale: Setări regionale
         language: Limbă
-
+        translations: 'Traduceri'
+        value: 'Valoare'
 account:
     labels:
         current_password: 'Parola curentă'

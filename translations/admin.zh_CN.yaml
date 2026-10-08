@@ -126,6 +126,14 @@ product:
         updated_at: 更新时间
         master_data: 主数据
         fields: 字段
+        batch_edit: '批量编辑'
+    batch_selection:
+        page_selected: '已选择此页面上的项目。'
+        select_all: '全选'
+        all_selected: '已选择所有项目。'
+        clear_selection: '清除选择'
+    batch_edit:
+        notice: '更改将以异步方式处理。必须启用 MessageConsumer，或者启用 JS Consumer 模块。'
 dashboard:
     title: '仪表板'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: 翻译
         locale: 区域设置
         language: 语言
-
+        translations: '翻译'
+        value: '值'
 account:
     labels:
         current_password: '当前密码'

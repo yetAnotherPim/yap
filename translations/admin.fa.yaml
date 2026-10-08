@@ -126,6 +126,14 @@ product:
         updated_at: به‌روزرسانی شده در
         master_data: داده‌های اصلی
         fields: فیلدها
+        batch_edit: 'ویرایش گروهی'
+    batch_selection:
+        page_selected: 'موارد این صفحه انتخاب شده‌اند.'
+        select_all: 'انتخاب همه'
+        all_selected: 'همه موارد انتخاب شده‌اند.'
+        clear_selection: 'لغو انتخاب'
+    batch_edit:
+        notice: 'تغییرات به‌صورت ناهمگام پردازش می‌شوند. MessageConsumer باید فعال باشد یا در عوض ماژول JS Consumer فعال شود.'
 dashboard:
     title: 'داشبورد'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: ترجمه
         locale: محلی
         language: زبان
-
+        translations: 'ترجمه‌ها'
+        value: 'مقدار'
 account:
     labels:
         current_password: 'رمز عبور فعلی'

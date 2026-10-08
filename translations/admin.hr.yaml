@@ -126,6 +126,14 @@ product:
         updated_at: Ažurirano
         master_data: Matični podaci
         fields: Polja
+        batch_edit: 'Skupno uređivanje'
+    batch_selection:
+        page_selected: 'Stavke na ovoj stranici su odabrane.'
+        select_all: 'Odaberi sve'
+        all_selected: 'Sve stavke su odabrane.'
+        clear_selection: 'Očisti odabir'
+    batch_edit:
+        notice: 'Promjene se obrađuju asinkrono. MessageConsumer mora biti aktivan ili alternativno mora biti omogućen modul JS Consumer.'
 dashboard:
     title: 'Nadzorna ploča'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Prijevod
         locale: Lokalne postavke
         language: Jezik
-
+        translations: 'Prijevodi'
+        value: 'Vrijednost'
 account:
     labels:
         current_password: 'Trenutna lozinka'

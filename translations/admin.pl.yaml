@@ -126,6 +126,14 @@ product:
         updated_at: Zaktualizowano
         master_data: Dane podstawowe
         fields: Pola
+        batch_edit: 'Edycja zbiorcza'
+    batch_selection:
+        page_selected: 'Elementy na tej stronie zostały zaznaczone.'
+        select_all: 'Zaznacz wszystko'
+        all_selected: 'Wszystkie elementy zostały zaznaczone.'
+        clear_selection: 'Wyczyść zaznaczenie'
+    batch_edit:
+        notice: 'Zmiany są przetwarzane asynchronicznie. MessageConsumer musi być aktywny lub alternatywnie należy włączyć moduł JS Consumer.'
 dashboard:
     title: 'Panel'
     system_status:
@@ -149,7 +157,8 @@ general:
         translation: Tłumaczenie
         locale: Ustawienia regionalne
         language: Język
-
+        translations: 'Tłumaczenia'
+        value: 'Wartość'
 account:
     labels:
         current_password: 'Aktualne hasło'
