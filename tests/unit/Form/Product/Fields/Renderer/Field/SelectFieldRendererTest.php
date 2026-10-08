@@ -18,6 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 #[CoversClass(SelectFieldRenderer::class)]
 #[UsesClass(InputType::class)]
@@ -249,5 +250,15 @@ class SelectFieldRendererTest extends MockeryTestCase
             'blue',
             $result->getAsDto()->getFormTypeOptions()['data'],
         );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(TextType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame([], $this->renderer->getBatchEditOptions());
     }
 }

@@ -651,7 +651,7 @@ final class AccountCrudControllerTest extends MockeryTestCase
             ->shouldReceive('render')
             ->once()
             ->with(
-                'easyadmin/page/product_column_configuration/product_column_configuration.html.twig',
+                'easyadmin/page/product/column_configuration/product_column_configuration.html.twig',
                 [
                     'configurations' => $configurations,
                     'unconfiguredFieldTypes' => $unconfiguredFieldTypes,

@@ -9,10 +9,13 @@ use App\Form\Product\BatchEdit\Dto\BatchEditFieldTranslationData;
 use App\Repository\LocaleRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<BatchEditFieldTranslationData>
+ */
 class BatchEditFieldTranslationType extends AbstractType
 {
     public function __construct(
@@ -20,6 +23,12 @@ class BatchEditFieldTranslationType extends AbstractType
     ) {
     }
 
+    /**
+     * @param array{
+     *     form_type: class-string<FormTypeInterface<mixed>>,
+     *     form_options: array<string, mixed>
+     * } $options
+     */
     public function buildForm(
         FormBuilderInterface $builder,
         array $options,
@@ -28,14 +37,8 @@ class BatchEditFieldTranslationType extends AbstractType
             'required' => false,
             'label' => 'general.labels.value',
             'translation_domain' => 'admin',
+            ...$options['form_options'],
         ];
-
-        if (TextareaType::class === $options['form_type']) {
-            $valueOptions['attr'] = [
-                'rows' => 4,
-                'class' => 'batch-edit-textarea',
-            ];
-        }
 
         $builder
             ->add('locale', EntityType::class, [
@@ -60,10 +63,12 @@ class BatchEditFieldTranslationType extends AbstractType
             'data_class' => BatchEditFieldTranslationData::class,
         ]);
 
-        $resolver->setRequired('form_type');
-
-        $resolver->setAllowedTypes('form_type', [
-            'string',
+        $resolver->setRequired([
+            'form_type',
+            'form_options',
         ]);
+
+        $resolver->setAllowedTypes('form_type', 'string');
+        $resolver->setAllowedTypes('form_options', 'array');
     }
 }

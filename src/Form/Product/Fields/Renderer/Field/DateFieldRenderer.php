@@ -41,9 +41,13 @@ final class DateFieldRenderer implements FieldRendererInterface, BatchEditFieldR
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return DateType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [];
     }
 }

@@ -41,9 +41,18 @@ final class TextAreaFieldRenderer implements FieldRendererInterface, BatchEditFi
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return TextareaType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [
+            'attr' => [
+                'rows' => 4,
+                'class' => 'batch-edit-textarea',
+            ],
+        ];
     }
 }

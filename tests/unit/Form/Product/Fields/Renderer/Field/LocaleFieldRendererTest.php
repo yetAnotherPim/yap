@@ -18,6 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 
 #[CoversClass(LocaleFieldRenderer::class)]
 #[UsesClass(InputType::class)]
@@ -226,5 +227,15 @@ class LocaleFieldRendererTest extends MockeryTestCase
             'de_DE',
             $result->getAsDto()->getFormTypeOptions()['data'],
         );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(LocaleType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame([], $this->renderer->getBatchEditOptions());
     }
 }

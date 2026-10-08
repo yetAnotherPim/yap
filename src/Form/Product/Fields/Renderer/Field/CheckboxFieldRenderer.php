@@ -41,9 +41,13 @@ final class CheckboxFieldRenderer implements FieldRendererInterface, BatchEditFi
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return CheckboxType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [];
     }
 }

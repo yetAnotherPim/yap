@@ -15,23 +15,42 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Controller\Admin\User\AccountCrudController;
+use App\Controller\Provider\DashboardStatisticsProvider;
+use App\Controller\Provider\DashboardSystemStatusProvider;
+use App\Controller\Provider\SystemStatus\InputVarsConfig;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
 use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
+use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
+use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
+use App\Form\Product\Fields\Composer\Translation\ProductFieldTranslationComposer;
+use App\Form\Product\Fields\Renderer\ProductFieldsRenderer;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
+use App\Form\Product\Fields\Synchronizer\Translation\FieldTranslationSynchronizer;
+use App\Form\Product\Filter\Composer\ProductFilterComposer;
+use App\Form\Product\Filter\Element\Category\FilterCategory;
+use App\Form\Product\Filter\Element\Field\Registry\FieldFilterHandlerRegistry;
+use App\Form\Product\Identifier\IdentifierManager;
+use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use App\Form\User\PasswordFormConfigurator;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Localisation\Exception\DefaultLocaleIsNotDefinedException;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\PluginManager;
+use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
 use App\Repository\PluginRepository;
+use App\Repository\ProductColumnConfigurationRepository;
+use App\Repository\ProductRepository;
+use App\Repository\ProductTypeRepository;
 use App\Repository\UserRepository;
 use App\Tests\helper\Trait\Frontend\LoginTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -69,6 +88,25 @@ use Symfony\Component\HttpFoundation\Response;
 #[UsesClass(FieldSynchronizer::class)]
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(TitleTranslationSynchronizer::class)]
+#[UsesClass(AccountCrudController::class)]
+#[UsesClass(DashboardStatisticsProvider::class)]
+#[UsesClass(DashboardSystemStatusProvider::class)]
+#[UsesClass(InputVarsConfig::class)]
+#[UsesClass(MenuItemsConfiguredEvent::class)]
+#[UsesClass(DefaultTranslationSynchronizer::class)]
+#[UsesClass(ProductColumnsComposer::class)]
+#[UsesClass(ProductFieldTranslationComposer::class)]
+#[UsesClass(ProductFieldsRenderer::class)]
+#[UsesClass(FieldTranslationSynchronizer::class)]
+#[UsesClass(ProductFilterComposer::class)]
+#[UsesClass(FilterCategory::class)]
+#[UsesClass(FieldFilterHandlerRegistry::class)]
+#[UsesClass(IdentifierManager::class)]
+#[UsesClass(PasswordFormConfigurator::class)]
+#[UsesClass(FieldTypeRepository::class)]
+#[UsesClass(ProductColumnConfigurationRepository::class)]
+#[UsesClass(ProductRepository::class)]
+#[UsesClass(ProductTypeRepository::class)]
 class IndexControllerTest extends WebTestCase
 {
     use LoginTrait;

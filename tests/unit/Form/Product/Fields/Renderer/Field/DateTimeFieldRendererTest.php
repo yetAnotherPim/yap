@@ -18,6 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 #[CoversClass(DateTimeFieldRenderer::class)]
 #[UsesClass(InputType::class)]
@@ -257,5 +258,15 @@ class DateTimeFieldRendererTest extends MockeryTestCase
             '2026-09-21 14:00:00',
             $result->getAsDto()->getFormTypeOptions()['data']->format('Y-m-d H:i:s'),
         );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(DateTimeType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame([], $this->renderer->getBatchEditOptions());
     }
 }

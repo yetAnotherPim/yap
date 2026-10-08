@@ -41,9 +41,13 @@ final class EmailFieldRenderer implements FieldRendererInterface, BatchEditField
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return EmailType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [];
     }
 }

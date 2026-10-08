@@ -19,6 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\File\File;
 
 #[CoversClass(ImageFieldRenderer::class)]
@@ -295,5 +296,15 @@ class ImageFieldRendererTest extends MockeryTestCase
             $file,
             $result->getAsDto()->getFormTypeOptions()['data'],
         );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(TextType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame([], $this->renderer->getBatchEditOptions());
     }
 }

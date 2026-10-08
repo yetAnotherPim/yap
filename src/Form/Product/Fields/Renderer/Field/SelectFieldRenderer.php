@@ -42,9 +42,13 @@ final class SelectFieldRenderer implements FieldRendererInterface, BatchEditFiel
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return TextType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [];
     }
 }

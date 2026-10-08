@@ -52,6 +52,7 @@ class InputTypeTest extends TestCase
         yield 'checkbox_true' => ['1', InputType::CheckBox, null, true];
         yield 'datetime_null' => [null, InputType::DateTime, null, null];
         yield 'datetime' => ['2020-01-01 12:00:00', InputType::DateTime, null, new \DateTime('2020-01-01 12:00:00')];
+        yield 'datetime_invalid' => ['sdf', InputType::DateTime, null, null];
         yield 'date_null' => [null, InputType::Date, null, null];
         yield 'date' => ['2020-01-01 12:00:00', InputType::Date, null, new \DateTime('2020-01-01 12:00:00')];
         yield 'time_null' => [null, InputType::Time, null, null];
@@ -62,6 +63,10 @@ class InputTypeTest extends TestCase
         yield 'number_null' => [null, InputType::Number, ',', null];
         yield 'number_empty_separator' => ['7,97', InputType::Number, '', 7];
         yield 'number_separator' => ['7,97', InputType::Number, ',', 7.97];
+        yield 'integer_null' => [null, InputType::Integer, ',', null];
+        yield 'integer_string' => ['sdf', InputType::Integer, ',', 0];
+        yield 'integer_float' => ['7.97', InputType::Integer, ',', 7];
+        yield 'integer' => ['7', InputType::Integer, ',', 7];
     }
 
     /**

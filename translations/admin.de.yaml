@@ -141,6 +141,8 @@ product:
         select_all: 'Alle %count% passenden Produkte zum Bearbeiten auswählen'
         all_selected: 'Alle %count% passenden Produkte zum Bearbeiten ausgewählt.'
         clear_selection: 'Auswahl aufheben'
+    batch_edit:
+        notice: 'Die Änderungen werden asynchron verarbeitet. Dafür muss der MessageConsumer aktiv oder alternativ das Modul JS-Consumer aktiviert sein.'
 
 dashboard:
     title: 'Dashboard'

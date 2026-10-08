@@ -18,6 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 #[CoversClass(IntegerFieldRenderer::class)]
 #[UsesClass(InputType::class)]
@@ -126,7 +127,7 @@ class IntegerFieldRendererTest extends MockeryTestCase
         $formTypeOptions = $result->getAsDto()->getFormTypeOptions();
 
         $this->assertSame('label', $formTypeOptions['label']);
-        $this->assertSame('100', $formTypeOptions['data']);
+        $this->assertSame(100, (int) $formTypeOptions['data']);
         $this->assertFalse($formTypeOptions['mapped']);
         $this->assertTrue($formTypeOptions['required']);
     }
@@ -223,8 +224,18 @@ class IntegerFieldRendererTest extends MockeryTestCase
         );
 
         $this->assertSame(
-            '100',
-            $result->getAsDto()->getFormTypeOptions()['data'],
+            100,
+            (int) $result->getAsDto()->getFormTypeOptions()['data'],
         );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(IntegerType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame([], $this->renderer->getBatchEditOptions());
     }
 }

@@ -14,6 +14,7 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Controller\Admin\User\AccountCrudController;
 use App\Controller\Api\PluginWorkflowController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
@@ -32,6 +33,7 @@ use App\Form\Product\Identifier\IdentifierManager;
 use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use App\Form\User\PasswordFormConfigurator;
 use App\Kernel;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
@@ -116,6 +118,8 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(IdentifierManager::class)]
 #[UsesClass(FieldFilterHandlerRegistry::class)]
 #[UsesClass(ProductColumnConfigurationRepository::class)]
+#[UsesClass(AccountCrudController::class)]
+#[UsesClass(PasswordFormConfigurator::class)]
 #[RunTestsInSeparateProcesses]
 #[ResetDatabase]
 /** execute tests clearing the cache in a separate environment */

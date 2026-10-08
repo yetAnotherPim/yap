@@ -18,6 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 #[CoversClass(NumberFieldRenderer::class)]
 #[UsesClass(InputType::class)]
@@ -323,5 +324,15 @@ class NumberFieldRendererTest extends MockeryTestCase
             12.34,
             $result->getAsDto()->getFormTypeOptions()['data'],
         );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(NumberType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame([], $this->renderer->getBatchEditOptions());
     }
 }

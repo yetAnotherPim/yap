@@ -17,6 +17,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 #[CoversClass(TextAreaFieldRenderer::class)]
 #[UsesClass(InputType::class)]
@@ -212,6 +213,24 @@ class TextAreaFieldRendererTest extends MockeryTestCase
         $this->assertSame(
             'Default description',
             $result->getAsDto()->getFormTypeOptions()['data'],
+        );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(TextareaType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame(
+            [
+                'attr' => [
+                    'rows' => 4,
+                    'class' => 'batch-edit-textarea',
+                ],
+            ],
+            $this->renderer->getBatchEditOptions()
         );
     }
 }

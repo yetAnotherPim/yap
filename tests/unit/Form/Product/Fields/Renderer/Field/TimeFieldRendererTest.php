@@ -18,6 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 #[CoversClass(TimeFieldRenderer::class)]
 #[UsesClass(InputType::class)]
@@ -257,5 +258,15 @@ class TimeFieldRendererTest extends MockeryTestCase
             '08:00:00',
             $result->getAsDto()->getFormTypeOptions()['data']->format('H:i:s'),
         );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(TimeType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame([], $this->renderer->getBatchEditOptions());
     }
 }

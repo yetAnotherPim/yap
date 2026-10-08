@@ -42,9 +42,13 @@ final class ColorFieldRenderer implements FieldRendererInterface, BatchEditField
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return ColorType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [];
     }
 }

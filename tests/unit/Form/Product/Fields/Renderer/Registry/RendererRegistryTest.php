@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Form\Product\Fields\Renderer\Registry;
 
-use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Form\Product\Fields\Renderer\Registry\FieldRendererInterface;
@@ -16,26 +15,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(RendererRegistry::class)]
 class RendererRegistryTest extends MockeryTestCase
 {
-    private Field&MockInterface $field;
-
     private FieldType&MockInterface $fieldType;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->field = \Mockery::mock(Field::class);
         $this->fieldType = \Mockery::mock(FieldType::class);
     }
 
     public function testGetRendererReturnsMatchingRenderer(): void
     {
         $renderer = \Mockery::mock(FieldRendererInterface::class);
-
-        $this->field
-            ->shouldReceive('getType')
-            ->once()
-            ->andReturn($this->fieldType);
 
         $renderer
             ->shouldReceive('supports')
@@ -47,7 +38,7 @@ class RendererRegistryTest extends MockeryTestCase
 
         $this->assertSame(
             $renderer,
-            $registry->getRenderer($this->field)
+            $registry->getRenderer($this->fieldType)
         );
     }
 
@@ -55,11 +46,6 @@ class RendererRegistryTest extends MockeryTestCase
     {
         $firstRenderer = \Mockery::mock(FieldRendererInterface::class);
         $secondRenderer = \Mockery::mock(FieldRendererInterface::class);
-
-        $this->field
-            ->shouldReceive('getType')
-            ->twice()
-            ->andReturn($this->fieldType);
 
         $firstRenderer
             ->shouldReceive('supports')
@@ -80,18 +66,13 @@ class RendererRegistryTest extends MockeryTestCase
 
         $this->assertSame(
             $secondRenderer,
-            $registry->getRenderer($this->field)
+            $registry->getRenderer($this->fieldType)
         );
     }
 
     public function testGetRendererThrowsExceptionWhenNoRendererSupportsField(): void
     {
         $renderer = \Mockery::mock(FieldRendererInterface::class);
-
-        $this->field
-            ->shouldReceive('getType')
-            ->twice()
-            ->andReturn($this->fieldType);
 
         $this->fieldType
             ->shouldReceive('getInputType')
@@ -109,6 +90,6 @@ class RendererRegistryTest extends MockeryTestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessageIs('No renderer for "Text"');
 
-        $registry->getRenderer($this->field);
+        $registry->getRenderer($this->fieldType);
     }
 }

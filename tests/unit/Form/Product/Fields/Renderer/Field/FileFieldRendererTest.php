@@ -19,6 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FileField as EasyAdminFileField;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\File\File;
 
 #[CoversClass(FileFieldRenderer::class)]
@@ -294,5 +295,15 @@ class FileFieldRendererTest extends MockeryTestCase
             $file,
             $result->getAsDto()->getFormTypeOptions()['data'],
         );
+    }
+
+    public function testGetBatchEditFormType(): void
+    {
+        $this->assertSame(TextType::class, $this->renderer->getBatchEditFormType());
+    }
+
+    public function testGetBatchEditOptions(): void
+    {
+        $this->assertSame([], $this->renderer->getBatchEditOptions());
     }
 }

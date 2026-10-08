@@ -41,9 +41,13 @@ final class LanguageFieldRenderer implements FieldRendererInterface, BatchEditFi
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return LanguageType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [];
     }
 }

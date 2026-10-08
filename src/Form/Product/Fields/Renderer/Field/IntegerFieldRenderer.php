@@ -41,9 +41,13 @@ final class IntegerFieldRenderer implements FieldRendererInterface, BatchEditFie
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return IntegerType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [];
     }
 }

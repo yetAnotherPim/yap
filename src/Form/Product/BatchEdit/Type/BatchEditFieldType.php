@@ -9,12 +9,14 @@ use App\Form\Product\Fields\Renderer\Registry\BatchEditFieldRendererInterface;
 use App\Form\Product\Fields\Renderer\Registry\RendererRegistry;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<BatchEditFieldData>
+ */
 class BatchEditFieldType extends AbstractType
 {
     public function __construct(
@@ -47,20 +49,15 @@ class BatchEditFieldType extends AbstractType
                     return;
                 }
 
-                $formType = $renderer->getBatchEditFormType($fieldType);
+                $formType = $renderer->getBatchEditFormType();
+                $batchEditOptions = $renderer->getBatchEditOptions();
 
                 $options = [
                     'required' => false,
                     'label' => 'general.labels.value',
                     'translation_domain' => 'admin',
+                    ...$batchEditOptions,
                 ];
-
-                if (TextareaType::class === $formType) {
-                    $options['attr'] = [
-                        'rows' => 4,
-                        'class' => 'batch-edit-textarea',
-                    ];
-                }
 
                 $event->getForm()->add('value', $formType, $options);
 
@@ -77,6 +74,7 @@ class BatchEditFieldType extends AbstractType
                     'entry_options' => [
                         'label' => false,
                         'form_type' => $formType,
+                        'form_options' => $batchEditOptions,
                     ],
                     'prototype_name' => '__translation__',
                 ]);

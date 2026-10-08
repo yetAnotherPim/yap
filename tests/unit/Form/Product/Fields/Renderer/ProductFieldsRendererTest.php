@@ -90,24 +90,49 @@ class ProductFieldsRendererTest extends MockeryTestCase
         $field = \Mockery::mock(Field::class);
         $renderedField = TextField::new('test');
 
-        $product->shouldReceive('getProductType')->andReturn($productType);
-        $productType->shouldReceive('getProductTypeFieldConfigurations')
+        $product
+            ->shouldReceive('getProductType')
+            ->andReturn($productType)
+        ;
+
+        $productType
+            ->shouldReceive('getProductTypeFieldConfigurations')
             ->andReturn(new ArrayCollection([$config]));
 
-        $config->shouldReceive('getFieldType')->andReturn($fieldType);
-        $config->shouldReceive('getDefaultValue')->andReturn('default-val');
+        $config
+            ->shouldReceive('getFieldType')
+            ->andReturn($fieldType)
+        ;
 
-        $this->fieldResolver->shouldReceive('resolve')
+        $config
+            ->shouldReceive('getDefaultValue')
+            ->andReturn('default-val');
+
+        $this->fieldResolver
+            ->shouldReceive('resolve')
             ->once()
             ->with($product, $fieldType, 'default-val')
             ->andReturn($field);
 
-        $this->translator->shouldReceive('getLocale')->andReturn('en');
-        $fieldType->shouldReceive('getTranslatedTitleByLocale')->with('en')->andReturn('Field Label');
+        $this->translator
+            ->shouldReceive('getLocale')
+            ->andReturn('en');
+
+        $field
+            ->shouldReceive('getType')
+            ->once()
+            ->andReturn($fieldType);
+
+        $fieldType
+            ->shouldReceive('getTranslatedTitleByLocale')
+            ->with('en')
+            ->andReturn('Field Label');
 
         $fieldRenderer = \Mockery::mock(FieldRendererInterface::class);
-        $this->rendererRegistry->shouldReceive('getRenderer')
-            ->with($field)
+
+        $this->rendererRegistry
+            ->shouldReceive('getRenderer')
+            ->with($fieldType)
             ->andReturn($fieldRenderer);
 
         $fieldRenderer->shouldReceive('render')
@@ -144,11 +169,17 @@ class ProductFieldsRendererTest extends MockeryTestCase
             ->andReturn($field);
 
         $this->translator->shouldReceive('getLocale')->andReturn('de');
+
+        $field
+            ->shouldReceive('getType')
+            ->once()
+            ->andReturn($fieldType);
+
         $fieldType->shouldReceive('getTranslatedTitleByLocale')->with('de')->andReturn('Feldbezeichnung');
 
         $fieldRenderer = \Mockery::mock(FieldRendererInterface::class);
         $this->rendererRegistry->shouldReceive('getRenderer')
-            ->with($field)
+            ->with($fieldType)
             ->andReturn($fieldRenderer);
 
         $fieldRenderer->shouldReceive('render')

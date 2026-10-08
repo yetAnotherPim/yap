@@ -41,9 +41,13 @@ final class TelephoneFieldRenderer implements FieldRendererInterface, BatchEditF
         return $this->addTranslationOptions($element, $field, $locale);
     }
 
-    public function getBatchEditFormType(
-        FieldType $fieldType,
-    ): string {
+    public function getBatchEditFormType(): string
+    {
         return TelType::class;
+    }
+
+    public function getBatchEditOptions(): array
+    {
+        return [];
     }
 }

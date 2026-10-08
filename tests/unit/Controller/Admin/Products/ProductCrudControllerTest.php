@@ -28,6 +28,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Orm\EntityRepositoryInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -45,6 +46,7 @@ use Symfony\Component\Form\FormConfigInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatableMessage;
@@ -143,14 +145,20 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $actions = Actions::new()
             ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
-            ->add(Crud::PAGE_NEW, Action::SAVE_AND_RETURN);
+            ->add(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)
+            ->add(Crud::PAGE_INDEX, Action::BATCH_DELETE);
 
         $result = $this->controller->configureActions($actions);
 
         $this->assertCount(3, $result->getAsDto(Crud::PAGE_NEW)->getActions());
+        $this->assertCount(3, $result->getAsDto(Crud::PAGE_INDEX)->getActions());
         $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)?->getVariant());
         $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)?->getVariant());
         $this->assertEquals(ButtonVariant::Primary, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE)?->getVariant());
+
+        $this->assertNotNull($result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, Action::BATCH_DELETE));
+        $this->assertNotNull($result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'batch_edit'));
+        $this->assertNotNull($result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'configureColumns'));
     }
 
     public function testCreateEntityInitializesIdentifiers(): void
@@ -739,6 +747,113 @@ class ProductCrudControllerTest extends MockeryTestCase
         );
 
         $this->assertSame($queryBuilder, $result);
+    }
+
+    public function testBatchEditRedirectsToBatchEditFormWithSelectedProductIds(): void
+    {
+        $request = new Request();
+
+        /** @var AdminContext<Product> $context */
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+        );
+
+        $batchActionDto = new BatchActionDto(
+            'batch_edit',
+            [
+                '01J123456789ABCDEFGHJKLMNPQR',
+                '01J123456789ABCDEFGHJKLMNPQS',
+            ],
+            Product::class,
+            'csrf-token',
+        );
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->with('admin_batch_edit_product_batch_edit_form')
+            ->andReturn('/admin/product/batch-edit/form');
+
+        $result = $controller->batchEdit($context, $batchActionDto);
+
+        $this->assertSame(
+            '/admin/product/batch-edit/form?ids%5B0%5D=01J123456789ABCDEFGHJKLMNPQR&ids%5B1%5D=01J123456789ABCDEFGHJKLMNPQS',
+            $result->getTargetUrl(),
+        );
+    }
+
+    public function testBatchEditRedirectsToBatchEditFormForAllProducts(): void
+    {
+        $request = new Request([
+            'batchActionAll' => '1',
+            'filters' => [
+                'productType' => '123',
+            ],
+            'sort' => 'name',
+        ]);
+
+        /** @var AdminContext<Product> $context */
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+        );
+
+        $controller = \Mockery::mock(
+            ProductCrudController::class,
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('redirectToRoute')
+            ->once()
+            ->with(
+                'admin_batch_edit_product_batch_edit_form',
+                [
+                    'batchActionAll' => '1',
+                    'filters' => [
+                        'productType' => '123',
+                    ],
+                    'sort' => 'name',
+                ],
+            )
+            ->andReturn(new RedirectResponse('/admin/product/batch-edit/form'));
+
+        $result = $controller->batchEdit(
+            $context,
+            new BatchActionDto(
+                'batch_edit',
+                [],
+                Product::class,
+                'csrf-token',
+            ),
+        );
+
+        $this->assertSame(
+            '/admin/product/batch-edit/form',
+            $result->getTargetUrl(),
+        );
     }
 
     /**
