@@ -15,16 +15,32 @@ use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Filter\Composer\ProductFilterComposer;
 use App\Form\Product\Identifier\IdentifierManager;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Provider\AdminContextProviderInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\CrudDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\FilterConfigDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -150,6 +166,424 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $this->assertSame('test', $result->getContent());
     }
 
+    public function testProcessBatchEditFormRedirectsWhenFormIsNotSubmitted(): void
+    {
+        $request = new Request();
+
+        $form = \Mockery::mock(FormInterface::class);
+        $form
+            ->shouldReceive('handleRequest')
+            ->once()
+            ->with($request)
+            ->andReturn($form);
+
+        $form
+            ->shouldReceive('isSubmitted')
+            ->once()
+            ->andReturn(false);
+
+        $form->shouldNotReceive('isValid');
+        $form->shouldNotReceive('getData');
+
+        $controller = $this->createControllerMock();
+
+        $controller
+            ->shouldReceive('createForm')
+            ->once()
+            ->with(BatchEditType::class)
+            ->andReturn($form);
+
+        $controller
+            ->shouldReceive('addFlash')
+            ->once()
+            ->with('error', 'Batch edit was not successful');
+
+        $controller
+            ->shouldReceive('redirectToRoute')
+            ->once()
+            ->with('admin_product_index')
+            ->andReturn(new RedirectResponse('/admin/products'));
+
+        /** @var AdminContext<Product> $context */
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+        );
+
+        /** @var RedirectResponse $result */
+        $result = $controller->processBatchEditForm(
+            $request,
+            $context,
+        );
+
+        $this->assertSame('/admin/products', $result->getTargetUrl());
+    }
+
+    public function testProcessBatchEditFormRedirectsWhenNoFieldsAreSelected(): void
+    {
+        $request = new Request();
+        $data = new BatchEditData();
+
+        $form = \Mockery::mock(FormInterface::class);
+        $form
+            ->shouldReceive('handleRequest')
+            ->once()
+            ->with($request)
+            ->andReturn($form);
+
+        $form
+            ->shouldReceive('isSubmitted')
+            ->once()
+            ->andReturn(true);
+
+        $form
+            ->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+
+        $form
+            ->shouldReceive('getData')
+            ->once()
+            ->andReturn($data);
+
+        $controller = $this->createControllerMock();
+
+        $controller
+            ->shouldReceive('createForm')
+            ->once()
+            ->with(BatchEditType::class)
+            ->andReturn($form);
+
+        $controller->shouldNotReceive('addFlash');
+
+        $controller
+            ->shouldReceive('redirectToRoute')
+            ->once()
+            ->with('admin_product_index')
+            ->andReturn(new RedirectResponse('/admin/products'));
+
+        /** @var AdminContext<Product> $context */
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+        );
+
+        /** @var RedirectResponse $result */
+        $result = $controller->processBatchEditForm(
+            $request,
+            $context
+        );
+
+        $this->assertSame('/admin/products', $result->getTargetUrl());
+    }
+
+    public function testProcessBatchEditFormRedirectsAfterSuccessfulSubmission(): void
+    {
+        $request = new Request();
+
+        $fields = \Mockery::mock(Collection::class);
+
+        $fields
+            ->shouldReceive('isEmpty')
+            ->once()
+            ->andReturn(false);
+
+        $data = \Mockery::mock(BatchEditData::class);
+
+        $data
+            ->shouldReceive('getFields')
+            ->once()
+            ->andReturn($fields);
+
+        $form = \Mockery::mock(FormInterface::class);
+
+        $form
+            ->shouldReceive('handleRequest')
+            ->once()
+            ->with($request);
+
+        $form
+            ->shouldReceive('isSubmitted')
+            ->once()
+            ->andReturn(true);
+
+        $form
+            ->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+
+        $form
+            ->shouldReceive('getData')
+            ->once()
+            ->andReturn($data);
+
+        $controller = $this->createControllerMock();
+
+        $controller
+            ->shouldReceive('createForm')
+            ->once()
+            ->with(BatchEditType::class)
+            ->andReturn($form);
+
+        $controller
+            ->shouldReceive('addFlash')
+            ->once()
+            ->with('success', 'Batch edit was successful');
+
+        $controller
+            ->shouldReceive('redirectToRoute')
+            ->once()
+            ->with('admin_product_index')
+            ->andReturn(new RedirectResponse('/admin/products'));
+
+        /** @var AdminContext<Product> $context */
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+        );
+
+        /** @var RedirectResponse $result */
+        $result = $controller->processBatchEditForm($request, $context);
+
+        $this->assertSame('/admin/products', $result->getTargetUrl());
+    }
+
+    public function testGetSelectedProductIdsReturnsSelectedIds(): void
+    {
+        $request = new Request([
+            'ids' => ['product-1', 'product-2'],
+        ]);
+
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+        );
+
+        $method = new \ReflectionMethod(
+            BatchEditProductCrudController::class,
+            'getSelectedProductIds',
+        );
+
+        /** @var iterable<string> $result */
+        $result = $method->invoke($this->controller, $context);
+
+        $this->assertSame(
+            ['product-1', 'product-2'],
+            iterator_to_array($result),
+        );
+    }
+
+    public function testGetSelectedProductIdsReturnsAllMatchingIds(): void
+    {
+        $request = new Request(
+            [
+                'batchActionAll' => '1',
+                'filters' => ['productType' => '123'],
+                'sort' => 'name',
+            ],
+            [],
+            [],
+            [],
+            [],
+            ['REQUEST_METHOD' => Request::METHOD_POST],
+        );
+
+        $entityDto = new EntityDto(
+            Product::class,
+            \Mockery::mock(ClassMetadata::class),
+            null,
+            \Mockery::mock(Product::class),
+        );
+
+        $searchDto = new SearchDto(
+            $request,
+            null,
+            null,
+            [],
+            [],
+            null,
+        );
+
+        $crudContext = CrudContext::forTesting(
+            entityDto: $entityDto,
+            searchDto: $searchDto,
+        );
+
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+            crudContext: $crudContext,
+        );
+
+        /** @var CrudDto $crud */
+        $crud = $context->getCrud();
+        $crud->setFiltersConfig(new FilterConfigDto());
+
+        $filterFactory = new FilterFactory(
+            \Mockery::mock(AdminContextProviderInterface::class),
+            [],
+        );
+
+        $container = \Mockery::mock(ContainerInterface::class);
+
+        $container
+            ->shouldReceive('get')
+            ->once()
+            ->with(FilterFactory::class)
+            ->andReturn($filterFactory);
+
+        $query = \Mockery::mock(Query::class);
+
+        $query
+            ->shouldReceive('toIterable')
+            ->once()
+            ->andReturn([
+                ['id' => 'product-1'],
+                ['id' => 'product-2'],
+            ]);
+
+        $queryBuilder = \Mockery::mock(QueryBuilder::class);
+
+        $queryBuilder
+            ->shouldReceive('resetDQLPart')
+            ->once()
+            ->with('orderBy')
+            ->andReturnSelf();
+
+        $queryBuilder
+            ->shouldReceive('resetDQLPart')
+            ->once()
+            ->with('select')
+            ->andReturnSelf();
+
+        $queryBuilder
+            ->shouldReceive('select')
+            ->once()
+            ->with('DISTINCT entity.id')
+            ->andReturnSelf();
+
+        $queryBuilder
+            ->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($query);
+
+        $controller = $this->createControllerMock();
+        $controller->setContainer($container);
+
+        $controller
+            ->shouldReceive('configureFields')
+            ->once()
+            ->with(Crud::PAGE_INDEX)
+            ->andReturn([]);
+
+        $controller
+            ->shouldReceive('createIndexQueryBuilder')
+            ->once()
+            ->with(
+                $searchDto,
+                $entityDto,
+                \Mockery::type(FieldCollection::class),
+                \Mockery::type(FilterCollection::class),
+            )
+            ->andReturnUsing(
+                static function (
+                    SearchDto $searchDto,
+                    EntityDto $entityDto,
+                    FieldCollection $fields,
+                    FilterCollection $filters,
+                ) use ($request, $queryBuilder): QueryBuilder {
+                    if (Request::METHOD_GET !== $request->getMethod()) {
+                        throw new \RuntimeException('Expected GET while creating the batch-action query.');
+                    }
+
+                    return $queryBuilder;
+                },
+            );
+
+        $method = new \ReflectionMethod(
+            BatchEditProductCrudController::class,
+            'getSelectedProductIds',
+        );
+
+        /** @var iterable<string> $result */
+        $result = $method->invoke($controller, $context);
+
+        $this->assertSame(
+            ['product-1', 'product-2'],
+            iterator_to_array($result),
+        );
+
+        $this->assertSame(Request::METHOD_POST, $request->getMethod());
+    }
+
+    public function testGetSelectedProductIdsThrowsExceptionWhenCrudContextIsMissing(): void
+    {
+        $request = new Request(['batchActionAll' => '1']);
+
+        $crudContext = new CrudContext(
+            crudDto: null,
+            entityDto: null,
+            searchDto: null,
+            adminControllers: new \EasyCorp\Bundle\EasyAdminBundle\Registry\AdminControllerRegistry(
+                new \Symfony\Component\Cache\Adapter\ArrayAdapter(),
+            ),
+        );
+
+        $context = new AdminContext(
+            RequestContext::forTesting($request),
+            $crudContext,
+            \EasyCorp\Bundle\EasyAdminBundle\Context\DashboardContext::forTesting(),
+            \EasyCorp\Bundle\EasyAdminBundle\Context\I18nContext::forTesting(),
+        );
+
+        $controller = $this->createControllerMock();
+
+        $method = new \ReflectionMethod(
+            BatchEditProductCrudController::class,
+            'getSelectedProductIds',
+        );
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('The CRUD context is missing.');
+
+        /** @var iterable<string> $result */
+        $result = $method->invoke($controller, $context);
+
+        iterator_to_array($result);
+    }
+
+    public function testGetSelectedProductIdsThrowsExceptionWhenSearchContextIsMissing(): void
+    {
+        $request = new Request(['batchActionAll' => '1']);
+
+        $entityDto = new EntityDto(
+            Product::class,
+            \Mockery::mock(ClassMetadata::class),
+            null,
+            \Mockery::mock(Product::class),
+        );
+
+        $crudContext = CrudContext::forTesting(
+            entityDto: $entityDto,
+            searchDto: null,
+        );
+
+        $context = AdminContext::forTesting(
+            requestContext: RequestContext::forTesting($request),
+            crudContext: $crudContext,
+        );
+
+        $controller = $this->createControllerMock();
+
+        $method = new \ReflectionMethod(
+            BatchEditProductCrudController::class,
+            'getSelectedProductIds',
+        );
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('The search context is missing.');
+
+        /** @var iterable<string> $result */
+        $result = $method->invoke($controller, $context);
+
+        iterator_to_array($result);
+    }
+
     public function testAjaxGetBatchEditFieldRendersField(): void
     {
         $fieldType = \Mockery::mock(FieldType::class);
@@ -232,5 +666,25 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $result = $controller->ajaxGetBatchEditField($fieldType);
 
         $this->assertSame('test', $result->getContent());
+    }
+
+    /**
+     * @return BatchEditProductCrudController&MockInterface
+     */
+    private function createControllerMock(): BatchEditProductCrudController
+    {
+        return \Mockery::mock(
+            BatchEditProductCrudController::class,
+            [
+                $this->identifierManager,
+                $this->productFieldsRenderer,
+                $this->fieldSynchronizer,
+                $this->translator,
+                $this->productFilterComposer,
+                $this->productColumnsComposer,
+            ],
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
     }
 }

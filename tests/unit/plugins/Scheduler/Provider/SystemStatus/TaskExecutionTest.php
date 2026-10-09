@@ -134,4 +134,32 @@ final class TaskExecutionTest extends MockeryTestCase
             $messages,
         );
     }
+
+    public function testCheckReturnsWarningWhenQueryCausesException(): void
+    {
+        $this->connection
+            ->shouldReceive('fetchOne')
+            ->once()
+            ->with('SELECT last_run FROM yap_scheduler LIMIT 1')
+            ->andThrow(
+                new class('Database connection failed.') extends \RuntimeException implements \Doctrine\DBAL\Exception {
+                },
+            );
+
+        $messages = $this->taskExecution->check();
+
+        $this->assertEquals(
+            [
+                new SystemStatusMessage(
+                    MessageType::Warning,
+                    new TranslatableMessage(
+                        'yap_scheduler.tasks.warning.not_active',
+                        [],
+                        'scheduler',
+                    ),
+                ),
+            ],
+            $messages,
+        );
+    }
 }

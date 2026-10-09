@@ -13,9 +13,10 @@ class BatchEditFieldData
     /** @var Collection<int, BatchEditFieldTranslationData> */
     private Collection $translations;
 
+    private ?string $value = null;
+
     public function __construct(
         private ?FieldType $fieldType,
-        private ?string $value = null,
     ) {
         $this->translations = new ArrayCollection();
     }
@@ -23,6 +24,13 @@ class BatchEditFieldData
     public function getFieldType(): ?FieldType
     {
         return $this->fieldType;
+    }
+
+    public function setValue(?string $value): BatchEditFieldData
+    {
+        $this->value = $value;
+
+        return $this;
     }
 
     public function getValue(): ?string
