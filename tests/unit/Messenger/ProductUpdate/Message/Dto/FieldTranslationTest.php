@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Messenger\ProductUpdate\Message\Dto;
 
-use App\Messenger\ProductUpdate\Message\Dto\ProductTranslation;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTranslation;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Validator\Validation;
 
-#[CoversClass(ProductTranslation::class)]
-class ProductTranslationTest extends MockeryTestCase
+#[CoversClass(FieldTranslation::class)]
+class FieldTranslationTest extends MockeryTestCase
 {
     public function testConstructorInitializesProperties(): void
     {
-        $translation = new ProductTranslation('de_DE', 'Beschreibung');
+        $translation = new FieldTranslation('de_DE', 'Beschreibung');
 
         $this->assertSame('de_DE', $translation->getLocaleId());
         $this->assertSame('Beschreibung', $translation->getValue());
@@ -22,7 +22,7 @@ class ProductTranslationTest extends MockeryTestCase
 
     public function testConstructorDefaultsValueToNull(): void
     {
-        $translation = new ProductTranslation('de_DE');
+        $translation = new FieldTranslation('de_DE');
 
         $this->assertSame('de_DE', $translation->getLocaleId());
         $this->assertNull($translation->getValue());
@@ -30,7 +30,7 @@ class ProductTranslationTest extends MockeryTestCase
 
     public function testSetLocaleId(): void
     {
-        $translation = new ProductTranslation('de_DE');
+        $translation = new FieldTranslation('de_DE');
 
         $result = $translation->setLocaleId('en_US');
 
@@ -40,7 +40,7 @@ class ProductTranslationTest extends MockeryTestCase
 
     public function testSetValue(): void
     {
-        $translation = new ProductTranslation('de_DE');
+        $translation = new FieldTranslation('de_DE');
 
         $result = $translation->setValue('Beschreibung');
 
@@ -54,7 +54,7 @@ class ProductTranslationTest extends MockeryTestCase
 
     public function testValidationRejectsBlankLocaleId(): void
     {
-        $translation = new ProductTranslation('');
+        $translation = new FieldTranslation('');
 
         $violations = Validation::createValidatorBuilder()
             ->enableAttributeMapping()
@@ -66,7 +66,7 @@ class ProductTranslationTest extends MockeryTestCase
 
     public function testValidationAcceptsNullValue(): void
     {
-        $translation = new ProductTranslation('de_DE');
+        $translation = new FieldTranslation('de_DE');
 
         $violations = Validation::createValidatorBuilder()
             ->enableAttributeMapping()

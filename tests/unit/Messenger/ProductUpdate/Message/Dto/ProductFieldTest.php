@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\unit\Messenger\ProductUpdate\Message\Dto;
 
 use App\Messenger\ProductUpdate\Message\Dto\FieldIdentifier;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTranslation;
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
-use App\Messenger\ProductUpdate\Message\Dto\ProductTranslation;
 use App\Messenger\ProductUpdate\Message\Enum\ProductFieldIdentifierType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Validation;
 
 #[CoversClass(ProductField::class)]
 #[UsesClass(FieldIdentifier::class)]
-#[UsesClass(ProductTranslation::class)]
+#[UsesClass(FieldTranslation::class)]
 class ProductFieldTest extends MockeryTestCase
 {
     private const string ID = '550e8400-e29b-41d4-a716-446655440000';
@@ -89,8 +89,8 @@ class ProductFieldTest extends MockeryTestCase
         $field = new ProductField(
             \Mockery::mock(FieldIdentifier::class),
         );
-        $translation = \Mockery::mock(ProductTranslation::class);
-        /** @var Collection<int, ProductTranslation> $translations */
+        $translation = \Mockery::mock(FieldTranslation::class);
+        /** @var Collection<int, FieldTranslation> $translations */
         $translations = new ArrayCollection([$translation]);
 
         $field->setTranslations($translations);
@@ -119,7 +119,7 @@ class ProductFieldTest extends MockeryTestCase
             new FieldIdentifier(ProductFieldIdentifierType::ID, self::ID),
         );
         $field->setTranslations(new ArrayCollection([
-            new ProductTranslation(''),
+            new FieldTranslation(''),
         ]));
 
         $violations = Validation::createValidatorBuilder()

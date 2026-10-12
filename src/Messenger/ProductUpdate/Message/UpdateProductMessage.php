@@ -51,4 +51,11 @@ class UpdateProductMessage
 
         return $this;
     }
+
+    public function addField(ProductField $field): self
+    {
+        $this->fields->add($field);
+
+        return $this;
+    }
 }

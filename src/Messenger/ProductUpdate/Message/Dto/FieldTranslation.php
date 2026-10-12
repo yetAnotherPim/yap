@@ -6,7 +6,7 @@ namespace App\Messenger\ProductUpdate\Message\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ProductTranslation
+class FieldTranslation
 {
     public function __construct(
         #[Assert\NotBlank]

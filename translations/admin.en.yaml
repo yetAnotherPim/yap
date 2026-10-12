@@ -143,6 +143,8 @@ product:
         clear_selection: 'Clear selection'
     batch_edit:
         notice: 'The changes are processed asynchronously. For this, the MessageConsumer must be active, or alternatively the JS Consumer module must be enabled.'
+        dispatched_singular: '1 product update has been queued for processing.'
+        dispatched_plural: '%count% product updates have been queued for processing.'
 
 dashboard:
     title: 'Dashboard'

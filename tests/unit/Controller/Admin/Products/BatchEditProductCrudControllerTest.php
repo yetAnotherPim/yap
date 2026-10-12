@@ -9,13 +9,13 @@ use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
 use App\Form\Product\BatchEdit\Dto\BatchEditData;
 use App\Form\Product\BatchEdit\Dto\BatchEditFieldData;
+use App\Form\Product\BatchEdit\Message\ProductBatchUpdateDispatcher;
 use App\Form\Product\BatchEdit\Type\BatchEditType;
 use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
 use App\Form\Product\Fields\Synchronizer\FieldSynchronizer;
 use App\Form\Product\Filter\Composer\ProductFilterComposer;
 use App\Form\Product\Identifier\IdentifierManager;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -42,6 +42,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[CoversClass(BatchEditProductCrudController::class)]
@@ -170,6 +171,13 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
     {
         $request = new Request();
 
+        $filterFactory = new FilterFactory(
+            \Mockery::mock(AdminContextProviderInterface::class),
+            [],
+        );
+
+        $productBatchUpdateDispatcher = \Mockery::mock(ProductBatchUpdateDispatcher::class);
+
         $form = \Mockery::mock(FormInterface::class);
         $form
             ->shouldReceive('handleRequest')
@@ -194,11 +202,6 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
             ->andReturn($form);
 
         $controller
-            ->shouldReceive('addFlash')
-            ->once()
-            ->with('error', 'Batch edit was not successful');
-
-        $controller
             ->shouldReceive('redirectToRoute')
             ->once()
             ->with('admin_product_index')
@@ -213,6 +216,8 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $result = $controller->processBatchEditForm(
             $request,
             $context,
+            $productBatchUpdateDispatcher,
+            $filterFactory,
         );
 
         $this->assertSame('/admin/products', $result->getTargetUrl());
@@ -220,6 +225,13 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
 
     public function testProcessBatchEditFormRedirectsWhenNoFieldsAreSelected(): void
     {
+        $filterFactory = new FilterFactory(
+            \Mockery::mock(AdminContextProviderInterface::class),
+            [],
+        );
+
+        $productBatchUpdateDispatcher = \Mockery::mock(ProductBatchUpdateDispatcher::class);
+
         $request = new Request();
         $data = new BatchEditData();
 
@@ -253,7 +265,20 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
             ->with(BatchEditType::class)
             ->andReturn($form);
 
-        $controller->shouldNotReceive('addFlash');
+        $controller
+            ->shouldReceive('addFlash')
+            ->once()
+            ->withArgs(
+                static function (
+                    string $type,
+                    TranslatableMessage $message,
+                ): bool {
+                    return 'success' === $type
+                        && 'product.batch_edit.dispatched_plural' === $message->getMessage()
+                        && ['%count%' => 0] === $message->getParameters()
+                        && 'admin' === $message->getDomain();
+                },
+            );
 
         $controller
             ->shouldReceive('redirectToRoute')
@@ -269,7 +294,9 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         /** @var RedirectResponse $result */
         $result = $controller->processBatchEditForm(
             $request,
-            $context
+            $context,
+            $productBatchUpdateDispatcher,
+            $filterFactory,
         );
 
         $this->assertSame('/admin/products', $result->getTargetUrl());
@@ -277,21 +304,25 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
 
     public function testProcessBatchEditFormRedirectsAfterSuccessfulSubmission(): void
     {
-        $request = new Request();
+        $request = new Request([
+            'ids' => ['product-1'],
+        ]);
 
-        $fields = \Mockery::mock(Collection::class);
+        $productBatchUpdateDispatcher = \Mockery::mock(
+            ProductBatchUpdateDispatcher::class,
+        );
 
-        $fields
-            ->shouldReceive('isEmpty')
-            ->once()
-            ->andReturn(false);
+        $filterFactory = new FilterFactory(
+            \Mockery::mock(AdminContextProviderInterface::class),
+            [],
+        );
 
         $data = \Mockery::mock(BatchEditData::class);
 
-        $data
-            ->shouldReceive('getFields')
+        $productBatchUpdateDispatcher
+            ->shouldReceive('dispatch')
             ->once()
-            ->andReturn($fields);
+            ->with($data, 'product-1');
 
         $form = \Mockery::mock(FormInterface::class);
 
@@ -326,7 +357,17 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $controller
             ->shouldReceive('addFlash')
             ->once()
-            ->with('success', 'Batch edit was successful');
+            ->withArgs(
+                static function (
+                    string $type,
+                    TranslatableMessage $message,
+                ): bool {
+                    return 'success' === $type
+                        && 'product.batch_edit.dispatched_singular' === $message->getMessage()
+                        && ['%count%' => 1] === $message->getParameters()
+                        && 'admin' === $message->getDomain();
+                },
+            );
 
         $controller
             ->shouldReceive('redirectToRoute')
@@ -340,7 +381,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         );
 
         /** @var RedirectResponse $result */
-        $result = $controller->processBatchEditForm($request, $context);
+        $result = $controller->processBatchEditForm($request, $context, $productBatchUpdateDispatcher, $filterFactory);
 
         $this->assertSame('/admin/products', $result->getTargetUrl());
     }
@@ -350,6 +391,11 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $request = new Request([
             'ids' => ['product-1', 'product-2'],
         ]);
+
+        $filterFactory = new FilterFactory(
+            \Mockery::mock(AdminContextProviderInterface::class),
+            [],
+        );
 
         $context = AdminContext::forTesting(
             requestContext: RequestContext::forTesting($request),
@@ -361,7 +407,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         );
 
         /** @var iterable<string> $result */
-        $result = $method->invoke($this->controller, $context);
+        $result = $method->invoke($this->controller, $context, $filterFactory);
 
         $this->assertSame(
             ['product-1', 'product-2'],
@@ -420,12 +466,6 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         );
 
         $container = \Mockery::mock(ContainerInterface::class);
-
-        $container
-            ->shouldReceive('get')
-            ->once()
-            ->with(FilterFactory::class)
-            ->andReturn($filterFactory);
 
         $query = \Mockery::mock(Query::class);
 
@@ -501,7 +541,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         );
 
         /** @var iterable<string> $result */
-        $result = $method->invoke($controller, $context);
+        $result = $method->invoke($controller, $context, $filterFactory);
 
         $this->assertSame(
             ['product-1', 'product-2'],
@@ -514,6 +554,11 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
     public function testGetSelectedProductIdsThrowsExceptionWhenCrudContextIsMissing(): void
     {
         $request = new Request(['batchActionAll' => '1']);
+
+        $filterFactory = new FilterFactory(
+            \Mockery::mock(AdminContextProviderInterface::class),
+            [],
+        );
 
         $crudContext = new CrudContext(
             crudDto: null,
@@ -539,16 +584,21 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         );
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('The CRUD context is missing.');
+        $this->expectExceptionMessageIs('The CRUD context is missing.');
 
         /** @var iterable<string> $result */
-        $result = $method->invoke($controller, $context);
+        $result = $method->invoke($controller, $context, $filterFactory);
 
         iterator_to_array($result);
     }
 
     public function testGetSelectedProductIdsThrowsExceptionWhenSearchContextIsMissing(): void
     {
+        $filterFactory = new FilterFactory(
+            \Mockery::mock(AdminContextProviderInterface::class),
+            [],
+        );
+
         $request = new Request(['batchActionAll' => '1']);
 
         $entityDto = new EntityDto(
@@ -576,10 +626,10 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         );
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('The search context is missing.');
+        $this->expectExceptionMessageIs('The search context is missing.');
 
         /** @var iterable<string> $result */
-        $result = $method->invoke($controller, $context);
+        $result = $method->invoke($controller, $context, $filterFactory);
 
         iterator_to_array($result);
     }

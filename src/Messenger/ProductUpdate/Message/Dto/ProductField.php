@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ProductField
 {
-    /** @var Collection<int, ProductTranslation> */
+    /** @var Collection<int, FieldTranslation> */
     #[Assert\Valid]
     private Collection $translations;
 
@@ -47,7 +47,7 @@ class ProductField
     }
 
     /**
-     * @return Collection<int, ProductTranslation>
+     * @return Collection<int, FieldTranslation>
      */
     public function getTranslations(): Collection
     {
@@ -55,11 +55,18 @@ class ProductField
     }
 
     /**
-     * @param Collection<int, ProductTranslation> $translations
+     * @param Collection<int, FieldTranslation> $translations
      */
     public function setTranslations(Collection $translations): self
     {
         $this->translations = $translations;
+
+        return $this;
+    }
+
+    public function addTranslation(FieldTranslation $translation): self
+    {
+        $this->translations->add($translation);
 
         return $this;
     }
