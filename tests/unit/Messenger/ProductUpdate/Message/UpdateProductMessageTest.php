@@ -60,4 +60,29 @@ class UpdateProductMessageTest extends MockeryTestCase
         $this->assertSame($fields, $message->getFields());
         $this->assertSame($field, $message->getFields()->first());
     }
+
+    public function testAddField(): void
+    {
+        $message = new UpdateProductMessage(self::PRODUCT_ID);
+        $field = \Mockery::mock(ProductField::class);
+
+        $result = $message->addField($field);
+
+        $this->assertSame($message, $result);
+        $this->assertTrue($message->getFields()->contains($field));
+    }
+
+    public function testRemoveField(): void
+    {
+        $message = new UpdateProductMessage(self::PRODUCT_ID);
+        $field = \Mockery::mock(ProductField::class);
+
+        $message->addField($field);
+
+        $result = $message->removeField($field);
+
+        $this->assertSame($message, $result);
+        $this->assertFalse($message->getFields()->contains($field));
+        $this->assertCount(0, $message->getFields());
+    }
 }

@@ -58,4 +58,11 @@ class UpdateProductMessage
 
         return $this;
     }
+
+    public function removeField(ProductField $field): self
+    {
+        $this->fields->removeElement($field);
+
+        return $this;
+    }
 }

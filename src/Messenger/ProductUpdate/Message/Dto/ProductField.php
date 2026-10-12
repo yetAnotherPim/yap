@@ -70,4 +70,11 @@ class ProductField
 
         return $this;
     }
+
+    public function removeTranslation(FieldTranslation $translation): self
+    {
+        $this->translations->removeElement($translation);
+
+        return $this;
+    }
 }

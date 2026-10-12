@@ -18,13 +18,14 @@ use App\Messenger\ProductUpdate\Message\UpdateProductMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Component\Uid\Uuid;
 
 #[CoversClass(ProductUpdateMessageTransformer::class)]
-#[CoversClass(FieldIdentifier::class)]
-#[CoversClass(ProductField::class)]
-#[CoversClass(FieldTranslation::class)]
-#[CoversClass(UpdateProductMessage::class)]
+#[UsesClass(FieldIdentifier::class)]
+#[UsesClass(ProductField::class)]
+#[UsesClass(FieldTranslation::class)]
+#[UsesClass(UpdateProductMessage::class)]
 class ProductUpdateMessageTransformerTest extends MockeryTestCase
 {
     private ProductUpdateMessageTransformer $transformer;

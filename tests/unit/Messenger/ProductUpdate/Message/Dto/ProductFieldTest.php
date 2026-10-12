@@ -129,4 +129,33 @@ class ProductFieldTest extends MockeryTestCase
 
         $this->assertGreaterThan(0, $violations->count());
     }
+
+    public function testAddTranslation(): void
+    {
+        $field = new ProductField(
+            \Mockery::mock(FieldIdentifier::class),
+        );
+        $translation = new FieldTranslation('de_DE', 'Beschreibung');
+
+        $result = $field->addTranslation($translation);
+
+        $this->assertSame($field, $result);
+        $this->assertTrue($field->getTranslations()->contains($translation));
+    }
+
+    public function testRemoveTranslation(): void
+    {
+        $field = new ProductField(
+            \Mockery::mock(FieldIdentifier::class),
+        );
+        $translation = new FieldTranslation('de_DE', 'Beschreibung');
+
+        $field->addTranslation($translation);
+
+        $result = $field->removeTranslation($translation);
+
+        $this->assertSame($field, $result);
+        $this->assertFalse($field->getTranslations()->contains($translation));
+        $this->assertCount(0, $field->getTranslations());
+    }
 }
