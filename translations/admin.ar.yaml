@@ -134,6 +134,8 @@ product:
         clear_selection: 'إلغاء تحديد الكل'
     batch_edit:
         notice: 'تتم معالجة التغييرات بشكل غير متزامن. يجب أن يكون MessageConsumer نشطًا، أو يجب تفعيل وحدة JS Consumer بدلاً من ذلك.'
+        dispatched_singular: 'تمت إضافة تحديث منتج واحد إلى قائمة الانتظار للمعالجة.'
+        dispatched_plural: 'تمت إضافة تحديثات %count% منتجات إلى قائمة الانتظار للمعالجة.'
 dashboard:
     title: 'لوحة التحكم'
     system_status:

@@ -143,6 +143,8 @@ product:
         clear_selection: 'Auswahl aufheben'
     batch_edit:
         notice: 'Die Änderungen werden asynchron verarbeitet. Dafür muss der MessageConsumer aktiv oder alternativ das Modul JS-Consumer aktiviert sein.'
+        dispatched_singular: 'Die Aktualisierung für 1 Produkt wurde zur Verarbeitung in die Warteschlange gestellt.'
+        dispatched_plural: 'Die Aktualisierungen für %count% Produkte wurden zur Verarbeitung in die Warteschlange gestellt.'
 
 dashboard:
     title: 'Dashboard'

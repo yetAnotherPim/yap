@@ -134,6 +134,8 @@ product:
         clear_selection: 'Selectie wissen'
     batch_edit:
         notice: 'De wijzigingen worden asynchroon verwerkt. De MessageConsumer moet actief zijn of als alternatief moet de JS Consumer-module worden ingeschakeld.'
+        dispatched_singular: 'De update van 1 product is in de wachtrij geplaatst voor verwerking.'
+        dispatched_plural: 'Updates van %count% producten zijn in de wachtrij geplaatst voor verwerking.'
 dashboard:
     title: 'Dashboard'
     system_status:

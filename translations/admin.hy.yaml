@@ -134,6 +134,8 @@ product:
         clear_selection: 'Մաքրել ընտրությունը'
     batch_edit:
         notice: 'Փոփոխությունները մշակվում են ասինխրոն կերպով։ MessageConsumer-ը պետք է ակտիվ լինի կամ, այլընտրանք, պետք է միացված լինի JS Consumer մոդուլը։'
+        dispatched_singular: '1 ապրանքի թարմացումը դրվել է մշակման հերթում։'
+        dispatched_plural: '%count% ապրանքի թարմացումները դրվել են մշակման հերթում։'
 dashboard:
     title: 'Կառավարման վահանակ'
     system_status:

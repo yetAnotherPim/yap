@@ -134,6 +134,8 @@ product:
         clear_selection: 'Kijelölés törlése'
     batch_edit:
         notice: 'A módosítások aszinkron módon kerülnek feldolgozásra. A MessageConsumernek aktívnak kell lennie, vagy alternatívaként engedélyezni kell a JS Consumer modult.'
+        dispatched_singular: '1 termék frissítése feldolgozásra váró sorba került.'
+        dispatched_plural: '%count% termék frissítése feldolgozásra váró sorba került.'
 dashboard:
     title: 'Vezérlőpult'
     system_status:

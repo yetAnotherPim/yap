@@ -134,6 +134,8 @@ product:
         clear_selection: '清除选择'
     batch_edit:
         notice: '更改将以异步方式处理。必须启用 MessageConsumer，或者启用 JS Consumer 模块。'
+        dispatched_singular: '1 个产品更新已加入处理队列。'
+        dispatched_plural: '%count% 个产品更新已加入处理队列。'
 dashboard:
     title: '仪表板'
     system_status:

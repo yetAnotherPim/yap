@@ -134,6 +134,8 @@ product:
         clear_selection: 'Seçimi temizle'
     batch_edit:
         notice: 'Değişiklikler eşzamansız olarak işlenir. MessageConsumer etkin olmalı veya alternatif olarak JS Consumer modülü etkinleştirilmelidir.'
+        dispatched_singular: '1 ürün güncellemesi işlenmek üzere kuyruğa alındı.'
+        dispatched_plural: '%count% ürün güncellemesi işlenmek üzere kuyruğa alındı.'
 dashboard:
     title: 'Kontrol paneli'
     system_status:

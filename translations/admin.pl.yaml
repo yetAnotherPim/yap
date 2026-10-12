@@ -134,6 +134,8 @@ product:
         clear_selection: 'Wyczyść zaznaczenie'
     batch_edit:
         notice: 'Zmiany są przetwarzane asynchronicznie. MessageConsumer musi być aktywny lub alternatywnie należy włączyć moduł JS Consumer.'
+        dispatched_singular: 'Aktualizacja 1 produktu została dodana do kolejki przetwarzania.'
+        dispatched_plural: 'Aktualizacje %count% produktów zostały dodane do kolejki przetwarzania.'
 dashboard:
     title: 'Panel'
     system_status:

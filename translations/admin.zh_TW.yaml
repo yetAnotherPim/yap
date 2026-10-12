@@ -134,6 +134,8 @@ product:
         clear_selection: '清除選取'
     batch_edit:
         notice: '變更會以非同步方式處理。必須啟用 MessageConsumer，或啟用 JS Consumer 模組。'
+        dispatched_singular: '1 個產品更新已加入處理佇列。'
+        dispatched_plural: '%count% 個產品更新已加入處理佇列。'
 dashboard:
     title: '儀表板'
     system_status:

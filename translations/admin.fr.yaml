@@ -134,6 +134,8 @@ product:
         clear_selection: 'Effacer la sélection'
     batch_edit:
         notice: 'Les modifications sont traitées de manière asynchrone. Le MessageConsumer doit être actif ou, à défaut, le module JS Consumer doit être activé.'
+        dispatched_singular: 'La mise à jour d’un produit a été mise en file d’attente.'
+        dispatched_plural: 'Les mises à jour de %count% produits ont été mises en file d’attente.'
 dashboard:
     title: 'Tableau de bord'
     system_status:

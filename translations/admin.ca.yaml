@@ -134,6 +134,8 @@ product:
         clear_selection: 'Neteja la selecció'
     batch_edit:
         notice: 'Els canvis es processen de manera asíncrona. El MessageConsumer ha d''estar actiu o, alternativament, cal activar el mòdul JS Consumer.'
+        dispatched_singular: 'L’actualització d’1 producte s’ha posat a la cua per processar-la.'
+        dispatched_plural: 'Les actualitzacions de %count% productes s’han posat a la cua per processar-les.'
 dashboard:
     title: 'Tauler'
     system_status:

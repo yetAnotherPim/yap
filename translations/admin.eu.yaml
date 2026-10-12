@@ -134,6 +134,8 @@ product:
         clear_selection: 'Garbitu hautapena'
     batch_edit:
         notice: 'Aldaketak modu asinkronoan prozesatzen dira. MessageConsumer aktibo egon behar du, edo bestela JS Consumer modulua gaitu behar da.'
+        dispatched_singular: 'Produktu baten eguneratzea prozesatzeko ilaran jarri da.'
+        dispatched_plural: '%count% produkturen eguneratzeak prozesatzeko ilaran jarri dira.'
 dashboard:
     title: 'Aginte-panela'
     system_status:

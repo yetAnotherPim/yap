@@ -134,6 +134,8 @@ product:
         clear_selection: 'Șterge selecția'
     batch_edit:
         notice: 'Modificările sunt procesate asincron. MessageConsumer trebuie să fie activ sau, alternativ, trebuie activat modulul JS Consumer.'
+        dispatched_singular: 'Actualizarea unui produs a fost pusă în coadă pentru procesare.'
+        dispatched_plural: 'Actualizările pentru %count% produse au fost puse în coadă pentru procesare.'
 dashboard:
     title: 'Panou de control'
     system_status:

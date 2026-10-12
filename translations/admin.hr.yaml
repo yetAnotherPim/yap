@@ -134,6 +134,8 @@ product:
         clear_selection: 'Očisti odabir'
     batch_edit:
         notice: 'Promjene se obrađuju asinkrono. MessageConsumer mora biti aktivan ili alternativno mora biti omogućen modul JS Consumer.'
+        dispatched_singular: 'Ažuriranje 1 proizvoda stavljeno je u red za obradu.'
+        dispatched_plural: 'Ažuriranja %count% proizvoda stavljena su u red za obradu.'
 dashboard:
     title: 'Nadzorna ploča'
     system_status:

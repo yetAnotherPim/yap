@@ -134,6 +134,8 @@ product:
         clear_selection: 'لغو انتخاب'
     batch_edit:
         notice: 'تغییرات به‌صورت ناهمگام پردازش می‌شوند. MessageConsumer باید فعال باشد یا در عوض ماژول JS Consumer فعال شود.'
+        dispatched_singular: '۱ به‌روزرسانی محصول برای پردازش در صف قرار گرفت.'
+        dispatched_plural: '%count% به‌روزرسانی محصول برای پردازش در صف قرار گرفت.'
 dashboard:
     title: 'داشبورد'
     system_status:

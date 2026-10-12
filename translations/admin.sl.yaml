@@ -134,6 +134,8 @@ product:
         clear_selection: 'Počisti izbor'
     batch_edit:
         notice: 'Spremembe se obdelujejo asinhrono. MessageConsumer mora biti aktiven ali pa mora biti omogočen modul JS Consumer.'
+        dispatched_singular: 'Posodobitev 1 izdelka je bila dodana v čakalno vrsto za obdelavo.'
+        dispatched_plural: 'Posodobitve %count% izdelkov so bile dodane v čakalno vrsto za obdelavo.'
 dashboard:
     title: 'Nadzorna plošča'
     system_status:

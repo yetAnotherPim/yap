@@ -134,6 +134,8 @@ product:
         clear_selection: 'Tyhjennä valinta'
     batch_edit:
         notice: 'Muutokset käsitellään asynkronisesti. MessageConsumerin on oltava aktiivinen tai vaihtoehtoisesti JS Consumer -moduuli on otettava käyttöön.'
+        dispatched_singular: 'Yhden tuotteen päivitys on lisätty käsittelyjonoon.'
+        dispatched_plural: '%count% tuotteen päivitykset on lisätty käsittelyjonoon.'
 dashboard:
     title: 'Hallintapaneeli'
     system_status:

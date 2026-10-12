@@ -134,6 +134,8 @@ product:
         clear_selection: 'Rensa markering'
     batch_edit:
         notice: 'Ändringarna behandlas asynkront. MessageConsumer måste vara aktiv eller alternativt måste JS Consumer-modulen aktiveras.'
+        dispatched_singular: 'Uppdatering av 1 produkt har köats för bearbetning.'
+        dispatched_plural: 'Uppdateringar av %count% produkter har köats för bearbetning.'
 dashboard:
     title: 'Instrumentpanel'
     system_status:

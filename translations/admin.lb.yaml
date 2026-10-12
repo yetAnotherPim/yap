@@ -134,6 +134,8 @@ product:
         clear_selection: 'Auswiel läschen'
     batch_edit:
         notice: 'D''Ännerunge ginn asynchron veraarbecht. De MessageConsumer muss aktiv sinn oder alternativ muss de JS Consumer Modul aktivéiert sinn.'
+        dispatched_singular: 'D’Produktaktualiséierung gouf an d’Waardeschlaang fir d’Veraarbechtung gesat.'
+        dispatched_plural: 'D’Aktualiséierunge vu %count% Produkter goufen an d’Waardeschlaang fir d’Veraarbechtung gesat.'
 dashboard:
     title: 'Dashboard'
     system_status:

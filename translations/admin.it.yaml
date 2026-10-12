@@ -134,6 +134,8 @@ product:
         clear_selection: 'Cancella selezione'
     batch_edit:
         notice: 'Le modifiche vengono elaborate in modo asincrono. Il MessageConsumer deve essere attivo oppure, in alternativa, deve essere attivato il modulo JS Consumer.'
+        dispatched_singular: 'L’aggiornamento di 1 prodotto è stato messo in coda per l’elaborazione.'
+        dispatched_plural: 'Gli aggiornamenti di %count% prodotti sono stati messi in coda per l’elaborazione.'
 dashboard:
     title: 'Dashboard'
     system_status:

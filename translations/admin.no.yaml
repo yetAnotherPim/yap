@@ -134,6 +134,8 @@ product:
         clear_selection: 'Tøm utvalg'
     batch_edit:
         notice: 'Endringene behandles asynkront. MessageConsumer må være aktiv, eller alternativt må JS Consumer-modulen aktiveres.'
+        dispatched_singular: 'Oppdatering av 1 produkt er lagt i kø for behandling.'
+        dispatched_plural: 'Oppdateringer av %count% produkter er lagt i kø for behandling.'
 dashboard:
     title: 'Kontrollpanel'
     system_status:

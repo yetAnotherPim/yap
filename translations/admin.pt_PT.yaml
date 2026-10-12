@@ -134,6 +134,8 @@ product:
         clear_selection: 'Limpar seleção'
     batch_edit:
         notice: 'As alterações são processadas de forma assíncrona. O MessageConsumer tem de estar ativo ou, em alternativa, o módulo JS Consumer tem de estar ativado.'
+        dispatched_singular: 'A atualização de 1 produto foi colocada na fila de processamento.'
+        dispatched_plural: 'As atualizações de %count% produtos foram colocadas na fila de processamento.'
 dashboard:
     title: 'Painel'
     system_status:

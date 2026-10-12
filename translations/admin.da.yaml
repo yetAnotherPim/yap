@@ -134,6 +134,8 @@ product:
         clear_selection: 'Ryd valg'
     batch_edit:
         notice: 'Ændringerne behandles asynkront. MessageConsumer skal være aktiv, eller JS Consumer-modulet skal alternativt være aktiveret.'
+        dispatched_singular: 'Opdatering af 1 produkt er sat i kø til behandling.'
+        dispatched_plural: 'Opdateringer af %count% produkter er sat i kø til behandling.'
 dashboard:
     title: 'Kontrolpanel'
     system_status:

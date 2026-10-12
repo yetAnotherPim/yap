@@ -134,6 +134,8 @@ product:
         clear_selection: 'Исчисти избор'
     batch_edit:
         notice: 'Промените се обработуваат асинхроно. MessageConsumer мора да биде активен или алтернативно да биде овозможен модулот JS Consumer.'
+        dispatched_singular: 'Ажурирањето на 1 производ е ставено во редица за обработка.'
+        dispatched_plural: 'Ажурирањата на %count% производи се ставени во редица за обработка.'
 dashboard:
     title: 'Контролна табла'
     system_status:

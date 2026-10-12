@@ -134,6 +134,8 @@ product:
         clear_selection: 'Hapus pilihan'
     batch_edit:
         notice: 'Perubahan diproses secara asinkron. MessageConsumer harus aktif atau sebagai alternatif modul JS Consumer harus diaktifkan.'
+        dispatched_singular: 'Pembaruan 1 produk telah masuk antrean untuk diproses.'
+        dispatched_plural: 'Pembaruan %count% produk telah masuk antrean untuk diproses.'
 dashboard:
     title: 'Dasbor'
     system_status:

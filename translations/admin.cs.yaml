@@ -134,6 +134,8 @@ product:
         clear_selection: 'Zrušit výběr'
     batch_edit:
         notice: 'Změny se zpracovávají asynchronně. MessageConsumer musí být aktivní, případně musí být aktivován modul JS Consumer.'
+        dispatched_singular: 'Aktualizace 1 produktu byla zařazena do fronty ke zpracování.'
+        dispatched_plural: 'Aktualizace %count% produktů byly zařazeny do fronty ke zpracování.'
 dashboard:
     title: 'Přehled'
     system_status:

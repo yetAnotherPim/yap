@@ -134,6 +134,8 @@ product:
         clear_selection: 'Zrušiť výber'
     batch_edit:
         notice: 'Zmeny sa spracúvajú asynchrónne. MessageConsumer musí byť aktívny alebo alternatívne musí byť aktivovaný modul JS Consumer.'
+        dispatched_singular: 'Aktualizácia 1 produktu bola zaradená do frontu na spracovanie.'
+        dispatched_plural: 'Aktualizácie %count% produktov boli zaradené do frontu na spracovanie.'
 dashboard:
     title: 'Prehľad'
     system_status:

@@ -134,6 +134,8 @@ product:
         clear_selection: 'Очистити вибір'
     batch_edit:
         notice: 'Зміни обробляються асинхронно. MessageConsumer має бути активним або, як альтернатива, потрібно ввімкнути модуль JS Consumer.'
+        dispatched_singular: 'Оновлення 1 товару додано до черги на обробку.'
+        dispatched_plural: 'Оновлення %count% товарів додано до черги на обробку.'
 dashboard:
     title: 'Панель керування'
     system_status:

@@ -134,6 +134,8 @@ product:
         clear_selection: 'Borrar selección'
     batch_edit:
         notice: 'Los cambios se procesan de forma asíncrona. El MessageConsumer debe estar activo o, alternativamente, debe estar habilitado el módulo JS Consumer.'
+        dispatched_singular: 'La actualización de 1 producto se ha puesto en cola para su procesamiento.'
+        dispatched_plural: 'Las actualizaciones de %count% productos se han puesto en cola para su procesamiento.'
 dashboard:
     title: 'Panel de control'
     system_status:

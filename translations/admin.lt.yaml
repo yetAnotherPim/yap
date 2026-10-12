@@ -134,6 +134,8 @@ product:
         clear_selection: 'Išvalyti pasirinkimą'
     batch_edit:
         notice: 'Pakeitimai apdorojami asinchroniškai. MessageConsumer turi būti aktyvus arba, alternatyviai, turi būti įjungtas JS Consumer modulis.'
+        dispatched_singular: '1 produkto atnaujinimas įtrauktas į apdorojimo eilę.'
+        dispatched_plural: '%count% produktų atnaujinimai įtraukti į apdorojimo eilę.'
 dashboard:
     title: 'Valdymo skydelis'
     system_status:
