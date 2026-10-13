@@ -52,7 +52,7 @@ class ProductTypeFieldConfiguration
     /**
      * @phpstan-var string[]
      */
-    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[ORM\Column(type: Types::JSON)]
     private array $options = [];
 
     /**

@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Messenger\ProductUpdate;
 
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
+use App\Entity\Product\Type\ProductType;
 use App\Messenger\ProductUpdate\Message\Dto\FieldTranslation;
 use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
@@ -16,6 +20,9 @@ use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
 use App\Messenger\ProductUpdate\ProductUpdateMessageHandler;
 use App\Messenger\ProductUpdate\Resolver\FieldResolver;
 use App\Messenger\ProductUpdate\Resolver\FieldValueTranslationResolver;
+use App\Repository\FieldRepository;
+use App\Repository\FieldTypeRepository;
+use App\Repository\LocaleRepository;
 use App\Repository\ProductRepository;
 use App\Tests\TestData\Factory\Locale\LocaleFactory;
 use App\Tests\TestData\Factory\Product\Field\FieldFactory;
@@ -35,12 +42,24 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Foundry\Attribute\ResetDatabase;
 
 #[CoversClass(ProductUpdateMessageHandler::class)]
-#[UsesClass(FieldResolver::class)]
-#[UsesClass(FieldValueTranslationResolver::class)]
-#[UsesClass(Product::class)]
 #[UsesClass(Field::class)]
+#[UsesClass(FieldRepository::class)]
+#[UsesClass(FieldResolver::class)]
+#[UsesClass(FieldTranslation::class)]
 #[UsesClass(FieldType::class)]
+#[UsesClass(FieldTypeIdentifier::class)]
+#[UsesClass(FieldTypeRepository::class)]
 #[UsesClass(FieldValueTranslation::class)]
+#[UsesClass(FieldValueTranslationResolver::class)]
+#[UsesClass(Locale::class)]
+#[UsesClass(LocaleRepository::class)]
+#[UsesClass(Product::class)]
+#[UsesClass(ProductField::class)]
+#[UsesClass(ProductRepository::class)]
+#[UsesClass(ProductType::class)]
+#[UsesClass(ProductTypeFieldConfiguration::class)]
+#[UsesClass(ProductUpdateMessage::class)]
+#[UsesClass(RelatedTimestampUpdater::class)]
 #[ResetDatabase]
 class ProductUpdateMessageHandlerTest extends KernelTestCase
 {

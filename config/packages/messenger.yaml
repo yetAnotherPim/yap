@@ -14,7 +14,7 @@ framework:
                 dsn: 'doctrine://default'
                 options:
                     queue_name: product_update
-                serializer: messenger.transport.symfony_serializer
+                serializer: 'App\Messenger\ProductUpdate\Message\Serializer\ProductUpdateMessageSerializer'
                 failure_transport: product_update_failed
                 retry_strategy:
                     max_retries: 3
@@ -25,7 +25,7 @@ framework:
                 dsn: 'doctrine://default'
                 options:
                     queue_name: product_update_failed
-                serializer: messenger.transport.symfony_serializer
+                serializer: 'App\Messenger\ProductUpdate\Message\Serializer\ProductUpdateMessageSerializer'
 
         default_bus: messenger.bus.default
 

@@ -25,7 +25,7 @@ class ProductUpdateMessageHandler
     ) {
     }
 
-    #[AsMessageHandler]
+    #[AsMessageHandler(sign: false)]
     public function handleProductUpdateMessage(ProductUpdateMessage $message): void
     {
         $product = $this->productRepository->find($message->getProductId());

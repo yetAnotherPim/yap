@@ -4,21 +4,39 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Messenger\ProductUpdate;
 
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Product\Product;
+use App\Entity\Product\Type\ProductType;
 use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
+use App\Messenger\ProductUpdate\Message\Serializer\ProductUpdateMessageSerializer;
 use App\Messenger\ProductUpdate\ProductUpdateMessageHandler;
 use App\Messenger\ProductUpdate\Resolver\FieldResolver;
 use App\Messenger\ProductUpdate\Resolver\FieldValueTranslationResolver;
+use App\Repository\FieldRepository;
+use App\Repository\FieldTypeRepository;
+use App\Repository\LocaleRepository;
 use App\Repository\ProductRepository;
 use App\Tests\TestData\Factory\Product\ProductFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 use Symfony\Component\Uid\Uuid;
 use Zenstruck\Messenger\Test\InteractsWithMessenger;
 
 #[CoversClass(ProductUpdateMessageHandler::class)]
+#[UsesClass(FieldRepository::class)]
+#[UsesClass(FieldResolver::class)]
+#[UsesClass(FieldValueTranslationResolver::class)]
+#[UsesClass(LocaleRepository::class)]
+#[UsesClass(FieldTypeRepository::class)]
+#[UsesClass(Product::class)]
+#[UsesClass(ProductRepository::class)]
+#[UsesClass(ProductType::class)]
+#[UsesClass(ProductUpdateMessage::class)]
+#[UsesClass(ProductUpdateMessageSerializer::class)]
+#[UsesClass(RelatedTimestampUpdater::class)]
 final class ProductUpdateMessageQueueTest extends KernelTestCase
 {
     use InteractsWithMessenger;

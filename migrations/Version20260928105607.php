@@ -31,7 +31,6 @@ final class Version20260928105607 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE yap_scheduler (id SMALLINT DEFAULT 1 NOT NULL, last_run TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY (id))');
         $this->addSql('ALTER TABLE product_column_configuration DROP CONSTRAINT FK_965404F8A76ED395');
         $this->addSql('ALTER TABLE product_column_configuration DROP CONSTRAINT FK_965404F82B68A933');
     }
