@@ -7,19 +7,19 @@ namespace App\Form\Product\BatchEdit\Message\Transformer;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Form\Product\BatchEdit\Dto\BatchEditData;
 use App\Form\Product\BatchEdit\Dto\BatchEditFieldData;
-use App\Messenger\ProductUpdate\Message\Dto\FieldIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\FieldTranslation;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
-use App\Messenger\ProductUpdate\Message\Enum\ProductFieldIdentifierType;
-use App\Messenger\ProductUpdate\Message\UpdateProductMessage;
+use App\Messenger\ProductUpdate\Message\Enum\FieldTypeIdentifierType;
+use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
 
 class ProductUpdateMessageTransformer
 {
     public function transform(
         BatchEditData $data,
         string $productId,
-    ): UpdateProductMessage {
-        $message = new UpdateProductMessage($productId);
+    ): ProductUpdateMessage {
+        $message = new ProductUpdateMessage($productId);
 
         foreach ($data->getFields() as $fieldData) {
             $fieldType = $fieldData->getFieldType();
@@ -70,10 +70,10 @@ class ProductUpdateMessageTransformer
         }
     }
 
-    private function mapIdentifier(FieldType $fieldType): FieldIdentifier
+    private function mapIdentifier(FieldType $fieldType): FieldTypeIdentifier
     {
-        return new FieldIdentifier(
-            ProductFieldIdentifierType::ID,
+        return new FieldTypeIdentifier(
+            FieldTypeIdentifierType::ID,
             (string) $fieldType->getId(),
         );
     }

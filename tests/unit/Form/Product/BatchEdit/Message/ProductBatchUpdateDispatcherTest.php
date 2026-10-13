@@ -7,7 +7,7 @@ namespace App\Tests\unit\Form\Product\BatchEdit\Message;
 use App\Form\Product\BatchEdit\Dto\BatchEditData;
 use App\Form\Product\BatchEdit\Message\ProductBatchUpdateDispatcher;
 use App\Form\Product\BatchEdit\Message\Transformer\ProductUpdateMessageTransformer;
-use App\Messenger\ProductUpdate\Message\UpdateProductMessage;
+use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Messenger\Envelope;
@@ -21,7 +21,7 @@ class ProductBatchUpdateDispatcherTest extends MockeryTestCase
         $productId = 'product-123';
 
         $data = \Mockery::mock(BatchEditData::class);
-        $message = \Mockery::mock(UpdateProductMessage::class);
+        $message = \Mockery::mock(ProductUpdateMessage::class);
 
         $transformer = \Mockery::mock(ProductUpdateMessageTransformer::class);
         $transformer

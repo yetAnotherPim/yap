@@ -55,6 +55,13 @@ class LocaleRepository extends ServiceEntityRepository
         );
     }
 
+    public function getContentTranslationLocaleById(string $localeId): ?Locale
+    {
+        return $this->findOneBy(
+            ['id' => $localeId, 'contentTranslationEnabled' => true],
+        );
+    }
+
     /**
      * @param Collection<int, Locale>|null $locales
      *

@@ -7,6 +7,8 @@ namespace App\Tests\unit\Repository;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
+use App\Messenger\ProductUpdate\Message\Enum\FieldTypeIdentifierType;
 use App\Repository\FieldTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -278,5 +280,78 @@ class FieldTypeRepositoryTest extends MockeryTestCase
         $this->assertFalse(
             $repository->isInUse($fieldType),
         );
+    }
+
+    public function testFindByIdentifierWithId(): void
+    {
+        $registry = \Mockery::mock(ManagerRegistry::class);
+        $fieldType = \Mockery::mock(FieldType::class);
+        $identifier = \Mockery::mock(FieldTypeIdentifier::class);
+
+        $identifier->shouldReceive('getType')
+            ->once()
+            ->andReturn(FieldTypeIdentifierType::ID);
+
+        $identifier->shouldReceive('getValue')
+            ->once()
+            ->andReturn('42');
+        $repository = \Mockery::mock(FieldTypeRepository::class, [$registry])
+            ->makePartial();
+
+        $repository->shouldReceive('find')
+            ->once()
+            ->with('42')
+            ->andReturn($fieldType);
+
+        $this->assertSame($fieldType, $repository->findByIdentifier($identifier));
+    }
+
+    public function testFindByIdentifierWithCode(): void
+    {
+        $registry = \Mockery::mock(ManagerRegistry::class);
+        $fieldType = \Mockery::mock(FieldType::class);
+        $identifier = \Mockery::mock(FieldTypeIdentifier::class);
+
+        $identifier->shouldReceive('getType')
+            ->once()
+            ->andReturn(FieldTypeIdentifierType::CODE);
+
+        $identifier->shouldReceive('getValue')
+            ->once()
+            ->andReturn('product_name');
+
+        $repository = \Mockery::mock(FieldTypeRepository::class, [$registry])
+            ->makePartial();
+
+        $repository->shouldReceive('findOneBy')
+            ->once()
+            ->with(['code' => 'product_name'])
+            ->andReturn($fieldType);
+
+        $this->assertSame($fieldType, $repository->findByIdentifier($identifier));
+    }
+
+    public function testFindByIdentifierReturnsNullWhenNotFound(): void
+    {
+        $registry = \Mockery::mock(ManagerRegistry::class);
+        $identifier = \Mockery::mock(FieldTypeIdentifier::class);
+
+        $identifier->shouldReceive('getType')
+            ->once()
+            ->andReturn(FieldTypeIdentifierType::CODE);
+
+        $identifier->shouldReceive('getValue')
+            ->once()
+            ->andReturn('unknown_field');
+
+        $repository = \Mockery::mock(FieldTypeRepository::class, [$registry])
+            ->makePartial();
+
+        $repository->shouldReceive('findOneBy')
+            ->once()
+            ->with(['code' => 'unknown_field'])
+            ->andReturnNull();
+
+        $this->assertNull($repository->findByIdentifier($identifier));
     }
 }

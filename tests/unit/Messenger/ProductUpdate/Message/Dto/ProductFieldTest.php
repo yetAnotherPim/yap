@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Messenger\ProductUpdate\Message\Dto;
 
-use App\Messenger\ProductUpdate\Message\Dto\FieldIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\FieldTranslation;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
-use App\Messenger\ProductUpdate\Message\Enum\ProductFieldIdentifierType;
+use App\Messenger\ProductUpdate\Message\Enum\FieldTypeIdentifierType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Component\Validator\Validation;
 
 #[CoversClass(ProductField::class)]
-#[UsesClass(FieldIdentifier::class)]
+#[UsesClass(FieldTypeIdentifier::class)]
 #[UsesClass(FieldTranslation::class)]
 class ProductFieldTest extends MockeryTestCase
 {
@@ -24,7 +24,7 @@ class ProductFieldTest extends MockeryTestCase
 
     public function testConstructorInitializesProperties(): void
     {
-        $identifier = \Mockery::mock(FieldIdentifier::class);
+        $identifier = \Mockery::mock(FieldTypeIdentifier::class);
         $field = new ProductField($identifier, 'Example');
 
         $this->assertSame($identifier, $field->getIdentifier());
@@ -35,7 +35,7 @@ class ProductFieldTest extends MockeryTestCase
 
     public function testConstructorDefaultsValueToNull(): void
     {
-        $identifier = \Mockery::mock(FieldIdentifier::class);
+        $identifier = \Mockery::mock(FieldTypeIdentifier::class);
         $field = new ProductField($identifier);
 
         $this->assertSame($identifier, $field->getIdentifier());
@@ -45,9 +45,9 @@ class ProductFieldTest extends MockeryTestCase
     public function testSetIdentifier(): void
     {
         $field = new ProductField(
-            \Mockery::mock(FieldIdentifier::class),
+            \Mockery::mock(FieldTypeIdentifier::class),
         );
-        $identifier = \Mockery::mock(FieldIdentifier::class);
+        $identifier = \Mockery::mock(FieldTypeIdentifier::class);
 
         $result = $field->setIdentifier($identifier);
 
@@ -58,7 +58,7 @@ class ProductFieldTest extends MockeryTestCase
     public function testSetValue(): void
     {
         $field = new ProductField(
-            \Mockery::mock(FieldIdentifier::class),
+            \Mockery::mock(FieldTypeIdentifier::class),
         );
 
         $result = $field->setValue('Description');
@@ -74,7 +74,7 @@ class ProductFieldTest extends MockeryTestCase
     public function testSetTranslations(): void
     {
         $field = new ProductField(
-            \Mockery::mock(FieldIdentifier::class),
+            \Mockery::mock(FieldTypeIdentifier::class),
         );
         $translations = \Mockery::mock(Collection::class);
 
@@ -87,7 +87,7 @@ class ProductFieldTest extends MockeryTestCase
     public function testGetTranslationsReturnsConfiguredTranslations(): void
     {
         $field = new ProductField(
-            \Mockery::mock(FieldIdentifier::class),
+            \Mockery::mock(FieldTypeIdentifier::class),
         );
         $translation = \Mockery::mock(FieldTranslation::class);
         /** @var Collection<int, FieldTranslation> $translations */
@@ -102,7 +102,7 @@ class ProductFieldTest extends MockeryTestCase
     public function testValidationCascadesToIdentifier(): void
     {
         $field = new ProductField(
-            new FieldIdentifier(ProductFieldIdentifierType::CODE, ''),
+            new FieldTypeIdentifier(FieldTypeIdentifierType::CODE, ''),
         );
 
         $violations = Validation::createValidatorBuilder()
@@ -116,7 +116,7 @@ class ProductFieldTest extends MockeryTestCase
     public function testValidationCascadesToTranslations(): void
     {
         $field = new ProductField(
-            new FieldIdentifier(ProductFieldIdentifierType::ID, self::ID),
+            new FieldTypeIdentifier(FieldTypeIdentifierType::ID, self::ID),
         );
         $field->setTranslations(new ArrayCollection([
             new FieldTranslation(''),
@@ -133,7 +133,7 @@ class ProductFieldTest extends MockeryTestCase
     public function testAddTranslation(): void
     {
         $field = new ProductField(
-            \Mockery::mock(FieldIdentifier::class),
+            \Mockery::mock(FieldTypeIdentifier::class),
         );
         $translation = new FieldTranslation('de_DE', 'Beschreibung');
 
@@ -146,7 +146,7 @@ class ProductFieldTest extends MockeryTestCase
     public function testRemoveTranslation(): void
     {
         $field = new ProductField(
-            \Mockery::mock(FieldIdentifier::class),
+            \Mockery::mock(FieldTypeIdentifier::class),
         );
         $translation = new FieldTranslation('de_DE', 'Beschreibung');
 

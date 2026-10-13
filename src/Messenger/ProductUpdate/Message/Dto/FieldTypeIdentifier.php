@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Messenger\ProductUpdate\Message\Dto;
 
-use App\Messenger\ProductUpdate\Message\Enum\ProductFieldIdentifierType;
+use App\Messenger\ProductUpdate\Message\Enum\FieldTypeIdentifierType;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class FieldIdentifier
+class FieldTypeIdentifier
 {
     public function __construct(
-        private ProductFieldIdentifierType $type,
+        private FieldTypeIdentifierType $type,
         #[Assert\NotBlank]
         private string $value,
     ) {
     }
 
-    public function getType(): ProductFieldIdentifierType
+    public function getType(): FieldTypeIdentifierType
     {
         return $this->type;
     }
 
-    public function setType(ProductFieldIdentifierType $type): self
+    public function setType(FieldTypeIdentifierType $type): self
     {
         $this->type = $type;
 

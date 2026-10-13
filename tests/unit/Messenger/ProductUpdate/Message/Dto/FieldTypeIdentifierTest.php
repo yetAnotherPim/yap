@@ -4,45 +4,45 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Messenger\ProductUpdate\Message\Dto;
 
-use App\Messenger\ProductUpdate\Message\Dto\FieldIdentifier;
-use App\Messenger\ProductUpdate\Message\Enum\ProductFieldIdentifierType;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
+use App\Messenger\ProductUpdate\Message\Enum\FieldTypeIdentifierType;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Validator\Validation;
 
-#[CoversClass(FieldIdentifier::class)]
-class FieldIdentifierTest extends MockeryTestCase
+#[CoversClass(FieldTypeIdentifier::class)]
+class FieldTypeIdentifierTest extends MockeryTestCase
 {
     private const string ID = '550e8400-e29b-41d4-a716-446655440000';
 
     public function testConstructorInitializesProperties(): void
     {
-        $identifier = new FieldIdentifier(
-            ProductFieldIdentifierType::ID,
+        $identifier = new FieldTypeIdentifier(
+            FieldTypeIdentifierType::ID,
             self::ID,
         );
 
-        $this->assertSame(ProductFieldIdentifierType::ID, $identifier->getType());
+        $this->assertSame(FieldTypeIdentifierType::ID, $identifier->getType());
         $this->assertSame(self::ID, $identifier->getValue());
     }
 
     public function testSetType(): void
     {
-        $identifier = new FieldIdentifier(
-            ProductFieldIdentifierType::ID,
+        $identifier = new FieldTypeIdentifier(
+            FieldTypeIdentifierType::ID,
             self::ID,
         );
 
-        $result = $identifier->setType(ProductFieldIdentifierType::CODE);
+        $result = $identifier->setType(FieldTypeIdentifierType::CODE);
 
         $this->assertSame($identifier, $result);
-        $this->assertSame(ProductFieldIdentifierType::CODE, $identifier->getType());
+        $this->assertSame(FieldTypeIdentifierType::CODE, $identifier->getType());
     }
 
     public function testSetValue(): void
     {
-        $identifier = new FieldIdentifier(
-            ProductFieldIdentifierType::ID,
+        $identifier = new FieldTypeIdentifier(
+            FieldTypeIdentifierType::ID,
             self::ID,
         );
 
@@ -54,8 +54,8 @@ class FieldIdentifierTest extends MockeryTestCase
 
     public function testValidationRejectsBlankValue(): void
     {
-        $identifier = new FieldIdentifier(
-            ProductFieldIdentifierType::CODE,
+        $identifier = new FieldTypeIdentifier(
+            FieldTypeIdentifierType::CODE,
             '',
         );
 
@@ -69,8 +69,8 @@ class FieldIdentifierTest extends MockeryTestCase
 
     public function testValidationAcceptsValidIdentifier(): void
     {
-        $identifier = new FieldIdentifier(
-            ProductFieldIdentifierType::ID,
+        $identifier = new FieldTypeIdentifier(
+            FieldTypeIdentifierType::ID,
             self::ID,
         );
 

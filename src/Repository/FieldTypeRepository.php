@@ -7,6 +7,8 @@ namespace App\Repository;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Type\FieldConfiguration\ProductTypeFieldConfiguration;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
+use App\Messenger\ProductUpdate\Message\Enum\FieldTypeIdentifierType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -45,5 +47,13 @@ class FieldTypeRepository extends ServiceEntityRepository
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getOneOrNullResult();
+    }
+
+    public function findByIdentifier(FieldTypeIdentifier $identifier): ?FieldType
+    {
+        return match ($identifier->getType()) {
+            FieldTypeIdentifierType::ID => $this->find($identifier->getValue()),
+            FieldTypeIdentifierType::CODE => $this->findOneBy(['code' => $identifier->getValue()]),
+        };
     }
 }

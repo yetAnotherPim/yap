@@ -10,6 +10,8 @@ Redis
 external Storage
 Cron für Markplätze (Produktdaten)
 Stockmodul - Referenz für Bestandsänderung (History)
+Import
+Export
 Import/Export Shopify
 Import/Export Shopware
 Associated Entities -> like Manufacturer

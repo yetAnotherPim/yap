@@ -16,18 +16,18 @@ class ProductField
 
     public function __construct(
         #[Assert\Valid]
-        private FieldIdentifier $identifier,
+        private FieldTypeIdentifier $identifier,
         private ?string $value = null,
     ) {
         $this->translations = new ArrayCollection();
     }
 
-    public function getIdentifier(): FieldIdentifier
+    public function getIdentifier(): FieldTypeIdentifier
     {
         return $this->identifier;
     }
 
-    public function setIdentifier(FieldIdentifier $identifier): self
+    public function setIdentifier(FieldTypeIdentifier $identifier): self
     {
         $this->identifier = $identifier;
 

@@ -1,0 +1,12 @@
+framework:
+    messenger:
+        transports:
+            product_update:
+                dsn: 'test://?disable_retries=false'
+                failure_transport: product_update_failed
+                retry_strategy:
+                    max_retries: 3
+                    delay: 0
+                    multiplier: 1
+
+            product_update_failed: 'test://'

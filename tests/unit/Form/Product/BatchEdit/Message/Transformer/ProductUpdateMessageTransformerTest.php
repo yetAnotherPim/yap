@@ -10,11 +10,11 @@ use App\Form\Product\BatchEdit\Dto\BatchEditData;
 use App\Form\Product\BatchEdit\Dto\BatchEditFieldData;
 use App\Form\Product\BatchEdit\Dto\BatchEditFieldTranslationData;
 use App\Form\Product\BatchEdit\Message\Transformer\ProductUpdateMessageTransformer;
-use App\Messenger\ProductUpdate\Message\Dto\FieldIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\FieldTranslation;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
-use App\Messenger\ProductUpdate\Message\Enum\ProductFieldIdentifierType;
-use App\Messenger\ProductUpdate\Message\UpdateProductMessage;
+use App\Messenger\ProductUpdate\Message\Enum\FieldTypeIdentifierType;
+use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -22,10 +22,10 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Component\Uid\Uuid;
 
 #[CoversClass(ProductUpdateMessageTransformer::class)]
-#[UsesClass(FieldIdentifier::class)]
+#[UsesClass(FieldTypeIdentifier::class)]
 #[UsesClass(ProductField::class)]
 #[UsesClass(FieldTranslation::class)]
-#[UsesClass(UpdateProductMessage::class)]
+#[UsesClass(ProductUpdateMessage::class)]
 class ProductUpdateMessageTransformerTest extends MockeryTestCase
 {
     private ProductUpdateMessageTransformer $transformer;
@@ -53,7 +53,7 @@ class ProductUpdateMessageTransformerTest extends MockeryTestCase
 
         $this->assertSame('Example value', $field->getValue());
         $this->assertSame(
-            ProductFieldIdentifierType::ID,
+            FieldTypeIdentifierType::ID,
             $field->getIdentifier()->getType(),
         );
         $this->assertSame(
@@ -307,7 +307,7 @@ class ProductUpdateMessageTransformerTest extends MockeryTestCase
         return $fieldType;
     }
 
-    private function getFirstField(UpdateProductMessage $message): ProductField
+    private function getFirstField(ProductUpdateMessage $message): ProductField
     {
         $field = $message->getFields()->first();
 

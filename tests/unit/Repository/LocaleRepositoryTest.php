@@ -197,4 +197,41 @@ class LocaleRepositoryTest extends MockeryTestCase
 
         $this->assertSame(['fr_FR'], $result);
     }
+
+    public function testGetContentTranslationLocaleById(): void
+    {
+        $registryMock = \Mockery::mock(ManagerRegistry::class);
+        $locale = \Mockery::mock(Locale::class);
+
+        $repository = \Mockery::mock(LocaleRepository::class, [$registryMock])
+            ->makePartial();
+
+        $repository->shouldReceive('findOneBy')
+            ->once()
+            ->with([
+                'id' => 'de_DE',
+                'contentTranslationEnabled' => true,
+            ])
+            ->andReturn($locale);
+
+        $this->assertSame($locale, $repository->getContentTranslationLocaleById('de_DE'));
+    }
+
+    public function testGetContentTranslationLocaleByIdReturnsNullWhenNotFound(): void
+    {
+        $registryMock = \Mockery::mock(ManagerRegistry::class);
+
+        $repository = \Mockery::mock(LocaleRepository::class, [$registryMock])
+            ->makePartial();
+
+        $repository->shouldReceive('findOneBy')
+            ->once()
+            ->with([
+                'id' => 'de_DE',
+                'contentTranslationEnabled' => true,
+            ])
+            ->andReturnNull();
+
+        $this->assertNull($repository->getContentTranslationLocaleById('de_DE'));
+    }
 }

@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\Tests\unit\Messenger\ProductUpdate\Message;
 
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
-use App\Messenger\ProductUpdate\Message\UpdateProductMessage;
+use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(UpdateProductMessage::class)]
-class UpdateProductMessageTest extends MockeryTestCase
+#[CoversClass(ProductUpdateMessage::class)]
+class ProductUpdateMessageTest extends MockeryTestCase
 {
     private const string PRODUCT_ID = '550e8400-e29b-41d4-a716-446655440000';
 
     public function testConstructorInitializesProperties(): void
     {
-        $message = new UpdateProductMessage(self::PRODUCT_ID);
+        $message = new ProductUpdateMessage(self::PRODUCT_ID);
 
         $this->assertSame(self::PRODUCT_ID, $message->getProductId());
         $this->assertInstanceOf(ArrayCollection::class, $message->getFields());
@@ -27,7 +27,7 @@ class UpdateProductMessageTest extends MockeryTestCase
 
     public function testSetProductId(): void
     {
-        $message = new UpdateProductMessage(self::PRODUCT_ID);
+        $message = new ProductUpdateMessage(self::PRODUCT_ID);
         $newProductId = '550e8400-e29b-41d4-a716-446655440001';
 
         $result = $message->setProductId($newProductId);
@@ -38,7 +38,7 @@ class UpdateProductMessageTest extends MockeryTestCase
 
     public function testSetFields(): void
     {
-        $message = new UpdateProductMessage(self::PRODUCT_ID);
+        $message = new ProductUpdateMessage(self::PRODUCT_ID);
         $fields = \Mockery::mock(Collection::class);
 
         $result = $message->setFields($fields);
@@ -49,7 +49,7 @@ class UpdateProductMessageTest extends MockeryTestCase
 
     public function testGetFieldsReturnsConfiguredCollection(): void
     {
-        $message = new UpdateProductMessage(self::PRODUCT_ID);
+        $message = new ProductUpdateMessage(self::PRODUCT_ID);
         $field = \Mockery::mock(ProductField::class);
 
         /** @var Collection<int, ProductField> $fields */
@@ -63,7 +63,7 @@ class UpdateProductMessageTest extends MockeryTestCase
 
     public function testAddField(): void
     {
-        $message = new UpdateProductMessage(self::PRODUCT_ID);
+        $message = new ProductUpdateMessage(self::PRODUCT_ID);
         $field = \Mockery::mock(ProductField::class);
 
         $result = $message->addField($field);
@@ -74,7 +74,7 @@ class UpdateProductMessageTest extends MockeryTestCase
 
     public function testRemoveField(): void
     {
-        $message = new UpdateProductMessage(self::PRODUCT_ID);
+        $message = new ProductUpdateMessage(self::PRODUCT_ID);
         $field = \Mockery::mock(ProductField::class);
 
         $message->addField($field);

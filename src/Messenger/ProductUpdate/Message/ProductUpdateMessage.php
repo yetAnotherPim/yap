@@ -7,9 +7,11 @@ namespace App\Messenger\ProductUpdate\Message;
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Messenger\Attribute\AsMessage;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UpdateProductMessage
+#[AsMessage('product_update')]
+class ProductUpdateMessage
 {
     /** @var Collection<int, ProductField> */
     #[Assert\Valid]

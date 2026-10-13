@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Messenger\ProductUpdate\Message;
 
-use App\Messenger\ProductUpdate\Message\Dto\FieldIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\FieldTranslation;
+use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
-use App\Messenger\ProductUpdate\Message\Enum\ProductFieldIdentifierType;
-use App\Messenger\ProductUpdate\Message\UpdateProductMessage;
+use App\Messenger\ProductUpdate\Message\Enum\FieldTypeIdentifierType;
+use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[CoversClass(UpdateProductMessage::class)]
+#[CoversClass(ProductUpdateMessage::class)]
 #[UsesClass(ProductField::class)]
-#[UsesClass(FieldIdentifier::class)]
+#[UsesClass(FieldTypeIdentifier::class)]
 #[UsesClass(FieldTranslation::class)]
-#[UsesClass(ProductFieldIdentifierType::class)]
-class UpdateProductMessageSerializerTest extends KernelTestCase
+#[UsesClass(FieldTypeIdentifierType::class)]
+class ProductUpdateMessageSerializerTest extends KernelTestCase
 {
     public function testDeserializesCollections(): void
     {
@@ -51,11 +51,11 @@ class UpdateProductMessageSerializerTest extends KernelTestCase
 
         $message = $serializer->deserialize(
             $json,
-            UpdateProductMessage::class,
+            ProductUpdateMessage::class,
             'json',
         );
 
-        $this->assertInstanceOf(UpdateProductMessage::class, $message);
+        $this->assertInstanceOf(ProductUpdateMessage::class, $message);
         $this->assertSame('product-1', $message->getProductId());
 
         $fields = $message->getFields();
@@ -69,7 +69,7 @@ class UpdateProductMessageSerializerTest extends KernelTestCase
 
         $identifier = $field->getIdentifier();
 
-        $this->assertSame(ProductFieldIdentifierType::ID, $identifier->getType());
+        $this->assertSame(FieldTypeIdentifierType::ID, $identifier->getType());
         $this->assertSame('field-1', $identifier->getValue());
 
         $translations = $field->getTranslations();
