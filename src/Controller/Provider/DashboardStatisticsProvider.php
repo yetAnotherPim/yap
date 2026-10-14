@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Provider;
 
+use App\Messenger\QueueMonitor\QueueMonitor;
 use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
@@ -20,6 +21,7 @@ class DashboardStatisticsProvider
         private readonly UserRepository $userRepository,
         private readonly LocaleRepository $localeRepository,
         private readonly IdentifierTypeRepository $identifierTypeRepository,
+        private readonly QueueMonitor $queueMonitor,
     ) {
     }
 
@@ -38,6 +40,8 @@ class DashboardStatisticsProvider
             'product_type.entity.title_plural' => $this->productTypeRepository->count([]),
             'field_type.entity.title_plural' => $this->fieldTypeRepository->count([]),
             'user.entity.title_plural' => $this->userRepository->count([]),
+            'queue.stats.product_update' => (int) $this->queueMonitor->getMessageCount('product_update'),
+            'queue.stats.product_update_failed' => (int) $this->queueMonitor->getMessageCount('product_update_failed'),
         ];
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\unit\Controller\Provider;
 
 use App\Controller\Provider\DashboardStatisticsProvider;
+use App\Messenger\QueueMonitor\QueueMonitor;
 use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
 use App\Repository\LocaleRepository;
@@ -36,6 +37,8 @@ class DashboardStatisticsProviderTest extends MockeryTestCase
     /** @var IdentifierTypeRepository|MockInterface */
     private IdentifierTypeRepository $identifierTypeRepository;
 
+    private QueueMonitor $queueMonitor;
+
     private DashboardStatisticsProvider $provider;
 
     protected function setUp(): void
@@ -46,6 +49,7 @@ class DashboardStatisticsProviderTest extends MockeryTestCase
         $this->userRepository = \Mockery::mock(UserRepository::class);
         $this->localeRepository = \Mockery::mock(LocaleRepository::class);
         $this->identifierTypeRepository = \Mockery::mock(IdentifierTypeRepository::class);
+        $this->queueMonitor = \Mockery::mock(QueueMonitor::class);
 
         $this->provider = new DashboardStatisticsProvider(
             $this->productRepository,
@@ -53,7 +57,8 @@ class DashboardStatisticsProviderTest extends MockeryTestCase
             $this->fieldTypeRepository,
             $this->userRepository,
             $this->localeRepository,
-            $this->identifierTypeRepository
+            $this->identifierTypeRepository,
+            $this->queueMonitor,
         );
 
         parent::setUp();

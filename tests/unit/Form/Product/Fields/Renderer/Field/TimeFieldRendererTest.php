@@ -267,6 +267,6 @@ class TimeFieldRendererTest extends MockeryTestCase
 
     public function testGetBatchEditOptions(): void
     {
-        $this->assertSame([], $this->renderer->getBatchEditOptions());
+        $this->assertSame(['input' => 'string'], $this->renderer->getBatchEditOptions());
     }
 }

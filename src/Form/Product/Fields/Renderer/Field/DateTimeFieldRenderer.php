@@ -48,6 +48,8 @@ final class DateTimeFieldRenderer implements FieldRendererInterface, BatchEditFi
 
     public function getBatchEditOptions(): array
     {
-        return [];
+        return [
+            'input' => 'string',
+        ];
     }
 }

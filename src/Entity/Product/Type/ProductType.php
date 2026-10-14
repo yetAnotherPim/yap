@@ -34,8 +34,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\UniqueConstraint(name: 'unique_product_type_code', fields: ['code'])]
 #[ORM\Entity(repositoryClass: ProductTypeRepository::class)]
 #[Patch(
-    denormalizationContext: ['groups' => ['product_type:write']],
-    normalizationContext: ['groups' => ['product_type:read']]
+    normalizationContext: ['groups' => ['product_type:read']],
+    denormalizationContext: ['groups' => ['product_type:write']]
 )]
 #[Post(denormalizationContext: ['groups' => ['product_type:write']])]
 #[Get]
@@ -74,7 +74,7 @@ class ProductType extends TimestampableEntity implements TranslatableTitleInterf
      * @var Collection<int, ProductTypeFieldConfiguration>
      */
     #[ORM\OneToMany(targetEntity: ProductTypeFieldConfiguration::class, mappedBy: 'productType', cascade: ['all'], orphanRemoval: true)]
-    #[ORM\OrderBy(['position' => 'ASC'])]
+    #[ORM\OrderBy(['position' => \SortDirection::Ascending])]
     private Collection $productTypeFieldConfigurations;
 
     public function __construct()
