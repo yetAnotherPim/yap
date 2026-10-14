@@ -16,6 +16,7 @@ use App\Controller\Admin\Settings\PluginCrudController;
 use App\Controller\Admin\Settings\ProductTypeCrudController;
 use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
+use App\Controller\Admin\User\AccountCrudController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
@@ -36,6 +37,7 @@ use App\Form\Product\Identifier\IdentifierManager;
 use App\Form\ProductType\DefaultTranslation\Synchronizer\DefaultTranslationSynchronizer;
 use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
+use App\Form\User\PasswordFormConfigurator;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\PluginManager\Cache\CacheClearer;
@@ -106,6 +108,8 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(IdentifierManager::class)]
 #[UsesClass(FieldFilterHandlerRegistry::class)]
 #[UsesClass(ProductColumnConfigurationRepository::class)]
+#[UsesClass(AccountCrudController::class)]
+#[UsesClass(PasswordFormConfigurator::class)]
 #[ResetDatabase]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {

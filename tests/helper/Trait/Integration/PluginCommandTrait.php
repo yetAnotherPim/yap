@@ -22,13 +22,13 @@ trait PluginCommandTrait
                 ]
             );
 
-        // reload kernel cuz otherwise phpunit tries to access deleted cache files
-        $kernel->shutdown();
-        $kernel->boot();
-
         if (true === $expectSuccess) {
             $this->applicationTester->assertCommandIsSuccessful();
         }
+
+        // reload kernel cuz otherwise phpunit tries to access deleted cache files
+        $kernel->shutdown();
+        $kernel->boot();
     }
 
     protected function listPlugins(bool $expectSuccess = false): void
