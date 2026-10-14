@@ -15,12 +15,12 @@ if ($_SERVER['APP_DEBUG']) {
 }
 
 // Clean up cache to prevent "Failed to open stream" errors after Symfony update
-if (isset($_SERVER['APP_ENV']) && $_SERVER['APP_ENV'] === 'test') {
-    $cacheDir = __DIR__ . '/../var/cache';
+if (isset($_SERVER['APP_ENV']) && 'test' === $_SERVER['APP_ENV']) {
+    $cacheDir = __DIR__.'/../var/cache';
     if (is_dir($cacheDir)) {
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($cacheDir, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($cacheDir, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
         );
         foreach ($files as $fileinfo) {
             $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
