@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Käytettävissä olevat sarakkeet'
     errors:
         save_error: 'Sarakkeiden määrityksen tallentamisessa tapahtui virhe.'
+
+queue:
+    stats:
+        product_update: 'Odottavat tuotepäivitykset'
+        product_update_failed: 'Epäonnistuneet tuotepäivitykset'

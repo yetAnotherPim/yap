@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Columnes disponibles'
     errors:
         save_error: 'S’ha produït un error en desar la configuració de les columnes.'
+
+queue:
+    stats:
+        product_update: 'Actualitzacions de productes pendents'
+        product_update_failed: 'Actualitzacions de productes fallides'

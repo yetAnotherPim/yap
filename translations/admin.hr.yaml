@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Dostupni stupci'
     errors:
         save_error: 'Došlo je do pogreške prilikom spremanja konfiguracije stupaca.'
+
+queue:
+    stats:
+        product_update: 'Ažuriranja proizvoda na čekanju'
+        product_update_failed: 'Neuspjela ažuriranja proizvoda'

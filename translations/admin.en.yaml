@@ -187,3 +187,8 @@ product_column_configuration:
         available: 'Available Columns'
     errors:
         save_error: 'An error occurred while saving your column configuration.'
+
+queue:
+    stats:
+        product_update: 'Pending product updates'
+        product_update_failed: 'Failed product updates'

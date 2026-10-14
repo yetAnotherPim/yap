@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Dostupné sloupce'
     errors:
         save_error: 'Při ukládání konfigurace sloupců došlo k chybě.'
+
+queue:
+    stats:
+        product_update: 'Čekající aktualizace produktů'
+        product_update_failed: 'Neúspěšné aktualizace produktů'

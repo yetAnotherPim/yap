@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Διαθέσιμες στήλες'
     errors:
         save_error: 'Παρουσιάστηκε σφάλμα κατά την αποθήκευση της διαμόρφωσης των στηλών σας.'
+
+queue:
+    stats:
+        product_update: 'Εκκρεμείς ενημερώσεις προϊόντων'
+        product_update_failed: 'Αποτυχημένες ενημερώσεις προϊόντων'

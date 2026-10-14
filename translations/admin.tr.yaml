@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Kullanılabilir Sütunlar'
     errors:
         save_error: 'Sütun yapılandırmanız kaydedilirken bir hata oluştu.'
+
+queue:
+    stats:
+        product_update: 'Bekleyen ürün güncellemeleri'
+        product_update_failed: 'Başarısız ürün güncellemeleri'

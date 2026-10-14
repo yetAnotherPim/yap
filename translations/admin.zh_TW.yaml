@@ -176,3 +176,8 @@ product_column_configuration:
         available: '可用欄位'
     errors:
         save_error: '儲存欄位設定時發生錯誤。'
+
+queue:
+    stats:
+        product_update: '待處理的產品更新'
+        product_update_failed: '失敗的產品更新'

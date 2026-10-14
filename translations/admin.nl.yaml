@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Beschikbare kolommen'
     errors:
         save_error: 'Er is een fout opgetreden bij het opslaan van uw kolomconfiguratie.'
+
+queue:
+    stats:
+        product_update: 'Wachtende productupdates'
+        product_update_failed: 'Mislukte productupdates'

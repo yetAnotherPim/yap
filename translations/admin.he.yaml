@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'עמודות זמינות'
     errors:
         save_error: 'אירעה שגיאה בעת שמירת הגדרות העמודות שלך.'
+
+queue:
+    stats:
+        product_update: 'עדכוני מוצרים ממתינים'
+        product_update_failed: 'עדכוני מוצרים שנכשלו'

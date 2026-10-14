@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Доступні стовпці'
     errors:
         save_error: 'Під час збереження конфігурації стовпців сталася помилка.'
+
+queue:
+    stats:
+        product_update: 'Очікувані оновлення товарів'
+        product_update_failed: 'Невдалі оновлення товарів'

@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Доступные столбцы'
     errors:
         save_error: 'Произошла ошибка при сохранении конфигурации столбцов.'
+
+queue:
+    stats:
+        product_update: 'Ожидающие обновления товаров'
+        product_update_failed: 'Неудачные обновления товаров'

@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Galimi stulpeliai'
     errors:
         save_error: 'Įrašant stulpelių konfigūraciją įvyko klaida.'
+
+queue:
+    stats:
+        product_update: 'Laukiantys produktų atnaujinimai'
+        product_update_failed: 'Nepavykę produktų atnaujinimai'

@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Kolom yang Tersedia'
     errors:
         save_error: 'Terjadi kesalahan saat menyimpan konfigurasi kolom Anda.'
+
+queue:
+    stats:
+        product_update: 'Pembaruan produk tertunda'
+        product_update_failed: 'Pembaruan produk gagal'

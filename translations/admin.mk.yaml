@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Достапни колони'
     errors:
         save_error: 'Се појави грешка при зачувувањето на конфигурацијата на колоните.'
+
+queue:
+    stats:
+        product_update: 'Ажурирања на производи на чекање'
+        product_update_failed: 'Неуспешни ажурирања на производи'

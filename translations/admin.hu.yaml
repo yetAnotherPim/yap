@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Elérhető oszlopok'
     errors:
         save_error: 'Hiba történt az oszlopkonfiguráció mentésekor.'
+
+queue:
+    stats:
+        product_update: 'Függőben lévő termékfrissítések'
+        product_update_failed: 'Sikertelen termékfrissítések'

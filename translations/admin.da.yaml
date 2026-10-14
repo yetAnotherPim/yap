@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Tilgængelige kolonner'
     errors:
         save_error: 'Der opstod en fejl under lagring af din kolonnekonfiguration.'
+
+queue:
+    stats:
+        product_update: 'Ventende produktopdateringer'
+        product_update_failed: 'Mislykkede produktopdateringer'

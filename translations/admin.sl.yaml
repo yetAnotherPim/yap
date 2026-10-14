@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Razpoložljivi stolpci'
     errors:
         save_error: 'Pri shranjevanju konfiguracije stolpcev je prišlo do napake.'
+
+queue:
+    stats:
+        product_update: 'Čakajoče posodobitve izdelkov'
+        product_update_failed: 'Neuspele posodobitve izdelkov'

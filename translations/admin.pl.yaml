@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Dostępne kolumny'
     errors:
         save_error: 'Wystąpił błąd podczas zapisywania konfiguracji kolumn.'
+
+queue:
+    stats:
+        product_update: 'Oczekujące aktualizacje produktów'
+        product_update_failed: 'Nieudane aktualizacje produktów'

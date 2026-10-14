@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Colonnes disponibles'
     errors:
         save_error: 'Une erreur est survenue lors de l’enregistrement de votre configuration des colonnes.'
+
+queue:
+    stats:
+        product_update: 'Mises à jour de produits en attente'
+        product_update_failed: 'Échecs des mises à jour de produits'

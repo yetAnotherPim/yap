@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Dostupné stĺpce'
     errors:
         save_error: 'Pri ukladaní konfigurácie stĺpcov sa vyskytla chyba.'
+
+queue:
+    stats:
+        product_update: 'Čakajúce aktualizácie produktov'
+        product_update_failed: 'Neúspešné aktualizácie produktov'

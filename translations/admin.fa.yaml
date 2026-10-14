@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'ستون‌های موجود'
     errors:
         save_error: 'هنگام ذخیره پیکربندی ستون‌ها خطایی رخ داد.'
+
+queue:
+    stats:
+        product_update: 'به‌روزرسانی‌های در انتظار محصولات'
+        product_update_failed: 'به‌روزرسانی‌های ناموفق محصولات'

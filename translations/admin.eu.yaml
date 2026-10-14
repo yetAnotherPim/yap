@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Zutabe erabilgarriak'
     errors:
         save_error: 'Errore bat gertatu da zutabeen konfigurazioa gordetzean.'
+
+queue:
+    stats:
+        product_update: 'Zain dauden produktuen eguneraketak'
+        product_update_failed: 'Huts egindako produktuen eguneraketak'

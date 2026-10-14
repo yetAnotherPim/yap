@@ -37,6 +37,7 @@ class DashboardStatisticsProviderTest extends MockeryTestCase
     /** @var IdentifierTypeRepository|MockInterface */
     private IdentifierTypeRepository $identifierTypeRepository;
 
+    /** @var QueueMonitor|MockInterface */
     private QueueMonitor $queueMonitor;
 
     private DashboardStatisticsProvider $provider;
@@ -73,6 +74,8 @@ class DashboardStatisticsProviderTest extends MockeryTestCase
         $this->productTypeRepository->shouldReceive('count')->with([])->once()->andReturn(5);
         $this->fieldTypeRepository->shouldReceive('count')->with([])->once()->andReturn(6);
         $this->userRepository->shouldReceive('count')->with([])->once()->andReturn(7);
+        $this->queueMonitor->shouldReceive('getMessageCount')->with('product_update')->once()->andReturn(42);
+        $this->queueMonitor->shouldReceive('getMessageCount')->with('product_update_failed')->once()->andReturn(13);
 
         $result = $this->provider->getStatistics();
 
@@ -84,6 +87,8 @@ class DashboardStatisticsProviderTest extends MockeryTestCase
             'product_type.entity.title_plural' => 5,
             'field_type.entity.title_plural' => 6,
             'user.entity.title_plural' => 7,
+            'queue.stats.product_update' => 42,
+            'queue.stats.product_update_failed' => 13,
         ];
 
         $this->assertSame($expected, $result);

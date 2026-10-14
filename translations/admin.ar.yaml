@@ -177,3 +177,8 @@ product_column_configuration:
         available: 'الأعمدة المتاحة'
     errors:
         save_error: 'حدث خطأ أثناء حفظ تكوين الأعمدة.'
+
+queue:
+    stats:
+        product_update: 'تحديثات المنتجات المعلقة'
+        product_update_failed: 'تحديثات المنتجات الفاشلة'

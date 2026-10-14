@@ -176,3 +176,8 @@ product_column_configuration:
         available: 'Coloane disponibile'
     errors:
         save_error: 'A apărut o eroare la salvarea configurației coloanelor.'
+
+queue:
+    stats:
+        product_update: 'Actualizări de produse în așteptare'
+        product_update_failed: 'Actualizări de produse eșuate'
