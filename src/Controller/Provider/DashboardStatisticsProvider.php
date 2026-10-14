@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Provider;
 
+use App\Controller\Provider\Dto\DashboardStatistic;
 use App\Messenger\QueueMonitor\QueueMonitor;
 use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
@@ -26,12 +27,15 @@ class DashboardStatisticsProvider
     }
 
     /**
-     * @return array<string, int>
+     * @return array<string, int|DashboardStatistic>
      *
      * @throws \DateMalformedStringException
      */
     public function getStatistics(): array
     {
+        $productUpdateCount = (int) $this->queueMonitor->getMessageCount('product_update');
+        $productUpdateFailedCount = (int) $this->queueMonitor->getMessageCount('product_update_failed');
+
         return [
             'product.entity.title_plural' => $this->productRepository->count([]),
             'dashboard.products.latest' => $this->productRepository->countCreatedWithinLastDays(10),
@@ -40,8 +44,14 @@ class DashboardStatisticsProvider
             'product_type.entity.title_plural' => $this->productTypeRepository->count([]),
             'field_type.entity.title_plural' => $this->fieldTypeRepository->count([]),
             'user.entity.title_plural' => $this->userRepository->count([]),
-            'queue.stats.product_update' => (int) $this->queueMonitor->getMessageCount('product_update'),
-            'queue.stats.product_update_failed' => (int) $this->queueMonitor->getMessageCount('product_update_failed'),
+            'queue.stats.product_update' => new DashboardStatistic(
+                value: $productUpdateCount,
+                color: 'info',
+            ),
+            'queue.stats.product_update_failed' => new DashboardStatistic(
+                value: $productUpdateFailedCount,
+                color: $productUpdateFailedCount > 0 ? 'warning' : null,
+            ),
         ];
     }
 }

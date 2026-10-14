@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\unit\Controller\Provider;
 
 use App\Controller\Provider\DashboardStatisticsProvider;
+use App\Controller\Provider\Dto\DashboardStatistic;
 use App\Messenger\QueueMonitor\QueueMonitor;
 use App\Repository\FieldTypeRepository;
 use App\Repository\IdentifierTypeRepository;
@@ -15,8 +16,10 @@ use App\Repository\UserRepository;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
 #[CoversClass(DashboardStatisticsProvider::class)]
+#[UsesClass(DashboardStatistic::class)]
 class DashboardStatisticsProviderTest extends MockeryTestCase
 {
     /** @var ProductRepository|MockInterface */
@@ -87,10 +90,10 @@ class DashboardStatisticsProviderTest extends MockeryTestCase
             'product_type.entity.title_plural' => 5,
             'field_type.entity.title_plural' => 6,
             'user.entity.title_plural' => 7,
-            'queue.stats.product_update' => 42,
-            'queue.stats.product_update_failed' => 13,
+            'queue.stats.product_update' => new DashboardStatistic(42, 'info'),
+            'queue.stats.product_update_failed' => new DashboardStatistic(13, 'warning'),
         ];
 
-        $this->assertSame($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 }

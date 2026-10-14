@@ -192,5 +192,3 @@ queue:
     stats:
         product_update: 'Wartende Produktaktualisierungen'
         product_update_failed: 'Fehlgeschlagene Produktaktualisierungen'
-    notice:
-        product_update_failed: 'Bei der Verarbeitung von %count% Produktaktualisierungen ist ein Fehler aufgetreten.'
