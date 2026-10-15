@@ -768,6 +768,7 @@ class PluginManagerTest extends MockeryTestCase
         Plugin $pluginEntity,
         string $appEnv,
     ): PluginManager {
+        /** @phpstan-var PluginInterface&PluginWithAssetsInterface&MockInterface $pluginInstance */
         $pluginInstance
             ->shouldReceive('getName')
             ->once()

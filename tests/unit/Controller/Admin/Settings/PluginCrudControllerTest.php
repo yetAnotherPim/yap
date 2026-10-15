@@ -14,6 +14,7 @@ use App\PluginManager\PluginManager;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
@@ -95,6 +96,7 @@ class PluginCrudControllerTest extends MockeryTestCase
 
     public function testAssetCompilationStatusFieldFormatsValue(): void
     {
+        /** @var array<int, FieldInterface> $fields */
         $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
         $fieldDto = $fields[5]->getAsDto();
 
@@ -117,6 +119,7 @@ class PluginCrudControllerTest extends MockeryTestCase
 
     public function testAssetCompilationStatusFieldReturnsEmptyMarkupWhenCompilationIsNotRequired(): void
     {
+        /** @var array<int, FieldInterface> $fields */
         $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
         $fieldDto = $fields[5]->getAsDto();
 
