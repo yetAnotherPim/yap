@@ -35,6 +35,8 @@ use App\Form\Title\Translation\Renderer\TitleTranslationFieldRenderer;
 use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Form\User\PasswordFormConfigurator;
 use App\Kernel;
+use App\Messenger\QueueMonitor\QueueMonitor;
+use App\PluginManager\AssetMapper\AssetMapCompiler;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\Command\PluginDeactivateCommand;
@@ -117,6 +119,8 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(ProductColumnConfigurationRepository::class)]
 #[UsesClass(AccountCrudController::class)]
 #[UsesClass(PasswordFormConfigurator::class)]
+#[UsesClass(QueueMonitor::class)]
+#[UsesClass(AssetMapCompiler::class)]
 #[RunTestsInSeparateProcesses]
 /** execute tests clearing the cache in a separate environment */
 #[WithEnvironmentVariable('APP_ENV', 'ct')]

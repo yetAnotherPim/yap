@@ -161,6 +161,9 @@ class Plugin
     #[ORM\Column(length: 255, nullable: false)]
     private string $version = '';
 
+    #[ORM\Column(options: ['default' => false])]
+    private bool $assetCompilationRequired = false;
+
     public function getId(): Uuid
     {
         return $this->id;
@@ -222,6 +225,18 @@ class Plugin
     public function setVersion(string $version): static
     {
         $this->version = $version;
+
+        return $this;
+    }
+
+    public function isAssetCompilationRequired(): bool
+    {
+        return $this->assetCompilationRequired;
+    }
+
+    public function setAssetCompilationRequired(bool $required): static
+    {
+        $this->assetCompilationRequired = $required;
 
         return $this;
     }

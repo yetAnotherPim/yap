@@ -40,6 +40,8 @@ use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Form\User\PasswordFormConfigurator;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
+use App\Messenger\QueueMonitor\QueueMonitor;
+use App\PluginManager\AssetMapper\AssetMapCompiler;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\PluginManager;
 use App\Repository\FieldTypeRepository;
@@ -110,6 +112,8 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(ProductColumnConfigurationRepository::class)]
 #[UsesClass(AccountCrudController::class)]
 #[UsesClass(PasswordFormConfigurator::class)]
+#[UsesClass(QueueMonitor::class)]
+#[UsesClass(AssetMapCompiler::class)]
 #[ResetDatabase]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {

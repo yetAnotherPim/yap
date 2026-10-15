@@ -200,4 +200,77 @@ class PluginRepositoryTest extends MockeryTestCase
 
         $this->repository->getPluginEntity('App\\plugin\\SamplePlugin\\Plugin');
     }
+
+    public function testResetAssetCompilationRequired(): void
+    {
+        $queryBuilderMock = \Mockery::mock(QueryBuilder::class);
+        $queryMock = \Mockery::mock(Query::class);
+
+        $this->registryMock
+            ->shouldReceive('getManagerForClass')
+            ->once()
+            ->andReturn($this->entityManagerMock);
+
+        $this->entityManagerMock
+            ->shouldReceive('getClassMetadata')
+            ->once()
+            ->andReturn(new ClassMetadata(Plugin::class));
+
+        $this->entityManagerMock
+            ->shouldReceive('createQueryBuilder')
+            ->once()
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('select')
+            ->once()
+            ->with('p')
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('from')
+            ->once()
+            ->with(Plugin::class, 'p', null)
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('update')
+            ->once()
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('set')
+            ->once()
+            ->with('p.assetCompilationRequired', ':notRequired')
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('where')
+            ->once()
+            ->with('p.assetCompilationRequired = :required')
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('setParameter')
+            ->once()
+            ->with('notRequired', false)
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('setParameter')
+            ->once()
+            ->with('required', true)
+            ->andReturn($queryBuilderMock);
+
+        $queryBuilderMock
+            ->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($queryMock);
+
+        $queryMock
+            ->shouldReceive('execute')
+            ->once();
+
+        $this->repository->resetAssetCompilationRequired();
+    }
 }

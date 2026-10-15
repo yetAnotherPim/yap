@@ -44,4 +44,16 @@ class PluginRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['namespace' => $namespace]);
     }
+
+    public function resetAssetCompilationRequired(): void
+    {
+        $this->createQueryBuilder('p')
+            ->update()
+            ->set('p.assetCompilationRequired', ':notRequired')
+            ->where('p.assetCompilationRequired = :required')
+            ->setParameter('notRequired', false)
+            ->setParameter('required', true)
+            ->getQuery()
+            ->execute();
+    }
 }

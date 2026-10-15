@@ -8,12 +8,14 @@ use App\Entity\Plugin\Plugin;
 use App\PluginManager\Event\Enum\Action;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
 use App\PluginManager\Plugin\PluginInterface;
+use App\PluginManager\Plugin\PluginWithAssetsInterface;
 use App\Repository\PluginRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -54,7 +56,7 @@ class PluginManager
     /**
      * @throws PluginWorkflowException
      */
-    public function performWorkflow(Action $action, string $name): bool
+    public function performWorkflow(Action $action, string $name, ?SymfonyStyle $consoleOutput = null): bool
     {
         $pluginInstance = $this->plugins->findFirst(static fn (int $key, PluginInterface $plugin): bool => $plugin->getName() === $name);
 
@@ -83,6 +85,8 @@ class PluginManager
 
             return false;
         }
+
+        $this->notifyAssetCompilation($pluginInstance, $pluginEntity, $consoleOutput);
 
         $this->eventDispatcher->dispatch(new $action->value($pluginInstance, $pluginEntity));
 
@@ -236,5 +240,27 @@ class PluginManager
         }
 
         $container->setParameter('plugins_loaded_successfully', $successfullyLoaded);
+    }
+
+    private function notifyAssetCompilation(
+        PluginInterface $pluginInstance,
+        Plugin $pluginEntity,
+        ?SymfonyStyle $consoleOutput,
+    ): void {
+        if ('prod' !== $this->appEnv) {
+            return;
+        }
+
+        if (!$pluginInstance instanceof PluginWithAssetsInterface) {
+            return;
+        }
+
+        if (null !== $consoleOutput) {
+            $consoleOutput->info('Please run "php bin/console asset-map:compile" to compile assets afterwards.');
+
+            return;
+        }
+
+        $pluginEntity->setAssetCompilationRequired(true);
     }
 }

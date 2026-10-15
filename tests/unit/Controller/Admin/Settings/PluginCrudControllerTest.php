@@ -6,6 +6,8 @@ namespace App\Tests\unit\Controller\Admin\Settings;
 
 use App\Controller\Admin\Settings\PluginCrudController;
 use App\Entity\Plugin\Plugin;
+use App\PluginManager\AssetMapper\AssetMapCompiler;
+use App\PluginManager\AssetMapper\Exception\AssetCompilationException;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
 use App\PluginManager\PluginManager;
@@ -37,6 +39,9 @@ class PluginCrudControllerTest extends MockeryTestCase
     /** @phpstan-var PluginManager|MockInterface  */
     private PluginManager $pluginManagerMock;
 
+    /** @phpstan-var AssetMapCompiler|MockInterface  */
+    private AssetMapCompiler $assetMapCompilerMock;
+
     /** @phpstan-var CacheClearer|MockInterface  */
     private CacheClearer $cacheClearerMock;
 
@@ -44,8 +49,9 @@ class PluginCrudControllerTest extends MockeryTestCase
     {
         $this->pluginManagerMock = \Mockery::mock(PluginManager::class);
         $this->cacheClearerMock = \Mockery::mock(CacheClearer::class);
+        $this->assetMapCompilerMock = \Mockery::mock(AssetMapCompiler::class);
 
-        $this->controller = new PluginCrudController($this->pluginManagerMock, $this->cacheClearerMock);
+        $this->controller = new PluginCrudController($this->pluginManagerMock, $this->cacheClearerMock, $this->assetMapCompilerMock);
 
         parent::setUp();
     }
@@ -59,8 +65,9 @@ class PluginCrudControllerTest extends MockeryTestCase
 
         $result = $this->controller->configureActions($actions);
 
-        $this->assertCount(7, $result->getAsDto(Crud::PAGE_INDEX)->getActions());
+        $this->assertCount(8, $result->getAsDto(Crud::PAGE_INDEX)->getActions());
         $this->assertEquals(['delete', 'new', 'edit', 'batchDelete'], $result->getAsDto(Crud::PAGE_INDEX)->getDisabledActions());
+        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'compileAssets')?->getVariant());
         $this->assertEquals(ButtonVariant::Primary, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'refresh')?->getVariant());
         $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'activate')?->getVariant());
         $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'deactivate')?->getVariant());
@@ -70,7 +77,7 @@ class PluginCrudControllerTest extends MockeryTestCase
     public function testConfigureFieldsForReturnsExpectedFields(): void
     {
         $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
-        $this->assertCount(5, $fields);
+        $this->assertCount(6, $fields);
 
         $this->assertInstanceOf(TextField::class, $fields[0]);
         $this->assertEquals('name', $fields[0]->getAsDto()->getProperty());
@@ -82,6 +89,52 @@ class PluginCrudControllerTest extends MockeryTestCase
         $this->assertEquals('installedVersion', $fields[3]->getAsDto()->getProperty());
         $this->assertInstanceOf(BooleanField::class, $fields[4]);
         $this->assertEquals('active', $fields[4]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[5]);
+        $this->assertEquals('assetCompilationStatus', $fields[5]->getAsDto()->getProperty());
+    }
+
+    public function testAssetCompilationStatusFieldFormatsValue(): void
+    {
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
+        $fieldDto = $fields[5]->getAsDto();
+
+        $formatValue = $fieldDto->getFormatValueCallable();
+
+        $this->assertIsCallable($formatValue);
+
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('isAssetCompilationRequired')
+            ->once()
+            ->andReturn(true);
+
+        $this->assertSame(
+            '<span class="text-danger"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>',
+            $formatValue('', $pluginMock),
+        );
+    }
+
+    public function testAssetCompilationStatusFieldReturnsEmptyMarkupWhenCompilationIsNotRequired(): void
+    {
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
+        $fieldDto = $fields[5]->getAsDto();
+
+        $formatValue = $fieldDto->getFormatValueCallable();
+
+        $this->assertIsCallable($formatValue);
+
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('isAssetCompilationRequired')
+            ->once()
+            ->andReturn(false);
+
+        $this->assertSame(
+            '<span aria-hidden="true"></span>',
+            $formatValue('', $pluginMock),
+        );
     }
 
     /**
@@ -467,6 +520,122 @@ class PluginCrudControllerTest extends MockeryTestCase
             ->andReturn('url');
 
         $response = $this->controller->deactivatePlugin($pluginMock);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testCompileAssets(): void
+    {
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+        $requestStackMock = \Mockery::mock(RequestStack::class);
+        $sessionMock = \Mockery::mock(Session::class);
+        $flashBagMock = \Mockery::mock(FlashBagInterface::class);
+
+        $this->assetMapCompilerMock
+            ->shouldReceive('compile')
+            ->once();
+
+        $containerMock
+            ->shouldReceive('get')
+            ->never()
+            ->with('request_stack')
+            ->andReturn($requestStackMock);
+
+        $requestStackMock
+            ->shouldReceive('getSession')
+            ->never()
+            ->andReturn($sessionMock);
+
+        $sessionMock
+            ->shouldReceive('getFlashBag')
+            ->never()
+            ->andReturn($flashBagMock);
+
+        $flashBagMock
+            ->shouldReceive('add')
+            ->never()
+            ->with('error', 'message');
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->compileAssets();
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    public function testCompileAssetsCausingException(): void
+    {
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+        $requestStackMock = \Mockery::mock(RequestStack::class);
+        $sessionMock = \Mockery::mock(Session::class);
+        $flashBagMock = \Mockery::mock(FlashBagInterface::class);
+
+        $this->assetMapCompilerMock
+            ->shouldReceive('compile')
+            ->once()
+            ->andThrow(new AssetCompilationException('message'));
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with('request_stack')
+            ->andReturn($requestStackMock);
+
+        $requestStackMock
+            ->shouldReceive('getSession')
+            ->once()
+            ->andReturn($sessionMock);
+
+        $sessionMock
+            ->shouldReceive('getFlashBag')
+            ->once()
+            ->andReturn($flashBagMock);
+
+        $flashBagMock
+            ->shouldReceive('add')
+            ->once()
+            ->with('error', 'message');
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->compileAssets();
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 

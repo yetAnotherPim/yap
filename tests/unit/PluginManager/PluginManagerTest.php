@@ -9,6 +9,7 @@ use App\PluginManager\Event\Enum\Action;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
 use App\PluginManager\Event\WorkflowEvent\PluginActivateEvent;
 use App\PluginManager\Plugin\PluginInterface;
+use App\PluginManager\Plugin\PluginWithAssetsInterface;
 use App\PluginManager\PluginManager;
 use App\Repository\PluginRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,6 +20,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -604,6 +606,12 @@ class PluginManagerTest extends MockeryTestCase
             ->andReturn(\Mockery::mock(Definition::class));
 
         $container
+            ->shouldReceive('hasParameter')
+            ->once()
+            ->with('kernel.project_dir')
+            ->andReturn(true);
+
+        $container
             ->shouldReceive('setParameter')
             ->once()
             ->with('plugins_loaded_successfully', true);
@@ -681,6 +689,108 @@ class PluginManagerTest extends MockeryTestCase
             $pluginConfigurationFolder,
             $eventDispatcher ?? \Mockery::mock(EventDispatcherInterface::class),
             $this->loggerMock
+        );
+    }
+
+    public function testNotifyAssetCompilationDoesNothingOutsideProduction(): void
+    {
+        $pluginInstance = \Mockery::mock(PluginWithAssetsInterface::class);
+        $pluginEntity = new Plugin()->setAssetCompilationRequired(false);
+
+        $pluginManager = $this->createPluginManagerForAssetCompilation(
+            $pluginInstance,
+            $pluginEntity,
+            'test',
+        );
+
+        $this->assertTrue($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
+        $this->assertFalse($pluginEntity->isAssetCompilationRequired());
+    }
+
+    public function testNotifyAssetCompilationDoesNothingForPluginWithoutAssets(): void
+    {
+        $pluginInstance = \Mockery::mock(PluginInterface::class);
+        $pluginEntity = new Plugin()->setAssetCompilationRequired(false);
+
+        $pluginManager = $this->createPluginManagerForAssetCompilation(
+            $pluginInstance,
+            $pluginEntity,
+            'prod',
+        );
+
+        $this->assertTrue($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
+        $this->assertFalse($pluginEntity->isAssetCompilationRequired());
+    }
+
+    public function testNotifyAssetCompilationWritesConsoleNoticeWhenConsoleOutputIsAvailable(): void
+    {
+        $pluginInstance = \Mockery::mock(PluginWithAssetsInterface::class);
+        $pluginEntity = new Plugin()->setAssetCompilationRequired(false);
+        $consoleOutput = \Mockery::mock(SymfonyStyle::class);
+
+        $consoleOutput
+            ->shouldReceive('info')
+            ->once()
+            ->with('Please run "php bin/console asset-map:compile" to compile assets afterwards.');
+
+        $pluginManager = $this->createPluginManagerForAssetCompilation(
+            $pluginInstance,
+            $pluginEntity,
+            'prod',
+        );
+
+        $this->assertTrue(
+            $pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin', $consoleOutput),
+        );
+        $this->assertFalse($pluginEntity->isAssetCompilationRequired());
+    }
+
+    public function testNotifyAssetCompilationSetsFlagWhenConsoleOutputIsUnavailable(): void
+    {
+        $pluginInstance = \Mockery::mock(PluginWithAssetsInterface::class);
+        $pluginEntity = new Plugin()->setAssetCompilationRequired(false);
+
+        $pluginManager = $this->createPluginManagerForAssetCompilation(
+            $pluginInstance,
+            $pluginEntity,
+            'prod',
+        );
+
+        $this->assertTrue($pluginManager->performWorkflow(Action::ACTIVATE, 'SamplePlugin'));
+        $this->assertTrue($pluginEntity->isAssetCompilationRequired());
+    }
+
+    /**
+     * @throws PluginWorkflowException
+     */
+    private function createPluginManagerForAssetCompilation(
+        PluginInterface $pluginInstance,
+        Plugin $pluginEntity,
+        string $appEnv,
+    ): PluginManager {
+        $pluginInstance
+            ->shouldReceive('getName')
+            ->once()
+            ->andReturn('SamplePlugin');
+
+        $pluginRepository = \Mockery::mock(PluginRepository::class);
+        $pluginRepository
+            ->shouldReceive('getPluginEntity')
+            ->once()
+            ->with($pluginInstance::class)
+            ->andReturn($pluginEntity);
+
+        $eventDispatcher = \Mockery::mock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->shouldReceive('dispatch')
+            ->once()
+            ->andReturnUsing(static fn (object $event): object => $event);
+
+        return $this->createPluginManager(
+            plugins: [$pluginInstance],
+            pluginRepository: $pluginRepository,
+            appEnv: $appEnv,
+            eventDispatcher: $eventDispatcher,
         );
     }
 }

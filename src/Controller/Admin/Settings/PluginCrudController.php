@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller\Admin\Settings;
 
 use App\Entity\Plugin\Plugin;
+use App\PluginManager\AssetMapper\AssetMapCompiler;
+use App\PluginManager\AssetMapper\Exception\AssetCompilationException;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Event\Enum\Action as PluginAction;
 use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
@@ -32,6 +34,7 @@ class PluginCrudController extends AbstractCrudController
     public function __construct(
         private readonly PluginManager $pluginManager,
         private readonly CacheClearer $cacheClearer,
+        private readonly AssetMapCompiler $assetMapCompiler,
     ) {
     }
 
@@ -55,6 +58,11 @@ class PluginCrudController extends AbstractCrudController
                     ->createAsGlobalAction()
                     ->asPrimaryAction()
                     ->linkToCrudAction('refreshPlugins')
+            )
+            ->add(Crud::PAGE_INDEX,
+                Action::new('compileAssets', new TranslatableMessage('plugin_manager.labels.actions.compile', [], 'admin'), 'fa fa-gears')
+                    ->createAsGlobalAction()
+                    ->linkToCrudAction('compileAssets')
             )
             ->add(Crud::PAGE_INDEX,
                 Action::new('activate', new TranslatableMessage('plugin_manager.labels.actions.activate', [], 'admin'), 'fa fa-check')
@@ -136,6 +144,18 @@ class PluginCrudController extends AbstractCrudController
         return $this->redirectToIndex();
     }
 
+    #[AdminRoute('/compileAssets')]
+    public function compileAssets(): Response
+    {
+        try {
+            $this->assetMapCompiler->compile();
+        } catch (AssetCompilationException $exception) {
+            $this->addFlash('error', $exception->getMessage());
+        }
+
+        return $this->redirectToIndex();
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -144,6 +164,14 @@ class PluginCrudController extends AbstractCrudController
             TextField::new('version', new TranslatableMessage('plugin_manager.labels.version', [], 'admin')),
             TextField::new('installedVersion', new TranslatableMessage('plugin_manager.labels.installed_version', [], 'admin')),
             BooleanField::new('active', new TranslatableMessage('plugin_manager.labels.active', [], 'admin')),
+            TextField::new('assetCompilationStatus', new TranslatableMessage('plugin_manager.labels.asset_compilation_required', [], 'admin'))
+                ->setValue('')
+                ->formatValue(
+                    static fn (mixed $value, Plugin $plugin): string => $plugin->isAssetCompilationRequired()
+                        ? '<span class="text-danger"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>'
+                        : '<span aria-hidden="true"></span>',
+                )
+                ->renderAsHtml(),
         ];
     }
 

@@ -82,6 +82,8 @@ class PluginTest extends MockeryTestCase
             ['setInstalledVersion', 'getInstalledVersion', null, \TypeError::class],
             ['setVersion', 'getVersion', '0.9.0'],
             ['setVersion', 'getVersion', null, \TypeError::class],
+            ['setAssetCompilationRequired', 'isAssetCompilationRequired', true],
+            ['setAssetCompilationRequired', 'isAssetCompilationRequired', null, \TypeError::class],
         ];
     }
 }
