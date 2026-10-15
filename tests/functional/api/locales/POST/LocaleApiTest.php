@@ -96,7 +96,7 @@ class LocaleApiTest extends ApiTestCase
             ]
         );
 
-        $this->assertResponseStatusCodeSame(500);
+        $this->assertResponseStatusCodeSame(422);
     }
 
     /**
