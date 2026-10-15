@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\LocaleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LocaleRepository::class)]
@@ -20,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     new Post(),
     new Delete(),
 ])]
+#[UniqueEntity(fields: ['id'])]
 class Locale
 {
     #[ORM\Id]

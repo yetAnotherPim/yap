@@ -49,7 +49,7 @@ class PasswordFormConfigurator
      */
     public function addPasswordEventListener(FormBuilderInterface $formBuilder): FormBuilderInterface
     {
-        return $formBuilder->addEventListener(FormEvents::POST_SUBMIT, $this->hashPassword());
+        return $formBuilder->addEventListener(FormEvents::POST_SUBMIT, $this->hashPassword(), 100);
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Entity\User\Enum\Roles;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
@@ -18,6 +19,8 @@ use Webmozart\Assert\Assert;
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'uniq_user_username', fields: ['username'])]
 #[ORM\UniqueConstraint(name: 'uniq_user_email', fields: ['email'])]
+#[UniqueEntity(fields: ['email'])]
+#[UniqueEntity(fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     // TODO: On insufficient permissions, redirect to login and display flash message

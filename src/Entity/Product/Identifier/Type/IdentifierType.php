@@ -11,6 +11,7 @@ use App\Entity\Product\Identifier\Type\Enum\DataType;
 use App\Repository\IdentifierTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\UniqueConstraint(name: 'unique_product_identifier_type_title', columns: ['title'])]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['title'])]
 class IdentifierType extends TimestampableEntity
 {
     #[ORM\Id]

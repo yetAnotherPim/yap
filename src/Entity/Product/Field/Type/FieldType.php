@@ -22,6 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -41,6 +42,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Get]
 #[GetCollection]
 #[Delete]
+#[UniqueEntity(fields: ['code'])]
 class FieldType extends TimestampableEntity implements TranslatableTitleInterface
 {
     use TitleTranslationTrait;

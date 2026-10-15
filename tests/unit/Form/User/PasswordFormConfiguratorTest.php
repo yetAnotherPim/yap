@@ -167,6 +167,7 @@ final class PasswordFormConfiguratorTest extends MockeryTestCase
             ->with(
                 FormEvents::POST_SUBMIT,
                 \Mockery::type(\Closure::class),
+                100
             )
             ->andReturnSelf();
 
