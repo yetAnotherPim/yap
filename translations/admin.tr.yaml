@@ -22,11 +22,13 @@ plugin_manager:
         version: Sürüm
         installed_version: Yüklü sürüm
         active: Etkin
+        asset_compilation_required: 'Varlıkların derlenmesi gerekiyor'
         actions:
             reload: Yeniden yükle
             activate: Etkinleştir
             deactivate: Devre dışı bırak
             update: Güncelle
+            compile_assets: 'Varlıkları derle'
 user:
     title: Kullanıcılar
     entity:

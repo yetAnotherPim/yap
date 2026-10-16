@@ -22,11 +22,13 @@ plugin_manager:
         version: Različica
         installed_version: Nameščena različica
         active: Aktivno
+        asset_compilation_required: 'Potrebna je kompilacija virov'
         actions:
             reload: Znova naloži
             activate: Aktiviraj
             deactivate: Deaktiviraj
             update: Posodobi
+            compile_assets: 'Prevedi vire'
 user:
     title: Uporabniki
     entity:

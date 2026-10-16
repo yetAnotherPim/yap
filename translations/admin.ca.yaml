@@ -22,11 +22,13 @@ plugin_manager:
         version: Versió
         installed_version: Versió instal·lada
         active: Actiu
+        asset_compilation_required: 'Requereix compilar els recursos'
         actions:
             reload: Torna a carregar
             activate: Activa
             deactivate: Desactiva
             update: Actualitza
+            compile_assets: 'Compila els recursos'
 user:
     title: Usuaris
     entity:

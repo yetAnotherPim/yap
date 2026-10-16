@@ -54,6 +54,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
 #[CoversClass(\App\plugins\Scheduler\Plugin::class)]
+#[CoversClass(\App\plugins\JsConsumer\Plugin::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(User::class)]
@@ -177,7 +178,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
 
         $dumpfileContent = file_get_contents(__DIR__.'/../../../../../var/plugin_configuration/test_plugin_configuration');
         $this->assertEmpty($dumpfileContent);
@@ -396,7 +397,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
         $content = $response->getContent();
         $this->assertStringContainsString('"active":false,"version":"1.0.0","updatable":false', $content);
         $this->assertStringNotContainsString('"installedVersion', $content);
@@ -411,7 +412,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
         $this->assertStringContainsString('"active":false', $response->getContent());
         $this->assertStringNotContainsString('"installedVersion', $content);
     }

@@ -10,6 +10,7 @@ use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
 use App\Entity\User\User;
+use App\PluginManager\Event\Admin\Assets\AdminAssetsConfiguredEvent;
 use App\PluginManager\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\Repository\LocaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -35,6 +36,7 @@ use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(IndexController::class)]
 #[UsesClass(MenuItemsConfiguredEvent::class)]
+#[UsesClass(AdminAssetsConfiguredEvent::class)]
 class IndexControllerTest extends MockeryTestCase
 {
     /** @var LocaleRepository|MockInterface */
@@ -253,6 +255,11 @@ class IndexControllerTest extends MockeryTestCase
 
     public function testConfigureAssets(): void
     {
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->once()
+            ->with(\Mockery::type(AdminAssetsConfiguredEvent::class));
+
         $assets = $this->controller->configureAssets();
 
         $this->assertArrayHasKey('admin', $assets->getAsDto()->getAssetMapperAssets());

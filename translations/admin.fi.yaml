@@ -22,11 +22,13 @@ plugin_manager:
         version: Versio
         installed_version: Asennettu versio
         active: Aktiivinen
+        asset_compilation_required: 'Edellyttää resurssien kääntämistä'
         actions:
             reload: Lataa uudelleen
             activate: Aktivoi
             deactivate: Poista käytöstä
             update: Päivitä
+            compile_assets: 'Käännä resurssit'
 user:
     title: Käyttäjät
     entity:

@@ -22,11 +22,13 @@ plugin_manager:
         version: Wersja
         installed_version: Zainstalowana wersja
         active: Aktywny
+        asset_compilation_required: 'Wymagana kompilacja zasobów'
         actions:
             reload: Przeładuj
             activate: Aktywuj
             deactivate: Dezaktywuj
             update: Aktualizuj
+            compile_assets: 'Kompiluj zasoby'
 user:
     title: Użytkownicy
     entity:

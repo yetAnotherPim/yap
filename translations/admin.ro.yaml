@@ -22,11 +22,13 @@ plugin_manager:
         version: Versiune
         installed_version: Versiune instalată
         active: Activ
+        asset_compilation_required: 'Este necesară compilarea resurselor'
         actions:
             reload: Reîncarcă
             activate: Activează
             deactivate: Dezactivează
             update: Actualizează
+            compile_assets: 'Compilează resursele'
 user:
     title: Utilizatori
     entity:

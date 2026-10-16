@@ -22,11 +22,13 @@ plugin_manager:
         version: Verze
         installed_version: Nainstalovaná verze
         active: Aktivní
+        asset_compilation_required: 'Vyžaduje kompilaci prostředků'
         actions:
             reload: Načíst znovu
             activate: Aktivovat
             deactivate: Deaktivovat
             update: Aktualizovat
+            compile_assets: 'Kompilovat prostředky'
 user:
     title: Uživatelé
     entity:

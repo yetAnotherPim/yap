@@ -22,11 +22,13 @@ plugin_manager:
         version: Versioun
         installed_version: Installéiert Versioun
         active: Aktiv
+        asset_compilation_required: 'Ressourcenkompiléierung erfuerderlech'
         actions:
             reload: Nei lueden
             activate: Aktivéieren
             deactivate: Desaktivéieren
             update: Aktualiséieren
+            compile_assets: 'Ressourcen kompiléieren'
 user:
     title: Benotzer
     entity:

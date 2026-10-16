@@ -22,11 +22,13 @@ plugin_manager:
         version: الإصدار
         installed_version: الإصدار المثبت
         active: نشط
+        asset_compilation_required: 'يتطلب تجميع الأصول'
         actions:
             reload: إعادة تحميل
             activate: تفعيل
             deactivate: تعطيل
             update: تحديث
+            compile_assets: 'تجميع الأصول'
 user:
     title: المستخدمون
     entity:

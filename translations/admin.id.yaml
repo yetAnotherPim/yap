@@ -22,11 +22,13 @@ plugin_manager:
         version: Versi
         installed_version: Versi terpasang
         active: Aktif
+        asset_compilation_required: 'Memerlukan kompilasi aset'
         actions:
             reload: Muat ulang
             activate: Aktifkan
             deactivate: Nonaktifkan
             update: Perbarui
+            compile_assets: 'Kompilasi aset'
 user:
     title: Pengguna
     entity:

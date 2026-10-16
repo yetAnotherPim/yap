@@ -22,11 +22,13 @@ plugin_manager:
         version: Bertsioa
         installed_version: Instalatutako bertsioa
         active: Aktibo
+        asset_compilation_required: 'Baliabideak konpilatzea beharrezkoa'
         actions:
             reload: Birkargatu
             activate: Aktibatu
             deactivate: Desaktibatu
             update: Eguneratu
+            compile_assets: 'Konpilatu baliabideak'
 user:
     title: Erabiltzaileak
     entity:

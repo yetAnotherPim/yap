@@ -39,6 +39,8 @@ use App\Form\Title\Translation\Synchronizer\TitleTranslationSynchronizer;
 use App\Form\User\PasswordFormConfigurator;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
+use App\Messenger\QueueMonitor\QueueMonitor;
+use App\PluginManager\AssetMapper\AssetMapCompiler;
 use App\PluginManager\Cache\CacheClearer;
 use App\PluginManager\Cache\Decorator\CacheClearerDecorator;
 use App\PluginManager\PluginManager;
@@ -77,6 +79,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[CoversClass(CacheClearer::class)]
 #[CoversClass(CacheClearerDecorator::class)]
 #[CoversClass(\App\plugins\Scheduler\Plugin::class)]
+#[CoversClass(\App\plugins\JsConsumer\Plugin::class)]
 // Deleting the cache is causing instantiation of following classes
 #[UsesClass(FieldTypeCrudController::class)]
 #[UsesClass(IdentifierCrudController::class)]
@@ -116,6 +119,8 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(ProductColumnConfigurationRepository::class)]
 #[UsesClass(AccountCrudController::class)]
 #[UsesClass(PasswordFormConfigurator::class)]
+#[UsesClass(AssetMapCompiler::class)]
+#[UsesClass(QueueMonitor::class)]
 #[ResetDatabase]
 class PluginTest extends ApiTestCase
 {
@@ -165,7 +170,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
 
         $this->client->request(
             'GET',
@@ -177,7 +182,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
     }
 
     /**
@@ -246,7 +251,7 @@ class PluginTest extends ApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJsonContains(['totalItems' => 2]);
+        $this->assertJsonContains(['totalItems' => 3]);
     }
 
     /**

@@ -22,11 +22,13 @@ plugin_manager:
         version: Version
         installed_version: Installerad version
         active: Aktiv
+        asset_compilation_required: 'Resurskompilering krävs'
         actions:
             reload: Ladda om
             activate: Aktivera
             deactivate: Inaktivera
             update: Uppdatera
+            compile_assets: 'Kompilera resurser'
 user:
     title: Användare
     entity:

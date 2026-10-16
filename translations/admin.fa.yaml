@@ -22,11 +22,13 @@ plugin_manager:
         version: نسخه
         installed_version: نسخه نصب‌شده
         active: فعال
+        asset_compilation_required: 'نیازمند کامپایل دارایی‌ها'
         actions:
             reload: بارگذاری مجدد
             activate: فعال‌سازی
             deactivate: غیرفعال‌سازی
             update: به‌روزرسانی
+            compile_assets: 'کامپایل دارایی‌ها'
 user:
     title: کاربران
     entity:

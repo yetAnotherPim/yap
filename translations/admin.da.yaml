@@ -22,11 +22,13 @@ plugin_manager:
         version: Version
         installed_version: Installeret version
         active: Aktiv
+        asset_compilation_required: 'Kræver kompilering af assets'
         actions:
             reload: Genindlæs
             activate: Aktivér
             deactivate: Deaktivér
             update: Opdatér
+            compile_assets: 'Kompilér assets'
 user:
     title: Brugere
     entity:

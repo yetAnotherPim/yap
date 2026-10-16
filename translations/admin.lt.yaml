@@ -22,11 +22,13 @@ plugin_manager:
         version: Versija
         installed_version: Įdiegta versija
         active: Aktyvus
+        asset_compilation_required: 'Reikia kompiliuoti išteklius'
         actions:
             reload: Įkelti iš naujo
             activate: Aktyvuoti
             deactivate: Deaktyvuoti
             update: Atnaujinti
+            compile_assets: 'Kompiliuoti išteklius'
 user:
     title: Naudotojai
     entity:

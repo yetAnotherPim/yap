@@ -22,11 +22,13 @@ plugin_manager:
         version: Versie
         installed_version: Geïnstalleerde versie
         active: Actief
+        asset_compilation_required: 'Assetcompilatie vereist'
         actions:
             reload: Herladen
             activate: Activeren
             deactivate: Deactiveren
             update: Bijwerken
+            compile_assets: 'Assets compileren'
 user:
     title: Gebruikers
     entity:

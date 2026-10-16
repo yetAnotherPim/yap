@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\plugins\JsConsumer;
 
-use App\PluginManager\Plugin\PluginInterface;
 use App\PluginManager\Plugin\PluginWithAssetsInterface;
 use Doctrine\ORM\EntityManagerInterface;
 

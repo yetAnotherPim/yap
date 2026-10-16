@@ -22,11 +22,13 @@ plugin_manager:
         version: 版本
         installed_version: 已安装版本
         active: 启用
+        asset_compilation_required: '需要编译资源'
         actions:
             reload: 重新加载
             activate: 启用
             deactivate: 停用
             update: 更新
+            compile_assets: '编译资源'
 user:
     title: 用户
     entity:

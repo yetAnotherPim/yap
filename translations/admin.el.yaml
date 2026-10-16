@@ -22,11 +22,13 @@ plugin_manager:
         version: Έκδοση
         installed_version: Εγκατεστημένη έκδοση
         active: Ενεργό
+        asset_compilation_required: 'Απαιτείται μεταγλώττιση πόρων'
         actions:
             reload: Επαναφόρτωση
             activate: Ενεργοποίηση
             deactivate: Απενεργοποίηση
             update: Ενημέρωση
+            compile_assets: 'Μεταγλώττιση πόρων'
 user:
     title: Χρήστες
     entity:

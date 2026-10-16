@@ -22,11 +22,13 @@ plugin_manager:
         version: Verzija
         installed_version: Instalirana verzija
         active: Aktivno
+        asset_compilation_required: 'Potrebna je kompilacija resursa'
         actions:
             reload: Ponovno učitaj
             activate: Aktiviraj
             deactivate: Deaktiviraj
             update: Ažuriraj
+            compile_assets: 'Kompiliraj resurse'
 user:
     title: Korisnici
     entity:

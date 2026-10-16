@@ -23,11 +23,13 @@ plugin_manager:
         version: 'Version'
         installed_version: 'installierte Version'
         active: 'Aktiv'
+        asset_compilation_required: 'Asset-Kompilierung erforderlich'
         actions:
             reload: 'Neu laden'
             activate: 'Aktivieren'
             deactivate: 'Deaktivieren'
             update: 'Update'
+            compile_assets: 'Assets kompilieren'
 
 user:
     title: 'Benutzer'

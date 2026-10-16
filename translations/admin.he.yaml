@@ -22,11 +22,13 @@ plugin_manager:
         version: גרסה
         installed_version: גרסה מותקנת
         active: פעיל
+        asset_compilation_required: 'נדרש הידור נכסים'
         actions:
             reload: טען מחדש
             activate: הפעל
             deactivate: השבת
             update: עדכן
+            compile_assets: 'הידור נכסים'
 user:
     title: משתמשים
     entity:

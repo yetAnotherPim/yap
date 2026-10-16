@@ -22,11 +22,13 @@ plugin_manager:
         version: Տարբերակ
         installed_version: Տեղադրված տարբերակ
         active: Ակտիվ
+        asset_compilation_required: 'Պահանջվում է ռեսուրսների կոմպիլացում'
         actions:
             reload: Վերաբեռնել
             activate: Ակտիվացնել
             deactivate: Ապաակտիվացնել
             update: Թարմացնել
+            compile_assets: 'Կոմպիլացնել ռեսուրսները'
 user:
     title: Օգտատերեր
     entity:

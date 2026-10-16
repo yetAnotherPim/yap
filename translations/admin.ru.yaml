@@ -22,11 +22,13 @@ plugin_manager:
         version: Версия
         installed_version: Установленная версия
         active: Активный
+        asset_compilation_required: 'Требуется компиляция ресурсов'
         actions:
             reload: Перезагрузить
             activate: Активировать
             deactivate: Деактивировать
             update: Обновить
+            compile_assets: 'Компилировать ресурсы'
 user:
     title: Пользователи
     entity:

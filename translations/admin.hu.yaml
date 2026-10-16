@@ -22,11 +22,13 @@ plugin_manager:
         version: Verzió
         installed_version: Telepített verzió
         active: Aktív
+        asset_compilation_required: 'Erőforrás-fordítás szükséges'
         actions:
             reload: Újratöltés
             activate: Aktiválás
             deactivate: Deaktiválás
             update: Frissítés
+            compile_assets: 'Erőforrások fordítása'
 user:
     title: Felhasználók
     entity:
