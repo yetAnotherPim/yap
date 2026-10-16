@@ -108,6 +108,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(TitleTranslationFieldRenderer::class)]
 #[UsesClass(ProductFieldTranslationComposer::class)]
 #[UsesClass(\App\plugins\Scheduler\Plugin::class)]
+#[CoversClass(\App\plugins\JsConsumer\Plugin::class)]
 #[UsesClass(DefaultTranslationSynchronizer::class)]
 #[UsesClass(ProductColumnsComposer::class)]
 #[UsesClass(ProductFilterComposer::class)]

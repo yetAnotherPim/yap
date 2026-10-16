@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\plugins\Scheduler\EventListener;
 
-use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
+use App\PluginManager\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\plugins\Scheduler\EventListener\MenuItemsConfiguredListener;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
 use Mockery;

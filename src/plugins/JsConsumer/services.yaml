@@ -1,0 +1,11 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\plugins\JsConsumer\:
+        resource: './'
+        exclude: './Plugin.php'
+

@@ -87,6 +87,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
 #[CoversClass(\App\plugins\Scheduler\Plugin::class)]
+#[CoversClass(\App\plugins\JsConsumer\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
 #[UsesClass(PluginActivateCommand::class)]
 #[UsesClass(PluginActivateEvent::class)]

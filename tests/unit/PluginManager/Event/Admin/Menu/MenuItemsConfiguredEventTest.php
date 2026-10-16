@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\unit\Event\Admin\Menu;
+namespace App\Tests\unit\PluginManager\Event\Admin\Menu;
 
-use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
+use App\PluginManager\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

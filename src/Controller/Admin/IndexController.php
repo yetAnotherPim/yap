@@ -16,7 +16,8 @@ use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
 use App\Entity\User\User;
-use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
+use App\PluginManager\Event\Admin\Assets\AdminAssetsConfiguredEvent;
+use App\PluginManager\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\Repository\LocaleRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -124,8 +125,13 @@ class IndexController extends AbstractDashboardController
 
     public function configureAssets(): Assets
     {
-        return Assets::new()
+        $assets = parent::configureAssets()
             ->addAssetMapperEntry('admin');
+
+        $this->eventDispatcher
+            ->dispatch(new AdminAssetsConfiguredEvent($assets));
+
+        return $assets;
     }
 
     public function configureDashboard(): Dashboard

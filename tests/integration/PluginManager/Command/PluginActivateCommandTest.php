@@ -85,6 +85,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[CoversClass(PluginRepository::class)]
 #[CoversClass(Action::class)]
 #[CoversClass(\App\plugins\Scheduler\Plugin::class)]
+#[CoversClass(\App\plugins\JsConsumer\Plugin::class)]
 #[UsesClass(PluginsListCommand::class)]
 // Deleting the cache is causing instantiation of following classes
 #[UsesClass(FieldTypeCrudController::class)]

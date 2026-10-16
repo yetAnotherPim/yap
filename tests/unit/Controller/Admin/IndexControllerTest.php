@@ -10,7 +10,7 @@ use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Entity\Locale\Locale;
 use App\Entity\User\User;
-use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
+use App\PluginManager\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\Repository\LocaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;

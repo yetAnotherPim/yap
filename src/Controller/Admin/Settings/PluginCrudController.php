@@ -60,7 +60,7 @@ class PluginCrudController extends AbstractCrudController
                     ->linkToCrudAction('refreshPlugins')
             )
             ->add(Crud::PAGE_INDEX,
-                Action::new('compileAssets', new TranslatableMessage('plugin_manager.labels.actions.compile', [], 'admin'), 'fa fa-gears')
+                Action::new('compileAssets', new TranslatableMessage('plugin_manager.labels.actions.compile_assets', [], 'admin'), 'fa fa-gears')
                     ->createAsGlobalAction()
                     ->linkToCrudAction('compileAssets')
             )

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Event\Admin\Menu;
+namespace App\PluginManager\Event\Admin\Menu;
 
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
 use Symfony\Contracts\EventDispatcher\Event;

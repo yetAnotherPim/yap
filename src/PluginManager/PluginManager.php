@@ -26,6 +26,8 @@ class PluginManager
 {
     private const string TWIG_FOLDER = 'twig/';
 
+    private const string ASSET_FOLDER = 'assets/';
+
     private const string TRANSLATION_FOLDER = 'translations/';
     private const string SERVICE_DEFINITION_FILE = 'services.yaml';
     private const string PLUGIN_FOLDER = __DIR__.'/../plugins/';
@@ -198,6 +200,7 @@ class PluginManager
             $serviceDefinitionFile = self::PLUGIN_FOLDER.$pluginName.'/'.self::SERVICE_DEFINITION_FILE;
             $twigFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::TWIG_FOLDER);
             $translationFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::TRANSLATION_FOLDER);
+            $assetFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::ASSET_FOLDER);
 
             if (false === file_exists($serviceDefinitionFile)) {
                 continue;
@@ -229,6 +232,19 @@ class PluginManager
                             'translator' => [
                                 'paths' => [
                                     $translationFolder,
+                                ],
+                            ],
+                        ],
+                    );
+                }
+
+                if (false !== $assetFolder && is_dir($assetFolder)) {
+                    $container->prependExtensionConfig(
+                        'framework',
+                        [
+                            'asset_mapper' => [
+                                'paths' => [
+                                    $assetFolder => 'plugins/'.$pluginName,
                                 ],
                             ],
                         ],

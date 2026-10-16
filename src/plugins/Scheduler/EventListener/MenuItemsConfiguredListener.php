@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\plugins\Scheduler\EventListener;
 
-use App\Event\Admin\Menu\MenuItemsConfiguredEvent;
+use App\PluginManager\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Translation\TranslatableMessage;
