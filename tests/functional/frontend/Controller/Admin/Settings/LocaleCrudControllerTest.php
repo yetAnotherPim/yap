@@ -17,6 +17,7 @@ use App\Controller\Admin\Settings\ProductTypeFieldConfigurationCrudController;
 use App\Controller\Admin\Settings\UserCrudController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
+use App\Controller\Provider\Dto\DashboardStatistic;
 use App\Controller\Provider\SystemStatus\InputVarsConfig;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
@@ -24,7 +25,9 @@ use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Localisation\Exception\DefaultLocaleIsNotDefinedException;
+use App\Messenger\QueueMonitor\QueueMonitor;
 use App\PluginManager\Cache\CacheClearer;
+use App\PluginManager\Event\Admin\Assets\AdminAssetsConfiguredEvent;
 use App\PluginManager\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\PluginManager\PluginManager;
 use App\Repository\FieldTypeRepository;
@@ -71,6 +74,9 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(FieldTypeRepository::class)]
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductTypeRepository::class)]
+#[UsesClass(DashboardStatistic::class)]
+#[UsesClass(QueueMonitor::class)]
+#[UsesClass(AdminAssetsConfiguredEvent::class)]
 class LocaleCrudControllerTest extends WebTestCase
 {
     use Factories;

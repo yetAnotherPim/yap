@@ -18,6 +18,7 @@ use App\Controller\Admin\Settings\UserCrudController;
 use App\Controller\Admin\User\AccountCrudController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
+use App\Controller\Provider\Dto\DashboardStatistic;
 use App\Controller\Provider\SystemStatus\InputVarsConfig;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Entity\Locale\Locale;
@@ -41,7 +42,10 @@ use App\Form\User\PasswordFormConfigurator;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Localisation\Event\EventListener\LoginSuccessListener;
 use App\Localisation\Exception\DefaultLocaleIsNotDefinedException;
+use App\Messenger\QueueMonitor\QueueMonitor;
+use App\PluginManager\AssetMapper\AssetMapCompiler;
 use App\PluginManager\Cache\CacheClearer;
+use App\PluginManager\Event\Admin\Assets\AdminAssetsConfiguredEvent;
 use App\PluginManager\Event\Admin\Menu\MenuItemsConfiguredEvent;
 use App\PluginManager\PluginManager;
 use App\Repository\FieldTypeRepository;
@@ -107,6 +111,10 @@ use Symfony\Component\HttpFoundation\Response;
 #[UsesClass(ProductColumnConfigurationRepository::class)]
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductTypeRepository::class)]
+#[UsesClass(DashboardStatistic::class)]
+#[UsesClass(QueueMonitor::class)]
+#[UsesClass(AssetMapCompiler::class)]
+#[UsesClass(AdminAssetsConfiguredEvent::class)]
 class IndexControllerTest extends WebTestCase
 {
     use LoginTrait;
