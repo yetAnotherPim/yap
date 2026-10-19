@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: '调度器'
+    tasks:
+        title: '计划任务'
+        columns:
+            title: '标题'
+            description: '描述'
+        remove_obsolete_fields:
+            title: '删除过时字段'
+            description: '从产品中删除未分配给产品类型的字段'
+        remove_obsolete_field_value_translations:
+            title: '删除过时的字段值翻译'
+            description: '删除未配置为可翻译字段的过时字段值翻译。'
+        label: '任务'
+        warning:
+            not_active: '计划任务在过去 24 小时内未执行。'

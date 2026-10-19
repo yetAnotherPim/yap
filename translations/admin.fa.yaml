@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: نوع فیلد
+        default_value: مقدار پیش‌فرض
+        required: الزامی
+    alert:
+        duplicate_field_type: 'این نوع فیلد قبلاً استفاده شده است.'
+    default_value:
+        help: |-
+            مقدار پیش‌فرض: محصول.
+
+            انواع:
+            'Some text'
+            '17.06'
+            '1' - فعال (کادر انتخاب)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: مدیریت افزونه‌ها
+    labels:
+        name: نام
+        namespace: فضای نام
+        version: نسخه
+        installed_version: نسخه نصب‌شده
+        active: فعال
+        asset_compilation_required: 'نیازمند کامپایل دارایی‌ها'
+        actions:
+            reload: بارگذاری مجدد
+            activate: فعال‌سازی
+            deactivate: غیرفعال‌سازی
+            update: به‌روزرسانی
+            compile_assets: 'کامپایل دارایی‌ها'
+user:
+    title: کاربران
+    entity:
+        title: کاربر
+        title_plural: کاربران
+    labels:
+        master_data: داده‌های اصلی
+        password: رمز عبور
+        repeat_password: تکرار رمز عبور
+        username: نام کاربری
+        role: نقش
+        email: ایمیل
+        first_name: نام
+        last_name: نام خانوادگی
+types:
+    title: انواع
+    label:
+        identifier: شناسه
+        field: فیلد
+        product: محصول
+identifier_type:
+    title: نوع شناسه
+    data_type:
+        string: رشته
+        integer: عدد صحیح
+    entity:
+        title: نوع شناسه
+        title_plural: انواع شناسه
+    labels:
+        title: عنوان
+        data_type: نوع داده
+product_type:
+    title: نوع محصول
+    entity:
+        title: نوع محصول
+        title_plural: انواع محصول
+    labels:
+        title: عنوان
+        code: کد
+        fields: فیلدها
+field_type:
+    title: نوع فیلد
+    input_type:
+        string: رشته
+        integer: عدد صحیح
+        checkbox: کادر انتخاب
+        date: تاریخ
+        file: فایل
+        section: بخش
+        text: متن
+        textarea: ناحیه متن
+        datetime: تاریخ و زمان
+        time: زمان
+        number: عدد
+        color: رنگ
+        country: کشور
+        telephone: تلفن
+        email: ایمیل
+        language: زبان
+        locale: محلی
+        texteditor: ویرایشگر متن
+        url: URL
+        select: انتخاب
+        multiselect: انتخاب چندگانه
+        image: تصویر
+    entity:
+        title: نوع فیلد
+        title_plural: انواع فیلد
+    labels:
+        title: عنوان
+        code: کد
+        translatable: قابل ترجمه
+        filterable: قابل فیلتر
+        input_type: نوع ورودی
+        decimal_separator: جداکننده اعشار
+locale:
+    title: محلی‌ها
+    entity:
+        title: محلی
+        title_plural: محلی‌ها
+    labels:
+        content_translation_enabled: 'استفاده برای ترجمه محتوا'
+        default: پیش‌فرض
+    actions:
+        set_as_default: تنظیم به‌عنوان پیش‌فرض
+settings:
+    title: تنظیمات
+product:
+    title: محصولات
+    entity:
+        title: محصول
+        title_plural: محصولات
+    labels:
+        identifiers: شناسه‌ها
+        product_type: نوع محصول
+        created_at: ایجاد شده در
+        updated_at: به‌روزرسانی شده در
+        master_data: داده‌های اصلی
+        fields: فیلدها
+        batch_edit: 'ویرایش گروهی'
+    batch_selection:
+        page_selected: 'موارد این صفحه انتخاب شده‌اند.'
+        select_all: 'انتخاب همه'
+        all_selected: 'همه موارد انتخاب شده‌اند.'
+        clear_selection: 'لغو انتخاب'
+    batch_edit:
+        notice: 'تغییرات به‌صورت ناهمگام پردازش می‌شوند. MessageConsumer باید فعال باشد یا در عوض ماژول JS Consumer فعال شود.'
+        dispatched_singular: '۱ به‌روزرسانی محصول برای پردازش در صف قرار گرفت.'
+        dispatched_plural: '%count% به‌روزرسانی محصول برای پردازش در صف قرار گرفت.'
+dashboard:
+    title: 'داشبورد'
+    system_status:
+        title: 'وضعیت سیستم'
+        all_ok: 'OK'
+        input_vars:
+            message: 'نوع محصول «%productType%» به %fieldCount% متغیر ورودی نیاز دارد. مقدار پیکربندی‌شده برای max_input_vars برابر %maxInputVars% است.'
+    products:
+        latest: 'جدیدترین محصولات'
+
+filter:
+    is_set: '%name% تنظیم شده است'
+    labels:
+        translations: 'ترجمه‌ها'
+        identifiers: 'شناسه‌ها'
+        fields: 'فیلدها'
+        general: 'عمومی'
+
+general:
+    labels:
+        translation: ترجمه
+        locale: محلی
+        language: زبان
+        translations: 'ترجمه‌ها'
+        value: 'مقدار'
+account:
+    labels:
+        current_password: 'رمز عبور فعلی'
+        account: 'حساب کاربری'
+        change_password: 'تغییر رمز عبور'
+    messages:
+        invalid_current_password: 'رمز عبور فعلی نامعتبر است.'
+
+product_column_configuration:
+    title: 'پیکربندی ستون‌ها'
+    labels:
+        configured: 'ستون‌های پیکربندی‌شده'
+        available: 'ستون‌های موجود'
+    errors:
+        save_error: 'هنگام ذخیره پیکربندی ستون‌ها خطایی رخ داد.'
+
+queue:
+    stats:
+        product_update: 'به‌روزرسانی‌های در انتظار محصولات'
+        product_update_failed: 'به‌روزرسانی‌های ناموفق محصولات'

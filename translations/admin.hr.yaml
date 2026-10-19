@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Vrsta polja
+        default_value: Zadana vrijednost
+        required: Obavezno
+    alert:
+        duplicate_field_type: 'Ova vrsta polja već se koristi.'
+    default_value:
+        help: |-
+            Zadana vrijednost: Proizvod.
+
+            Vrste:
+            'Some text'
+            '17.06'
+            '1' - Aktivno (Potvrdni okvir)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Upravitelj dodataka
+    labels:
+        name: Naziv
+        namespace: Imenski prostor
+        version: Verzija
+        installed_version: Instalirana verzija
+        active: Aktivno
+        asset_compilation_required: 'Potrebna je kompilacija resursa'
+        actions:
+            reload: Ponovno učitaj
+            activate: Aktiviraj
+            deactivate: Deaktiviraj
+            update: Ažuriraj
+            compile_assets: 'Kompiliraj resurse'
+user:
+    title: Korisnici
+    entity:
+        title: Korisnik
+        title_plural: Korisnici
+    labels:
+        master_data: Matični podaci
+        password: Lozinka
+        repeat_password: Ponovite lozinku
+        username: Korisničko ime
+        role: Uloga
+        email: E-pošta
+        first_name: Ime
+        last_name: Prezime
+types:
+    title: Vrste
+    label:
+        identifier: Identifikator
+        field: Polje
+        product: Proizvod
+identifier_type:
+    title: Vrsta identifikatora
+    data_type:
+        string: Niz
+        integer: Cijeli broj
+    entity:
+        title: Vrsta identifikatora
+        title_plural: Vrste identifikatora
+    labels:
+        title: Naslov
+        data_type: Vrsta podataka
+product_type:
+    title: Vrsta proizvoda
+    entity:
+        title: Vrsta proizvoda
+        title_plural: Vrste proizvoda
+    labels:
+        title: Naslov
+        code: Kod
+        fields: Polja
+field_type:
+    title: Vrsta polja
+    input_type:
+        string: Niz
+        integer: Cijeli broj
+        checkbox: Potvrdni okvir
+        date: Datum
+        file: Datoteka
+        section: Odjeljak
+        text: Tekst
+        textarea: Tekstualno područje
+        datetime: Datum i vrijeme
+        time: Vrijeme
+        number: Broj
+        color: Boja
+        country: Država
+        telephone: Telefon
+        email: E-pošta
+        language: Jezik
+        locale: Lokalne postavke
+        texteditor: Uređivač teksta
+        url: URL
+        select: Odabir
+        multiselect: Višestruki odabir
+        image: Slika
+    entity:
+        title: Vrsta polja
+        title_plural: Vrste polja
+    labels:
+        title: Naslov
+        code: Kod
+        translatable: Prevodivo
+        filterable: Moguće filtrirati
+        input_type: Vrsta unosa
+        decimal_separator: Decimalni separator
+locale:
+    title: Lokalne postavke
+    entity:
+        title: Lokalne postavke
+        title_plural: Lokalne postavke
+    labels:
+        content_translation_enabled: 'Koristi za prijevode sadržaja'
+        default: Zadano
+    actions:
+        set_as_default: Postavi kao zadano
+settings:
+    title: Postavke
+product:
+    title: Proizvodi
+    entity:
+        title: Proizvod
+        title_plural: Proizvodi
+    labels:
+        identifiers: Identifikatori
+        product_type: Vrsta proizvoda
+        created_at: Stvoreno
+        updated_at: Ažurirano
+        master_data: Matični podaci
+        fields: Polja
+        batch_edit: 'Skupno uređivanje'
+    batch_selection:
+        page_selected: 'Stavke na ovoj stranici su odabrane.'
+        select_all: 'Odaberi sve'
+        all_selected: 'Sve stavke su odabrane.'
+        clear_selection: 'Očisti odabir'
+    batch_edit:
+        notice: 'Promjene se obrađuju asinkrono. MessageConsumer mora biti aktivan ili alternativno mora biti omogućen modul JS Consumer.'
+        dispatched_singular: 'Ažuriranje 1 proizvoda stavljeno je u red za obradu.'
+        dispatched_plural: 'Ažuriranja %count% proizvoda stavljena su u red za obradu.'
+dashboard:
+    title: 'Nadzorna ploča'
+    system_status:
+        title: 'Status sustava'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Vrsta proizvoda "%productType%" zahtijeva %fieldCount% ulaznih varijabli. Konfigurirana vrijednost za max_input_vars je %maxInputVars%.'
+    products:
+        latest: 'Najnoviji proizvodi'
+
+filter:
+    is_set: '%name% je postavljen'
+    labels:
+        translations: 'Prijevodi'
+        identifiers: 'Identifikatori'
+        fields: 'Polja'
+        general: 'Općenito'
+
+general:
+    labels:
+        translation: Prijevod
+        locale: Lokalne postavke
+        language: Jezik
+        translations: 'Prijevodi'
+        value: 'Vrijednost'
+account:
+    labels:
+        current_password: 'Trenutna lozinka'
+        account: 'Račun'
+        change_password: 'Promijeni lozinku'
+    messages:
+        invalid_current_password: 'Trenutna lozinka nije valjana.'
+
+product_column_configuration:
+    title: 'Konfiguriraj stupce'
+    labels:
+        configured: 'Konfigurirani stupci'
+        available: 'Dostupni stupci'
+    errors:
+        save_error: 'Došlo je do pogreške prilikom spremanja konfiguracije stupaca.'
+
+queue:
+    stats:
+        product_update: 'Ažuriranja proizvoda na čekanju'
+        product_update_failed: 'Neuspjela ažuriranja proizvoda'

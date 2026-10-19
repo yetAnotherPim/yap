@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'المجدول'
+    tasks:
+        title: 'المهام المجدولة'
+        columns:
+            title: 'العنوان'
+            description: 'الوصف'
+        remove_obsolete_fields:
+            title: 'إزالة الحقول القديمة'
+            description: 'إزالة الحقول من المنتجات التي لم تعد معيّنة لنوع المنتج'
+        remove_obsolete_field_value_translations:
+            title: 'إزالة ترجمات قيم الحقول القديمة'
+            description: 'إزالة ترجمات قيم الحقول القديمة للحقول غير المهيأة لتكون قابلة للترجمة.'
+        label: 'المهمة'
+        warning:
+            not_active: 'لم يتم تنفيذ المهام المجدولة خلال آخر 24 ساعة.'

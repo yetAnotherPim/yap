@@ -58,6 +58,81 @@
         ]
       }
     },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "@type": {
+            "type": "string"
+          },
+          "translations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "@id": {
+                    "type": "string"
+                  },
+                  "@type": {
+                    "type": "string"
+                  },
+                  "locale": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": ["string", "null"]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "pattern": "\\d{4}-\\d{2}-\\d{2}\\D\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "pattern": "\\d{4}-\\d{2}-\\d{2}\\D\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}"
+                  }
+              },
+                "required": [
+                  "@id",
+                  "@type",
+                  "locale",
+                  "createdAt"
+                ]
+              }
+          },
+          "type": {
+            "type": "object",
+            "properties": {
+              "@id": {
+                "type": "string"
+              },
+              "@type": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "@id",
+              "@type",
+              "title"
+            ]
+          },
+          "value": {
+            "type": ["string", "null"]
+          }
+        },
+        "required": [
+          "@id",
+          "@type",
+          "type"
+        ]
+      }
+    },
     "createdAt": {
       "type": "string",
       "pattern": "\\d{4}-\\d{2}-\\d{2}\\D\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}"
@@ -72,6 +147,7 @@
     "@id",
     "@type",
     "identifiers",
+    "fields",
     "createdAt"
   ]
 }

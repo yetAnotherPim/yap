@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Planificator'
+    tasks:
+        title: 'Sarcini programate'
+        columns:
+            title: 'Titlu'
+            description: 'Descriere'
+        remove_obsolete_fields:
+            title: 'Elimină câmpurile învechite'
+            description: 'Elimină din produse câmpurile care nu sunt atribuite tipului de produs'
+        remove_obsolete_field_value_translations:
+            title: 'Elimină traducerile învechite ale valorilor câmpurilor'
+            description: 'Elimină traducerile învechite ale valorilor câmpurilor pentru câmpurile care nu sunt configurate ca traductibile.'
+        label: 'Sarcină'
+        warning:
+            not_active: 'Sarcinile programate nu au fost executate în ultimele 24 de ore.'

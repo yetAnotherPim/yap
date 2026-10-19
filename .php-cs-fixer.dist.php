@@ -18,7 +18,7 @@ return (new PhpCsFixer\Config())
         '@Symfony' => true,
         'phpdoc_to_comment' => [
             'allow_before_return_statement' => false,
-            'ignored_tags' => ['phpstan-var', 'phpstan-param'],
+            'ignored_tags' => ['phpstan-var', 'phpstan-param', 'codeCoverageIgnore', 'codeCoverageIgnoreStart', 'codeCoverageIgnoreEnd'],
         ],
         'full_opening_tag' => false,
         'array_syntax' => ['syntax' => 'short'],

@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Razporejevalnik'
+    tasks:
+        title: 'Načrtovana opravila'
+        columns:
+            title: 'Naslov'
+            description: 'Opis'
+        remove_obsolete_fields:
+            title: 'Odstrani zastarela polja'
+            description: 'Odstrani iz izdelkov polja, ki niso dodeljena vrsti izdelka'
+        remove_obsolete_field_value_translations:
+            title: 'Odstrani zastarele prevode vrednosti polj'
+            description: 'Odstrani zastarele prevode vrednosti polj za polja, ki niso nastavljena kot prevedljiva.'
+        label: 'Opravilo'
+        warning:
+            not_active: 'Načrtovana opravila niso bila izvedena v zadnjih 24 urah.'

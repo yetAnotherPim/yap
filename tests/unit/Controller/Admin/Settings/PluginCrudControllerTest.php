@@ -1,0 +1,662 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\unit\Controller\Admin\Settings;
+
+use App\Controller\Admin\Settings\PluginCrudController;
+use App\Entity\Plugin\Plugin;
+use App\PluginManager\AssetMapper\AssetMapCompiler;
+use App\PluginManager\AssetMapper\Exception\AssetCompilationException;
+use App\PluginManager\Cache\CacheClearer;
+use App\PluginManager\Event\WorkflowEvent\Exception\PluginWorkflowException;
+use App\PluginManager\PluginManager;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Twig\Component\Option\ButtonVariant;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Translation\TranslatableMessage;
+
+#[CoversClass(PluginCrudController::class)]
+#[UsesClass(PluginWorkflowException::class)]
+class PluginCrudControllerTest extends MockeryTestCase
+{
+    private PluginCrudController $controller;
+    /** @phpstan-var PluginManager|MockInterface  */
+    private PluginManager $pluginManagerMock;
+
+    /** @phpstan-var AssetMapCompiler|MockInterface  */
+    private AssetMapCompiler $assetMapCompilerMock;
+
+    /** @phpstan-var CacheClearer|MockInterface  */
+    private CacheClearer $cacheClearerMock;
+
+    public function setUp(): void
+    {
+        $this->pluginManagerMock = \Mockery::mock(PluginManager::class);
+        $this->cacheClearerMock = \Mockery::mock(CacheClearer::class);
+        $this->assetMapCompilerMock = \Mockery::mock(AssetMapCompiler::class);
+
+        $this->controller = new PluginCrudController($this->pluginManagerMock, $this->cacheClearerMock, $this->assetMapCompilerMock);
+
+        parent::setUp();
+    }
+
+    public function testConfigureActions(): void
+    {
+        $actions = Actions::new()
+            ->add(Crud::PAGE_INDEX, Action::NEW)
+            ->add(Crud::PAGE_INDEX, Action::DELETE)
+            ->add(Crud::PAGE_INDEX, Action::EDIT);
+
+        $result = $this->controller->configureActions($actions);
+
+        $this->assertCount(8, $result->getAsDto(Crud::PAGE_INDEX)->getActions());
+        $this->assertEquals(['delete', 'new', 'edit', 'batchDelete'], $result->getAsDto(Crud::PAGE_INDEX)->getDisabledActions());
+        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'compileAssets')?->getVariant());
+        $this->assertEquals(ButtonVariant::Primary, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'refresh')?->getVariant());
+        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'activate')?->getVariant());
+        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'deactivate')?->getVariant());
+        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'update')?->getVariant());
+    }
+
+    public function testConfigureFieldsForReturnsExpectedFields(): void
+    {
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
+        $this->assertCount(6, $fields);
+
+        $this->assertInstanceOf(TextField::class, $fields[0]);
+        $this->assertEquals('name', $fields[0]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[1]);
+        $this->assertEquals('namespace', $fields[1]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[2]);
+        $this->assertEquals('version', $fields[2]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[3]);
+        $this->assertEquals('installedVersion', $fields[3]->getAsDto()->getProperty());
+        $this->assertInstanceOf(BooleanField::class, $fields[4]);
+        $this->assertEquals('active', $fields[4]->getAsDto()->getProperty());
+        $this->assertInstanceOf(TextField::class, $fields[5]);
+        $this->assertEquals('assetCompilationStatus', $fields[5]->getAsDto()->getProperty());
+    }
+
+    public function testAssetCompilationStatusFieldFormatsValue(): void
+    {
+        /** @var array<int, FieldInterface> $fields */
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
+        $fieldDto = $fields[5]->getAsDto();
+
+        $formatValue = $fieldDto->getFormatValueCallable();
+
+        $this->assertIsCallable($formatValue);
+
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('isAssetCompilationRequired')
+            ->once()
+            ->andReturn(true);
+
+        $this->assertSame(
+            '<span class="text-danger"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>',
+            $formatValue('', $pluginMock),
+        );
+    }
+
+    public function testAssetCompilationStatusFieldReturnsEmptyMarkupWhenCompilationIsNotRequired(): void
+    {
+        /** @var array<int, FieldInterface> $fields */
+        $fields = iterator_to_array($this->controller->configureFields(Crud::PAGE_INDEX));
+        $fieldDto = $fields[5]->getAsDto();
+
+        $formatValue = $fieldDto->getFormatValueCallable();
+
+        $this->assertIsCallable($formatValue);
+
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('isAssetCompilationRequired')
+            ->once()
+            ->andReturn(false);
+
+        $this->assertSame(
+            '<span aria-hidden="true"></span>',
+            $formatValue('', $pluginMock),
+        );
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws PluginWorkflowException
+     */
+    public function testRefreshPlugins(): void
+    {
+        $this->pluginManagerMock
+            ->shouldReceive('getPlugins')
+            ->once();
+
+        $this->cacheClearerMock
+            ->shouldReceive('clear')
+            ->once();
+
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->refreshPlugins();
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws PluginWorkflowException
+     */
+    public function testUpdatePlugin(): void
+    {
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('getName')
+            ->once()
+            ->andReturn('plugin');
+
+        $this->pluginManagerMock
+            ->shouldReceive('performWorkflow')
+            ->once()
+            ->with(\App\PluginManager\Event\Enum\Action::UPDATE, 'plugin');
+
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->updatePlugin($pluginMock);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws PluginWorkflowException
+     */
+    public function testUpdatePluginCausesWorkflowException(): void
+    {
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('getName')
+            ->once()
+            ->andReturn('plugin');
+
+        $this->pluginManagerMock
+            ->shouldReceive('performWorkflow')
+            ->once()
+            ->with(\App\PluginManager\Event\Enum\Action::UPDATE, 'plugin')
+            ->andThrow(new PluginWorkflowException(\App\PluginManager\Event\Enum\Action::DEACTIVATE, 'plugin', 'message'));
+
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+        $requestStackMock = \Mockery::mock(RequestStack::class);
+        $sessionMock = \Mockery::mock(Session::class);
+        $flashBagMock = \Mockery::mock(FlashBagInterface::class);
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with('request_stack')
+            ->andReturn($requestStackMock);
+
+        $requestStackMock
+            ->shouldReceive('getSession')
+            ->once()
+            ->andReturn($sessionMock);
+
+        $sessionMock
+            ->shouldReceive('getFlashBag')
+            ->once()
+            ->andReturn($flashBagMock);
+
+        $flashBagMock
+            ->shouldReceive('add')
+            ->once()
+            ->with('error', 'message');
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->updatePlugin($pluginMock);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws PluginWorkflowException
+     */
+    public function testActivatePlugin(): void
+    {
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('getName')
+            ->once()
+            ->andReturn('plugin');
+
+        $this->pluginManagerMock
+            ->shouldReceive('performWorkflow')
+            ->once()
+            ->with(\App\PluginManager\Event\Enum\Action::ACTIVATE, 'plugin');
+
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->activatePlugin($pluginMock);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws PluginWorkflowException
+     */
+    public function testActivatePluginCausesWorkflowException(): void
+    {
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('getName')
+            ->once()
+            ->andReturn('plugin');
+
+        $this->pluginManagerMock
+            ->shouldReceive('performWorkflow')
+            ->once()
+            ->with(\App\PluginManager\Event\Enum\Action::ACTIVATE, 'plugin')
+            ->andThrow(new PluginWorkflowException(\App\PluginManager\Event\Enum\Action::DEACTIVATE, 'plugin', 'message'));
+
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+        $requestStackMock = \Mockery::mock(RequestStack::class);
+        $sessionMock = \Mockery::mock(Session::class);
+        $flashBagMock = \Mockery::mock(FlashBagInterface::class);
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with('request_stack')
+            ->andReturn($requestStackMock);
+
+        $requestStackMock
+            ->shouldReceive('getSession')
+            ->once()
+            ->andReturn($sessionMock);
+
+        $sessionMock
+            ->shouldReceive('getFlashBag')
+            ->once()
+            ->andReturn($flashBagMock);
+
+        $flashBagMock
+            ->shouldReceive('add')
+            ->once()
+            ->with('error', 'message');
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->activatePlugin($pluginMock);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws PluginWorkflowException
+     */
+    public function testDeactivatePlugin(): void
+    {
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('getName')
+            ->once()
+            ->andReturn('plugin');
+
+        $this->pluginManagerMock
+            ->shouldReceive('performWorkflow')
+            ->once()
+            ->with(\App\PluginManager\Event\Enum\Action::DEACTIVATE, 'plugin');
+
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->deactivatePlugin($pluginMock);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws PluginWorkflowException
+     */
+    public function testDeactivatePluginCausesWorkflowException(): void
+    {
+        $pluginMock = \Mockery::mock(Plugin::class);
+
+        $pluginMock
+            ->shouldReceive('getName')
+            ->once()
+            ->andReturn('plugin');
+
+        $this->pluginManagerMock
+            ->shouldReceive('performWorkflow')
+            ->once()
+            ->with(\App\PluginManager\Event\Enum\Action::DEACTIVATE, 'plugin')
+            ->andThrow(new PluginWorkflowException(\App\PluginManager\Event\Enum\Action::DEACTIVATE, 'plugin', 'message'));
+
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+        $requestStackMock = \Mockery::mock(RequestStack::class);
+        $sessionMock = \Mockery::mock(Session::class);
+        $flashBagMock = \Mockery::mock(FlashBagInterface::class);
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with('request_stack')
+            ->andReturn($requestStackMock);
+
+        $requestStackMock
+            ->shouldReceive('getSession')
+            ->once()
+            ->andReturn($sessionMock);
+
+        $sessionMock
+            ->shouldReceive('getFlashBag')
+            ->once()
+            ->andReturn($flashBagMock);
+
+        $flashBagMock
+            ->shouldReceive('add')
+            ->once()
+            ->with('error', 'message');
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->deactivatePlugin($pluginMock);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testCompileAssets(): void
+    {
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+        $requestStackMock = \Mockery::mock(RequestStack::class);
+        $sessionMock = \Mockery::mock(Session::class);
+        $flashBagMock = \Mockery::mock(FlashBagInterface::class);
+
+        $this->assetMapCompilerMock
+            ->shouldReceive('compile')
+            ->once();
+
+        $containerMock
+            ->shouldReceive('get')
+            ->never()
+            ->with('request_stack')
+            ->andReturn($requestStackMock);
+
+        $requestStackMock
+            ->shouldReceive('getSession')
+            ->never()
+            ->andReturn($sessionMock);
+
+        $sessionMock
+            ->shouldReceive('getFlashBag')
+            ->never()
+            ->andReturn($flashBagMock);
+
+        $flashBagMock
+            ->shouldReceive('add')
+            ->never()
+            ->with('error', 'message');
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->compileAssets();
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    public function testCompileAssetsCausingException(): void
+    {
+        $containerMock = \Mockery::mock(ContainerInterface::class);
+        $this->controller->setContainer($containerMock);
+
+        $adminUrlGeneratorMock = \Mockery::mock(\stdClass::class);
+        $requestStackMock = \Mockery::mock(RequestStack::class);
+        $sessionMock = \Mockery::mock(Session::class);
+        $flashBagMock = \Mockery::mock(FlashBagInterface::class);
+
+        $this->assetMapCompilerMock
+            ->shouldReceive('compile')
+            ->once()
+            ->andThrow(new AssetCompilationException('message'));
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with('request_stack')
+            ->andReturn($requestStackMock);
+
+        $requestStackMock
+            ->shouldReceive('getSession')
+            ->once()
+            ->andReturn($sessionMock);
+
+        $sessionMock
+            ->shouldReceive('getFlashBag')
+            ->once()
+            ->andReturn($flashBagMock);
+
+        $flashBagMock
+            ->shouldReceive('add')
+            ->once()
+            ->with('error', 'message');
+
+        $containerMock
+            ->shouldReceive('get')
+            ->once()
+            ->with(AdminUrlGeneratorInterface::class)
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('setAction')
+            ->once()
+            ->with('index')
+            ->andReturn($adminUrlGeneratorMock);
+
+        $adminUrlGeneratorMock
+            ->shouldReceive('generateUrl')
+            ->once()
+            ->andReturn('url');
+
+        $response = $this->controller->compileAssets();
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    public function testGetEntityFqcn(): void
+    {
+        $this->assertEquals(Plugin::class, PluginCrudController::getEntityFqcn());
+    }
+
+    public function testConfigureCrud(): void
+    {
+        $crud = Crud::new();
+
+        $configuredCrud = $this->controller->configureCrud($crud);
+
+        $this->assertInstanceOf(TranslatableMessage::class, $configuredCrud->getAsDto()->getCustomPageTitle(Crud::PAGE_INDEX));
+        $this->assertEquals(
+            'plugin_manager.title',
+            $configuredCrud->getAsDto()->getCustomPageTitle(Crud::PAGE_INDEX)->getMessage()
+        );
+    }
+}

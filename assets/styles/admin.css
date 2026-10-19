@@ -1,0 +1,133 @@
+div.sortable-collection {
+    cursor: grab;
+}
+
+.sortable-collection .field-collection-item:nth-child(odd) {
+
+}
+
+.sortable-collection .field-collection-item:nth-child(even){
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 5px,
+        light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 5px,
+        light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05)) 10px
+    );
+}
+
+.sortable-collection .field-collection-item-complex::before {
+    content: "⋮⋮";
+    position: absolute;
+    transform: translateY(30%) translateX(25%);
+}
+
+div.field-collection-item > div.accordion-item * .col-form-label.required:after {
+ display: none;
+}
+
+.yap-admin-logo {
+    display: block;
+    width: auto;
+    height: 32px;
+    max-width: 140px;
+}
+
+.help-tooltip .tooltip-inner {
+    white-space: pre-line;
+    text-align: left;
+    max-width: 350px;
+}
+
+.field-section {
+    margin-top: 1.25rem;
+    margin-bottom: .75rem;
+}
+
+.field-section:first-child {
+    margin-top: .5rem;
+}
+
+.field-section .col-form-label {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    font-size: .95rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.field-section .col-form-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+    opacity: .7;
+}
+
+.translation-locale-spacer, .translation-field-spacer {
+    visibility: hidden;
+}
+
+.filter-heading:has(> .filter-category) {
+    pointer-events: none;
+}
+
+.filter-heading:has(> .filter-category) > .filter-checkbox {
+    display: none;
+}
+
+.filter-category {
+    display: block;
+    width: 100%;
+    padding-bottom: .5rem;
+    font-weight: 600;
+}
+
+.filter-field:has(.filter-category) > .filter-content {
+    display: none;
+}
+
+.filter-field:has(.filter-category) {
+    padding-top: .75rem;
+    cursor: default;
+}
+
+.product-batch-selection {
+    flex-basis: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.35rem;
+}
+
+.product-batch-selection__message {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--bs-secondary-color);
+    font-size: 0.8rem;
+}
+
+.product-batch-selection__message .btn-link {
+    padding: 0;
+    color: var(--bs-secondary-color);
+    font-size: 0.8rem;
+    text-decoration: underline;
+}
+
+.batch-edit-textarea {
+    width: 75%;
+    min-height: 100px;
+    resize: vertical;
+}
+
+@media (max-width: 768px) {
+    .batch-edit-textarea {
+        width: 100%;
+    }
+}

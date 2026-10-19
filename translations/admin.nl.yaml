@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Veldtype
+        default_value: Standaardwaarde
+        required: Verplicht
+    alert:
+        duplicate_field_type: 'Dit veldtype wordt al gebruikt.'
+    default_value:
+        help: |-
+            Standaardwaarde: Product.
+
+            Typen:
+            'Some text'
+            '17.06'
+            '1' - Actief (Selectievakje)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Pluginbeheer
+    labels:
+        name: Naam
+        namespace: Naamruimte
+        version: Versie
+        installed_version: Geïnstalleerde versie
+        active: Actief
+        asset_compilation_required: 'Assetcompilatie vereist'
+        actions:
+            reload: Herladen
+            activate: Activeren
+            deactivate: Deactiveren
+            update: Bijwerken
+            compile_assets: 'Assets compileren'
+user:
+    title: Gebruikers
+    entity:
+        title: Gebruiker
+        title_plural: Gebruikers
+    labels:
+        master_data: Stamgegevens
+        password: Wachtwoord
+        repeat_password: Wachtwoord herhalen
+        username: Gebruikersnaam
+        role: Rol
+        email: E-mail
+        first_name: Voornaam
+        last_name: Achternaam
+types:
+    title: Typen
+    label:
+        identifier: Identificatie
+        field: Veld
+        product: Product
+identifier_type:
+    title: Identificatietype
+    data_type:
+        string: Tekenreeks
+        integer: Geheel getal
+    entity:
+        title: Identificatietype
+        title_plural: Identificatietypen
+    labels:
+        title: Titel
+        data_type: Gegevenstype
+product_type:
+    title: Producttype
+    entity:
+        title: Producttype
+        title_plural: Producttypen
+    labels:
+        title: Titel
+        code: Code
+        fields: Velden
+field_type:
+    title: Veldtype
+    input_type:
+        string: Tekenreeks
+        integer: Geheel getal
+        checkbox: Selectievakje
+        date: Datum
+        file: Bestand
+        section: Sectie
+        text: Tekst
+        textarea: Tekstgebied
+        datetime: Datum en tijd
+        time: Tijd
+        number: Getal
+        color: Kleur
+        country: Land
+        telephone: Telefoon
+        email: E-mail
+        language: Taal
+        locale: Landinstelling
+        texteditor: Teksteditor
+        url: URL
+        select: Selectie
+        multiselect: Meervoudige selectie
+        image: Afbeelding
+    entity:
+        title: Veldtype
+        title_plural: Veldtypen
+    labels:
+        title: Titel
+        code: Code
+        translatable: Vertaalbaar
+        filterable: Filterbaar
+        input_type: Invoertype
+        decimal_separator: Decimaalteken
+locale:
+    title: Landinstellingen
+    entity:
+        title: Landinstelling
+        title_plural: Landinstellingen
+    labels:
+        content_translation_enabled: 'Gebruiken voor inhoudsvertalingen'
+        default: Standaard
+    actions:
+        set_as_default: Als standaard instellen
+settings:
+    title: Instellingen
+product:
+    title: Producten
+    entity:
+        title: Product
+        title_plural: Producten
+    labels:
+        identifiers: Identificaties
+        product_type: Producttype
+        created_at: Aangemaakt op
+        updated_at: Bijgewerkt op
+        master_data: Stamgegevens
+        fields: Velden
+        batch_edit: 'Batchbewerking'
+    batch_selection:
+        page_selected: 'De items op deze pagina zijn geselecteerd.'
+        select_all: 'Alles selecteren'
+        all_selected: 'Alle items zijn geselecteerd.'
+        clear_selection: 'Selectie wissen'
+    batch_edit:
+        notice: 'De wijzigingen worden asynchroon verwerkt. De MessageConsumer moet actief zijn of als alternatief moet de JS Consumer-module worden ingeschakeld.'
+        dispatched_singular: 'De update van 1 product is in de wachtrij geplaatst voor verwerking.'
+        dispatched_plural: 'Updates van %count% producten zijn in de wachtrij geplaatst voor verwerking.'
+dashboard:
+    title: 'Dashboard'
+    system_status:
+        title: 'Systeemstatus'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Producttype "%productType%" vereist %fieldCount% invoervariabelen. De geconfigureerde waarde voor max_input_vars is %maxInputVars%.'
+    products:
+        latest: 'Nieuwste producten'
+
+filter:
+    is_set: '%name% is ingesteld'
+    labels:
+        translations: 'Vertalingen'
+        identifiers: 'Identificatoren'
+        fields: 'Velden'
+        general: 'Algemeen'
+
+general:
+    labels:
+        translation: Vertaling
+        locale: Landinstelling
+        language: Taal
+        translations: 'Vertalingen'
+        value: 'Waarde'
+account:
+    labels:
+        current_password: 'Huidig wachtwoord'
+        account: 'Account'
+        change_password: 'Wachtwoord wijzigen'
+    messages:
+        invalid_current_password: 'Het huidige wachtwoord is ongeldig.'
+
+product_column_configuration:
+    title: 'Kolommen configureren'
+    labels:
+        configured: 'Geconfigureerde kolommen'
+        available: 'Beschikbare kolommen'
+    errors:
+        save_error: 'Er is een fout opgetreden bij het opslaan van uw kolomconfiguratie.'
+
+queue:
+    stats:
+        product_update: 'Wachtende productupdates'
+        product_update_failed: 'Mislukte productupdates'

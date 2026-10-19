@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Programatzailea'
+    tasks:
+        title: 'Programatutako zereginak'
+        columns:
+            title: 'Izenburua'
+            description: 'Deskribapena'
+        remove_obsolete_fields:
+            title: 'Kendu zaharkitutako eremuak'
+            description: 'Kendu produktu motari esleituta ez dauden eremuak produktuetatik'
+        remove_obsolete_field_value_translations:
+            title: 'Kendu eremu-balioen itzulpen zaharkituak'
+            description: 'Kendu itzulgarri gisa konfiguratuta ez dauden eremuen balio-itzulpen zaharkituak.'
+        label: 'Zeregina'
+        warning:
+            not_active: 'Programatutako zereginak ez dira exekutatu azken 24 orduetan.'

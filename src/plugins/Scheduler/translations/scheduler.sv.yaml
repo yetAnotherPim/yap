@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Schemaläggare'
+    tasks:
+        title: 'Schemalagda uppgifter'
+        columns:
+            title: 'Titel'
+            description: 'Beskrivning'
+        remove_obsolete_fields:
+            title: 'Ta bort inaktuella fält'
+            description: 'Ta bort fält från produkter som inte är tilldelade produkttypen'
+        remove_obsolete_field_value_translations:
+            title: 'Ta bort inaktuella översättningar av fältvärden'
+            description: 'Ta bort inaktuella översättningar av fältvärden för fält som inte är konfigurerade som översättningsbara.'
+        label: 'Uppgift'
+        warning:
+            not_active: 'De schemalagda uppgifterna har inte körts under de senaste 24 timmarna.'

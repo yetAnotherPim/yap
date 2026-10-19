@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Agendador'
+    tasks:
+        title: 'Tarefas agendadas'
+        columns:
+            title: 'Título'
+            description: 'Descrição'
+        remove_obsolete_fields:
+            title: 'Remover campos obsoletos'
+            description: 'Remover dos produtos os campos que não estão associados ao tipo de produto'
+        remove_obsolete_field_value_translations:
+            title: 'Remover traduções obsoletas de valores de campo'
+            description: 'Remover traduções obsoletas de valores de campo para campos que não estão configurados como traduzíveis.'
+        label: 'Tarefa'
+        warning:
+            not_active: 'As tarefas agendadas não foram executadas nas últimas 24 horas.'

@@ -1,0 +1,89 @@
+{% block product_column_configuration %}
+    <input
+        type="hidden"
+        data-controller="csrf-protection"
+        value="{{ csrf_token('product_column_configuration') }}"
+    >
+    {% block product_column_configuration_header %}
+        <div class="modal-header">
+            <h5 class="modal-title">
+                {{ 'product_column_configuration.title'|trans({}, 'admin') }}
+            </h5>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+            ></button>
+        </div>
+    {% endblock %}
+
+    {% block product_column_configuration_content %}
+        <div class="modal-body">
+            {% block product_column_configuration_configured %}
+                <h6>
+                    {{ 'product_column_configuration.labels.configured'|trans({}, 'admin') }}
+                </h6>
+
+                <ul
+                    class="list-group mb-4"
+                    data-product-column-configuration-list="configured"
+                >
+                    {% for configuration in configurations %}
+                        <li
+                            class="list-group-item"
+                            data-field-type-id="{{ configuration.fieldType.id }}"
+                        >
+                            <i class="fa fa-grip-vertical me-2"></i>
+
+                            {{ configuration.fieldType.getTranslatedTitleByLocale(locale) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endblock %}
+
+            {% block product_column_configuration_unconfigured %}
+                <h6>
+                    {{ 'product_column_configuration.labels.available'|trans({}, 'admin') }}
+                </h6>
+
+                <ul
+                    class="list-group"
+                    data-product-column-configuration-list="unconfigured"
+                >
+                    {% for fieldType in unconfiguredFieldTypes %}
+                        <li
+                            class="list-group-item"
+                            data-field-type-id="{{ fieldType.id }}"
+                        >
+                            <i class="fa fa-grip-vertical me-2"></i>
+
+                            {{ fieldType.getTranslatedTitleByLocale(locale) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endblock %}
+        </div>
+    {% endblock %}
+
+    {% block product_column_configuration_footer %}
+        <div class="modal-footer">
+            <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+            >
+                {{ 'action.close'|trans({}, 'EasyAdminBundle') }}
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                data-product-column-configuration-save
+            >
+                {{ 'action.save'|trans({}, 'EasyAdminBundle') }}
+            </button>
+        </div>
+    {% endblock %}
+{% endblock %}

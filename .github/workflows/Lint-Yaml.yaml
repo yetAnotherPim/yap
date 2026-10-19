@@ -31,8 +31,8 @@ jobs:
                   restore-keys: ${{ runner.os }}-composer-
 
             - name: Install dependencies
-              run: composer install --prefer-dist
+              run: composer install --prefer-dist --no-scripts
 
             - name: Lint Yaml files
               run: |
-                  bin/console lint:yaml --parse-tags config/ src/
+                  bin/console lint:yaml --parse-tags config/ src/ translations/ src/plugins/Scheduler/

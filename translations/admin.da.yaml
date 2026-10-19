@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Felttype
+        default_value: Standardværdi
+        required: Påkrævet
+    alert:
+        duplicate_field_type: 'Denne felttype bruges allerede.'
+    default_value:
+        help: |-
+            Standardværdi: Produkt.
+
+            Typer:
+            'Some text'
+            '17.06'
+            '1' - Aktiv (Afkrydsningsfelt)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Pluginhåndtering
+    labels:
+        name: Navn
+        namespace: Navnerum
+        version: Version
+        installed_version: Installeret version
+        active: Aktiv
+        asset_compilation_required: 'Kræver kompilering af assets'
+        actions:
+            reload: Genindlæs
+            activate: Aktivér
+            deactivate: Deaktivér
+            update: Opdatér
+            compile_assets: 'Kompilér assets'
+user:
+    title: Brugere
+    entity:
+        title: Bruger
+        title_plural: Brugere
+    labels:
+        master_data: Stamdata
+        password: Adgangskode
+        repeat_password: Gentag adgangskode
+        username: Brugernavn
+        role: Rolle
+        email: E-mail
+        first_name: Fornavn
+        last_name: Efternavn
+types:
+    title: Typer
+    label:
+        identifier: Identifikator
+        field: Felt
+        product: Produkt
+identifier_type:
+    title: Identifikatortype
+    data_type:
+        string: Tekststreng
+        integer: Heltal
+    entity:
+        title: Identifikatortype
+        title_plural: Identifikatortyper
+    labels:
+        title: Titel
+        data_type: Datatype
+product_type:
+    title: Produkttype
+    entity:
+        title: Produkttype
+        title_plural: Produkttyper
+    labels:
+        title: Titel
+        code: Kode
+        fields: Felter
+field_type:
+    title: Felttype
+    input_type:
+        string: Tekststreng
+        integer: Heltal
+        checkbox: Afkrydsningsfelt
+        date: Dato
+        file: Fil
+        section: Sektion
+        text: Tekst
+        textarea: Tekstområde
+        datetime: Dato og tid
+        time: Tid
+        number: Tal
+        color: Farve
+        country: Land
+        telephone: Telefon
+        email: E-mail
+        language: Sprog
+        locale: Landestandard
+        texteditor: Teksteditor
+        url: URL
+        select: Valg
+        multiselect: Flere valg
+        image: Billede
+    entity:
+        title: Felttype
+        title_plural: Felttyper
+    labels:
+        title: Titel
+        code: Kode
+        translatable: Kan oversættes
+        filterable: Kan filtreres
+        input_type: Inputtype
+        decimal_separator: Decimalseparator
+locale:
+    title: Landestandarder
+    entity:
+        title: Landestandard
+        title_plural: Landestandarder
+    labels:
+        content_translation_enabled: 'Brug til indholdsoversættelser'
+        default: Standard
+    actions:
+        set_as_default: Angiv som standard
+settings:
+    title: Indstillinger
+product:
+    title: Produkter
+    entity:
+        title: Produkt
+        title_plural: Produkter
+    labels:
+        identifiers: Identifikatorer
+        product_type: Produkttype
+        created_at: Oprettet
+        updated_at: Opdateret
+        master_data: Stamdata
+        fields: Felter
+        batch_edit: 'Masseredigering'
+    batch_selection:
+        page_selected: 'Elementerne på denne side er valgt.'
+        select_all: 'Vælg alle'
+        all_selected: 'Alle elementer er valgt.'
+        clear_selection: 'Ryd valg'
+    batch_edit:
+        notice: 'Ændringerne behandles asynkront. MessageConsumer skal være aktiv, eller JS Consumer-modulet skal alternativt være aktiveret.'
+        dispatched_singular: 'Opdatering af 1 produkt er sat i kø til behandling.'
+        dispatched_plural: 'Opdateringer af %count% produkter er sat i kø til behandling.'
+dashboard:
+    title: 'Kontrolpanel'
+    system_status:
+        title: 'Systemstatus'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Produkttypen "%productType%" kræver %fieldCount% inputvariabler. Den konfigurerede værdi for max_input_vars er %maxInputVars%.'
+    products:
+        latest: 'Seneste produkter'
+
+filter:
+    is_set: '%name% er angivet'
+    labels:
+        translations: 'Oversættelser'
+        identifiers: 'Identifikatorer'
+        fields: 'Felter'
+        general: 'Generelt'
+
+general:
+    labels:
+        translation: Oversættelse
+        locale: Landestandard
+        language: Sprog
+        translations: 'Oversættelser'
+        value: 'Værdi'
+account:
+    labels:
+        current_password: 'Nuværende adgangskode'
+        account: 'Konto'
+        change_password: 'Skift adgangskode'
+    messages:
+        invalid_current_password: 'Den nuværende adgangskode er ugyldig.'
+
+product_column_configuration:
+    title: 'Konfigurer kolonner'
+    labels:
+        configured: 'Konfigurerede kolonner'
+        available: 'Tilgængelige kolonner'
+    errors:
+        save_error: 'Der opstod en fejl under lagring af din kolonnekonfiguration.'
+
+queue:
+    stats:
+        product_update: 'Ventende produktopdateringer'
+        product_update_failed: 'Mislykkede produktopdateringer'

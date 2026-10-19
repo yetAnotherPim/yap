@@ -9,6 +9,7 @@
          failOnWarning="true"
          failOnRisky="true"
          beStrictAboutCoverageMetadata="true"
+         requireCoverageMetadata="true"
          bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
 >
@@ -26,6 +27,9 @@
         <testsuite name="integration">
             <directory>tests/integration</directory>
         </testsuite>
+        <testsuite name="frontend">
+            <directory>tests/functional/frontend</directory>
+        </testsuite>
         <testsuite name="api">
             <directory>tests/functional/api</directory>
         </testsuite>
@@ -39,6 +43,11 @@
         <include>
             <directory>src</directory>
         </include>
+
+        <exclude>
+            <file>src/Kernel.php</file>
+            <file>src/Schedule.php</file>
+        </exclude>
 
         <deprecationTrigger>
             <method>Doctrine\Deprecations\Deprecation::trigger</method>

@@ -1,0 +1,111 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\functional\api\field_types\POST;
+
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Entity\Abstract\RelatedTimestampableEntity;
+use App\Entity\Locale\Locale;
+use App\Entity\Product\Field\Type\FieldType;
+use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
+use App\Entity\User\User;
+use App\Localisation\Event\EventListener\LocaleListener;
+use App\Localisation\Event\EventListener\LoginSuccessListener;
+use App\Repository\FieldTypeRepository;
+use App\Repository\LocaleRepository;
+use App\Repository\UserRepository;
+use App\Tests\helper\Trait\Api\AuthTrait;
+use App\Tests\TestData\Factory\Locale\LocaleFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+
+#[CoversClass(RelatedTimestampUpdater::class)]
+#[CoversClass(FieldType::class)]
+#[CoversClass(FieldTypeRepository::class)]
+#[UsesClass(Locale::class)]
+#[UsesClass(LocaleRepository::class)]
+#[UsesClass(FieldTypeTitleTranslation::class)]
+#[UsesClass(RelatedTimestampableEntity::class)]
+#[UsesClass(LocaleListener::class)]
+#[UsesClass(User::class)]
+#[UsesClass(LoginSuccessListener::class)]
+#[UsesClass(UserRepository::class)]
+class FieldTypeApiTest extends ApiTestCase
+{
+    use AuthTrait;
+
+    protected static ?bool $alwaysBootKernel = true;
+
+    private Client $client;
+
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+
+        $this->auth();
+
+        parent::setUp();
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function testPost(): void
+    {
+        $locale = LocaleFactory::findOrCreate(['id' => 'de_DE']);
+
+        $response = $this->client->request(
+            'POST',
+            '/api/field_types',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->authToken,
+                ],
+                'body' => '{
+                                "title":"Product name",
+                                "code":"product_name",
+                                "translatable": true,
+                                "filterable": true,
+                                "inputType": "string",
+                                "titleTranslations": [
+                                    {
+                                        "locale": "/api/locales/'.$locale->getId().'",
+                                        "value": "Produktname"
+                                    }
+                                ]
+                            }',
+            ]
+        );
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertJsonContains(['title' => 'Product name']);
+        $this->assertJsonContains(['translatable' => true]);
+        $this->assertJsonContains(['filterable' => true]);
+        $this->assertJsonContains(['inputType' => 'string']);
+
+        $this->assertStringContainsString('"\/api\/field_type_title_translations\/', $response->getContent());
+        $this->assertStringContainsString('"createdAt":', $response->getContent());
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function testRequestRequiresAuth(): void
+    {
+        $this->client->request('POST', '/api/field_types');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
+}

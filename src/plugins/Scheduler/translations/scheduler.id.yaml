@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Penjadwal'
+    tasks:
+        title: 'Tugas terjadwal'
+        columns:
+            title: 'Judul'
+            description: 'Deskripsi'
+        remove_obsolete_fields:
+            title: 'Hapus field usang'
+            description: 'Hapus field dari produk yang tidak ditetapkan ke tipe produk'
+        remove_obsolete_field_value_translations:
+            title: 'Hapus terjemahan nilai field yang usang'
+            description: 'Hapus terjemahan nilai field yang usang untuk field yang tidak dikonfigurasi sebagai dapat diterjemahkan.'
+        label: 'Tugas'
+        warning:
+            not_active: 'Tugas terjadwal belum dijalankan dalam 24 jam terakhir.'

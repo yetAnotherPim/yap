@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Jenis bidang
+        default_value: Nilai bawaan
+        required: Wajib
+    alert:
+        duplicate_field_type: 'Jenis bidang ini sudah digunakan.'
+    default_value:
+        help: |-
+            Nilai bawaan: Produk.
+
+            Jenis:
+            'Some text'
+            '17.06'
+            '1' - Aktif (Kotak centang)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Pengelola Plugin
+    labels:
+        name: Nama
+        namespace: Namespace
+        version: Versi
+        installed_version: Versi terpasang
+        active: Aktif
+        asset_compilation_required: 'Memerlukan kompilasi aset'
+        actions:
+            reload: Muat ulang
+            activate: Aktifkan
+            deactivate: Nonaktifkan
+            update: Perbarui
+            compile_assets: 'Kompilasi aset'
+user:
+    title: Pengguna
+    entity:
+        title: Pengguna
+        title_plural: Pengguna
+    labels:
+        master_data: Data utama
+        password: Kata sandi
+        repeat_password: Ulangi kata sandi
+        username: Nama pengguna
+        role: Peran
+        email: Email
+        first_name: Nama depan
+        last_name: Nama belakang
+types:
+    title: Jenis
+    label:
+        identifier: Pengenal
+        field: Bidang
+        product: Produk
+identifier_type:
+    title: Jenis pengenal
+    data_type:
+        string: String
+        integer: Bilangan bulat
+    entity:
+        title: Jenis pengenal
+        title_plural: Jenis pengenal
+    labels:
+        title: Judul
+        data_type: Jenis data
+product_type:
+    title: Jenis produk
+    entity:
+        title: Jenis produk
+        title_plural: Jenis produk
+    labels:
+        title: Judul
+        code: Kode
+        fields: Bidang
+field_type:
+    title: Jenis bidang
+    input_type:
+        string: String
+        integer: Bilangan bulat
+        checkbox: Kotak centang
+        date: Tanggal
+        file: Berkas
+        section: Bagian
+        text: Teks
+        textarea: Area teks
+        datetime: Tanggal & Waktu
+        time: Waktu
+        number: Angka
+        color: Warna
+        country: Negara
+        telephone: Telepon
+        email: Email
+        language: Bahasa
+        locale: Lokal
+        texteditor: Editor Teks
+        url: URL
+        select: Pilih
+        multiselect: Pilih Banyak
+        image: Gambar
+    entity:
+        title: Jenis bidang
+        title_plural: Jenis bidang
+    labels:
+        title: Judul
+        code: Kode
+        translatable: Dapat diterjemahkan
+        filterable: Dapat difilter
+        input_type: Jenis input
+        decimal_separator: Pemisah desimal
+locale:
+    title: Lokal
+    entity:
+        title: Lokal
+        title_plural: Lokal
+    labels:
+        content_translation_enabled: 'Gunakan untuk terjemahan konten'
+        default: Bawaan
+    actions:
+        set_as_default: Jadikan bawaan
+settings:
+    title: Pengaturan
+product:
+    title: Produk
+    entity:
+        title: Produk
+        title_plural: Produk
+    labels:
+        identifiers: Pengenal
+        product_type: Jenis produk
+        created_at: Dibuat pada
+        updated_at: Diperbarui pada
+        master_data: Data utama
+        fields: Bidang
+        batch_edit: 'Pengeditan massal'
+    batch_selection:
+        page_selected: 'Item di halaman ini telah dipilih.'
+        select_all: 'Pilih semua'
+        all_selected: 'Semua item telah dipilih.'
+        clear_selection: 'Hapus pilihan'
+    batch_edit:
+        notice: 'Perubahan diproses secara asinkron. MessageConsumer harus aktif atau sebagai alternatif modul JS Consumer harus diaktifkan.'
+        dispatched_singular: 'Pembaruan 1 produk telah masuk antrean untuk diproses.'
+        dispatched_plural: 'Pembaruan %count% produk telah masuk antrean untuk diproses.'
+dashboard:
+    title: 'Dasbor'
+    system_status:
+        title: 'Status sistem'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Jenis produk "%productType%" memerlukan %fieldCount% variabel input. Nilai max_input_vars yang dikonfigurasi adalah %maxInputVars%.'
+    products:
+        latest: 'Produk terbaru'
+
+filter:
+    is_set: '%name% telah diatur'
+    labels:
+        translations: 'Terjemahan'
+        identifiers: 'Pengidentifikasi'
+        fields: 'Bidang'
+        general: 'Umum'
+
+general:
+    labels:
+        translation: Terjemahan
+        locale: Lokal
+        language: Bahasa
+        translations: 'Terjemahan'
+        value: 'Nilai'
+account:
+    labels:
+        current_password: 'Kata sandi saat ini'
+        account: 'Akun'
+        change_password: 'Ubah kata sandi'
+    messages:
+        invalid_current_password: 'Kata sandi saat ini tidak valid.'
+
+product_column_configuration:
+    title: 'Konfigurasikan Kolom'
+    labels:
+        configured: 'Kolom yang Dikonfigurasi'
+        available: 'Kolom yang Tersedia'
+    errors:
+        save_error: 'Terjadi kesalahan saat menyimpan konfigurasi kolom Anda.'
+
+queue:
+    stats:
+        product_update: 'Pembaruan produk tertunda'
+        product_update_failed: 'Pembaruan produk gagal'

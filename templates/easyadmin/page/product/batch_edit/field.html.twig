@@ -1,0 +1,79 @@
+<div
+    class="card"
+    data-batch-edit-item
+    data-field-type-id="{{ field.vars.data.fieldType.id }}"
+    data-field-type-code="{{ field.vars.data.fieldType.code }}"
+>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>
+            {{ field.vars.data.fieldType.getTranslatedTitleByLocale(app.request.locale) }}
+        </strong>
+
+        <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            data-action="batch-edit#remove"
+        >
+            <i class="fa fa-trash"></i>
+            {{ 'action.remove_item'|trans({}, 'EasyAdminBundle') }}
+        </button>
+    </div>
+
+    <div class="card-body">
+        {% if field.value is defined %}
+            <div class="mb-3">
+                {{ form_row(field.value, {
+                    label_attr: {
+                        class: 'd-block mb-2'
+                    },
+                    row_attr: {
+                        class: 'mb-0'
+                    }
+                }) }}
+            </div>
+        {% endif %}
+
+        {% if field.translations is defined %}
+            <div class="border rounded p-3 mt-4">
+                <div class="fw-semibold mb-3">
+                    {{ 'general.labels.translations'|trans({}, 'admin') }}
+                </div>
+
+                {% set translationPrototype %}
+                    {% include 'easyadmin/page/product/batch_edit/translation.html.twig' with {
+                        translation: field.translations.vars.prototype,
+                    } %}
+                {% endset %}
+
+                <div
+                    data-controller="batch-edit"
+                    data-batch-edit-index-value="{{ field.translations|length }}"
+                    data-batch-edit-prototype-value="{{ translationPrototype|e('html_attr') }}"
+                    data-batch-edit-prototype-name-value="__translation__"
+                >
+                    <div
+                        class="vstack gap-3"
+                        data-batch-edit-target="items"
+                    >
+                        {% for translation in field.translations %}
+                            {% include 'easyadmin/page/product/batch_edit/translation.html.twig' with {
+                                translation: translation,
+                            } %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-3">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary btn-sm"
+                            data-action="batch-edit#add"
+                        >
+                            <i class="fa fa-plus"></i>
+                            {{ 'action.add_new_item'|trans({}, 'EasyAdminBundle') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

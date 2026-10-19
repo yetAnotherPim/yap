@@ -1,0 +1,11 @@
+TODO:
+-setup command
+    after composer install
+    set db config
+    dump env for prod
+    create keys
+    assets compile
+    offer loading demodata
+    -> test via pipeline (supported php versions) with fixture for api user and check api is available
+
+

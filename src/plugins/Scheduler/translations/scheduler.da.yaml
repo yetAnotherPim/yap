@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Planlægger'
+    tasks:
+        title: 'Planlagte opgaver'
+        columns:
+            title: 'Titel'
+            description: 'Beskrivelse'
+        remove_obsolete_fields:
+            title: 'Fjern forældede felter'
+            description: 'Fjern felter fra produkter, som ikke er tildelt produkttypen'
+        remove_obsolete_field_value_translations:
+            title: 'Fjern forældede oversættelser af feltværdier'
+            description: 'Fjern forældede oversættelser af feltværdier for felter, der ikke er konfigureret som oversættelige.'
+        label: 'Opgave'
+        warning:
+            not_active: 'De planlagte opgaver er ikke blevet udført inden for de seneste 24 timer.'

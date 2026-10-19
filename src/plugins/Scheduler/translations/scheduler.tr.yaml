@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Zamanlayıcı'
+    tasks:
+        title: 'Zamanlanmış görevler'
+        columns:
+            title: 'Başlık'
+            description: 'Açıklama'
+        remove_obsolete_fields:
+            title: 'Eski alanları kaldır'
+            description: 'Ürün türüne atanmamış alanları ürünlerden kaldır'
+        remove_obsolete_field_value_translations:
+            title: 'Eski alan değeri çevirilerini kaldır'
+            description: 'Çevrilebilir olarak yapılandırılmamış alanların eski alan değeri çevirilerini kaldır.'
+        label: 'Görev'
+        warning:
+            not_active: 'Zamanlanmış görevler son 24 saat içinde çalıştırılmadı.'

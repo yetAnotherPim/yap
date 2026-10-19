@@ -1,3 +1,6 @@
+includes:
+	- phpstan-baseline.neon
+
 parameters:
     doctrine:
         objectManagerLoader: tests/object-manager.php
@@ -14,3 +17,4 @@ parameters:
         - tests/bootstrap.php
         - tests/object-manager.php
         - config/reference.php
+    treatPhpDocTypesAsCertain: false

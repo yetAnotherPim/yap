@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Распоређивач'
+    tasks:
+        title: 'Заказани задаци'
+        columns:
+            title: 'Наслов'
+            description: 'Опис'
+        remove_obsolete_fields:
+            title: 'Уклони застарела поља'
+            description: 'Уклони из производа поља која нису додељена типу производа'
+        remove_obsolete_field_value_translations:
+            title: 'Уклони застареле преводе вредности поља'
+            description: 'Уклони застареле преводе вредности поља за поља која нису подешена као преводива.'
+        label: 'Задатак'
+        warning:
+            not_active: 'Заказани задаци нису извршени у последња 24 сата.'

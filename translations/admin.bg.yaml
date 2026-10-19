@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Тип поле
+        default_value: Стойност по подразбиране
+        required: Задължително
+    alert:
+        duplicate_field_type: 'Този тип поле вече се използва.'
+    default_value:
+        help: |-
+            Стойност по подразбиране: Продукт.
+
+            Типове:
+            'Some text'
+            '17.06'
+            '1' - Активен (Отметка)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Мениджър на плъгини
+    labels:
+        name: Име
+        namespace: Пространство от имена
+        version: Версия
+        installed_version: Инсталирана версия
+        active: Активен
+        asset_compilation_required: 'Изисква компилиране на ресурси'
+        actions:
+            reload: Презареди
+            activate: Активирай
+            deactivate: Деактивирай
+            update: Актуализирай
+            compile_assets: 'Компилиране на ресурси'
+user:
+    title: Потребители
+    entity:
+        title: Потребител
+        title_plural: Потребители
+    labels:
+        master_data: Основни данни
+        password: Парола
+        repeat_password: Повтори паролата
+        username: Потребителско име
+        role: Роля
+        email: Имейл
+        first_name: Собствено име
+        last_name: Фамилия
+types:
+    title: Типове
+    label:
+        identifier: Идентификатор
+        field: Поле
+        product: Продукт
+identifier_type:
+    title: Тип идентификатор
+    data_type:
+        string: Низ
+        integer: Цяло число
+    entity:
+        title: Тип идентификатор
+        title_plural: Типове идентификатори
+    labels:
+        title: Заглавие
+        data_type: Тип данни
+product_type:
+    title: Тип продукт
+    entity:
+        title: Тип продукт
+        title_plural: Типове продукти
+    labels:
+        title: Заглавие
+        code: Код
+        fields: Полета
+field_type:
+    title: Тип поле
+    input_type:
+        string: Низ
+        integer: Цяло число
+        checkbox: Отметка
+        date: Дата
+        file: Файл
+        section: Раздел
+        text: Текст
+        textarea: Текстово поле
+        datetime: Дата и час
+        time: Час
+        number: Число
+        color: Цвят
+        country: Държава
+        telephone: Телефон
+        email: Имейл
+        language: Език
+        locale: Локал
+        texteditor: Текстов редактор
+        url: URL
+        select: Избор
+        multiselect: Множествен избор
+        image: Изображение
+    entity:
+        title: Тип поле
+        title_plural: Типове полета
+    labels:
+        title: Заглавие
+        code: Код
+        translatable: Преводим
+        filterable: Филтруем
+        input_type: Тип въвеждане
+        decimal_separator: Десетичен разделител
+locale:
+    title: Локали
+    entity:
+        title: Локал
+        title_plural: Локали
+    labels:
+        content_translation_enabled: 'Използвайте за превод на съдържание'
+        default: По подразбиране
+    actions:
+        set_as_default: Задай по подразбиране
+settings:
+    title: Настройки
+product:
+    title: Продукти
+    entity:
+        title: Продукт
+        title_plural: Продукти
+    labels:
+        identifiers: Идентификатори
+        product_type: Тип продукт
+        created_at: Създадено на
+        updated_at: Актуализирано на
+        master_data: Основни данни
+        fields: Полета
+        batch_edit: 'Пакетно редактиране'
+    batch_selection:
+        page_selected: 'Елементите на тази страница са избрани.'
+        select_all: 'Избери всички'
+        all_selected: 'Всички елементи са избрани.'
+        clear_selection: 'Изчисти избора'
+    batch_edit:
+        notice: 'Промените се обработват асинхронно. MessageConsumer трябва да е активен или алтернативно да е активиран модулът JS Consumer.'
+        dispatched_singular: 'Актуализацията на 1 продукт е добавена на опашката за обработка.'
+        dispatched_plural: 'Актуализациите на %count% продукта са добавени на опашката за обработка.'
+dashboard:
+    title: 'Табло'
+    system_status:
+        title: 'Състояние на системата'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Типът продукт "%productType%" изисква %fieldCount% входни променливи. Конфигурираната стойност на max_input_vars е %maxInputVars%.'
+    products:
+        latest: 'Най-нови продукти'
+
+filter:
+    is_set: '%name% е зададено'
+    labels:
+        translations: 'Преводи'
+        identifiers: 'Идентификатори'
+        fields: 'Полета'
+        general: 'Общи'
+
+general:
+    labels:
+        translation: Превод
+        locale: Локал
+        language: Език
+        translations: 'Преводи'
+        value: 'Стойност'
+account:
+    labels:
+        current_password: 'Текуща парола'
+        account: 'Акаунт'
+        change_password: 'Промяна на паролата'
+    messages:
+        invalid_current_password: 'Текущата парола е невалидна.'
+
+product_column_configuration:
+    title: 'Конфигуриране на колони'
+    labels:
+        configured: 'Конфигурирани колони'
+        available: 'Налични колони'
+    errors:
+        save_error: 'Възникна грешка при запазването на конфигурацията на колоните.'
+
+queue:
+    stats:
+        product_update: 'Чакащи актуализации на продукти'
+        product_update_failed: 'Неуспешни актуализации на продукти'

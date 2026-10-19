@@ -1,0 +1,69 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity\Product\Identifier\Type;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Abstract\TimestampableEntity;
+use App\Entity\Product\Identifier\Type\Enum\DataType;
+use App\Repository\IdentifierTypeRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
+#[ORM\Entity(repositoryClass: IdentifierTypeRepository::class)]
+#[ORM\UniqueConstraint(name: 'unique_product_identifier_type_title', columns: ['title'])]
+#[ApiResource]
+#[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['title'])]
+class IdentifierType extends TimestampableEntity
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
+    #[ApiProperty(identifier: true)]
+    private Uuid $id;
+
+    #[ORM\Column(length: 255, unique: true)]
+    #[NotBlank]
+    #[Groups(['product:read', 'product:read:without-translations'])]
+    private string $title;
+
+    #[ORM\Column(enumType: DataType::class)]
+    private DataType $dataType = DataType::String;
+
+    public function getId(): Uuid
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDataType(): ?DataType
+    {
+        return $this->dataType;
+    }
+
+    public function setDataType(DataType $dataType): static
+    {
+        $this->dataType = $dataType;
+
+        return $this;
+    }
+}

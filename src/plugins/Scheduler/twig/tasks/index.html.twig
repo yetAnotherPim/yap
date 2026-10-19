@@ -1,0 +1,48 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% trans_default_domain 'scheduler' %}
+
+{% block content_title %}
+    {{ 'yap_scheduler.tasks.title'|trans }}
+{% endblock %}
+
+{% block main %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>{{ 'yap_scheduler.tasks.columns.title'|trans }}</th>
+                    <th>{{ 'yap_scheduler.tasks.columns.description'|trans }}</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>
+                            {{
+                            (
+                            'yap_scheduler.tasks.'
+                            ~ task.translationKey
+                            ~ '.title'
+                            )|trans
+                            }}
+                        </td>
+
+                        <td>
+                            {{
+                            (
+                            'yap_scheduler.tasks.'
+                            ~ task.translationKey
+                            ~ '.description'
+                            )|trans
+                            }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

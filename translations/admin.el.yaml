@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Τύπος πεδίου
+        default_value: Προεπιλεγμένη τιμή
+        required: Υποχρεωτικό
+    alert:
+        duplicate_field_type: 'Αυτός ο τύπος πεδίου χρησιμοποιείται ήδη.'
+    default_value:
+        help: |-
+            Προεπιλεγμένη τιμή: Προϊόν.
+
+            Τύποι:
+            'Some text'
+            '17.06'
+            '1' - Ενεργό (Πλαίσιο ελέγχου)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Διαχείριση προσθέτων
+    labels:
+        name: Όνομα
+        namespace: Χώρος ονομάτων
+        version: Έκδοση
+        installed_version: Εγκατεστημένη έκδοση
+        active: Ενεργό
+        asset_compilation_required: 'Απαιτείται μεταγλώττιση πόρων'
+        actions:
+            reload: Επαναφόρτωση
+            activate: Ενεργοποίηση
+            deactivate: Απενεργοποίηση
+            update: Ενημέρωση
+            compile_assets: 'Μεταγλώττιση πόρων'
+user:
+    title: Χρήστες
+    entity:
+        title: Χρήστης
+        title_plural: Χρήστες
+    labels:
+        master_data: Βασικά δεδομένα
+        password: Κωδικός πρόσβασης
+        repeat_password: Επανάληψη κωδικού
+        username: Όνομα χρήστη
+        role: Ρόλος
+        email: Email
+        first_name: Όνομα
+        last_name: Επώνυμο
+types:
+    title: Τύποι
+    label:
+        identifier: Αναγνωριστικό
+        field: Πεδίο
+        product: Προϊόν
+identifier_type:
+    title: Τύπος αναγνωριστικού
+    data_type:
+        string: Συμβολοσειρά
+        integer: Ακέραιος
+    entity:
+        title: Τύπος αναγνωριστικού
+        title_plural: Τύποι αναγνωριστικών
+    labels:
+        title: Τίτλος
+        data_type: Τύπος δεδομένων
+product_type:
+    title: Τύπος προϊόντος
+    entity:
+        title: Τύπος προϊόντος
+        title_plural: Τύποι προϊόντων
+    labels:
+        title: Τίτλος
+        code: Κωδικός
+        fields: Πεδία
+field_type:
+    title: Τύπος πεδίου
+    input_type:
+        string: Συμβολοσειρά
+        integer: Ακέραιος
+        checkbox: Πλαίσιο ελέγχου
+        date: Ημερομηνία
+        file: Αρχείο
+        section: Ενότητα
+        text: Κείμενο
+        textarea: Περιοχή κειμένου
+        datetime: Ημερομηνία & ώρα
+        time: Ώρα
+        number: Αριθμός
+        color: Χρώμα
+        country: Χώρα
+        telephone: Τηλέφωνο
+        email: Email
+        language: Γλώσσα
+        locale: Τοπικές ρυθμίσεις
+        texteditor: Επεξεργαστής κειμένου
+        url: URL
+        select: Επιλογή
+        multiselect: Πολλαπλή επιλογή
+        image: Εικόνα
+    entity:
+        title: Τύπος πεδίου
+        title_plural: Τύποι πεδίων
+    labels:
+        title: Τίτλος
+        code: Κωδικός
+        translatable: Μεταφράσιμο
+        filterable: Φιλτράρισμα
+        input_type: Τύπος εισόδου
+        decimal_separator: Διαχωριστικό δεκαδικών
+locale:
+    title: Τοπικές ρυθμίσεις
+    entity:
+        title: Τοπικές ρυθμίσεις
+        title_plural: Τοπικές ρυθμίσεις
+    labels:
+        content_translation_enabled: 'Χρήση για μεταφράσεις περιεχομένου'
+        default: Προεπιλογή
+    actions:
+        set_as_default: Ορισμός ως προεπιλογή
+settings:
+    title: Ρυθμίσεις
+product:
+    title: Προϊόντα
+    entity:
+        title: Προϊόν
+        title_plural: Προϊόντα
+    labels:
+        identifiers: Αναγνωριστικά
+        product_type: Τύπος προϊόντος
+        created_at: Δημιουργήθηκε
+        updated_at: Ενημερώθηκε
+        master_data: Βασικά δεδομένα
+        fields: Πεδία
+        batch_edit: 'Μαζική επεξεργασία'
+    batch_selection:
+        page_selected: 'Τα στοιχεία αυτής της σελίδας έχουν επιλεγεί.'
+        select_all: 'Επιλογή όλων'
+        all_selected: 'Έχουν επιλεγεί όλα τα στοιχεία.'
+        clear_selection: 'Εκκαθάριση επιλογής'
+    batch_edit:
+        notice: 'Οι αλλαγές υποβάλλονται σε ασύγχρονη επεξεργασία. Το MessageConsumer πρέπει να είναι ενεργό ή, εναλλακτικά, να έχει ενεργοποιηθεί η λειτουργική μονάδα JS Consumer.'
+        dispatched_singular: 'Η ενημέρωση 1 προϊόντος προστέθηκε στην ουρά επεξεργασίας.'
+        dispatched_plural: 'Οι ενημερώσεις %count% προϊόντων προστέθηκαν στην ουρά επεξεργασίας.'
+dashboard:
+    title: 'Πίνακας ελέγχου'
+    system_status:
+        title: 'Κατάσταση συστήματος'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Ο τύπος προϊόντος "%productType%" απαιτεί %fieldCount% μεταβλητές εισόδου. Η ρυθμισμένη τιμή του max_input_vars είναι %maxInputVars%.'
+    products:
+        latest: 'Πρόσφατα προϊόντα'
+
+filter:
+    is_set: 'Το %name% έχει οριστεί'
+    labels:
+        translations: 'Μεταφράσεις'
+        identifiers: 'Αναγνωριστικά'
+        fields: 'Πεδία'
+        general: 'Γενικά'
+
+general:
+    labels:
+        translation: Μετάφραση
+        locale: Τοπικές ρυθμίσεις
+        language: Γλώσσα
+        translations: 'Μεταφράσεις'
+        value: 'Τιμή'
+account:
+    labels:
+        current_password: 'Τρέχων κωδικός πρόσβασης'
+        account: 'Λογαριασμός'
+        change_password: 'Αλλαγή κωδικού πρόσβασης'
+    messages:
+        invalid_current_password: 'Ο τρέχων κωδικός πρόσβασης δεν είναι έγκυρος.'
+
+product_column_configuration:
+    title: 'Διαμόρφωση στηλών'
+    labels:
+        configured: 'Διαμορφωμένες στήλες'
+        available: 'Διαθέσιμες στήλες'
+    errors:
+        save_error: 'Παρουσιάστηκε σφάλμα κατά την αποθήκευση της διαμόρφωσης των στηλών σας.'
+
+queue:
+    stats:
+        product_update: 'Εκκρεμείς ενημερώσεις προϊόντων'
+        product_update_failed: 'Αποτυχημένες ενημερώσεις προϊόντων'

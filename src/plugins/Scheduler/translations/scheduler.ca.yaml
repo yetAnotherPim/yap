@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Planificador'
+    tasks:
+        title: 'Tasques programades'
+        columns:
+            title: 'Títol'
+            description: 'Descripció'
+        remove_obsolete_fields:
+            title: 'Elimina els camps obsolets'
+            description: 'Elimina dels productes els camps que no estan assignats al tipus de producte'
+        remove_obsolete_field_value_translations:
+            title: 'Elimina les traduccions obsoletes dels valors dels camps'
+            description: 'Elimina les traduccions obsoletes dels valors dels camps que no estan configurats com a traduïbles.'
+        label: 'Tasca'
+        warning:
+            not_active: 'Les tasques programades no s''han executat durant les últimes 24 hores.'

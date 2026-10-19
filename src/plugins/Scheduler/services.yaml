@@ -1,0 +1,14 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    #Enable autowiring for plugin folder
+    App\plugins\Scheduler\:
+        resource: './'
+        #Plugin.php is already loaded
+        exclude: './Plugin.php'
+
+    #add custom definitions if needed

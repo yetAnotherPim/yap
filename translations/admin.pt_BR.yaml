@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Tipo de campo
+        default_value: Valor padrão
+        required: Obrigatório
+    alert:
+        duplicate_field_type: 'Este tipo de campo já está sendo usado.'
+    default_value:
+        help: |-
+            Os valores padrão são aplicados ao criar um produto.
+
+            Os valores possíveis são:
+            'Some text'
+            '17.06'
+            '1' - É interpretado como ativo nas caixas de seleção
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Gerenciador de plugins
+    labels:
+        name: Nome
+        namespace: Namespace
+        version: Versão
+        installed_version: Versão instalada
+        active: Ativo
+        asset_compilation_required: 'É necessário compilar os recursos'
+        actions:
+            reload: Recarregar
+            activate: Ativar
+            deactivate: Desativar
+            update: Atualizar
+            compile_assets: 'Compilar recursos'
+user:
+    title: Usuários
+    entity:
+        title: Usuário
+        title_plural: Usuários
+    labels:
+        master_data: Dados mestres
+        password: Senha
+        repeat_password: Repetir senha
+        username: Nome de usuário
+        role: Função
+        email: E-mail
+        first_name: Nome
+        last_name: Sobrenome
+types:
+    title: Tipos
+    label:
+        identifier: Identificador
+        field: Campo
+        product: Produto
+identifier_type:
+    title: Tipo de identificador
+    data_type:
+        string: Texto
+        integer: Inteiro
+    entity:
+        title: Tipo de identificador
+        title_plural: Tipos de identificador
+    labels:
+        title: Título
+        data_type: Tipo de dados
+product_type:
+    title: Tipo de produto
+    entity:
+        title: Tipo de produto
+        title_plural: Tipos de produto
+    labels:
+        title: Título
+        code: Código
+        fields: Campos
+field_type:
+    title: Tipo de campo
+    input_type:
+        string: Texto
+        integer: Inteiro
+        checkbox: Caixa de seleção
+        date: Data
+        file: Arquivo
+        section: Seção
+        text: Texto
+        textarea: Área de texto
+        datetime: Data e hora
+        time: Hora
+        number: Número
+        color: Cor
+        country: País
+        telephone: Telefone
+        email: E-mail
+        language: Idioma
+        locale: Localidade
+        texteditor: Editor de texto
+        url: URL
+        select: Seleção
+        multiselect: Seleção múltipla
+        image: Imagem
+    entity:
+        title: Tipo de campo
+        title_plural: Tipos de campo
+    labels:
+        title: Título
+        code: Código
+        translatable: Traduzível
+        filterable: Filtrável
+        input_type: Tipo de entrada
+        decimal_separator: Separador decimal
+locale:
+    title: Localidades
+    entity:
+        title: Localidade
+        title_plural: Localidades
+    labels:
+        content_translation_enabled: 'Usar para traduções de conteúdo'
+        default: Padrão
+    actions:
+        set_as_default: Definir como padrão
+settings:
+    title: Configurações
+product:
+    title: Produtos
+    entity:
+        title: Produto
+        title_plural: Produtos
+    labels:
+        identifiers: Identificadores
+        product_type: Tipo de produto
+        created_at: Criado em
+        updated_at: Atualizado em
+        master_data: Dados mestres
+        fields: Campos
+        batch_edit: 'Edição em massa'
+    batch_selection:
+        page_selected: 'Os itens desta página foram selecionados.'
+        select_all: 'Selecionar tudo'
+        all_selected: 'Todos os itens foram selecionados.'
+        clear_selection: 'Limpar seleção'
+    batch_edit:
+        notice: 'As alterações são processadas de forma assíncrona. O MessageConsumer deve estar ativo ou, alternativamente, o módulo JS Consumer deve estar habilitado.'
+        dispatched_singular: 'A atualização de 1 produto foi colocada na fila para processamento.'
+        dispatched_plural: 'As atualizações de %count% produtos foram colocadas na fila para processamento.'
+dashboard:
+    title: 'Painel'
+    system_status:
+        title: 'Status do sistema'
+        all_ok: 'OK'
+        input_vars:
+            message: 'O tipo de produto "%productType%" requer %fieldCount% variáveis de entrada. O valor configurado de max_input_vars é %maxInputVars%.'
+    products:
+        latest: 'Produtos mais recentes'
+
+filter:
+    is_set: '%name% está definido'
+    labels:
+        translations: 'Traduções'
+        identifiers: 'Identificadores'
+        fields: 'Campos'
+        general: 'Geral'
+
+general:
+    labels:
+        translation: Tradução
+        locale: Localidade
+        language: Idioma
+        translations: 'Traduções'
+        value: 'Valor'
+account:
+    labels:
+        current_password: 'Senha atual'
+        account: 'Conta'
+        change_password: 'Alterar senha'
+    messages:
+        invalid_current_password: 'A senha atual é inválida.'
+
+product_column_configuration:
+    title: 'Configurar colunas'
+    labels:
+        configured: 'Colunas configuradas'
+        available: 'Colunas disponíveis'
+    errors:
+        save_error: 'Ocorreu um erro ao salvar a configuração das colunas.'
+
+queue:
+    stats:
+        product_update: 'Atualizações de produtos pendentes'
+        product_update_failed: 'Falhas nas atualizações de produtos'

@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Ajastin'
+    tasks:
+        title: 'Ajastetut tehtävät'
+        columns:
+            title: 'Otsikko'
+            description: 'Kuvaus'
+        remove_obsolete_fields:
+            title: 'Poista vanhentuneet kentät'
+            description: 'Poista tuotteista kentät, joita ei ole liitetty tuotetyyppiin'
+        remove_obsolete_field_value_translations:
+            title: 'Poista vanhentuneet kenttäarvojen käännökset'
+            description: 'Poista vanhentuneet kenttäarvojen käännökset kentiltä, joita ei ole määritetty käännettäviksi.'
+        label: 'Tehtävä'
+        warning:
+            not_active: 'Ajastettuja tehtäviä ei ole suoritettu viimeisten 24 tunnin aikana.'

@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Fälttyp
+        default_value: Standardvärde
+        required: Obligatoriskt
+    alert:
+        duplicate_field_type: 'Den här fälttypen används redan.'
+    default_value:
+        help: |-
+            Standardvärde: Produkt.
+
+            Typer:
+            'Some text'
+            '17.06'
+            '1' - Aktiv (Kryssruta)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Pluginhanterare
+    labels:
+        name: Namn
+        namespace: Namnrymd
+        version: Version
+        installed_version: Installerad version
+        active: Aktiv
+        asset_compilation_required: 'Resurskompilering krävs'
+        actions:
+            reload: Ladda om
+            activate: Aktivera
+            deactivate: Inaktivera
+            update: Uppdatera
+            compile_assets: 'Kompilera resurser'
+user:
+    title: Användare
+    entity:
+        title: Användare
+        title_plural: Användare
+    labels:
+        master_data: Grunddata
+        password: Lösenord
+        repeat_password: Upprepa lösenord
+        username: Användarnamn
+        role: Roll
+        email: E-post
+        first_name: Förnamn
+        last_name: Efternamn
+types:
+    title: Typer
+    label:
+        identifier: Identifierare
+        field: Fält
+        product: Produkt
+identifier_type:
+    title: Identifierartyp
+    data_type:
+        string: Sträng
+        integer: Heltal
+    entity:
+        title: Identifierartyp
+        title_plural: Identifierartyper
+    labels:
+        title: Titel
+        data_type: Datatyp
+product_type:
+    title: Produkttyp
+    entity:
+        title: Produkttyp
+        title_plural: Produkttyper
+    labels:
+        title: Titel
+        code: Kod
+        fields: Fält
+field_type:
+    title: Fälttyp
+    input_type:
+        string: Sträng
+        integer: Heltal
+        checkbox: Kryssruta
+        date: Datum
+        file: Fil
+        section: Sektion
+        text: Text
+        textarea: Textområde
+        datetime: Datum och tid
+        time: Tid
+        number: Nummer
+        color: Färg
+        country: Land
+        telephone: Telefon
+        email: E-post
+        language: Språk
+        locale: Språkinställning
+        texteditor: Textredigerare
+        url: URL
+        select: Val
+        multiselect: Flerval
+        image: Bild
+    entity:
+        title: Fälttyp
+        title_plural: Fälttyper
+    labels:
+        title: Titel
+        code: Kod
+        translatable: Översättningsbar
+        filterable: Filtrerbar
+        input_type: Inmatningstyp
+        decimal_separator: Decimaltecken
+locale:
+    title: Språkinställningar
+    entity:
+        title: Språkinställning
+        title_plural: Språkinställningar
+    labels:
+        content_translation_enabled: 'Använd för innehållsöversättningar'
+        default: Standard
+    actions:
+        set_as_default: Ange som standard
+settings:
+    title: Inställningar
+product:
+    title: Produkter
+    entity:
+        title: Produkt
+        title_plural: Produkter
+    labels:
+        identifiers: Identifierare
+        product_type: Produkttyp
+        created_at: Skapad
+        updated_at: Uppdaterad
+        master_data: Grunddata
+        fields: Fält
+        batch_edit: 'Massredigering'
+    batch_selection:
+        page_selected: 'Objekten på den här sidan är markerade.'
+        select_all: 'Markera alla'
+        all_selected: 'Alla objekt är markerade.'
+        clear_selection: 'Rensa markering'
+    batch_edit:
+        notice: 'Ändringarna behandlas asynkront. MessageConsumer måste vara aktiv eller alternativt måste JS Consumer-modulen aktiveras.'
+        dispatched_singular: 'Uppdatering av 1 produkt har köats för bearbetning.'
+        dispatched_plural: 'Uppdateringar av %count% produkter har köats för bearbetning.'
+dashboard:
+    title: 'Instrumentpanel'
+    system_status:
+        title: 'Systemstatus'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Produkttypen ”%productType%” kräver %fieldCount% indatavariabler. Det konfigurerade värdet för max_input_vars är %maxInputVars%.'
+    products:
+        latest: 'Senaste produkterna'
+
+filter:
+    is_set: '%name% är angivet'
+    labels:
+        translations: 'Översättningar'
+        identifiers: 'Identifierare'
+        fields: 'Fält'
+        general: 'Allmänt'
+
+general:
+    labels:
+        translation: Översättning
+        locale: Språkinställning
+        language: Språk
+        translations: 'Översättningar'
+        value: 'Värde'
+account:
+    labels:
+        current_password: 'Nuvarande lösenord'
+        account: 'Konto'
+        change_password: 'Ändra lösenord'
+    messages:
+        invalid_current_password: 'Det nuvarande lösenordet är ogiltigt.'
+
+product_column_configuration:
+    title: 'Konfigurera kolumner'
+    labels:
+        configured: 'Konfigurerade kolumner'
+        available: 'Tillgängliga kolumner'
+    errors:
+        save_error: 'Ett fel uppstod när kolumnkonfigurationen skulle sparas.'
+
+queue:
+    stats:
+        product_update: 'Väntande produktuppdateringar'
+        product_update_failed: 'Misslyckade produktuppdateringar'

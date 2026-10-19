@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity\Product;
 
+use ApiPlatform\Doctrine\Orm\Filter\ComparisonFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -12,33 +15,135 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
-use App\Entity\Identifier\Identifier;
+use ApiPlatform\Serializer\Filter\GroupFilter;
+use App\Entity\Abstract\TimestampableEntity;
+use App\Entity\Product\Field\Field;
+use App\Entity\Product\Identifier\Identifier;
+use App\Entity\Product\Type\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
+// TODO: add parent relation -> provide fieldTypes[] for distinction
+
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[Index(name: 'index_product_producttype', columns: ['product_type_id'])]
 #[Get(
-    normalizationContext: ['groups' => ['product:read']]
+    normalizationContext: ['groups' => ['product:read']],
+    parameters: [
+        'groups' => new QueryParameter(
+            schema: [
+                'type' => 'array',
+                'items' => [
+                    'type' => 'string',
+                    'enum' => [
+                        'product:read:without-translations',
+                    ],
+                ],
+            ],
+            filter: new GroupFilter(
+                overrideDefaultGroups: true,
+                whitelist: [
+                    'product:read:without-translations',
+                ],
+            ),
+            description: 'Serializer groups. Use "product:read:without-translations" to return the product without field value translations.',
+        ),
+    ],
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['product:read']],
     parameters: [
-        'hasIdentifiers' => new QueryParameter(
+        'groups' => new QueryParameter(
+            schema: [
+                'type' => 'array',
+                'items' => [
+                    'type' => 'string',
+                    'enum' => [
+                        'product:read:without-translations',
+                    ],
+                ],
+            ],
+            filter: new GroupFilter(
+                overrideDefaultGroups: true,
+                whitelist: [
+                    'product:read:without-translations',
+                ],
+            ),
+            description: 'Serializer groups. Use "product:read:without-translations" to return products without field value translations.',
+        ),
+        'productType' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'productType.id',
+            description: 'Filter products by product type ID',
+        ),
+        'createdAt' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'createdAt',
+        ),
+        'updatedAt' => new QueryParameter(
+            filter: new ComparisonFilter(new ExactFilter()),
+            property: 'updatedAt',
+        ),
+        'hasIdentifier' => new QueryParameter(
             filter: new ExistsFilter(),
             property: 'identifiers',
             description: 'Filter products that have/don\'t have identifiers',
         ),
+        'identifierIs' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'identifiers.value',
+            description: 'Filter products by identifier matching value exactly',
+        ),
+        'identifierLike' => new QueryParameter(
+            filter: new PartialSearchFilter(),
+            property: 'identifiers.value',
+            description: 'Filter products by identifier matching value partially',
+        ),
+        'identifierType' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'identifiers.type.title',
+        ),
+        'fieldValueIs' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'fields.value',
+            description: 'Filter products by field matching value exactly',
+        ),
+        'fieldValueLike' => new QueryParameter(
+            filter: new PartialSearchFilter(),
+            property: 'fields.value',
+            description: 'Filter products by field matching value partially',
+        ),
+        'fieldTypeCode' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'fields.type.code',
+        ),
+        'fieldTranslatedValueIs' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'fields.translations.value',
+            description: 'Filter products by field matching translated value exactly',
+        ),
+        'fieldTranslatedValueLike' => new QueryParameter(
+            filter: new PartialSearchFilter(),
+            property: 'fields.translations.value',
+            description: 'Filter products by field matching translated value partially',
+        ),
+        'locale' => new QueryParameter(
+            filter: new ExactFilter(),
+            property: 'fields.translations.locale.id'
+        ),
     ]
 )]
-#[Post]
-#[Patch]
+#[Post(denormalizationContext: ['groups' => ['product:write']])]
+#[Patch(denormalizationContext: ['groups' => ['product:write']])]
 #[Delete]
-class Product
+#[ORM\HasLifecycleCallbacks]
+class Product extends TimestampableEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -47,31 +152,48 @@ class Product
     #[ApiProperty(identifier: true)]
     private Uuid $id;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
+    private ProductType $productType;
+
     /**
      * @var Collection<int, Identifier>
      */
-    #[ORM\OneToMany(targetEntity: Identifier::class, mappedBy: 'product', orphanRemoval: true)]
-    #[Groups(['product:read'])]
+    #[ORM\OneToMany(targetEntity: Identifier::class, mappedBy: 'product', cascade: ['all'], orphanRemoval: true)]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
     private Collection $identifiers;
 
-    #[ORM\Column]
-    #[Groups(['product:read', 'identifier:filter'])]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['product:read', 'identifier:filter'])]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    // TODO: set created at and updted at -> integration test
+    /**
+     * @var Collection<int, Field>
+     */
+    #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'product', cascade: ['all'], orphanRemoval: true)]
+    #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
+    private Collection $fields;
 
     public function __construct()
     {
         $this->identifiers = new ArrayCollection();
+        $this->fields = new ArrayCollection();
+
+        parent::__construct();
     }
 
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getProductType(): ProductType
+    {
+        return $this->productType;
+    }
+
+    public function setProductType(ProductType $productType): static
+    {
+        $this->productType = $productType;
+
+        return $this;
     }
 
     /**
@@ -99,26 +221,27 @@ class Product
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    /**
+     * @return Collection<int, Field>
+     */
+    public function getFields(): Collection
     {
-        return $this->createdAt;
+        return $this->fields;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function addField(Field $field): static
     {
-        $this->createdAt = $createdAt;
+        if (!$this->fields->contains($field)) {
+            $this->fields->add($field);
+            $field->setProduct($this);
+        }
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function removeField(Field $field): static
     {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
+        $this->fields->removeElement($field);
 
         return $this;
     }

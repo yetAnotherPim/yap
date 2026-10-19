@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Planner'
+    tasks:
+        title: 'Geplande taken'
+        columns:
+            title: 'Titel'
+            description: 'Beschrijving'
+        remove_obsolete_fields:
+            title: 'Verouderde velden verwijderen'
+            description: 'Velden uit producten verwijderen die niet aan het producttype zijn toegewezen'
+        remove_obsolete_field_value_translations:
+            title: 'Verouderde vertalingen van veldwaarden verwijderen'
+            description: 'Verouderde vertalingen van veldwaarden verwijderen voor velden die niet als vertaalbaar zijn geconfigureerd.'
+        label: 'Taak'
+        warning:
+            not_active: 'De geplande taken zijn de afgelopen 24 uur niet uitgevoerd.'

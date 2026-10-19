@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Planificateur'
+    tasks:
+        title: 'Tâches planifiées'
+        columns:
+            title: 'Titre'
+            description: 'Description'
+        remove_obsolete_fields:
+            title: 'Supprimer les champs obsolètes'
+            description: 'Supprimer des produits les champs qui ne sont pas associés au type de produit'
+        remove_obsolete_field_value_translations:
+            title: 'Supprimer les traductions obsolètes des valeurs de champ'
+            description: 'Supprimer les traductions obsolètes des valeurs de champ pour les champs qui ne sont pas configurés comme traduisibles.'
+        label: 'Tâche'
+        warning:
+            not_active: 'Les tâches planifiées n''ont pas été exécutées au cours des dernières 24 heures.'

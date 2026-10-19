@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Тип на поле
+        default_value: Стандардна вредност
+        required: Задолжително
+    alert:
+        duplicate_field_type: 'Овој тип на поле веќе се користи.'
+    default_value:
+        help: |-
+            Стандардна вредност: Производ.
+
+            Типови:
+            'Some text'
+            '17.06'
+            '1' - Активно (Поле за избор)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Управувач со приклучоци
+    labels:
+        name: Име
+        namespace: Именски простор
+        version: Верзија
+        installed_version: Инсталирана верзија
+        active: Активно
+        asset_compilation_required: 'Потребна е компилација на ресурси'
+        actions:
+            reload: Вчитај повторно
+            activate: Активирај
+            deactivate: Деактивирај
+            update: Ажурирај
+            compile_assets: 'Компилирај ресурси'
+user:
+    title: Корисници
+    entity:
+        title: Корисник
+        title_plural: Корисници
+    labels:
+        master_data: Основни податоци
+        password: Лозинка
+        repeat_password: Повтори лозинка
+        username: Корисничко име
+        role: Улога
+        email: Е-пошта
+        first_name: Име
+        last_name: Презиме
+types:
+    title: Типови
+    label:
+        identifier: Идентификатор
+        field: Поле
+        product: Производ
+identifier_type:
+    title: Тип на идентификатор
+    data_type:
+        string: Низа
+        integer: Цел број
+    entity:
+        title: Тип на идентификатор
+        title_plural: Типови на идентификатори
+    labels:
+        title: Наслов
+        data_type: Тип на податоци
+product_type:
+    title: Тип на производ
+    entity:
+        title: Тип на производ
+        title_plural: Типови на производи
+    labels:
+        title: Наслов
+        code: Код
+        fields: Полиња
+field_type:
+    title: Тип на поле
+    input_type:
+        string: Низа
+        integer: Цел број
+        checkbox: Поле за избор
+        date: Датум
+        file: Датотека
+        section: Секција
+        text: Текст
+        textarea: Текстуално поле
+        datetime: Датум и време
+        time: Време
+        number: Број
+        color: Боја
+        country: Држава
+        telephone: Телефон
+        email: Е-пошта
+        language: Јазик
+        locale: Локал
+        texteditor: Уредувач на текст
+        url: URL
+        select: Избор
+        multiselect: Повеќекратен избор
+        image: Слика
+    entity:
+        title: Тип на поле
+        title_plural: Типови на полиња
+    labels:
+        title: Наслов
+        code: Код
+        translatable: Преводливо
+        filterable: Филтрирачко
+        input_type: Тип на внес
+        decimal_separator: Децимален разделувач
+locale:
+    title: Локали
+    entity:
+        title: Локал
+        title_plural: Локали
+    labels:
+        content_translation_enabled: 'Користи за преводи на содржина'
+        default: Стандардно
+    actions:
+        set_as_default: Постави како стандардно
+settings:
+    title: Поставки
+product:
+    title: Производи
+    entity:
+        title: Производ
+        title_plural: Производи
+    labels:
+        identifiers: Идентификатори
+        product_type: Тип на производ
+        created_at: Создадено
+        updated_at: Ажурирано
+        master_data: Основни податоци
+        fields: Полиња
+        batch_edit: 'Групно уредување'
+    batch_selection:
+        page_selected: 'Ставките на оваа страница се избрани.'
+        select_all: 'Избери ги сите'
+        all_selected: 'Сите ставки се избрани.'
+        clear_selection: 'Исчисти избор'
+    batch_edit:
+        notice: 'Промените се обработуваат асинхроно. MessageConsumer мора да биде активен или алтернативно да биде овозможен модулот JS Consumer.'
+        dispatched_singular: 'Ажурирањето на 1 производ е ставено во редица за обработка.'
+        dispatched_plural: 'Ажурирањата на %count% производи се ставени во редица за обработка.'
+dashboard:
+    title: 'Контролна табла'
+    system_status:
+        title: 'Статус на системот'
+        all_ok: 'Во ред'
+        input_vars:
+            message: 'Типот на производ „%productType%“ бара %fieldCount% влезни променливи. Конфигурираната вредност за max_input_vars е %maxInputVars%.'
+    products:
+        latest: 'Најнови производи'
+
+filter:
+    is_set: '%name% е поставено'
+    labels:
+        translations: 'Преводи'
+        identifiers: 'Идентификатори'
+        fields: 'Полиња'
+        general: 'Општо'
+
+general:
+    labels:
+        translation: Превод
+        locale: Локал
+        language: Јазик
+        translations: 'Преводи'
+        value: 'Вредност'
+account:
+    labels:
+        current_password: 'Тековна лозинка'
+        account: 'Сметка'
+        change_password: 'Промени лозинка'
+    messages:
+        invalid_current_password: 'Тековната лозинка не е валидна.'
+
+product_column_configuration:
+    title: 'Конфигурирај колони'
+    labels:
+        configured: 'Конфигурирани колони'
+        available: 'Достапни колони'
+    errors:
+        save_error: 'Се појави грешка при зачувувањето на конфигурацијата на колоните.'
+
+queue:
+    stats:
+        product_update: 'Ажурирања на производи на чекање'
+        product_update_failed: 'Неуспешни ажурирања на производи'

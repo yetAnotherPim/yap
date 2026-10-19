@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Planer'
+    tasks:
+        title: 'Zakazani zadaci'
+        columns:
+            title: 'Naslov'
+            description: 'Opis'
+        remove_obsolete_fields:
+            title: 'Ukloni zastarjela polja'
+            description: 'Ukloni iz proizvoda polja koja nisu dodijeljena vrsti proizvoda'
+        remove_obsolete_field_value_translations:
+            title: 'Ukloni zastarjele prijevode vrijednosti polja'
+            description: 'Ukloni zastarjele prijevode vrijednosti polja za polja koja nisu konfigurirana kao prevodiva.'
+        label: 'Zadatak'
+        warning:
+            not_active: 'Zakazani zadaci nisu izvršeni u posljednja 24 sata.'

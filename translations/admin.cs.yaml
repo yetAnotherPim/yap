@@ -1,0 +1,185 @@
+product_type_field_configuration:
+    labels:
+        field_type: Typ pole
+        default_value: Výchozí hodnota
+        required: Povinné
+    alert:
+        duplicate_field_type: 'Tento typ pole se již používá.'
+    default_value:
+        help: |-
+            Výchozí hodnota: Produkt.
+
+            Typy:
+            'Some text'
+            '17.06'
+            '1' - Aktivní (Zaškrtávací políčko)
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+plugin_manager:
+    title: Správce pluginů
+    labels:
+        name: Název
+        namespace: Jmenný prostor
+        version: Verze
+        installed_version: Nainstalovaná verze
+        active: Aktivní
+        asset_compilation_required: 'Vyžaduje kompilaci prostředků'
+        actions:
+            reload: Načíst znovu
+            activate: Aktivovat
+            deactivate: Deaktivovat
+            update: Aktualizovat
+            compile_assets: 'Kompilovat prostředky'
+user:
+    title: Uživatelé
+    entity:
+        title: Uživatel
+        title_plural: Uživatelé
+    labels:
+        master_data: Kmenová data
+        password: Heslo
+        repeat_password: Zopakovat heslo
+        username: Uživatelské jméno
+        role: Role
+        email: E-mail
+        first_name: Jméno
+        last_name: Příjmení
+types:
+    title: Typy
+    label:
+        identifier: Identifikátor
+        field: Pole
+        product: Produkt
+identifier_type:
+    title: Typ identifikátoru
+    data_type:
+        string: Řetězec
+        integer: Celé číslo
+    entity:
+        title: Typ identifikátoru
+        title_plural: Typy identifikátorů
+    labels:
+        title: Název
+        data_type: Datový typ
+product_type:
+    title: Typ produktu
+    entity:
+        title: Typ produktu
+        title_plural: Typy produktů
+    labels:
+        title: Název
+        code: Kód
+        fields: Pole
+field_type:
+    title: Typ pole
+    input_type:
+        string: Řetězec
+        integer: Celé číslo
+        checkbox: Zaškrtávací políčko
+        date: Datum
+        file: Soubor
+        section: Sekce
+        text: Text
+        textarea: Textová oblast
+        datetime: Datum a čas
+        time: Čas
+        number: Číslo
+        color: Barva
+        country: Země
+        telephone: Telefon
+        email: E-mail
+        language: Jazyk
+        locale: Národní prostředí
+        texteditor: Textový editor
+        url: URL
+        select: Výběr
+        multiselect: Vícenásobný výběr
+        image: Obrázek
+    entity:
+        title: Typ pole
+        title_plural: Typy polí
+    labels:
+        title: Název
+        code: Kód
+        translatable: Přeložitelné
+        filterable: Filtrovatelné
+        input_type: Typ vstupu
+        decimal_separator: Desetinný oddělovač
+locale:
+    title: Národní prostředí
+    entity:
+        title: Národní prostředí
+        title_plural: Národní prostředí
+    labels:
+        content_translation_enabled: 'Použít pro překlady obsahu'
+        default: Výchozí
+    actions:
+        set_as_default: Nastavit jako výchozí
+settings:
+    title: Nastavení
+product:
+    title: Produkty
+    entity:
+        title: Produkt
+        title_plural: Produkty
+    labels:
+        identifiers: Identifikátory
+        product_type: Typ produktu
+        created_at: Vytvořeno
+        updated_at: Aktualizováno
+        master_data: Kmenová data
+        fields: Pole
+        batch_edit: 'Hromadná úprava'
+    batch_selection:
+        page_selected: 'Položky na této stránce jsou vybrány.'
+        select_all: 'Vybrat vše'
+        all_selected: 'Všechny položky jsou vybrány.'
+        clear_selection: 'Zrušit výběr'
+    batch_edit:
+        notice: 'Změny se zpracovávají asynchronně. MessageConsumer musí být aktivní, případně musí být aktivován modul JS Consumer.'
+        dispatched_singular: 'Aktualizace 1 produktu byla zařazena do fronty ke zpracování.'
+        dispatched_plural: 'Aktualizace %count% produktů byly zařazeny do fronty ke zpracování.'
+dashboard:
+    title: 'Přehled'
+    system_status:
+        title: 'Stav systému'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Typ produktu "%productType%" vyžaduje %fieldCount% vstupních proměnných. Nakonfigurovaná hodnota max_input_vars je %maxInputVars%.'
+    products:
+        latest: 'Nejnovější produkty'
+
+filter:
+    is_set: '%name% je nastaveno'
+    labels:
+        translations: 'Překlady'
+        identifiers: 'Identifikátory'
+        fields: 'Pole'
+        general: 'Obecné'
+
+general:
+    labels:
+        translation: Překlad
+        locale: Národní prostředí
+        language: Jazyk
+        translations: 'Překlady'
+        value: 'Hodnota'
+account:
+    labels:
+        current_password: 'Aktuální heslo'
+        account: 'Účet'
+        change_password: 'Změnit heslo'
+    messages:
+        invalid_current_password: 'Aktuální heslo není platné.'
+
+product_column_configuration:
+    title: 'Konfigurovat sloupce'
+    labels:
+        configured: 'Konfigurované sloupce'
+        available: 'Dostupné sloupce'
+    errors:
+        save_error: 'Při ukládání konfigurace sloupců došlo k chybě.'
+
+queue:
+    stats:
+        product_update: 'Čekající aktualizace produktů'
+        product_update_failed: 'Neúspěšné aktualizace produktů'

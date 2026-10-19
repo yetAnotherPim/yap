@@ -1,0 +1,27 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\plugins\JsConsumer\:
+        resource: './'
+        exclude: './Plugin.php'
+
+    js_consumer.logger:
+        class: Monolog\Logger
+        arguments:
+            - 'js_consumer'
+        calls:
+            - method: pushHandler
+              arguments:
+                  - '@js_consumer.log_handler'
+
+    js_consumer.log_handler:
+        class: Monolog\Handler\RotatingFileHandler
+        arguments:
+            - '%kernel.logs_dir%/js_consumer.log'
+            - 14
+            - !php/const Monolog\Level::Error
+

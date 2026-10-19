@@ -1,0 +1,196 @@
+product_type_field_configuration:
+    labels:
+        field_type: 'Feld-Typ'
+        default_value: 'Standardwert'
+        required: 'Pflichtfeld'
+    alert:
+        duplicate_field_type: 'Dieser Feld-Typ wird in der aktuellen Konfiguration bereits verwendet.'
+    default_value:
+        help: |
+            Standardwerte werden beim Erstellen eines Produktes gesetzt.
+
+            Mögliche Werte sind:<br/>
+            'Some text'<br/>
+            '17.06'<br/>
+            '1' - Wird bei Feldern vom Typ "CheckBox" als aktiv interpretiert.<br/>
+            '2026/08/17/file-20ca4a256c6ddbbf07ee1758dc98c817ac1a4b9b_1.pdf'
+
+plugin_manager:
+    title: 'Plugin Manager'
+    labels:
+        name: 'Name'
+        namespace: 'Namespace'
+        version: 'Version'
+        installed_version: 'installierte Version'
+        active: 'Aktiv'
+        asset_compilation_required: 'Asset-Kompilierung erforderlich'
+        actions:
+            reload: 'Neu laden'
+            activate: 'Aktivieren'
+            deactivate: 'Deaktivieren'
+            update: 'Update'
+            compile_assets: 'Assets kompilieren'
+
+user:
+    title: 'Benutzer'
+    entity:
+        title: 'Benutzer'
+        title_plural: 'Benutzer'
+    labels:
+        master_data: 'Benutzerdaten'
+        password: 'Passwort'
+        repeat_password: 'Passwort wiederholen'
+        username: 'Benutzername'
+        role: 'Rolle'
+        email: 'Email'
+        first_name: 'Vorname'
+        last_name: 'Nachname'
+
+types:
+    title: 'Typen'
+    label:
+        identifier: 'Identifier'
+        field: 'Feld'
+        product: 'Produkt'
+
+identifier_type:
+    title: 'Identifier-Typ'
+    data_type:
+        string: 'Zeichenkette'
+        integer: 'Ganzzahl'
+    entity:
+        title: 'Identifier-Typ'
+        title_plural: 'Identifier-Typen'
+    labels:
+        title: 'Name'
+        data_tape: 'Datentyp'
+
+product_type:
+    title: 'Product-Typ'
+    entity:
+        title: 'Product-Typ'
+        title_plural: 'Product-Typen'
+    labels:
+        title: 'Name'
+        code: 'Code'
+        fields: 'Felder'
+
+field_type:
+    title: 'Feld-Typ'
+    input_type:
+        string: 'Zeichenkette'
+        integer: 'Ganzzahl'
+        checkbox: 'CheckBox'
+        date: 'Datum'
+        file: 'Datei'
+        section: 'Trenner'
+        text: 'Text'
+        textarea: 'Textfeld'
+        datetime: 'Datum & Zeit'
+        time: 'Zeit'
+        number: 'Zahl'
+        color: 'Farbe'
+        country: 'Land'
+        telephone: 'Telefon'
+        email: 'Email'
+        language: 'Sprache'
+        locale: 'Locale'
+        texteditor: 'Text-Editor'
+        url: 'URL'
+        select: 'Auswahl'
+        multiselect: 'Mehrfachauswahl'
+        image: 'Bild'
+    entity:
+        title: 'Feld-Typ'
+        title_plural: 'Feld-Typen'
+    labels:
+        title: 'Name'
+        code: 'Code'
+        translatable: 'Übersetzbar'
+        filterable: 'Filterbar'
+        input_type: 'Eingabetyp'
+        decimal_separator: 'Dezimaltrennzeichen'
+
+locale:
+    title: 'Sprachen'
+    entity:
+        title: 'Sprache'
+        title_plural: 'Sprachen'
+    labels:
+        default: 'Standard'
+        content_translation_enabled: 'Für Inhaltsübersetzungen verwenden'
+    actions:
+        set_as_default: 'Als Standard setzen'
+
+settings:
+    title: 'Einstellungen'
+
+product:
+    title: 'Produkte'
+    entity:
+        title: 'Produkt'
+        title_plural: 'Produkte'
+    labels:
+        identifiers: 'Identifier'
+        product_type: 'Produkt-Typ'
+        created_at: 'Erstellt'
+        updated_at: 'Aktualisiert'
+        master_data: 'Stammdaten'
+        fields: 'Felder'
+        batch_edit: 'Produkte bearbeiten'
+    batch_selection:
+        page_selected: '%count% Produkte zum Bearbeiten ausgewählt.'
+        select_all: 'Alle %count% passenden Produkte zum Bearbeiten auswählen'
+        all_selected: 'Alle %count% passenden Produkte zum Bearbeiten ausgewählt.'
+        clear_selection: 'Auswahl aufheben'
+    batch_edit:
+        notice: 'Die Änderungen werden asynchron verarbeitet. Dafür muss der MessageConsumer aktiv oder alternativ das Modul JS-Consumer aktiviert sein.'
+        dispatched_singular: 'Die Aktualisierung für 1 Produkt wurde zur Verarbeitung in die Warteschlange gestellt.'
+        dispatched_plural: 'Die Aktualisierungen für %count% Produkte wurden zur Verarbeitung in die Warteschlange gestellt.'
+
+dashboard:
+    title: 'Dashboard'
+    system_status:
+        title: 'Systemstatus'
+        all_ok: 'OK'
+        input_vars:
+            message: 'Der Produkttyp "%productType%" benötigt %fieldCount% Input-Variablen. Der konfigurierte Wert für max_input_vars ist %maxInputVars%.'
+    products:
+        latest: 'Neueste Produkte'
+
+filter:
+    is_set: '%name% ist gesetzt'
+    labels:
+        translations: 'Übersetzungen'
+        identifiers: 'Identifiers'
+        fields: 'Felder'
+        general: 'Allgemein'
+
+general:
+    labels:
+        translation: 'Übersetzung'
+        translations: 'Übersetzungen'
+        locale: 'Sprache'
+        language: 'Sprache'
+        value: 'Wert'
+
+account:
+    labels:
+        current_password: 'Aktuelles Passwort'
+        account: 'Konto'
+        change_password: 'Passwort ändern'
+    messages:
+        invalid_current_password: 'Das aktuelle Passwort ist ungültig.'
+
+product_column_configuration:
+    title: 'Spalten konfigurieren'
+    labels:
+        configured: 'Konfigurierte Spalten'
+        available: 'Verfügbare Spalten'
+    errors:
+        save_error: 'Beim Speichern Ihrer Spaltenkonfiguration ist ein Fehler aufgetreten.'
+
+queue:
+    stats:
+        product_update: 'Wartende Produktaktualisierungen'
+        product_update_failed: 'Fehlgeschlagene Produktaktualisierungen'

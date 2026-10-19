@@ -1,0 +1,16 @@
+yap_scheduler:
+    title: 'Plánovač'
+    tasks:
+        title: 'Naplánované úlohy'
+        columns:
+            title: 'Názov'
+            description: 'Popis'
+        remove_obsolete_fields:
+            title: 'Odstrániť zastarané polia'
+            description: 'Odstrániť z produktov polia, ktoré nie sú priradené k typu produktu'
+        remove_obsolete_field_value_translations:
+            title: 'Odstrániť zastarané preklady hodnôt polí'
+            description: 'Odstrániť zastarané preklady hodnôt polí pre polia, ktoré nie sú nakonfigurované ako preložiteľné.'
+        label: 'Úloha'
+        warning:
+            not_active: 'Naplánované úlohy neboli vykonané za posledných 24 hodín.'
