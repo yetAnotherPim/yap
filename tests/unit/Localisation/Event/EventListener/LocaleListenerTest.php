@@ -41,6 +41,12 @@ class LocaleListenerTest extends MockeryTestCase
         // No session is set, so hasPreviousSession() will return false
 
         $event = \Mockery::mock(RequestEvent::class);
+
+        $event
+            ->shouldReceive('isMainRequest')
+            ->once()
+            ->andReturn(true);
+
         $event->shouldReceive('getRequest')
             ->once()
             ->andReturn($request);
@@ -71,6 +77,11 @@ class LocaleListenerTest extends MockeryTestCase
         $event->shouldReceive('getRequest')
             ->once()
             ->andReturn($request);
+
+        $event
+            ->shouldReceive('isMainRequest')
+            ->once()
+            ->andReturn(true);
 
         $this->localeRepositoryMock
             ->shouldNotReceive('getDefaultLocale');
@@ -109,6 +120,11 @@ class LocaleListenerTest extends MockeryTestCase
             ->once()
             ->andReturn($request);
 
+        $event
+            ->shouldReceive('isMainRequest')
+            ->once()
+            ->andReturn(true);
+
         $this->listener->onKernelRequest($event);
 
         $this->assertEquals('en', $request->getLocale());
@@ -123,6 +139,35 @@ class LocaleListenerTest extends MockeryTestCase
         $event->shouldReceive('getRequest')
             ->once()
             ->andReturn($request);
+
+        $event
+            ->shouldReceive('isMainRequest')
+            ->once()
+            ->andReturn(true);
+
+        $this->localeRepositoryMock
+            ->shouldNotReceive('getDefaultLocale');
+
+        $this->listener->onKernelRequest($event);
+
+        // Locale should remain default 'en'
+        $this->assertEquals('en', $request->getLocale());
+    }
+
+    public function testOnKernelRequestReturnsWhenSubrequest(): void
+    {
+        $request = Request::create('/');
+        $request->attributes->set('_stateless', true);
+
+        $event = \Mockery::mock(RequestEvent::class);
+        $event->shouldReceive('getRequest')
+            ->once()
+            ->andReturn($request);
+
+        $event
+            ->shouldReceive('isMainRequest')
+            ->once()
+            ->andReturn(false);
 
         $this->localeRepositoryMock
             ->shouldNotReceive('getDefaultLocale');
@@ -163,6 +208,11 @@ class LocaleListenerTest extends MockeryTestCase
         $event->shouldReceive('getRequest')
             ->once()
             ->andReturn($request);
+
+        $event
+            ->shouldReceive('isMainRequest')
+            ->once()
+            ->andReturn(true);
 
         $this->localeRepositoryMock
             ->shouldReceive('getDefaultLocale')
