@@ -12,3 +12,6 @@ Configure via Systemd:
 https://symfony.com/doc/current/messenger.html#systemd-configuration
 ExecStart=php /path/to/your/app/bin/console messenger:consume scheduler_default --time-limit=3600
 
+TODO:
+- setup
+- product_update queue or js consumer
