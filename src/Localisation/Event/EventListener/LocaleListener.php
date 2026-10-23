@@ -23,6 +23,10 @@ class LocaleListener
     {
         $request = $event->getRequest();
 
+        if (false === $event->isMainRequest()) {
+            return;
+        }
+
         if ($request->attributes->get('_stateless', false)) {
             return;
         }
