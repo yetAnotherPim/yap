@@ -1,0 +1,88 @@
+# Yet Another PIM (YAP) – Source-Available License
+
+**Version:** 1.0
+**Copyright:** © 2026 Stephan Altmann
+
+## 1. Copyright and scope
+
+YAP is protected by copyright. This License applies to the original source code and other materials owned by the Copyright Holder and expressly distributed under this License.
+
+Third-party software and materials remain subject to their respective licenses.
+
+For the purposes of this License, **“Copyright Holder”** means Stephan Altmann and any successor who owns the relevant rights in YAP.
+
+## 2. Permitted use
+
+You may use, study, install, and modify YAP for personal, internal, business, and commercial purposes, subject to this License.
+
+Commercial use of YAP in an online shop or other business is permitted.
+
+You may provide professional services relating to YAP, including installation, configuration, integration, customization, hosting for individual customers, maintenance, consulting, and support.
+
+You may develop, distribute, and commercially sell independent Plugins, subject to Section 5.
+
+## 3. Forks and community contributions
+
+You may fork the public YAP repository, create branches, modify the code, and submit Pull Requests for review and potential inclusion in YAP.
+
+Forks and modifications made for development, testing, evaluation, and community collaboration are permitted.
+
+This permission does not authorize the commercial distribution of YAP or a Derivative Work as a competing software product, nor the operation of a Hosted Service restricted under Section 4.
+
+Submitting a Pull Request does not automatically transfer copyright ownership of your contribution to the Copyright Holder. Contributions are subject to the applicable repository contribution guidelines and the rights granted by their authors.
+
+## 4. Restricted commercial exploitation
+
+Without prior written permission from the Copyright Holder, you may not:
+
+a. Sell, sublicense, or otherwise commercially distribute YAP or a Derivative Work as a standalone or competing software product.
+
+b. Offer or operate a Hosted Service that provides third parties with access to the core functionality of YAP or a Derivative Work as an independently offered software service.
+
+c. Sublicense YAP or a Derivative Work as a competing software product.
+
+These restrictions do not prohibit ordinary commercial use of YAP within a business, permitted professional services, or the sale of independent Plugins in accordance with Section 5.
+
+The restrictions apply only to rights in materials that the Copyright Holder is entitled to license. Third-party components remain subject to their respective licenses.
+
+## 5. Community Plugins and Enterprise Features
+
+Developers may create, distribute, license, and commercially sell independent Plugins for YAP.
+
+Plugins must not implement or provide functionality designated as reserved Enterprise functionality by the Copyright Holder and documented on the official YAP website at https://yet-another-pim.eu.
+
+The designation of Enterprise Features must identify the relevant functionality with reasonable specificity.
+
+This restriction applies to the implementation or provision of designated Enterprise functionality, regardless of whether the Plugin is free or paid.
+
+Ordinary integrations, customizations, and extensions are not prohibited solely because they are commercially valuable or distributed for a fee.
+
+Exceptions require prior written permission from the Copyright Holder.
+
+## 6. Third-party components
+
+Third-party software, libraries, assets, and other materials included in or used by YAP remain subject to their respective licenses.
+
+Nothing in this License revokes or restricts rights granted directly under those licenses. Where a third-party license grants rights that cannot be restricted by this License, those rights remain unaffected.
+
+## 7. Trademarks
+
+This License does not grant permission to use the YAP name, logo, or other trademarks in a way that implies official endorsement or affiliation.
+
+## 8. Termination
+
+If you materially breach this License, the rights granted under it may terminate to the extent permitted by applicable law. Any applicable rights to remedy a breach or reinstate a license remain unaffected.
+
+## 9. Disclaimer of warranty
+
+To the maximum extent permitted by applicable law, YAP is provided "AS IS", without warranties or conditions of any kind, express or implied.
+
+## 10. Additional permissions
+
+The Copyright Holder may grant additional permissions, including commercial redistribution, Hosted Service operation, and implementation of Enterprise Features, by a separate written agreement.
+
+## 11. License classification
+
+This is a custom Source-Available License. It is not an OSI-approved Open Source License.
+
+The source code is publicly accessible, but commercial exploitation restrictions distinguish this License from an Open Source license.
