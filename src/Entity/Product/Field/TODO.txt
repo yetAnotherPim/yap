@@ -8,4 +8,8 @@ TODO:
     offer loading demodata
     -> test via pipeline (supported php versions) with fixture for api user and check api is available
 
-
+- TEST:
+    - Prodmode
+        -Web
+        -API
+    - Plugin  refresh (prod + opcache)
