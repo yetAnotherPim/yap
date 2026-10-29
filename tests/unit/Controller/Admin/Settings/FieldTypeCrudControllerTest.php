@@ -291,6 +291,17 @@ class FieldTypeCrudControllerTest extends MockeryTestCase
         $this->assertInstanceOf(FieldType::class, $entity);
     }
 
+    public function testCreateEntityReturnsEntityWhenItIsNotAFieldType(): void
+    {
+        $this->titleTranslationSynchronizerMock
+            ->shouldNotReceive('synchronizeTitleTranslations');
+
+        /** @phpstan-ignore-next-line  */
+        $entity = $this->controller->createEntity(\stdClass::class);
+
+        $this->assertInstanceOf(\stdClass::class, $entity);
+    }
+
     public function testConfigureActions(): void
     {
         $actions = Actions::new()

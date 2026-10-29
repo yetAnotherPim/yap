@@ -426,6 +426,17 @@ class ProductTypeCrudControllerTest extends MockeryTestCase
         $this->assertInstanceOf(ProductType::class, $entity);
     }
 
+    public function testCreateEntityReturnsEntityWhenItIsNotAProductType(): void
+    {
+        $this->titleTranslationSynchronizerMock
+            ->shouldNotReceive('synchronizeTitleTranslations');
+
+        /** @phpstan-ignore-next-line  */
+        $entity = $this->controller->createEntity(\stdClass::class);
+
+        $this->assertInstanceOf(\stdClass::class, $entity);
+    }
+
     public function testAddDefaultTranslationListenerSynchronizesTranslations(): void
     {
         $configuration = \Mockery::mock(

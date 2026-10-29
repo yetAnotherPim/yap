@@ -27,6 +27,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Orm\NestedAssociationResolverInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Provider\AdminContextProviderInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\CrudDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
@@ -174,6 +175,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $filterFactory = new FilterFactory(
             \Mockery::mock(AdminContextProviderInterface::class),
             [],
+            \Mockery::mock(NestedAssociationResolverInterface::class),
         );
 
         $productBatchUpdateDispatcher = \Mockery::mock(ProductBatchUpdateDispatcher::class);
@@ -228,6 +230,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $filterFactory = new FilterFactory(
             \Mockery::mock(AdminContextProviderInterface::class),
             [],
+            \Mockery::mock(NestedAssociationResolverInterface::class),
         );
 
         $productBatchUpdateDispatcher = \Mockery::mock(ProductBatchUpdateDispatcher::class);
@@ -315,6 +318,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $filterFactory = new FilterFactory(
             \Mockery::mock(AdminContextProviderInterface::class),
             [],
+            \Mockery::mock(NestedAssociationResolverInterface::class),
         );
 
         $data = \Mockery::mock(BatchEditData::class);
@@ -395,6 +399,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $filterFactory = new FilterFactory(
             \Mockery::mock(AdminContextProviderInterface::class),
             [],
+            \Mockery::mock(NestedAssociationResolverInterface::class),
         );
 
         $context = AdminContext::forTesting(
@@ -463,6 +468,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $filterFactory = new FilterFactory(
             \Mockery::mock(AdminContextProviderInterface::class),
             [],
+            \Mockery::mock(NestedAssociationResolverInterface::class),
         );
 
         $container = \Mockery::mock(ContainerInterface::class);
@@ -558,6 +564,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $filterFactory = new FilterFactory(
             \Mockery::mock(AdminContextProviderInterface::class),
             [],
+            \Mockery::mock(NestedAssociationResolverInterface::class),
         );
 
         $crudContext = new CrudContext(
@@ -597,6 +604,7 @@ class BatchEditProductCrudControllerTest extends MockeryTestCase
         $filterFactory = new FilterFactory(
             \Mockery::mock(AdminContextProviderInterface::class),
             [],
+            \Mockery::mock(NestedAssociationResolverInterface::class),
         );
 
         $request = new Request(['batchActionAll' => '1']);

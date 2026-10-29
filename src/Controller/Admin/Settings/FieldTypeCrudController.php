@@ -120,9 +120,13 @@ class FieldTypeCrudController extends AbstractCrudController
         parent::updateEntity($entityManager, $entityInstance);
     }
 
-    public function createEntity(string $entityFqcn): object
+    public function createEntity(string $entityFqcn): ?object
     {
         $entity = parent::createEntity($entityFqcn);
+
+        if (!$entity instanceof FieldType) {
+            return $entity;
+        }
 
         $requestData = $this->getContext()
             ?->getRequest()
