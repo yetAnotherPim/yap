@@ -51,7 +51,7 @@ jobs:
             - name: Run migrations
               run: |
                 bin/console  doctrine:schema:create
-                bin/console doctrine:migrations:migrate
+                bin/console doctrine:migrations:migrate --allow-no-migration
                 bin/console doctrine:migrations:migrate --configuration=migrations-data.config.yaml
 
 
