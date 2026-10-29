@@ -1,6 +1,6 @@
 
 services:
-  database:
+  database-pgsql:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
@@ -16,3 +16,25 @@ services:
       - ./docker/db/data:/var/lib/postgresql/data:rw
     ports:
       - "5432:5432"
+    labels:
+      com.symfony.server.service-ignore: true
+
+  database-mysql:
+    image: mysql:${MYSQL_VERSION:-8.4}
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
+      # You should definitely change the passwords in production
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-!ChangeMe!}
+      MYSQL_USER: ${MYSQL_USER:-app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-!ChangeMe!}
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent" ]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - ./docker/db/mysql-data:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+    labels:
+      com.symfony.server.service-ignore: true

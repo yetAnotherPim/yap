@@ -42,6 +42,8 @@ abstract class AbstractTask
      */
     protected function logExecution(): void
     {
+        // TODO: mysql compatibility
+
         $this->entityManager
             ->getConnection()
             ->executeStatement(
