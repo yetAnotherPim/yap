@@ -114,8 +114,11 @@ final class ProductUpdateMessageQueueTest extends KernelTestCase
 
         $transport = $this->transport('product_update');
 
-        // All four attempts should have been rejected.
-        $this->assertCount(4, $transport->rejected());
+        // Message has been rejected
+        $this->assertCount(1, $transport->rejected());
+
+        // Message has been moved to the failure transport.
+        $this->assertCount(1, $this->transport('product_update_failed')->queue());
 
         // No messages should remain in the product update queue.
         $this->assertCount(0, $transport->queue());
