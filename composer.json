@@ -1,6 +1,23 @@
 {
+    "name": "yet-another-pim/yap",
     "type": "project",
     "license": "proprietary",
+    "description": "Yet Another PIM - Manage structured product data, multilingual content, and product attributes with YAP, a flexible self-hosted PIM platform.",
+    "homepage": "https://yet-another-pim.eu",
+    "keywords": [
+        "pim",
+        "product",
+        "data",
+        "management",
+        "platform",
+        "api"
+    ],
+    "authors": [
+        {
+            "name": "Stephan Altmann",
+            "email": "contact@yet-another-pim.eu"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
