@@ -138,22 +138,30 @@ jobs:
                 "zh_CN", "zh_TW"
               ]'
 
-              RESPONSE=$(curl --fail --silent --show-error \
-                http://127.0.0.1:8000/api/locales \
+                PAGE_1=$(curl --fail --silent --show-error \
+                'http://127.0.0.1:8000/api/locales?page=1' \
                 -H "Authorization: Bearer $TOKEN" \
                 -H 'Accept: application/ld+json')
 
-              echo "API response:"
-              echo "$RESPONSE" | jq .
+                PAGE_2=$(curl --fail --silent --show-error \
+                'http://127.0.0.1:8000/api/locales?page=2' \
+                -H "Authorization: Bearer $TOKEN" \
+                -H 'Accept: application/ld+json')
 
-              echo "$RESPONSE" | jq -e \
+                RESPONSE=$(jq -n \
+                --argjson page1 "$PAGE_1" \
+                --argjson page2 "$PAGE_2" \
+                '$page1 | .member = ($page1.member + $page2.member)')
+
+                echo "$RESPONSE" | jq -e \
                 --argjson expected "$EXPECTED_LOCALES" '
-                  (.["hydra:member"] // .member // .) as $locales
-                  | ($locales | map(.id) | sort) == ($expected | sort)
-                  and
-                  ($locales | map(select(.isDefault == true) | .id)) == ["en_GB"]
+                (.member | map(.id) | sort) == ($expected | sort)
+                and
+                (.member | map(select(.default == true) | .id)) == ["en_GB"]
+                and
+                .totalItems == 38
                 '
-
+              
               echo "API locales and default locale successfully verified."
 
         - name: Test Webinterface Login
