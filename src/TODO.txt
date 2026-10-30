@@ -1,10 +1,6 @@
 TODO:
 -setup command
-    after composer install
-    dump env for prod
-    create keys
-    assets compile
-    offer loading demodata
+    Offer loading demodata
     -> test via pipeline (supported php versions) with fixture for api user and check api is available
     mysql compatibility -> Test in CI
 

@@ -32,6 +32,22 @@ class RolesTest extends MockeryTestCase
         );
     }
 
+    #[DataProvider('roleProvider')]
+    public function testFromNameReturnsMatchingRole(
+        Roles $role,
+        string $name,
+    ): void {
+        $this->assertSame($role, Roles::fromName($role->name));
+    }
+
+    public function testFromNameThrowsValueErrorForUnknownRole(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessageIs('Unknown role "UNKNOWN".');
+
+        Roles::fromName('UNKNOWN');
+    }
+
     /**
      * @return iterable<string, array{Roles, string}>
      */

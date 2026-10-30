@@ -28,4 +28,15 @@ enum Roles: string implements TranslatableInterface
             locale: $locale
         );
     }
+
+    public static function fromName(string $name): self
+    {
+        foreach (self::cases() as $case) {
+            if ($case->name === $name) {
+                return $case;
+            }
+        }
+
+        throw new \ValueError(\sprintf('Unknown role "%s".', $name));
+    }
 }

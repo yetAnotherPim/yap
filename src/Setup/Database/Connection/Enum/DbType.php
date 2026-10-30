@@ -24,11 +24,12 @@ enum DbType: string
         };
     }
 
+    /** @return 'pdo_pgsql'|'pdo_mysql' */
     public function getDriver(): string
     {
         return match ($this) {
             self::PostgreSQL => 'pdo_pgsql',
-            //self::MySQL => 'pdo_mysql',
+            // self::MySQL => 'pdo_mysql',
         };
     }
 }

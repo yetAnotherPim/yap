@@ -6,32 +6,61 @@ namespace App\Setup\Command;
 
 use App\Setup\Database\Connection\Connection;
 use App\Setup\Database\Connection\Enum\DbType;
+use App\Setup\Environment\EnvironmentFileWriter;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[AsCommand(name: 'yap:setup', description: 'Setup YAP')]
+/**
+ * @codeCoverageIgnore
+ */
+#[AsCommand(
+    name: 'yap:setup',
+    description: 'Configure the database and initialize the application.',
+)]
 class ConfigureCommand extends Command
 {
     private readonly ValidatorInterface $validator;
 
     public function __construct(
-        private readonly Filesystem $filesystem,
-        #[Autowire(param: 'kernel.project_dir')]
-        private readonly string $projectDir,
+        private readonly EnvironmentFileWriter $environmentFileWriter,
     ) {
         $this->validator = Validation::createValidatorBuilder()
             ->enableAttributeMapping()
             ->getValidator();
 
         parent::__construct();
+    }
+
+    protected function configure(): void
+    {
+        $this->setHelp(<<<'HELP'
+        This command guides you through the initial setup of Yet Another PIM (YAP).
+
+        It performs the following steps:
+
+          1. Configure the database connection:
+             - Select the database type (PostgreSQL or MySQL).
+             - Enter the connection details.
+             - Validate the configuration and test the database connection.
+
+          2. Configure application environment variables:
+             - Write the database connection URL to .env.local.
+             - Generate APP_SECRET if it is missing or empty.
+             - Generate JWT_PASSPHRASE if it is missing or empty.
+             - Preserve existing non-empty secret values.
+
+        The configuration is stored in the local .env.local file.
+        The file is not intended to be committed to version control.
+
+        After completing the setup, further installation steps may be required,
+        such as generating the JWT key pair and compiling production assets.
+        HELP);
     }
 
     protected function execute(
@@ -50,9 +79,11 @@ class ConfigureCommand extends Command
             $connection->getVersion(),
         ));
 
-        $this->writeEnvironmentFile($connection);
+        $this->environmentFileWriter->write($connection);
 
         $io->success('Database configuration saved to .env.local.');
+
+        $this->displayNextSteps($io);
 
         return Command::SUCCESS;
     }
@@ -62,6 +93,7 @@ class ConfigureCommand extends Command
         while (true) {
             $connection = new Connection();
 
+            /** @var string $type */
             $type = $io->choice(
                 'Select your database type',
                 array_map(
@@ -73,13 +105,28 @@ class ConfigureCommand extends Command
 
             $type = DbType::from($type);
 
+            /** @var string $host */
+            $host = $io->ask('Database host', '127.0.0.1');
+
+            /** @var string $port */
+            $port = $io->ask('Database port', (string) $type->getDefaultPort());
+
+            /** @var string $dbname */
+            $dbname = $io->ask('Database name', 'app');
+
+            /** @var string $user */
+            $user = $io->ask('Database user', 'app');
+
+            /** @var ?string $password */
+            $password = $io->askHidden('Database password');
+
             $connection
                 ->setType($type)
-                ->setHost($io->ask('Database host', '127.0.0.1'))
-                ->setPort($io->ask('Database port', (string) $type->getDefaultPort()))
-                ->setDbname($io->ask('Database name', 'app'))
-                ->setUser($io->ask('Database user', 'app'))
-                ->setPassword($io->askHidden('Database password') ?? '');
+                ->setHost($host)
+                ->setPort($port)
+                ->setDbname($dbname)
+                ->setUser($user)
+                ->setPassword($password ?? '');
 
             $violations = $this->validator->validate($connection);
 
@@ -127,59 +174,33 @@ class ConfigureCommand extends Command
         }
     }
 
-    private function writeEnvironmentFile(Connection $connection): void
+    private function displayNextSteps(SymfonyStyle $io): void
     {
-        $envFile = $this->projectDir.'/.env.local';
+        $io->section('Next steps');
 
-        $contents = $this->filesystem->exists($envFile)
-            ? file_get_contents($envFile)
-            : '';
+        $io->text(<<<'TEXT'
+        Your database connection and application secrets have been configured.
 
-        if (false === $contents) {
-            throw new \RuntimeException('Could not read .env.local.');
-        }
+        Complete the following steps to finish the installation:
+        TEXT);
 
-        $line = \sprintf(
-            'DATABASE_URL="%s"',
-            str_replace('%', '%%', $connection->getDatabaseUrl()),
-        );
+        $io->listing([
+            'Create the database:',
+            'php bin/console doctrine:database:create --if-not-exists',
+            'Run database migrations:',
+            'php bin/console doctrine:migrations:migrate --allow-no-migration',
+            'Generate the JWT key pair:',
+            'php bin/console lexik:jwt:generate-keypair --skip-if-exists',
+            'Create the first user:',
+            'php bin/console yap:user:create',
+        ]);
 
-        $pattern = '/^[ \t]*DATABASE_URL[ \t]*=.*$/m';
-
-        if (preg_match($pattern, $contents)) {
-            $contents = preg_replace_callback(
-                $pattern,
-                static fn (): string => $line,
-                $contents,
-            );
-        } else {
-            $contents = rtrim($contents)."\n".$line."\n";
-        }
-
-        $this->writeSecret($contents, 'APP_SECRET');
-        $this->writeSecret($contents, 'JWT_PASSPHRASE');
-
-        $this->filesystem->dumpFile($envFile, $contents);
-    }
-
-    private function writeSecret(string &$contents, string $name): void
-    {
-        $pattern = '/^[ \t]*'.preg_quote($name, '/').'[ \t]*=[ \t]*(.*?)\s*$/m';
-
-        if (preg_match($pattern, $contents, $matches)) {
-            if ('' !== trim($matches[1], " \t\"'")) {
-                return;
-            }
-
-            return;
-        }
-
-        $line = \sprintf(
-            '%s="%s"',
-            $name,
-            bin2hex(random_bytes(32)),
-        );
-
-        $contents = rtrim($contents)."\n".$line."\n";
+        $io->text([
+            '<info>For production environments:</info>',
+            'Compile environment variables:',
+            'composer dump-env prod',
+            'Compile assets:',
+            'APP_ENV=prod php bin/console asset-map:compile',
+        ]);
     }
 }
