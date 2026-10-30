@@ -184,37 +184,91 @@ jobs:
                 try {
                   const page = await browser.newPage();
 
+                  // Browser diagnostics
+                  page.on('console', message => {
+                    console.log(`[Browser ${message.type()}] ${message.text()}`);
+                  });
+
+                  page.on('pageerror', error => {
+                    console.error('[Browser error]', error);
+                  });
+
+                  page.on('requestfailed', request => {
+                    console.error(
+                      '[Request failed]',
+                      request.url(),
+                      request.failure()?.errorText
+                    );
+                  });
+
+                  page.on('response', response => {
+                    if (response.status() >= 400) {
+                      console.error(
+                        '[HTTP error]',
+                        response.status(),
+                        response.url()
+                      );
+                    }
+                  });
+
+                  // Open login page
                   await page.goto('http://127.0.0.1:8000/admin/login', {
                     waitUntil: 'domcontentloaded',
                   });
 
-                  // Login form
+                  // Inspect CSRF input
+                  const csrfInput = page.locator('input[name="_csrf_token"]');
+
+                  console.log('CSRF input count:', await csrfInput.count());
+
+                  if (await csrfInput.count() > 0) {
+                    console.log('CSRF input:', await csrfInput.evaluate(element => ({
+                      value: element.value,
+                      controller: element.dataset.controller,
+                      attributes: [...element.attributes].map(attribute => ({
+                        name: attribute.name,
+                        value: attribute.value
+                      }))
+                    })));
+                  }
+
+                  // Give Stimulus some time to initialize
+                  await page.waitForTimeout(2000);
+
+                  const csrfToken = await csrfInput.inputValue();
+
+                  console.log('CSRF token after initialization:', csrfToken);
+
+                  if (!csrfToken || csrfToken === 'csrf-token') {
+                    throw new Error('CSRF token was not initialized. See browser diagnostics above.');
+                  }
+
+                  // Fill login form
                   await page.locator('#username').fill('ci-admin');
                   await page.locator('#password').fill(process.env.CI_USER_PASSWORD);
 
-                  // Wait until the Stimulus CSRF controller replaces its placeholder.
-                  await page.waitForFunction(() => {
-                    const token = document.querySelector('input[name="_csrf_token"]');
-
-                    return token && token.value !== 'csrf-token' && token.value.length > 0;
-                  });
+                  // Register response listener BEFORE submitting
+                  const responsePromise = page.waitForResponse(response =>
+                    response.url() === 'http://127.0.0.1:8000/admin'
+                    && response.request().isNavigationRequest()
+                  );
 
                   // Submit login form
                   await page.getByRole('button', { name: /sign in/i }).click();
 
                   const response = await responsePromise;
 
+                  console.log('Dashboard HTTP status:', response.status());
+
                   if (response.status() !== 200) {
                     throw new Error(`Dashboard returned HTTP ${response.status()}`);
                   }
 
-                  // Wait for successful redirect to the admin dashboard
                   await page.waitForURL(
                     url => url.pathname === '/admin' || url.pathname === '/admin/',
                     { timeout: 15000 }
                   );
 
-                  // Make sure the login form is no longer displayed
                   if (await page.locator('#username').count() > 0) {
                     throw new Error('Login form is still visible.');
                   }
