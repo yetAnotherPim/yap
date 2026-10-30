@@ -85,8 +85,6 @@ jobs:
 
         - name: Verify dumped production environment
           run: |
-              test -f .env.local.php
-
               grep -q "'APP_ENV' => 'prod'" .env.local.php
               grep -q "'APP_DEBUG' => false" .env.local.php
 
