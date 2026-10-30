@@ -1,11 +1,3 @@
 TODO:
--setup command
     Offer loading demodata
-    -> test via pipeline (supported php versions) with fixture for api user and check api is available
     mysql compatibility -> Test in CI
-
-- TEST:
-    - Prodmode
-        -Web
-        -API
-    - Plugin  refresh (prod + opcache)
