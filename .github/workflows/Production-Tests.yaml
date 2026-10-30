@@ -96,6 +96,13 @@ jobs:
         - name: Compile production assets
           run: php bin/console asset-map:compile
 
+        - name: Verify compiled assets
+          run: |
+              test -f public/assets/admin-FrQOkI9.js
+              test -f public/assets/styles/admin-10pdgPX.css
+
+              find public/assets -type f | head -30
+
         - name: Start production web server
           run: |
               php -S 127.0.0.1:8000 -t public public/index.php > /tmp/yap-server.log 2>&1 &
@@ -284,3 +291,12 @@ jobs:
               NODE
           env:
               CI_USER_PASSWORD: ${{ env.CI_USER_PASSWORD }}
+
+        - name: Debug production server
+          if: always()
+          run: |
+              echo "=== PHP built-in server log ==="
+              cat /tmp/yap-server.log || true
+
+              echo "=== Symfony production log ==="
+              cat var/log/prod.log || true
