@@ -161,52 +161,66 @@ jobs:
                 and
                 .totalItems == 38
                 '
-              
+
               echo "API locales and default locale successfully verified."
+
+        - name: Install Playwright
+          run: |
+              npm install --prefix "$RUNNER_TEMP/playwright" playwright
+              "$RUNNER_TEMP/playwright/node_modules/.bin/playwright" install --with-deps chromium
 
         - name: Test Webinterface Login
           run: |
-              COOKIE_JAR=$(mktemp)
-              LOGIN_PAGE=$(mktemp)
-              DASHBOARD=$(mktemp)
+              node <<'NODE'
+              const { chromium } = require(
+                `${process.env.RUNNER_TEMP}/playwright/node_modules/playwright`
+              );
 
-              # Retrieve login page and CSRF token
-              curl --fail --silent --show-error \
-                -c "$COOKIE_JAR" \
-                http://127.0.0.1:8000/admin/login \
-                -o "$LOGIN_PAGE"
+              (async () => {
+                const browser = await chromium.launch({
+                  headless: true,
+                });
 
-              echo "Login form fields:"
-              grep -oE 'name="[^"]+"' "$LOGIN_PAGE" | sort -u
+                try {
+                  const page = await browser.newPage();
 
-              CSRF_TOKEN=$(grep -oP 'name="_csrf_token"[^>]*value="\K[^"]+' "$LOGIN_PAGE")
+                  await page.goto('http://127.0.0.1:8000/admin/login', {
+                    waitUntil: 'domcontentloaded',
+                  });
 
-              test -n "$CSRF_TOKEN"
+                  // Login form
+                  await page.locator('#username').fill('ci-admin');
+                  await page.locator('#password').fill(process.env.CI_USER_PASSWORD);
 
-              # Submit login form
-              curl --silent --show-error \
-                -b "$COOKIE_JAR" \
-                -c "$COOKIE_JAR" \
-                -D - \
-                -X POST \
-                --data-urlencode "_username=ci-admin" \
-                --data-urlencode "_password=$CI_USER_PASSWORD" \
-                --data-urlencode "_csrf_token=$CSRF_TOKEN" \
-                http://127.0.0.1:8000/admin/login \
-                -o /dev/null
+                  // Wait until the Stimulus CSRF controller replaces its placeholder.
+                  await page.waitForFunction(() => {
+                    const token = document.querySelector('input[name="_csrf_token"]');
 
-              # Access protected admin dashboard
-              RESULT=$(curl --silent --show-error \
-                -L \
-                -b "$COOKIE_JAR" \
-                -o "$DASHBOARD" \
-                -w '%{http_code} %{url_effective}' \
-                http://127.0.0.1:8000/admin)
+                    return token && token.value !== 'csrf-token' && token.value.length > 0;
+                  });
 
-              echo "$RESULT"
+                  // Submit login form
+                  await page.getByRole('button', { name: /sign in/i }).click();
 
-              [[ "$RESULT" == "200 http://127.0.0.1:8000/admin" ]]
+                  // Wait for successful redirect to the admin dashboard
+                  await page.waitForURL(
+                    url => url.pathname === '/admin' || url.pathname === '/admin/',
+                    { timeout: 15000 }
+                  );
 
-              echo "Webinterface login successful."
+                  // Make sure the login form is no longer displayed
+                  if (await page.locator('#username').count() > 0) {
+                    throw new Error('Login form is still visible.');
+                  }
 
-              rm -f "$COOKIE_JAR" "$LOGIN_PAGE" "$DASHBOARD"
+                  console.log('Webinterface login successful.');
+                } finally {
+                  await browser.close();
+                }
+              })().catch(error => {
+                console.error(error);
+                process.exit(1);
+              });
+              NODE
+          env:
+              CI_USER_PASSWORD: ${{ env.CI_USER_PASSWORD }}
