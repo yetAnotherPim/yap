@@ -52,8 +52,6 @@ jobs:
               run: |
                 bin/console  doctrine:schema:create
                 bin/console doctrine:migrations:migrate --allow-no-migration
-                bin/console doctrine:migrations:migrate --configuration=migrations-data.config.yaml
-
 
             - name: Validate
               run: bin/console doctrine:schema:validate -n -vv
