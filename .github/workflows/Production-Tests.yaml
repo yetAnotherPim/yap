@@ -123,6 +123,7 @@ jobs:
               TOKEN=$(echo "$RESPONSE" | jq -er '.token')
 
               test -n "$TOKEN"
+              echo "TOKEN=$TOKEN" >> "$GITHUB_ENV"
               echo "API authentication successful. JWT received."
 
         - name: Test API locales
