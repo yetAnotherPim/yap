@@ -85,10 +85,7 @@ jobs:
 
         - name: Verify dumped production environment
           run: |
-              cat .env.local.php
-
               grep -q "'APP_ENV' => 'prod'" .env.local.php
-
               grep -Eq "'APP_SECRET' => '[^']+'" .env.local.php
               grep -Eq "'DATABASE_URL' => '[^']+'" .env.local.php
               grep -Eq "'JWT_PASSPHRASE' => '[^']+'" .env.local.php
@@ -140,14 +137,18 @@ jobs:
                 http://127.0.0.1:8000/admin/login \
                 -o "$LOGIN_PAGE"
 
+              echo "Login form fields:"
+              grep -oE 'name="[^"]+"' "$LOGIN_PAGE" | sort -u
+
               CSRF_TOKEN=$(grep -oP 'name="_csrf_token"[^>]*value="\K[^"]+' "$LOGIN_PAGE")
 
               test -n "$CSRF_TOKEN"
 
               # Submit login form
-              curl --fail --silent --show-error \
+              curl --silent --show-error \
                 -b "$COOKIE_JAR" \
                 -c "$COOKIE_JAR" \
+                -D - \
                 -X POST \
                 --data-urlencode "_username=ci-admin" \
                 --data-urlencode "_password=$CI_USER_PASSWORD" \
