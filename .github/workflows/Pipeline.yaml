@@ -98,7 +98,7 @@ jobs:
     FunctionalTests:
         needs:
             - UnitTests
-            #- IntegrationTests
+            - IntegrationTests
             - Init
         uses: ./.github/workflows/Functional-Tests.yaml
         with:
@@ -108,9 +108,18 @@ jobs:
     ApiTests:
         needs:
             - UnitTests
-            #- IntegrationTests
+            - IntegrationTests
             - Init
         uses: ./.github/workflows/API-Tests.yaml
         with:
             CURRENT_PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
             PREVIOUS_PHP_VERSION: ${{ needs.Init.outputs.PREVIOUS_PHP_VERSION }}
+
+    ProductionTests:
+        needs:
+            - ApiTests
+            - FunctionalTests
+            - Init
+        uses: ./.github/workflows/Production-Tests.yaml
+        with:
+            PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
