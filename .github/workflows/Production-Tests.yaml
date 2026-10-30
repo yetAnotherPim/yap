@@ -137,7 +137,7 @@ jobs:
               # Retrieve login page and CSRF token
               curl --fail --silent --show-error \
                 -c "$COOKIE_JAR" \
-                http://127.0.0.1:8000/login \
+                http://127.0.0.1:8000/admin/login \
                 -o "$LOGIN_PAGE"
 
               CSRF_TOKEN=$(grep -oP 'name="_csrf_token"[^>]*value="\K[^"]+' "$LOGIN_PAGE")
@@ -152,7 +152,7 @@ jobs:
                 --data-urlencode "_username=ci-admin" \
                 --data-urlencode "_password=$CI_USER_PASSWORD" \
                 --data-urlencode "_csrf_token=$CSRF_TOKEN" \
-                http://127.0.0.1:8000/login \
+                http://127.0.0.1:8000/admin/login \
                 -o /dev/null
 
               # Access protected admin dashboard
