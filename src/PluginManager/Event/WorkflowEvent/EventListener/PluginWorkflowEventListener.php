@@ -12,6 +12,7 @@ use App\PluginManager\Event\WorkflowEvent\PluginDeactivateEvent;
 use App\PluginManager\Event\WorkflowEvent\PluginUpdateEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 class PluginWorkflowEventListener
@@ -19,6 +20,7 @@ class PluginWorkflowEventListener
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly CacheClearer $cacheClearer,
+        #[Target('pluginLogger')]
         private readonly LoggerInterface $pluginLogger,
     ) {
     }

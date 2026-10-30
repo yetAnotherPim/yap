@@ -1,0 +1,171 @@
+name: Production Tests
+
+on:
+    workflow_call:
+        inputs:
+            PHP_VERSION:
+                description: PHP version used for the production installation test
+                type: string
+                required: true
+
+jobs:
+    production-installation:
+        name: Production installation (PostgreSQL)
+        runs-on: ubuntu-latest
+        env:
+            APP_ENV: prod
+            APP_DEBUG: '0'
+            CI_USER_PASSWORD: 'Yap-CI-Only-Password-123!'
+
+        services:
+            postgres:
+                image: postgres:16
+                env:
+                    POSTGRES_DB: app
+                    POSTGRES_USER: app
+                    POSTGRES_PASSWORD: postgres
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd "pg_isready -U app -d app"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
+
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
+          with:
+              php-version: ${{ inputs.PHP_VERSION }}
+              extensions: pdo_pgsql
+              coverage: none
+
+        - name: Install production dependencies
+          run: composer install --no-interaction --prefer-dist --no-progress --no-dev --optimize-autoloader
+
+        - name: Configure application
+          run: |
+              printf '%s\n' \
+                'postgresql' \
+                '127.0.0.1' \
+                '5432' \
+                'app' \
+                'app' \
+                'postgres' \
+                | script -q -e -c 'php bin/console yap:setup' /dev/null
+
+        - name: Create database and run migrations
+          run: |
+              php bin/console doctrine:database:create --if-not-exists
+              php bin/console doctrine:schema:create
+              php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+              php bin/console doctrine:migrations:migrate --configuration=migrations-data.config.yaml --no-interaction --allow-no-migration
+
+        - name: Generate JWT key pair
+          run: php bin/console lexik:jwt:generate-keypair --skip-if-exists
+
+        - name: Create first user
+          run: |
+              printf '%s\n' \
+                'ci-admin' \
+                'ci-admin@example.test' \
+                'CI' \
+                'Administrator' \
+                '' \
+                "$CI_USER_PASSWORD" \
+                "$CI_USER_PASSWORD" \
+                | script -q -e -c 'php bin/console yap:user:create' /dev/null
+
+        - name: Dump production environment
+          run: composer dump-env prod
+
+        - name: Verify dumped production environment
+          run: |
+              grep -q "'APP_ENV' => 'prod'" .env.local.php
+              grep -q "'APP_DEBUG' => false" .env.local.php
+
+              grep -Eq "'APP_SECRET' => '[^']+'" .env.local.php
+              grep -Eq "'DATABASE_URL' => '[^']+'" .env.local.php
+              grep -Eq "'JWT_PASSPHRASE' => '[^']+'" .env.local.php
+
+        - name: Clear production cache
+          run: php bin/console cache:clear
+
+        - name: Compile production assets
+          run: php bin/console asset-map:compile
+
+        - name: Start production web server
+          run: |
+              php -S 127.0.0.1:8000 -t public public/index.php > /tmp/yap-server.log 2>&1 &
+              echo $! > /tmp/yap-server.pid
+
+        - name: Create API user
+          run: |
+            printf '%s\n' \
+              'ci-api-user' \
+              'ci-api@example.test' \
+              'CI' \
+              'API User' \
+              'ROLE_API_USER' \
+              "$CI_USER_PASSWORD" \
+              "$CI_USER_PASSWORD" \
+              | script -q -e -c 'php bin/console yap:user:create' /dev/null
+
+        - name: Test API authentication
+          run: |
+              RESPONSE=$(curl --fail --silent --show-error \
+                -X POST http://127.0.0.1:8000/api/auth \
+                -H 'Content-Type: application/json' \
+                -d "{\"username\":\"ci-api-user\",\"password\":\"$CI_USER_PASSWORD\"}")
+
+              TOKEN=$(echo "$RESPONSE" | jq -er '.token')
+
+              test -n "$TOKEN"
+              echo "API authentication successful. JWT received."
+
+        - name: Test Webinterface Login
+          run: |
+              COOKIE_JAR=$(mktemp)
+              LOGIN_PAGE=$(mktemp)
+              DASHBOARD=$(mktemp)
+
+              # Retrieve login page and CSRF token
+              curl --fail --silent --show-error \
+                -c "$COOKIE_JAR" \
+                http://127.0.0.1:8000/login \
+                -o "$LOGIN_PAGE"
+
+              CSRF_TOKEN=$(grep -oP 'name="_csrf_token"[^>]*value="\K[^"]+' "$LOGIN_PAGE")
+
+              test -n "$CSRF_TOKEN"
+
+              # Submit login form
+              curl --fail --silent --show-error \
+                -b "$COOKIE_JAR" \
+                -c "$COOKIE_JAR" \
+                -X POST \
+                --data-urlencode "_username=ci-admin" \
+                --data-urlencode "_password=$CI_USER_PASSWORD" \
+                --data-urlencode "_csrf_token=$CSRF_TOKEN" \
+                http://127.0.0.1:8000/login \
+                -o /dev/null
+
+              # Access protected admin dashboard
+              RESULT=$(curl --silent --show-error \
+                -L \
+                -b "$COOKIE_JAR" \
+                -o "$DASHBOARD" \
+                -w '%{http_code} %{url_effective}' \
+                http://127.0.0.1:8000/admin)
+
+              echo "$RESULT"
+
+              [[ "$RESULT" == "200 http://127.0.0.1:8000/admin" ]]
+
+              echo "Webinterface login successful."
+
+              rm -f "$COOKIE_JAR" "$LOGIN_PAGE" "$DASHBOARD"
