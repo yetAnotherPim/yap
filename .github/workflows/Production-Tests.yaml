@@ -103,10 +103,20 @@ jobs:
 
               find public/assets -type f | head -30
 
+        - name: Install Symfony CLI
+          run: |
+              curl -sS https://get.symfony.com/cli/installer | bash
+              echo "$HOME/.symfony5/bin" >> "$GITHUB_PATH"
+
         - name: Start production web server
           run: |
-              php -S 127.0.0.1:8000 -t public public/index.php > /tmp/yap-server.log 2>&1 &
-              echo $! > /tmp/yap-server.pid
+              symfony server:start \
+                --no-tls \
+                --port=8000 \
+                --listen-ip=127.0.0.1 \
+                --daemon
+
+              symfony server:status
 
         - name: Create API user
           run: |
