@@ -178,29 +178,26 @@ class ConfigureCommand extends Command
     {
         $io->section('Next steps');
 
-        $io->text(<<<'TEXT'
-        Your database connection and application secrets have been configured.
+        $io->text(
+            'Your database connection and application secrets have been configured.'
+        );
 
-        Complete the following steps to finish the installation:
-        TEXT);
+        $io->text('Complete the following steps to finish the installation:');
 
         $io->listing([
-            'Create the database:',
-            'php bin/console doctrine:database:create --if-not-exists',
-            'Run database migrations:',
-            'php bin/console doctrine:migrations:migrate --allow-no-migration',
-            'Generate the JWT key pair:',
-            'php bin/console lexik:jwt:generate-keypair --skip-if-exists',
-            'Create the first user:',
-            'php bin/console yap:user:create',
+            'Create the database: <comment>php bin/console doctrine:database:create --if-not-exists</comment>',
+            'Run database migrations: <comment>php bin/console doctrine:migrations:migrate --allow-no-migration</comment>',
+            'Generate the JWT key pair: <comment>php bin/console lexik:jwt:generate-keypair --skip-if-exists</comment>',
+            'Create the first user: <comment>php bin/console yap:user:create</comment>',
         ]);
 
-        $io->text([
-            '<info>For production environments:</info>',
-            'Compile environment variables:',
-            'composer dump-env prod',
-            'Compile assets:',
-            'APP_ENV=prod php bin/console asset-map:compile',
+        $io->section('Production environment');
+
+        $io->text('Additionally, execute the following commands for production deployments:');
+
+        $io->listing([
+            'Compile environment variables: <comment>composer dump-env prod</comment>',
+            'Compile assets: <comment>bin/console asset-map:compile</comment>',
         ]);
     }
 }
