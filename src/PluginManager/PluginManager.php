@@ -18,6 +18,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -48,6 +49,7 @@ class PluginManager
         #[Autowire(param: 'plugin_configuration_folder')]
         private readonly string $pluginConfigurationFolder,
         private readonly EventDispatcherInterface $eventDispatcher,
+        #[Target('pluginLogger')]
         private readonly LoggerInterface $pluginLogger,
     ) {
         $plugins = $plugins instanceof \Traversable ? iterator_to_array($plugins) : $plugins;
