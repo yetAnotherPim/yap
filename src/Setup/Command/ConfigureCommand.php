@@ -197,7 +197,7 @@ class ConfigureCommand extends Command
 
         $io->listing([
             'Compile environment variables: <comment>composer dump-env prod</comment>',
-            'Compile assets: <comment>bin/console asset-map:compile</comment>',
+            'Compile assets: <comment>php bin/console asset-map:compile</comment>',
         ]);
     }
 }
