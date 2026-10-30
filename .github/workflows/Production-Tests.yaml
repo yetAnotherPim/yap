@@ -202,6 +202,12 @@ jobs:
                   // Submit login form
                   await page.getByRole('button', { name: /sign in/i }).click();
 
+                  const response = await responsePromise;
+
+                  if (response.status() !== 200) {
+                    throw new Error(`Dashboard returned HTTP ${response.status()}`);
+                  }
+
                   // Wait for successful redirect to the admin dashboard
                   await page.waitForURL(
                     url => url.pathname === '/admin' || url.pathname === '/admin/',
