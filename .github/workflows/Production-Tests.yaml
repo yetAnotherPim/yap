@@ -143,6 +143,9 @@ jobs:
                 -H "Authorization: Bearer $TOKEN" \
                 -H 'Accept: application/ld+json')
 
+              echo "API response:"
+              echo "$RESPONSE" | jq .
+
               echo "$RESPONSE" | jq -e \
                 --argjson expected "$EXPECTED_LOCALES" '
                   (.["hydra:member"] // .member // .) as $locales
