@@ -244,9 +244,25 @@ jobs:
                     );
                   }
 
-                  if (await page.locator('#username').count() > 0) {
-                    throw new Error('Login form is still displayed.');
-                  }
+                // Verify EasyAdmin dashboard
+                await page.locator('.ea-sidebar').waitFor({
+                    state: 'visible',
+                    timeout: 5000,
+                });
+
+                // Verify authenticated user in the main header
+                const userName = page.locator(
+                    '.navbar-custom-menu .user-menu-wrapper .user-name'
+                );
+
+                await userName.waitFor({
+                    state: 'visible',
+                    timeout: 5000,
+                });
+
+                if (!(await userName.textContent())?.trim()) {
+                    throw new Error('Authenticated user name is missing.');
+                }
 
                   console.log('Webinterface login successful.');
                 } finally {
