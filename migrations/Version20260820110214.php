@@ -65,7 +65,7 @@ final class Version20260820110214 extends AbstractMigration
                    AND NOT EXISTS (
                        SELECT 1
                        FROM "locale"
-                       WHERE is_default = false
+                       WHERE is_default = true
                    );'
         );
     }

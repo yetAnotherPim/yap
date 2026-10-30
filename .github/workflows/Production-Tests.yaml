@@ -125,6 +125,33 @@ jobs:
               test -n "$TOKEN"
               echo "API authentication successful. JWT received."
 
+        - name: Test API locales
+          run: |
+              EXPECTED_LOCALES='[
+                "ar", "bg_BG", "ca_AD", "cs_CZ", "da_DK", "de_DE",
+                "el_GR", "en_GB", "es_ES", "eu_ES", "fa_IR", "fi_FI",
+                "fr_FR", "gl_ES", "he_IL", "hr_HR", "hu_HU", "hy_AM",
+                "id_ID", "it_IT", "lb_LU", "lt_LT", "mk_MK", "nl_NL",
+                "no_NO", "pl_PL", "pt_PT", "pt_BR", "ro_RO", "ru_UA",
+                "sk_SK", "sl_SI", "sr_RS", "sv_SE", "tr_TR", "uk_UA",
+                "zh_CN", "zh_TW"
+              ]'
+
+              RESPONSE=$(curl --fail --silent --show-error \
+                http://127.0.0.1:8000/api/locales \
+                -H "Authorization: Bearer $TOKEN" \
+                -H 'Accept: application/ld+json')
+
+              echo "$RESPONSE" | jq -e \
+                --argjson expected "$EXPECTED_LOCALES" '
+                  (.["hydra:member"] // .member // .) as $locales
+                  | ($locales | map(.id) | sort) == ($expected | sort)
+                  and
+                  ($locales | map(select(.isDefault == true) | .id)) == ["en_GB"]
+                '
+
+              echo "API locales and default locale successfully verified."
+
         - name: Test Webinterface Login
           run: |
               COOKIE_JAR=$(mktemp)
