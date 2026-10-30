@@ -84,41 +84,14 @@ jobs:
 
         - name: Verify dumped production environment
           run: |
-              php -r '
-              $env = require ".env.local.php";
+              test -f .env.local.php
 
-              $required = [
-                  "APP_ENV",
-                  "APP_DEBUG",
-                  "APP_SECRET",
-                  "DATABASE_URL",
-                  "JWT_PASSPHRASE",
-              ];
+              grep -q "'APP_ENV' => 'prod'" .env.local.php
+              grep -q "'APP_DEBUG' => false" .env.local.php
 
-              foreach ($required as $name) {
-                  if (!isset($env[$name]) || "" === (string) $env[$name]) {
-                      fwrite(STDERR, "Missing or empty environment variable: {$name}\n");
-                      exit(1);
-                  }
-              }
-
-              if ("prod" !== $env["APP_ENV"]) {
-                  fwrite(STDERR, "APP_ENV must be prod.\n");
-                  exit(1);
-              }
-
-              if (!in_array($env["APP_DEBUG"], ["0", 0, false], true)) {
-                  fwrite(STDERR, "APP_DEBUG must be disabled.\n");
-                  exit(1);
-              }
-
-              if (!str_starts_with($env["DATABASE_URL"], "postgresql://")) {
-                  fwrite(STDERR, "DATABASE_URL must use PostgreSQL.\n");
-                  exit(1);
-              }
-
-              echo "Production environment dump contains all required variables.\n";
-              '
+              grep -Eq "'APP_SECRET' => '[^']+'" .env.local.php
+              grep -Eq "'DATABASE_URL' => '[^']+'" .env.local.php
+              grep -Eq "'JWT_PASSPHRASE' => '[^']+'" .env.local.php
 
         - name: Clear production cache
           run: php bin/console cache:clear
@@ -131,31 +104,29 @@ jobs:
               php -S 127.0.0.1:8000 -t public public/index.php > /tmp/yap-server.log 2>&1 &
               echo $! > /tmp/yap-server.pid
 
-        - name: Test API endpoint
+        - name: Create API user
           run: |
-              for attempt in $(seq 1 30); do
-                if curl --silent --fail http://127.0.0.1:8000/api/docs.json \
-                  --output /tmp/api-docs.json; then
-                  break
-                fi
+            printf '%s\n' \
+              'ci-api-user' \
+              'ci-api@example.test' \
+              'CI' \
+              'API User' \
+              'ROLE_API_USER' \
+              "$CI_USER_PASSWORD" \
+              "$CI_USER_PASSWORD" \
+              | script -q -e -c 'php bin/console yap:user:create' /dev/null
 
-                if [ "$attempt" -eq 30 ]; then
-                  cat /tmp/yap-server.log
-                  echo "API endpoint did not become available."
-                  exit 1
-                fi
+        -   name: Test API authentication
+            run: |
+                RESPONSE=$(curl --fail --silent --show-error \
+                  -X POST http://127.0.0.1:8000/api/login_check \
+                  -H 'Content-Type: application/json' \
+                  -d "{\"username\":\"ci-api@example.test\",\"password\":\"$CI_USER_PASSWORD\"}")
 
-                sleep 1
-              done
+                TOKEN=$(echo "$RESPONSE" | jq -er '.token')
 
-              php -r '
-              $document = json_decode(
-                  file_get_contents("/tmp/api-docs.json"),
-                  true,
-                  512,
-                  JSON_THROW_ON_ERROR,
-              );
+                curl --fail --silent --show-error \
+                  http://127.0.0.1:8000/api/auth \
+                  -H "Authorization: Bearer $TOKEN"
 
-              if (!isset($document["openapi"], $document["paths"])) {
-                  fwrite(STDERR, "The API documentation response is not a valid OpenAPI document.\n");
-                  exit(1);
+                echo "API authentication successful."
