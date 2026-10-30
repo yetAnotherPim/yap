@@ -32,129 +32,130 @@ jobs:
                     --health-timeout 5s
                     --health-retries 5
 
-steps:
-    - name: Checkout
-      uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-          php-version: ${{ inputs.PHP_VERSION }}
-          extensions: pdo_pgsql
-          tools: pecl
-          coverage: none
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
 
-    - name: Install production dependencies
-      run: composer install --no-interaction --prefer-dist --no-progress --no-dev --optimize-autoloader
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
+          with:
+              php-version: ${{ inputs.PHP_VERSION }}
+              extensions: pdo_pgsql
+              coverage: none
 
-    - name: Configure application
-      run: |
-          printf '%s\n' \
-            'postgresql' \
-            '127.0.0.1' \
-            '5432' \
-            'app' \
-            'app' \
-            'postgres' \
-            | script -q -e -c 'php bin/console yap:setup' /dev/null
+        - name: Install production dependencies
+          run: composer install --no-interaction --prefer-dist --no-progress --no-dev --optimize-autoloader
 
-    - name: Create database and run migrations
-      run: |
-          php bin/console doctrine:database:create --if-not-exists
-          php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+        - name: Configure application
+          run: |
+              printf '%s\n' \
+                'postgresql' \
+                '127.0.0.1' \
+                '5432' \
+                'app' \
+                'app' \
+                'postgres' \
+                | script -q -e -c 'php bin/console yap:setup' /dev/null
 
-    - name: Generate JWT key pair
-      run: php bin/console lexik:jwt:generate-keypair --skip-if-exists
+        - name: Create database and run migrations
+          run: |
+              php bin/console doctrine:database:create --if-not-exists
+              php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+              php bin/console doctrine:migrations:migrate --configuration=migrations-data.config.yaml --no-interaction --allow-no-migration
 
-    - name: Create first user
-      run: |
-          printf '%s\n' \
-            'ci-admin' \
-            'ci-admin@example.test' \
-            'CI' \
-            'Administrator' \
-            '' \
-            "$CI_USER_PASSWORD" \
-            "$CI_USER_PASSWORD" \
-            | script -q -e -c 'php bin/console yap:user:create' /dev/null
+        - name: Generate JWT key pair
+          run: php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
-    - name: Dump production environment
-      run: composer dump-env prod
+        - name: Create first user
+          run: |
+              printf '%s\n' \
+                'ci-admin' \
+                'ci-admin@example.test' \
+                'CI' \
+                'Administrator' \
+                '' \
+                "$CI_USER_PASSWORD" \
+                "$CI_USER_PASSWORD" \
+                | script -q -e -c 'php bin/console yap:user:create' /dev/null
 
-    - name: Verify dumped production environment
-      run: |
-          php -r '
-          $env = require ".env.local.php";
+        - name: Dump production environment
+          run: composer dump-env prod
 
-          $required = [
-              "APP_ENV",
-              "APP_DEBUG",
-              "APP_SECRET",
-              "DATABASE_URL",
-              "JWT_PASSPHRASE",
-          ];
+        - name: Verify dumped production environment
+          run: |
+              php -r '
+              $env = require ".env.local.php";
 
-          foreach ($required as $name) {
-              if (!isset($env[$name]) || "" === (string) $env[$name]) {
-                  fwrite(STDERR, "Missing or empty environment variable: {$name}\n");
+              $required = [
+                  "APP_ENV",
+                  "APP_DEBUG",
+                  "APP_SECRET",
+                  "DATABASE_URL",
+                  "JWT_PASSPHRASE",
+              ];
+
+              foreach ($required as $name) {
+                  if (!isset($env[$name]) || "" === (string) $env[$name]) {
+                      fwrite(STDERR, "Missing or empty environment variable: {$name}\n");
+                      exit(1);
+                  }
+              }
+
+              if ("prod" !== $env["APP_ENV"]) {
+                  fwrite(STDERR, "APP_ENV must be prod.\n");
                   exit(1);
               }
-          }
 
-          if ("prod" !== $env["APP_ENV"]) {
-              fwrite(STDERR, "APP_ENV must be prod.\n");
-              exit(1);
-          }
+              if (!in_array($env["APP_DEBUG"], ["0", 0, false], true)) {
+                  fwrite(STDERR, "APP_DEBUG must be disabled.\n");
+                  exit(1);
+              }
 
-          if (!in_array($env["APP_DEBUG"], ["0", 0, false], true)) {
-              fwrite(STDERR, "APP_DEBUG must be disabled.\n");
-              exit(1);
-          }
+              if (!str_starts_with($env["DATABASE_URL"], "postgresql://")) {
+                  fwrite(STDERR, "DATABASE_URL must use PostgreSQL.\n");
+                  exit(1);
+              }
 
-          if (!str_starts_with($env["DATABASE_URL"], "postgresql://")) {
-              fwrite(STDERR, "DATABASE_URL must use PostgreSQL.\n");
-              exit(1);
-          }
+              echo "Production environment dump contains all required variables.\n";
+              '
 
-          echo "Production environment dump contains all required variables.\n";
-          '
+        - name: Clear production cache
+          run: php bin/console cache:clear
 
-    - name: Clear production cache
-      run: php bin/console cache:clear
+        - name: Compile production assets
+          run: php bin/console asset-map:compile
 
-    - name: Compile production assets
-      run: php bin/console asset-map:compile
+        - name: Start production web server
+          run: |
+              php -S 127.0.0.1:8000 -t public public/index.php > /tmp/yap-server.log 2>&1 &
+              echo $! > /tmp/yap-server.pid
 
-    - name: Test API endpoint
-      run: |
-          php -S 127.0.0.1:8000 -t public public/index.php > /tmp/yap-server.log 2>&1 &
-          SERVER_PID=$!
-          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+        - name: Test API endpoint
+          run: |
+              for attempt in $(seq 1 30); do
+                if curl --silent --fail http://127.0.0.1:8000/api/docs.json \
+                  --output /tmp/api-docs.json; then
+                  break
+                fi
 
-          for attempt in $(seq 1 30); do
-            if curl --silent --fail http://127.0.0.1:8000/api/docs.json \
-              --output /tmp/api-docs.json; then
-              break
-            fi
+                if [ "$attempt" -eq 30 ]; then
+                  cat /tmp/yap-server.log
+                  echo "API endpoint did not become available."
+                  exit 1
+                fi
 
-            if [ "$attempt" -eq 30 ]; then
-              cat /tmp/yap-server.log
-              echo "API endpoint did not become available."
-              exit 1
-            fi
+                sleep 1
+              done
 
-            sleep 1
-          done
+              php -r '
+              $document = json_decode(
+                  file_get_contents("/tmp/api-docs.json"),
+                  true,
+                  512,
+                  JSON_THROW_ON_ERROR,
+              );
 
-          php -r '
-          $document = json_decode(
-              file_get_contents("/tmp/api-docs.json"),
-              true,
-              512,
-              JSON_THROW_ON_ERROR,
-          );
-
-          if (!isset($document["openapi"], $document["paths"])) {
-              fwrite(STDERR, "The API documentation response is not a valid OpenAPI document.\n");
-              exit(1);
-          }
+              if (!isset($document["openapi"], $document["paths"])) {
+                  fwrite(STDERR, "The API documentation response is not a valid OpenAPI document.\n");
+                  exit(1);
