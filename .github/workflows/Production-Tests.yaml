@@ -253,7 +253,7 @@ jobs:
                 // Verify authenticated user in the main header
                 const userName = page.locator(
                     '.navbar-custom-menu .user-menu-wrapper .user-name'
-                );
+                ).first();
 
                 await userName.waitFor({
                     state: 'visible',
