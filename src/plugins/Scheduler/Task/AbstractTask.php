@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\plugins\Scheduler\Task;
 
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\String\UnicodeString;
@@ -42,17 +43,20 @@ abstract class AbstractTask
      */
     protected function logExecution(): void
     {
-        // TODO: mysql compatibility
+        $connection = $this->entityManager->getConnection();
 
-        $this->entityManager
-            ->getConnection()
-            ->executeStatement(
-                <<<'SQL'
-                    INSERT INTO yap_scheduler (id, last_run)
-                    VALUES (1, CURRENT_TIMESTAMP)
-                    ON CONFLICT (id)
-                    DO UPDATE SET last_run = CURRENT_TIMESTAMP
-                SQL,
-            );
+        $updated = $connection->executeStatement(
+            'UPDATE yap_scheduler SET last_run = CURRENT_TIMESTAMP WHERE id = 1',
+        );
+
+        if (0 === $updated) {
+            try {
+                $connection->executeStatement(
+                    'INSERT INTO yap_scheduler (id, last_run) VALUES (1, CURRENT_TIMESTAMP)',
+                );
+            } catch (UniqueConstraintViolationException) {
+                // The scheduler row was created concurrently.
+            }
+        }
     }
 }
