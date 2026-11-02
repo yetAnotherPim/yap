@@ -34,7 +34,6 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 #[Index(name: 'index_product_field_type', fields: ['type'])]
 #[Index(name: 'index_product_field_product', fields: ['product'])]
-#[Index(name: 'index_product_field_value', fields: ['value'])]
 #[ORM\UniqueConstraint(name: 'unique_product_field_product_type', fields: ['type', 'product'])]
 #[Patch(
     denormalizationContext: ['groups' => ['field:write']],

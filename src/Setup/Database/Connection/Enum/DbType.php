@@ -40,8 +40,7 @@ enum DbType: string
     {
         return match ($this) {
             self::PostgreSQL => 'postgresql',
-            self::MySQL,
-            self::MariaDB => 'mysql',
+            self::MySQL, self::MariaDB => 'mysql',
         };
     }
 }
