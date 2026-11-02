@@ -13,8 +13,8 @@ Yet another PIM (YAP) is a Product Information Management system built with Symf
 - **PHP 8.4 or higher** (PHP 8.5 recommended)
 - **Composer**
 - **PostgreSQL 16 or higher** (recommended database)
-
-MySQL and MariaDB compatibility is currently under evaluation.
+- **MySQL 8.4 or higher**
+- **MariaDB 11.8 or higher**
 
 ## Setup
 
