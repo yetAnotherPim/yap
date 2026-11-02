@@ -22,15 +22,11 @@ final class Version20261102133146 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        if ($this->indexExists()) {
-            return;
-        }
-
         $platform = $this->connection->getDatabasePlatform();
 
         if ($platform instanceof PostgreSQLPlatform) {
             $this->addSql(
-                'CREATE INDEX '.self::INDEX_NAME
+                'CREATE INDEX IF NOT EXISTS '.self::INDEX_NAME
                 .' ON field (value)',
             );
 
@@ -46,17 +42,5 @@ final class Version20261102133146 extends AbstractMigration
                 .' ON field (value(768))',
             );
         }
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function indexExists(): bool
-    {
-        $indexes = $this->connection
-            ->createSchemaManager()
-            ->introspectTableIndexesByUnquotedName('field');
-
-        return isset($indexes[self::INDEX_NAME]);
     }
 }
