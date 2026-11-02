@@ -86,19 +86,24 @@ final class Version20260820110214 extends AbstractMigration
             $this->addSql($insertSql, [$locale]);
         }
 
-        $this->addSql(
-            <<<'SQL'
-                UPDATE locale
-                SET is_default = true
-                WHERE id = ?
-                  AND NOT EXISTS (
-                      SELECT 1
-                      FROM locale
-                      WHERE is_default = true
-                  )
-            SQL,
-            [self::DEFAULT_LOCALE],
+        $connection = $this->connection;
+
+        $hasDefaultLocale = (bool) $connection->fetchOne(
+            'SELECT EXISTS (
+                       SELECT 1
+                       FROM locale
+                       WHERE is_default = true
+               )',
         );
+
+        if (!$hasDefaultLocale) {
+            $this->addSql(
+                'UPDATE locale
+                     SET is_default = true
+                     WHERE id = ?',
+                [self::DEFAULT_LOCALE],
+            );
+        }
     }
 
     public function down(Schema $schema): void

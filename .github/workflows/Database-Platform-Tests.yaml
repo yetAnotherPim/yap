@@ -64,51 +64,68 @@ jobs:
           run: |
               case "${{ matrix.type }}" in
                   postgresql)
-                      for index in \
-                          index_product_field_value \
-                          index_product_field_translation_value
-                      do
-                          EXISTS=$(docker compose \
-                              -f compose-db-test.yaml \
-                              exec -T "${{ matrix.service }}" \
-                              psql \
-                              -U app \
-                              -d app \
-                              -tAc "
-                                  SELECT COUNT(*)
-                                  FROM pg_indexes
-                                  WHERE schemaname = 'public'
-                                    AND indexname = '$index'
-                              ")
+                      RESULT=$(docker compose \
+                          -f compose-db-test.yaml \
+                          exec -T "${{ matrix.service }}" \
+                          psql \
+                          -U app \
+                          -d app \
+                          -tAc "
+                              SELECT
+                                  indexname || ':' || indexdef
+                              FROM pg_indexes
+                              WHERE schemaname = 'public'
+                                AND indexname IN (
+                                    'index_product_field_value',
+                                    'index_product_field_translation_value'
+                                )
+                              ORDER BY indexname;
+                          ")
 
-                          test "$EXISTS" = "1"
-                      done
+                      echo "$RESULT"
+
+                      test "$(echo "$RESULT" | wc -l)" -eq 2
+
+                      echo "$RESULT" | grep -Fq \
+                          'index_product_field_translation_value:CREATE INDEX index_product_field_translation_value ON public.field_value_translation USING btree (value)'
+
+                      echo "$RESULT" | grep -Fq \
+                          'index_product_field_value:CREATE INDEX index_product_field_value ON public.field USING btree (value)'
                       ;;
 
                   mysql|mariadb)
-                      for index in \
-                          index_product_field_value \
-                          index_product_field_translation_value
-                      do
-                          RESULT=$(docker compose \
-                              -f compose-db-test.yaml \
-                              exec -T "${{ matrix.service }}" \
-                              mysql \
-                              -uapp \
-                              -p'!ChangeMe!' \
-                              -N \
-                              -e "
-                                  SELECT SUB_PART
-                                  FROM information_schema.STATISTICS
-                                  WHERE TABLE_SCHEMA = 'app'
-                                    AND INDEX_NAME = '$index'
-                                    AND COLUMN_NAME = 'value'
-                              ")
+                      RESULT=$(docker compose \
+                          -f compose-db-test.yaml \
+                          exec -T "${{ matrix.service }}" \
+                          mysql \
+                          -uapp \
+                          -p'!ChangeMe!' \
+                          -N \
+                          -e "
+                              SELECT
+                                  INDEX_NAME,
+                                  SUB_PART
+                              FROM information_schema.STATISTICS
+                              WHERE TABLE_SCHEMA = 'app'
+                                AND INDEX_NAME IN (
+                                    'index_product_field_value',
+                                    'index_product_field_translation_value'
+                                )
+                                AND COLUMN_NAME = 'value'
+                              ORDER BY INDEX_NAME;
+                          ")
 
-                          echo "$index: $RESULT"
+                      echo "$RESULT"
 
-                          test "$RESULT" = "768"
-                      done
+                      test "$(echo "$RESULT" | wc -l)" -eq 2
+
+                      echo "$RESULT" | grep -q $'index_product_field_translation_value\t768'
+                      echo "$RESULT" | grep -q $'index_product_field_value\t768'
+                      ;;
+
+                  *)
+                      echo "Unsupported database type: ${{ matrix.type }}"
+                      exit 1
                       ;;
               esac
 
@@ -120,7 +137,7 @@ jobs:
               curl -sS https://get.symfony.com/cli/installer | bash
               echo "$HOME/.symfony5/bin" >> "$GITHUB_PATH"
 
-        - name: Start production web server
+        - name: Start web server
           run: |
               symfony server:start \
                 --no-tls \
@@ -198,6 +215,7 @@ jobs:
 
         - name: Test Task execution time has been updated
           run: |
+              php bin/console yap:plugins:list --refresh
               php bin/console yap:plugin:activate Scheduler
               php bin/console messenger:consume scheduler_default --time-limit=5
               #todo: check if task execution time has been updated
