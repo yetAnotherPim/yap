@@ -211,17 +211,17 @@ jobs:
               php bin/console yap:plugin:activate Scheduler
 
               php -r '
-                require "vendor/autoload.php";
+              require "vendor/autoload.php";
 
-                use App\Kernel;
-                use App\plugins\Scheduler\Task\RemoveObsoleteFields;
+              use App\Kernel;
+              use App\plugins\Scheduler\Task\RemoveObsoleteFields;
 
-                $kernel = new Kernel("dev", true);
-                $kernel->boot();
+              $kernel = new Kernel("dev", true);
+              $kernel->boot();
 
-                $task = $kernel->getContainer()->get(RemoveObsoleteFields::class);
-                $task->run();
-             '
+              $task = $kernel->getContainer()->get(RemoveObsoleteFields::class);
+              $task->run();
+              '
 
               case "${{ matrix.type }}" in
                   postgresql)
