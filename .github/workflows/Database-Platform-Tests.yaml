@@ -215,7 +215,7 @@ jobs:
                   postgresql)
                       CLIENT=psql
                       CLIENT_ARGS="-U app -d app -tAc"
-                      EXPECTED=true
+                      EXPECTED=t
                       ;;
 
                   mysql)
