@@ -64,26 +64,33 @@ jobs:
           run: |
               case "${{ matrix.type }}" in
                   postgresql)
-                      docker compose \
+                      RESULT=$(docker compose \
                           -f compose-db-test.yaml \
                           exec -T "${{ matrix.service }}" \
                           psql \
                           -U app \
                           -d app \
-                          -v ON_ERROR_STOP=1 \
-                          -c "
-                              SELECT CASE
-                                  WHEN COUNT(*) = 2 THEN 1
-                                  ELSE 1 / 0
-                              END
+                          -tAc "
+                              SELECT
+                                  indexname || ':' || indexdef
                               FROM pg_indexes
                               WHERE schemaname = 'public'
                                 AND indexname IN (
                                     'index_product_field_value',
                                     'index_product_field_translation_value'
                                 )
-                                AND indexdef LIKE '%USING btree (value)%';
-                          "
+                              ORDER BY indexname;
+                          ")
+
+                      echo "$RESULT"
+
+                      test "$(echo "$RESULT" | wc -l)" -eq 2
+
+                      echo "$RESULT" | grep -Fq \
+                          'index_product_field_translation_value:CREATE INDEX index_product_field_translation_value ON public.field_value_translation USING btree (value)'
+
+                      echo "$RESULT" | grep -Fq \
+                          'index_product_field_value:CREATE INDEX index_product_field_value ON public.field USING btree (value)'
                       ;;
 
                   mysql|mariadb)
@@ -93,28 +100,41 @@ jobs:
                           CLIENT=mariadb
                       fi
 
-                      docker compose \
+                      RESULT=$(docker compose \
                           -f compose-db-test.yaml \
                           exec -T "${{ matrix.service }}" \
                           "$CLIENT" \
                           -uapp \
                           -p'!ChangeMe!' \
-                          app \
+                          -N \
                           -e "
-                              SELECT IF(
-                                  COUNT(*) = 2,
-                                  'OK',
-                                  (SELECT invalid_column)
-                              )
+                              SELECT
+                                  INDEX_NAME,
+                                  SUB_PART
                               FROM information_schema.STATISTICS
                               WHERE TABLE_SCHEMA = 'app'
-                                AND COLUMN_NAME = 'value'
                                 AND INDEX_NAME IN (
                                     'index_product_field_value',
                                     'index_product_field_translation_value'
                                 )
-                                AND SUB_PART = 768;
-                          "
+                                AND COLUMN_NAME = 'value'
+                              ORDER BY INDEX_NAME;
+                          ")
+
+                      echo "$RESULT"
+
+                      test "$(echo "$RESULT" | wc -l)" -eq 2
+
+                      echo "$RESULT" | grep -q \
+                          $'index_product_field_translation_value\t768'
+
+                      echo "$RESULT" | grep -q \
+                          $'index_product_field_value\t768'
+                      ;;
+
+                  *)
+                      echo "Unsupported database type: ${{ matrix.type }}"
+                      exit 1
                       ;;
               esac
 
@@ -202,9 +222,43 @@ jobs:
 
               echo "API locales and default locale successfully verified."
 
-        - name: Test Task execution time has been updated
+        - name: Test task execution time has been updated
           run: |
               php bin/console yap:plugins:list --refresh
               php bin/console yap:plugin:activate Scheduler
               php bin/console messenger:consume scheduler_default --time-limit=5
-              #todo: check if task execution time has been updated
+
+              case "${{ matrix.type }}" in
+                  postgresql)
+                      CLIENT=psql
+                      CLIENT_ARGS="-U app -d app -tAc"
+                      EXPECTED=true
+                      ;;
+
+                  mysql)
+                      CLIENT=mysql
+                      CLIENT_ARGS="-uapp -p!ChangeMe! -N -e"
+                      EXPECTED=1
+                      ;;
+
+                  mariadb)
+                      CLIENT=mariadb
+                      CLIENT_ARGS="-uapp -p!ChangeMe! -N -e"
+                      EXPECTED=1
+                      ;;
+              esac
+
+              RESULT=$(docker compose \
+                  -f compose-db-test.yaml \
+                  exec -T "${{ matrix.service }}" \
+                  "$CLIENT" \
+                  $CLIENT_ARGS \
+                  "
+                      SELECT last_run IS NOT NULL
+                      FROM yap_scheduler
+                      WHERE id = 1;
+                  ")
+
+              echo "$RESULT"
+
+              test "$RESULT" = "$EXPECTED"
