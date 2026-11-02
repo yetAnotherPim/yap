@@ -12,7 +12,7 @@ on:
 
 jobs:
     db-platform-tests:
-        name: Production installation (PostgreSQL)
+        name: (${{ matrix.name }})
         runs-on: ubuntu-latest
         env:
             CI_USER_PASSWORD: 'Yap-CI-Only-Password-123!'
@@ -60,9 +60,57 @@ jobs:
               php bin/console doctrine:schema:create
               php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
-        - name: Verify platform specific indizes
+        - name: Verify platform specific indexes
           run: |
-              echo todo
+              case "${{ matrix.type }}" in
+                  postgresql)
+                      for index in \
+                          index_product_field_value \
+                          index_product_field_translation_value
+                      do
+                          EXISTS=$(docker compose \
+                              -f compose-db-test.yaml \
+                              exec -T "${{ matrix.service }}" \
+                              psql \
+                              -U app \
+                              -d app \
+                              -tAc "
+                                  SELECT COUNT(*)
+                                  FROM pg_indexes
+                                  WHERE schemaname = 'public'
+                                    AND indexname = '$index'
+                              ")
+
+                          test "$EXISTS" = "1"
+                      done
+                      ;;
+
+                  mysql|mariadb)
+                      for index in \
+                          index_product_field_value \
+                          index_product_field_translation_value
+                      do
+                          RESULT=$(docker compose \
+                              -f compose-db-test.yaml \
+                              exec -T "${{ matrix.service }}" \
+                              mysql \
+                              -uapp \
+                              -p'!ChangeMe!' \
+                              -N \
+                              -e "
+                                  SELECT SUB_PART
+                                  FROM information_schema.STATISTICS
+                                  WHERE TABLE_SCHEMA = 'app'
+                                    AND INDEX_NAME = '$index'
+                                    AND COLUMN_NAME = 'value'
+                              ")
+
+                          echo "$index: $RESULT"
+
+                          test "$RESULT" = "768"
+                      done
+                      ;;
+              esac
 
         - name: Generate JWT key pair
           run: php bin/console lexik:jwt:generate-keypair --skip-if-exists
