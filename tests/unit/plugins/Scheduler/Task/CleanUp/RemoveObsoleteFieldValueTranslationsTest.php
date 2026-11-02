@@ -8,6 +8,8 @@ use App\Entity\Product\Field\Translation\FieldValueTranslation;
 use App\plugins\Scheduler\Task\AbstractTask;
 use App\plugins\Scheduler\Task\CleanUp\RemoveObsoleteFieldValueTranslations;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -54,14 +56,87 @@ final class RemoveObsoleteFieldValueTranslationsTest extends MockeryTestCase
         $this->connection
             ->shouldReceive('executeStatement')
             ->once()
-            ->with(
-                <<<'SQL'
-                    INSERT INTO yap_scheduler (id, last_run)
-                    VALUES (1, CURRENT_TIMESTAMP)
-                    ON CONFLICT (id)
-                    DO UPDATE SET last_run = CURRENT_TIMESTAMP
-                SQL,
-            );
+            ->with('UPDATE yap_scheduler SET last_run = CURRENT_TIMESTAMP WHERE id = 1')
+            ->andReturn(1);
+
+        $this->expectQueryBuilder();
+
+        $this->query
+            ->shouldReceive('getResult')
+            ->once()
+            ->andReturn([$translation]);
+
+        $this->entityManager
+            ->shouldReceive('remove')
+            ->once()
+            ->with($translation);
+
+        $this->entityManager
+            ->shouldReceive('flush')
+            ->once();
+
+        ($this->task)();
+    }
+
+    public function testInvokeLogsExecutionAndRunsTaskIfEntryDoesNotExists(): void
+    {
+        $translation = \Mockery::mock(FieldValueTranslation::class);
+
+        $this->entityManager
+            ->shouldReceive('getConnection')
+            ->once()
+            ->andReturn($this->connection);
+
+        $this->connection
+            ->shouldReceive('executeStatement')
+            ->once()
+            ->with('UPDATE yap_scheduler SET last_run = CURRENT_TIMESTAMP WHERE id = 1')
+            ->andReturn(0);
+
+        $this->connection
+            ->shouldReceive('executeStatement')
+            ->once()
+            ->with('INSERT INTO yap_scheduler (id, last_run) VALUES (1, CURRENT_TIMESTAMP)');
+
+        $this->expectQueryBuilder();
+
+        $this->query
+            ->shouldReceive('getResult')
+            ->once()
+            ->andReturn([$translation]);
+
+        $this->entityManager
+            ->shouldReceive('remove')
+            ->once()
+            ->with($translation);
+
+        $this->entityManager
+            ->shouldReceive('flush')
+            ->once();
+
+        ($this->task)();
+    }
+
+    public function testInvokeLogsExecutionAndRunsTaskAndIgnoresConstraintViolation(): void
+    {
+        $translation = \Mockery::mock(FieldValueTranslation::class);
+
+        $this->entityManager
+            ->shouldReceive('getConnection')
+            ->once()
+            ->andReturn($this->connection);
+
+        $this->connection
+            ->shouldReceive('executeStatement')
+            ->once()
+            ->with('UPDATE yap_scheduler SET last_run = CURRENT_TIMESTAMP WHERE id = 1')
+            ->andReturn(0);
+
+        $this->connection
+            ->shouldReceive('executeStatement')
+            ->once()
+            ->with('INSERT INTO yap_scheduler (id, last_run) VALUES (1, CURRENT_TIMESTAMP)')
+            ->andThrows(new UniqueConstraintViolationException(\Mockery::mock(DriverException::class), null));
 
         $this->expectQueryBuilder();
 

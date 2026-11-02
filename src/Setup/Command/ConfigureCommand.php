@@ -186,6 +186,7 @@ class ConfigureCommand extends Command
 
         $io->listing([
             'Create the database: <comment>php bin/console doctrine:database:create --if-not-exists</comment>',
+            'Create tables: <comment>php bin/console doctrine:schema:create</comment>',
             'Run database migrations: <comment>php bin/console doctrine:migrations:migrate --allow-no-migration</comment>',
             'Generate the JWT key pair: <comment>php bin/console lexik:jwt:generate-keypair --skip-if-exists</comment>',
             'Create the first user: <comment>php bin/console yap:user:create</comment>',

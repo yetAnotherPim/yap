@@ -11,7 +11,6 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\Translation\Title\TitleTranslationInterface;
 use App\Repository\ProductTypeTitleTranslationRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -46,7 +45,7 @@ class ProductTypeTitleTranslation extends RelatedTimestampableEntity implements 
     #[ORM\JoinColumn(nullable: false)]
     private ProductType $productType;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['product_type:write', 'product_type:read'])]
     private ?string $value = null;
 

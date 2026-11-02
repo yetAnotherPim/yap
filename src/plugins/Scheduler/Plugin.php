@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\plugins\Scheduler;
 
 use App\PluginManager\Plugin\PluginInterface;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Plugin implements PluginInterface
@@ -19,6 +20,9 @@ class Plugin implements PluginInterface
         return '1.0.0';
     }
 
+    /**
+     * @throws Exception
+     */
     public function activate(EntityManagerInterface $entityManager): static
     {
         $query = <<<SQL

@@ -57,7 +57,6 @@ class ProductType extends TimestampableEntity implements TranslatableTitleInterf
     #[ORM\Column(length: 255, nullable: false)]
     #[NotBlank]
     #[Groups(['product:read', 'product:read:without-translations', 'product_type:write', 'product_type:read'])]
-
     private string $code;
 
     #[ORM\Column(length: 255, nullable: false)]

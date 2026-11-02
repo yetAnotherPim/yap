@@ -123,3 +123,16 @@ jobs:
         uses: ./.github/workflows/Production-Tests.yaml
         with:
             PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+
+    DatabasePlatformTests:
+        needs:
+            - Init
+        uses: ./.github/workflows/Database-Platform-Tests.yaml
+        with:
+            PHP_VERSION: ${{ needs.Init.outputs.CURRENT_PHP_VERSION }}
+            DATABASE_MATRIX: >-
+                {"include":[
+                    {"name":"PostgreSQL","type":"postgresql","service":"database-pgsql","port":5432,"php_extension":"pdo_pgsql"},
+                    {"name":"MySQL","type":"mysql","service":"database-mysql","port":3306,"php_extension":"pdo_mysql"},
+                    {"name":"MariaDB","type":"mariadb","service":"database-mariadb","port":3307,"php_extension":"pdo_mysql"}
+                ]}

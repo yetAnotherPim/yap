@@ -7,12 +7,15 @@ namespace App\Setup\Database\Connection\Enum;
 enum DbType: string
 {
     case PostgreSQL = 'postgresql';
+    case MySQL = 'mysql';
+
+    case MariaDB = 'mariadb';
 
     public function getDefaultPort(): int
     {
         return match ($this) {
             self::PostgreSQL => 5432,
-            // self::MySQL => 3306,
+            self::MySQL, self::MariaDB => 3306,
         };
     }
 
@@ -20,7 +23,7 @@ enum DbType: string
     {
         return match ($this) {
             self::PostgreSQL => 'utf8',
-            // self::MySQL => 'utf8mb4',
+            self::MySQL, self::MariaDB => 'utf8mb4',
         };
     }
 
@@ -29,7 +32,15 @@ enum DbType: string
     {
         return match ($this) {
             self::PostgreSQL => 'pdo_pgsql',
-            // self::MySQL => 'pdo_mysql',
+            self::MySQL, self::MariaDB => 'pdo_mysql',
+        };
+    }
+
+    public function getDatabaseUrlScheme(): string
+    {
+        return match ($this) {
+            self::PostgreSQL => 'postgresql',
+            self::MySQL, self::MariaDB => 'mysql',
         };
     }
 }

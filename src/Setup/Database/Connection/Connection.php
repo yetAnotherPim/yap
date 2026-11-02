@@ -116,7 +116,7 @@ class Connection
     {
         return \sprintf(
             '%s://%s:%s@%s:%d/%s?serverVersion=%s&charset=%s',
-            $this->type->value,
+            $this->type->getDatabaseUrlScheme(),
             rawurlencode($this->user),
             rawurlencode($this->password),
             $this->host,

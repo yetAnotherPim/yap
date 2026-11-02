@@ -1,0 +1,246 @@
+name: DbPlatform Tests
+
+on:
+    workflow_call:
+        inputs:
+            PHP_VERSION:
+                type: string
+                required: true
+            DATABASE_MATRIX:
+                type: string
+                required: true
+
+jobs:
+    db-platform-tests:
+        name: ${{ matrix.name }}
+        runs-on: ubuntu-latest
+        env:
+            CI_USER_PASSWORD: 'Yap-CI-Only-Password-123!'
+        strategy:
+            fail-fast: false
+            matrix: ${{ fromJSON(inputs.DATABASE_MATRIX) }}
+
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Start databases
+          run: |
+              docker compose \
+                  -f compose-db-test.yaml \
+                  up \
+                  --detach \
+                  --wait \
+                  ${{ matrix.service }}
+
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
+          with:
+              php-version: ${{ inputs.PHP_VERSION }}
+              extensions: ${{ matrix.php_extension }}
+              coverage: none
+
+        - name: Install production dependencies
+          run: composer install --no-interaction --prefer-dist --no-progress --optimize-autoloader
+
+        - name: Configure application
+          run: |
+              printf '%s\n' \
+                  '${{ matrix.type }}' \
+                  '127.0.0.1' \
+                  '${{ matrix.port }}' \
+                  'app' \
+                  'app' \
+                  '!ChangeMe!' \
+                  | script -q -e -c 'php bin/console yap:setup' /dev/null
+
+        - name: Create database and run migrations
+          run: |
+              php bin/console doctrine:database:create --if-not-exists
+              php bin/console doctrine:schema:create
+              php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+
+        - name: Verify platform specific indexes
+          run: |
+              case "${{ matrix.type }}" in
+                  postgresql)
+                      RESULT=$(docker compose \
+                          -f compose-db-test.yaml \
+                          exec -T "${{ matrix.service }}" \
+                          psql \
+                          -U app \
+                          -d app \
+                          -tAc "
+                              SELECT
+                                  indexname || ':' || indexdef
+                              FROM pg_indexes
+                              WHERE schemaname = 'public'
+                                AND indexname IN (
+                                    'index_product_field_value',
+                                    'index_product_field_translation_value'
+                                )
+                              ORDER BY indexname;
+                          ")
+
+                      echo "$RESULT"
+
+                      test "$(echo "$RESULT" | wc -l)" -eq 2
+
+                      echo "$RESULT" | grep -Fq \
+                          'index_product_field_translation_value:CREATE INDEX index_product_field_translation_value ON public.field_value_translation USING btree (value)'
+
+                      echo "$RESULT" | grep -Fq \
+                          'index_product_field_value:CREATE INDEX index_product_field_value ON public.field USING btree (value)'
+                      ;;
+
+                  mysql|mariadb)
+                      if [ "${{ matrix.type }}" = "mysql" ]; then
+                          CLIENT=mysql
+                      else
+                          CLIENT=mariadb
+                      fi
+
+                      RESULT=$(docker compose \
+                          -f compose-db-test.yaml \
+                          exec -T "${{ matrix.service }}" \
+                          "$CLIENT" \
+                          -uapp \
+                          -p'!ChangeMe!' \
+                          -N \
+                          -e "
+                              SELECT
+                                  INDEX_NAME,
+                                  SUB_PART
+                              FROM information_schema.STATISTICS
+                              WHERE TABLE_SCHEMA = 'app'
+                                AND INDEX_NAME IN (
+                                    'index_product_field_value',
+                                    'index_product_field_translation_value'
+                                )
+                                AND COLUMN_NAME = 'value'
+                              ORDER BY INDEX_NAME;
+                          ")
+
+                      echo "$RESULT"
+
+                      test "$(echo "$RESULT" | wc -l)" -eq 2
+
+                      echo "$RESULT" | grep -q \
+                          $'index_product_field_translation_value\t768'
+
+                      echo "$RESULT" | grep -q \
+                          $'index_product_field_value\t768'
+                      ;;
+
+                  *)
+                      echo "Unsupported database type: ${{ matrix.type }}"
+                      exit 1
+                      ;;
+              esac
+
+        - name: Generate JWT key pair
+          run: php bin/console lexik:jwt:generate-keypair --skip-if-exists
+
+        - name: Install Symfony CLI
+          run: |
+              curl -sS https://get.symfony.com/cli/installer | bash
+              echo "$HOME/.symfony5/bin" >> "$GITHUB_PATH"
+
+        - name: Start web server
+          run: |
+              symfony server:start \
+                --no-tls \
+                --port=8000 \
+                --listen-ip=127.0.0.1 \
+                --daemon
+
+              symfony server:status
+
+        - name: Create API user
+          run: |
+            printf '%s\n' \
+              'ci-api-user' \
+              'ci-api@example.test' \
+              'CI' \
+              'API User' \
+              'ROLE_API_USER' \
+              "$CI_USER_PASSWORD" \
+              "$CI_USER_PASSWORD" \
+              | script -q -e -c 'php bin/console yap:user:create' /dev/null
+
+        - name: Test API authentication
+          run: |
+              RESPONSE=$(curl --fail --silent --show-error \
+                -X POST http://127.0.0.1:8000/api/auth \
+                -H 'Content-Type: application/json' \
+                -d "{\"username\":\"ci-api-user\",\"password\":\"$CI_USER_PASSWORD\"}")
+
+              TOKEN=$(echo "$RESPONSE" | jq -er '.token')
+
+              test -n "$TOKEN"
+              echo "TOKEN=$TOKEN" >> "$GITHUB_ENV"
+              echo "API authentication successful. JWT received."
+
+        - name: Test API locales
+          run: |
+              LOCALES_RESPONSE=$(curl --fail --silent --show-error \
+                  'http://127.0.0.1:8000/api/locales?page=1' \
+                  -H "Authorization: Bearer $TOKEN" \
+                  -H 'Accept: application/ld+json')
+
+              echo "$LOCALES_RESPONSE" | jq -e '
+                  .totalItems == 38
+              '
+
+              DEFAULT_LOCALE_RESPONSE=$(curl --fail --silent --show-error \
+                  'http://127.0.0.1:8000/api/locales/en_GB' \
+                  -H "Authorization: Bearer $TOKEN" \
+                  -H 'Accept: application/ld+json')
+
+              echo "$DEFAULT_LOCALE_RESPONSE" | jq -e '
+                  .id == "en_GB"
+                  and
+                  .default == true
+              '
+
+              echo "API locales and default locale successfully verified."
+
+        - name: Test task execution time has been updated
+          run: |
+              php bin/console yap:plugins:list --refresh
+              php bin/console yap:plugin:activate Scheduler
+              php bin/console ci:run-task
+
+              case "${{ matrix.type }}" in
+                  postgresql)
+                      CLIENT=psql
+                      CLIENT_ARGS="-U app -d app -tAc"
+                      EXPECTED=t
+                      ;;
+
+                  mysql)
+                      CLIENT=mysql
+                      CLIENT_ARGS="-uapp -p!ChangeMe! app -N -e"
+                      EXPECTED=1
+                      ;;
+
+                  mariadb)
+                      CLIENT=mariadb
+                      CLIENT_ARGS="-uapp -p!ChangeMe! app -N -e"
+                      EXPECTED=1
+                      ;;
+              esac
+
+              RESULT=$(docker compose \
+                  -f compose-db-test.yaml \
+                  exec -T "${{ matrix.service }}" \
+                  "$CLIENT" \
+                  $CLIENT_ARGS \
+                  "
+                      SELECT last_run IS NOT NULL
+                      FROM yap_scheduler
+                      WHERE id = 1;
+                  ")
+
+              echo "$RESULT"
+              test "$RESULT" = "$EXPECTED"
