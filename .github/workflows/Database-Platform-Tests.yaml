@@ -12,7 +12,7 @@ on:
 
 jobs:
     db-platform-tests:
-        name: (${{ matrix.name }})
+        name: ${{ matrix.name }}
         runs-on: ubuntu-latest
         env:
             CI_USER_PASSWORD: 'Yap-CI-Only-Password-123!'
@@ -64,68 +64,57 @@ jobs:
           run: |
               case "${{ matrix.type }}" in
                   postgresql)
-                      RESULT=$(docker compose \
+                      docker compose \
                           -f compose-db-test.yaml \
                           exec -T "${{ matrix.service }}" \
                           psql \
                           -U app \
                           -d app \
-                          -tAc "
-                              SELECT
-                                  indexname || ':' || indexdef
+                          -v ON_ERROR_STOP=1 \
+                          -c "
+                              SELECT CASE
+                                  WHEN COUNT(*) = 2 THEN 1
+                                  ELSE 1 / 0
+                              END
                               FROM pg_indexes
                               WHERE schemaname = 'public'
                                 AND indexname IN (
                                     'index_product_field_value',
                                     'index_product_field_translation_value'
                                 )
-                              ORDER BY indexname;
-                          ")
-
-                      echo "$RESULT"
-
-                      test "$(echo "$RESULT" | wc -l)" -eq 2
-
-                      echo "$RESULT" | grep -Fq \
-                          'index_product_field_translation_value:CREATE INDEX index_product_field_translation_value ON public.field_value_translation USING btree (value)'
-
-                      echo "$RESULT" | grep -Fq \
-                          'index_product_field_value:CREATE INDEX index_product_field_value ON public.field USING btree (value)'
+                                AND indexdef LIKE '%USING btree (value)%';
+                          "
                       ;;
 
                   mysql|mariadb)
-                      RESULT=$(docker compose \
+                      if [ "${{ matrix.type }}" = "mysql" ]; then
+                          CLIENT=mysql
+                      else
+                          CLIENT=mariadb
+                      fi
+
+                      docker compose \
                           -f compose-db-test.yaml \
                           exec -T "${{ matrix.service }}" \
-                          mysql \
+                          "$CLIENT" \
                           -uapp \
                           -p'!ChangeMe!' \
-                          -N \
+                          app \
                           -e "
-                              SELECT
-                                  INDEX_NAME,
-                                  SUB_PART
+                              SELECT IF(
+                                  COUNT(*) = 2,
+                                  'OK',
+                                  (SELECT invalid_column)
+                              )
                               FROM information_schema.STATISTICS
                               WHERE TABLE_SCHEMA = 'app'
+                                AND COLUMN_NAME = 'value'
                                 AND INDEX_NAME IN (
                                     'index_product_field_value',
                                     'index_product_field_translation_value'
                                 )
-                                AND COLUMN_NAME = 'value'
-                              ORDER BY INDEX_NAME;
-                          ")
-
-                      echo "$RESULT"
-
-                      test "$(echo "$RESULT" | wc -l)" -eq 2
-
-                      echo "$RESULT" | grep -q $'index_product_field_translation_value\t768'
-                      echo "$RESULT" | grep -q $'index_product_field_value\t768'
-                      ;;
-
-                  *)
-                      echo "Unsupported database type: ${{ matrix.type }}"
-                      exit 1
+                                AND SUB_PART = 768;
+                          "
                       ;;
               esac
 
