@@ -209,7 +209,19 @@ jobs:
           run: |
               php bin/console yap:plugins:list --refresh
               php bin/console yap:plugin:activate Scheduler
-              php bin/console messenger:consume scheduler_default --time-limit=5
+
+              php -r '
+                require "vendor/autoload.php";
+
+                use App\Kernel;
+                use App\plugins\Scheduler\Task\RemoveObsoleteFields;
+
+                $kernel = new Kernel("dev", true);
+                $kernel->boot();
+
+                $task = $kernel->getContainer()->get(RemoveObsoleteFields::class);
+                $task->run();
+             '
 
               case "${{ matrix.type }}" in
                   postgresql)
