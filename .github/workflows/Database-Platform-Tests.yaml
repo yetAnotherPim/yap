@@ -220,13 +220,13 @@ jobs:
 
                   mysql)
                       CLIENT=mysql
-                      CLIENT_ARGS="-uapp -p!ChangeMe! -N -e"
+                      CLIENT_ARGS="-uapp -p!ChangeMe! app -N -e"
                       EXPECTED=1
                       ;;
 
                   mariadb)
                       CLIENT=mariadb
-                      CLIENT_ARGS="-uapp -p!ChangeMe! -N -e"
+                      CLIENT_ARGS="-uapp -p!ChangeMe! app -N -e"
                       EXPECTED=1
                       ;;
               esac
