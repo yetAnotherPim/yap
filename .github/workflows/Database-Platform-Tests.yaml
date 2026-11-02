@@ -183,42 +183,25 @@ jobs:
 
         - name: Test API locales
           run: |
-              #TODO: only check: has 38 locales, default locale is en_GB via direct request
+              LOCALES_RESPONSE=$(curl --fail --silent --show-error \
+                  'http://127.0.0.1:8000/api/locales?page=1' \
+                  -H "Authorization: Bearer $TOKEN" \
+                  -H 'Accept: application/ld+json')
 
+              echo "$LOCALES_RESPONSE" | jq -e '
+                  .totalItems == 38
+              '
 
-              EXPECTED_LOCALES='[
-                "ar", "bg_BG", "ca_AD", "cs_CZ", "da_DK", "de_DE",
-                "el_GR", "en_GB", "es_ES", "eu_ES", "fa_IR", "fi_FI",
-                "fr_FR", "gl_ES", "he_IL", "hr_HR", "hu_HU", "hy_AM",
-                "id_ID", "it_IT", "lb_LU", "lt_LT", "mk_MK", "nl_NL",
-                "no_NO", "pl_PL", "pt_PT", "pt_BR", "ro_RO", "ru_UA",
-                "sk_SK", "sl_SI", "sr_RS", "sv_SE", "tr_TR", "uk_UA",
-                "zh_CN", "zh_TW"
-              ]'
+              DEFAULT_LOCALE_RESPONSE=$(curl --fail --silent --show-error \
+                  'http://127.0.0.1:8000/api/locales/en_GB' \
+                  -H "Authorization: Bearer $TOKEN" \
+                  -H 'Accept: application/ld+json')
 
-                PAGE_1=$(curl --fail --silent --show-error \
-                'http://127.0.0.1:8000/api/locales?page=1' \
-                -H "Authorization: Bearer $TOKEN" \
-                -H 'Accept: application/ld+json')
-
-                PAGE_2=$(curl --fail --silent --show-error \
-                'http://127.0.0.1:8000/api/locales?page=2' \
-                -H "Authorization: Bearer $TOKEN" \
-                -H 'Accept: application/ld+json')
-
-                RESPONSE=$(jq -n \
-                --argjson page1 "$PAGE_1" \
-                --argjson page2 "$PAGE_2" \
-                '$page1 | .member = ($page1.member + $page2.member)')
-
-                echo "$RESPONSE" | jq -e \
-                --argjson expected "$EXPECTED_LOCALES" '
-                (.member | map(.id) | sort) == ($expected | sort)
-                and
-                (.member | map(select(.default == true) | .id)) == ["en_GB"]
-                and
-                .totalItems == 38
-                '
+              echo "$DEFAULT_LOCALE_RESPONSE" | jq -e '
+                  .id == "en_GB"
+                  and
+                  .default == true
+              '
 
               echo "API locales and default locale successfully verified."
 
@@ -260,5 +243,4 @@ jobs:
                   ")
 
               echo "$RESULT"
-
               test "$RESULT" = "$EXPECTED"
