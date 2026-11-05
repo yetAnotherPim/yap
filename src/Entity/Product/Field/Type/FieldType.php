@@ -146,9 +146,11 @@ class FieldType extends TimestampableEntity implements TranslatableTitleInterfac
         return $this->inputType;
     }
 
-    public function setInputType(Enum\InputType $inputType): void
+    public function setInputType(Enum\InputType $inputType): FieldType
     {
         $this->inputType = $inputType;
+
+        return $this;
     }
 
     public function getDecimalSeparator(): ?string
