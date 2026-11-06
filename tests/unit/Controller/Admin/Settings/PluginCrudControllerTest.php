@@ -68,11 +68,11 @@ class PluginCrudControllerTest extends MockeryTestCase
 
         $this->assertCount(8, $result->getAsDto(Crud::PAGE_INDEX)->getActions());
         $this->assertEquals(['delete', 'new', 'edit', 'batchDelete'], $result->getAsDto(Crud::PAGE_INDEX)->getDisabledActions());
-        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'compileAssets')?->getVariant());
-        $this->assertEquals(ButtonVariant::Primary, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'refresh')?->getVariant());
-        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'activate')?->getVariant());
-        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'deactivate')?->getVariant());
-        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'update')?->getVariant());
+        $this->assertEquals(ButtonVariant::Outline, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'compileAssets')?->getButtonVariant());
+        $this->assertEquals(ButtonVariant::Solid, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'refresh')?->getButtonVariant());
+        $this->assertEquals(ButtonVariant::Outline, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'activate')?->getButtonVariant());
+        $this->assertEquals(ButtonVariant::Outline, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'deactivate')?->getButtonVariant());
+        $this->assertEquals(ButtonVariant::Outline, $result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'update')?->getButtonVariant());
     }
 
     public function testConfigureFieldsForReturnsExpectedFields(): void

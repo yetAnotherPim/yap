@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: IdentifierTypeRepository::class)]
@@ -31,6 +32,7 @@ class IdentifierType extends TimestampableEntity
     private Uuid $id;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Length(max: 255)]
     #[NotBlank]
     #[Groups(['product:read', 'product:read:without-translations'])]
     private string $title;

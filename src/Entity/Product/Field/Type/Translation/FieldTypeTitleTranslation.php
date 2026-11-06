@@ -11,12 +11,12 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Translation\Title\TitleTranslationInterface;
 use App\Repository\FieldTypeTitleTranslationRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\Length;
 
 #[ORM\Entity(repositoryClass: FieldTypeTitleTranslationRepository::class)]
 #[ApiResource]
@@ -45,7 +45,8 @@ class FieldTypeTitleTranslation extends RelatedTimestampableEntity implements Ti
     #[ORM\JoinColumn(nullable: false)]
     private FieldType $fieldType;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Length(max: 255)]
     #[Groups(['product:read', 'product:write', 'field_type:write', 'field_type:read'])]
     private ?string $value = null;
 

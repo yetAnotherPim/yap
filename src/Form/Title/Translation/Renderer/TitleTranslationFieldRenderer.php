@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\LocaleField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
 class TitleTranslationFieldRenderer
@@ -63,6 +64,12 @@ class TitleTranslationFieldRenderer
                 ->setFormTypeOptions([
                     'data' => $this->titleTranslationResolver->resolve($entity, $locale)?->getValue(),
                     'mapped' => false,
+                    'attr' => [
+                        'maxlength' => 255,
+                    ],
+                    'constraints' => [
+                        new Length(max: 255),
+                    ],
                 ])
                 ->setFormTypeOption('row_attr', [
                     'data-title-translation-locale' => $locale->getId(),

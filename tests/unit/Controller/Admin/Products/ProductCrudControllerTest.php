@@ -152,9 +152,9 @@ class ProductCrudControllerTest extends MockeryTestCase
 
         $this->assertCount(3, $result->getAsDto(Crud::PAGE_NEW)->getActions());
         $this->assertCount(3, $result->getAsDto(Crud::PAGE_INDEX)->getActions());
-        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)?->getVariant());
-        $this->assertEquals(ButtonVariant::Default, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)?->getVariant());
-        $this->assertEquals(ButtonVariant::Primary, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE)?->getVariant());
+        $this->assertEquals(ButtonVariant::Outline, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)?->getButtonVariant());
+        $this->assertEquals(ButtonVariant::Outline, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)?->getButtonVariant());
+        $this->assertEquals(ButtonVariant::Solid, $result->getAsDto(Crud::PAGE_NEW)->getAction(Crud::PAGE_NEW, Action::SAVE_AND_CONTINUE)?->getButtonVariant());
 
         $this->assertNotNull($result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, Action::BATCH_DELETE));
         $this->assertNotNull($result->getAsDto(Crud::PAGE_INDEX)->getAction(Crud::PAGE_INDEX, 'batch_edit'));

@@ -1,0 +1,426 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\DemoData\Definition;
+
+use App\Entity\Product\Field\Type\Enum\InputType;
+
+class FieldTypeDefinitions
+{
+    /**
+     * @var array<string, array{
+     *     title: array<string, string>,
+     *     inputType: InputType,
+     *     filterable: bool,
+     *     translatable: bool,
+     *     decimalSeparator?: string
+     * }>
+     */
+    public const array FIELD_TYPES = [
+        'section_general' => [
+            'title' => [
+                'en_GB' => 'General',
+                'de_DE' => 'Allgemein',
+                'fr_FR' => 'Général',
+                'es_ES' => 'General',
+                'it_IT' => 'Generale',
+            ],
+            'inputType' => InputType::Section,
+            'filterable' => false,
+            'translatable' => false,
+        ],
+        'section_attributes' => [
+            'title' => [
+                'en_GB' => 'Attributes',
+                'de_DE' => 'Attribute',
+                'fr_FR' => 'Attributs',
+                'es_ES' => 'Atributos',
+                'it_IT' => 'Attributi',
+            ],
+            'inputType' => InputType::Section,
+            'filterable' => false,
+            'translatable' => false,
+        ],
+        'section_marketing' => [
+            'title' => [
+                'en_GB' => 'Marketing',
+                'de_DE' => 'Marketing',
+                'fr_FR' => 'Marketing',
+                'es_ES' => 'Marketing',
+                'it_IT' => 'Marketing',
+            ],
+            'inputType' => InputType::Section,
+            'filterable' => false,
+            'translatable' => false,
+        ],
+        'section_media' => [
+            'title' => [
+                'en_GB' => 'Media',
+                'de_DE' => 'Medien',
+                'fr_FR' => 'Médias',
+                'es_ES' => 'Medios',
+                'it_IT' => 'Media',
+            ],
+            'inputType' => InputType::Section,
+            'filterable' => false,
+            'translatable' => false,
+        ],
+        'name' => [
+            'title' => [
+                'en_GB' => 'Name',
+                'de_DE' => 'Name',
+                'fr_FR' => 'Nom',
+                'es_ES' => 'Nombre',
+                'it_IT' => 'Nome',
+            ],
+            'inputType' => InputType::String,
+            'filterable' => true,
+            'translatable' => true,
+        ],
+        'description' => [
+            'title' => [
+                'en_GB' => 'Description',
+                'de_DE' => 'Beschreibung',
+                'fr_FR' => 'Description',
+                'es_ES' => 'Descripción',
+                'it_IT' => 'Descrizione',
+            ],
+            'inputType' => InputType::TextEditor,
+            'filterable' => false,
+            'translatable' => true,
+        ],
+        'material' => [
+            'title' => [
+                'en_GB' => 'Material',
+                'de_DE' => 'Material',
+                'fr_FR' => 'Matériau',
+                'es_ES' => 'Material',
+                'it_IT' => 'Materiale',
+            ],
+            'inputType' => InputType::String,
+            'filterable' => true,
+            'translatable' => true,
+        ],
+        'colour' => [
+            'title' => [
+                'en_GB' => 'Colour',
+                'de_DE' => 'Farbe',
+                'fr_FR' => 'Couleur',
+                'es_ES' => 'Color',
+                'it_IT' => 'Colore',
+            ],
+            'inputType' => InputType::Select,
+            'filterable' => true,
+            'translatable' => true,
+        ],
+        'size' => [
+            'title' => [
+                'en_GB' => 'Size',
+                'de_DE' => 'Größe',
+                'fr_FR' => 'Taille',
+                'es_ES' => 'Talla',
+                'it_IT' => 'Taglia',
+            ],
+            'inputType' => InputType::Select,
+            'filterable' => true,
+            'translatable' => false,
+        ],
+        'fit' => [
+            'title' => [
+                'en_GB' => 'Fit',
+                'de_DE' => 'Passform',
+                'fr_FR' => 'Coupe',
+                'es_ES' => 'Corte',
+                'it_IT' => 'Vestibilità',
+            ],
+            'inputType' => InputType::Select,
+            'filterable' => true,
+            'translatable' => false,
+        ],
+        'care_instructions' => [
+            'title' => [
+                'en_GB' => 'Care instructions',
+                'de_DE' => 'Pflegehinweise',
+                'fr_FR' => 'Instructions d’entretien',
+                'es_ES' => 'Instrucciones de cuidado',
+                'it_IT' => 'Istruzioni per la cura',
+            ],
+            'inputType' => InputType::MultiSelect,
+            'filterable' => true,
+            'translatable' => true,
+        ],
+        'manufacturer' => [
+            'title' => [
+                'en_GB' => 'Manufacturer',
+                'de_DE' => 'Hersteller',
+                'fr_FR' => 'Fabricant',
+                'es_ES' => 'Fabricante',
+                'it_IT' => 'Produttore',
+            ],
+            'inputType' => InputType::String,
+            'filterable' => true,
+            'translatable' => false,
+        ],
+        'model' => [
+            'title' => [
+                'en_GB' => 'Model',
+                'de_DE' => 'Modell',
+                'fr_FR' => 'Modèle',
+                'es_ES' => 'Modelo',
+                'it_IT' => 'Modello',
+            ],
+            'inputType' => InputType::String,
+            'filterable' => true,
+            'translatable' => false,
+        ],
+        'voltage' => [
+            'title' => [
+                'en_GB' => 'Voltage',
+                'de_DE' => 'Spannung',
+                'fr_FR' => 'Tension',
+                'es_ES' => 'Voltaje',
+                'it_IT' => 'Tensione',
+            ],
+            'inputType' => InputType::Number,
+            'filterable' => true,
+            'translatable' => false,
+            'decimalSeparator' => '.',
+        ],
+        'power' => [
+            'title' => [
+                'en_GB' => 'Power',
+                'de_DE' => 'Leistung',
+                'fr_FR' => 'Puissance',
+                'es_ES' => 'Potencia',
+                'it_IT' => 'Potenza',
+            ],
+            'inputType' => InputType::Number,
+            'filterable' => true,
+            'translatable' => false,
+            'decimalSeparator' => '.',
+        ],
+        'connectivity' => [
+            'title' => [
+                'en_GB' => 'Connectivity',
+                'de_DE' => 'Konnektivität',
+                'fr_FR' => 'Connectivité',
+                'es_ES' => 'Conectividad',
+                'it_IT' => 'Connettività',
+            ],
+            'inputType' => InputType::MultiSelect,
+            'filterable' => true,
+            'translatable' => false,
+        ],
+        'width' => [
+            'title' => [
+                'en_GB' => 'Width',
+                'de_DE' => 'Breite',
+                'fr_FR' => 'Largeur',
+                'es_ES' => 'Anchura',
+                'it_IT' => 'Larghezza',
+            ],
+            'inputType' => InputType::Number,
+            'filterable' => true,
+            'translatable' => false,
+            'decimalSeparator' => '.',
+        ],
+        'height' => [
+            'title' => [
+                'en_GB' => 'Height',
+                'de_DE' => 'Höhe',
+                'fr_FR' => 'Hauteur',
+                'es_ES' => 'Altura',
+                'it_IT' => 'Altezza',
+            ],
+            'inputType' => InputType::Number,
+            'filterable' => true,
+            'translatable' => false,
+            'decimalSeparator' => '.',
+        ],
+        'depth' => [
+            'title' => [
+                'en_GB' => 'Depth',
+                'de_DE' => 'Tiefe',
+                'fr_FR' => 'Profondeur',
+                'es_ES' => 'Profundidad',
+                'it_IT' => 'Profondità',
+            ],
+            'inputType' => InputType::Number,
+            'filterable' => true,
+            'translatable' => false,
+            'decimalSeparator' => '.',
+        ],
+        'weight' => [
+            'title' => [
+                'en_GB' => 'Weight',
+                'de_DE' => 'Gewicht',
+                'fr_FR' => 'Poids',
+                'es_ES' => 'Peso',
+                'it_IT' => 'Peso',
+            ],
+            'inputType' => InputType::Number,
+            'filterable' => true,
+            'translatable' => false,
+            'decimalSeparator' => '.',
+        ],
+        'assembly_required' => [
+            'title' => [
+                'en_GB' => 'Assembly required',
+                'de_DE' => 'Montage erforderlich',
+                'fr_FR' => 'Montage nécessaire',
+                'es_ES' => 'Requiere montaje',
+                'it_IT' => 'Richiede montaggio',
+            ],
+            'inputType' => InputType::CheckBox,
+            'filterable' => true,
+            'translatable' => false,
+        ],
+        'volume' => [
+            'title' => [
+                'en_GB' => 'Volume',
+                'de_DE' => 'Volumen',
+                'fr_FR' => 'Volume',
+                'es_ES' => 'Volumen',
+                'it_IT' => 'Volume',
+            ],
+            'inputType' => InputType::Number,
+            'filterable' => true,
+            'translatable' => false,
+            'decimalSeparator' => '.',
+        ],
+        'skin_type' => [
+            'title' => [
+                'en_GB' => 'Skin type',
+                'de_DE' => 'Hauttyp',
+                'fr_FR' => 'Type de peau',
+                'es_ES' => 'Tipo de piel',
+                'it_IT' => 'Tipo di pelle',
+            ],
+            'inputType' => InputType::MultiSelect,
+            'filterable' => true,
+            'translatable' => true,
+        ],
+        'ingredients' => [
+            'title' => [
+                'en_GB' => 'Ingredients',
+                'de_DE' => 'Inhaltsstoffe',
+                'fr_FR' => 'Ingrédients',
+                'es_ES' => 'Ingredientes',
+                'it_IT' => 'Ingredienti',
+            ],
+            'inputType' => InputType::Text,
+            'filterable' => false,
+            'translatable' => true,
+        ],
+        'net_weight' => [
+            'title' => [
+                'en_GB' => 'Net weight',
+                'de_DE' => 'Nettogewicht',
+                'fr_FR' => 'Poids net',
+                'es_ES' => 'Peso neto',
+                'it_IT' => 'Peso netto',
+            ],
+            'inputType' => InputType::Number,
+            'filterable' => true,
+            'translatable' => false,
+            'decimalSeparator' => '.',
+        ],
+        'allergens' => [
+            'title' => [
+                'en_GB' => 'Allergens',
+                'de_DE' => 'Allergene',
+                'fr_FR' => 'Allergènes',
+                'es_ES' => 'Alérgenos',
+                'it_IT' => 'Allergeni',
+            ],
+            'inputType' => InputType::MultiSelect,
+            'filterable' => true,
+            'translatable' => true,
+        ],
+        'storage_instructions' => [
+            'title' => [
+                'en_GB' => 'Storage instructions',
+                'de_DE' => 'Lagerhinweise',
+                'fr_FR' => 'Instructions de conservation',
+                'es_ES' => 'Instrucciones de conservación',
+                'it_IT' => 'Istruzioni di conservazione',
+            ],
+            'inputType' => InputType::Text,
+            'filterable' => false,
+            'translatable' => true,
+        ],
+        'marketplace_enabled' => [
+            'title' => [
+                'en_GB' => 'Marketplace enabled',
+                'de_DE' => 'Für Marketplace aktiviert',
+                'fr_FR' => 'Activé pour la marketplace',
+                'es_ES' => 'Activado para marketplace',
+                'it_IT' => 'Abilitato per il marketplace',
+            ],
+            'inputType' => InputType::CheckBox,
+            'filterable' => true,
+            'translatable' => false,
+        ],
+        'marketplace_title' => [
+            'title' => [
+                'en_GB' => 'Marketplace title',
+                'de_DE' => 'Marketplace-Titel',
+                'fr_FR' => 'Titre marketplace',
+                'es_ES' => 'Título para marketplace',
+                'it_IT' => 'Titolo marketplace',
+            ],
+            'inputType' => InputType::String,
+            'filterable' => false,
+            'translatable' => true,
+        ],
+        'marketplace_description' => [
+            'title' => [
+                'en_GB' => 'Marketplace description',
+                'de_DE' => 'Marketplace-Beschreibung',
+                'fr_FR' => 'Description marketplace',
+                'es_ES' => 'Descripción para marketplace',
+                'it_IT' => 'Descrizione marketplace',
+            ],
+            'inputType' => InputType::TextEditor,
+            'filterable' => false,
+            'translatable' => true,
+        ],
+        'marketplace_category' => [
+            'title' => [
+                'en_GB' => 'Marketplace category',
+                'de_DE' => 'Marketplace-Kategorie',
+                'fr_FR' => 'Catégorie marketplace',
+                'es_ES' => 'Categoría para marketplace',
+                'it_IT' => 'Categoria marketplace',
+            ],
+            'inputType' => InputType::Select,
+            'filterable' => true,
+            'translatable' => false,
+        ],
+        'product_image' => [
+            'title' => [
+                'en_GB' => 'Product image',
+                'de_DE' => 'Produktbild',
+                'fr_FR' => 'Image du produit',
+                'es_ES' => 'Imagen del producto',
+                'it_IT' => 'Immagine del prodotto',
+            ],
+            'inputType' => InputType::Image,
+            'filterable' => false,
+            'translatable' => false,
+        ],
+        'product_datasheet' => [
+            'title' => [
+                'en_GB' => 'Product datasheet',
+                'de_DE' => 'Produktdatenblatt',
+                'fr_FR' => 'Fiche technique du produit',
+                'es_ES' => 'Ficha técnica del producto',
+                'it_IT' => 'Scheda tecnica del prodotto',
+            ],
+            'inputType' => InputType::File,
+            'filterable' => false,
+            'translatable' => false,
+        ],
+    ];
+}

@@ -25,6 +25,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -55,11 +56,13 @@ class FieldType extends TimestampableEntity implements TranslatableTitleInterfac
     private Uuid $id;
 
     #[ORM\Column(length: 255, nullable: false)]
+    #[Length(max: 255)]
     #[NotBlank]
     #[Groups(['product:read', 'product:read:without-translations', 'field:read', 'field_type:write', 'field_type:read'])]
     private string $code;
 
     #[ORM\Column(length: 255, nullable: false)]
+    #[Length(max: 255)]
     #[NotBlank]
     #[Groups(['product:read', 'product:read:without-translations', 'field:read', 'field_type:write', 'field_type:read'])]
     private string $title;
@@ -146,9 +149,11 @@ class FieldType extends TimestampableEntity implements TranslatableTitleInterfac
         return $this->inputType;
     }
 
-    public function setInputType(Enum\InputType $inputType): void
+    public function setInputType(Enum\InputType $inputType): FieldType
     {
         $this->inputType = $inputType;
+
+        return $this;
     }
 
     public function getDecimalSeparator(): ?string

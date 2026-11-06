@@ -25,6 +25,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -55,11 +56,13 @@ class ProductType extends TimestampableEntity implements TranslatableTitleInterf
     private Uuid $id;
 
     #[ORM\Column(length: 255, nullable: false)]
+    #[Length(max: 255)]
     #[NotBlank]
     #[Groups(['product:read', 'product:read:without-translations', 'product_type:write', 'product_type:read'])]
     private string $code;
 
     #[ORM\Column(length: 255, nullable: false)]
+    #[Length(max: 255)]
     #[NotBlank]
     #[Groups(['product_type:write', 'product_type:read'])]
     private string $title;
