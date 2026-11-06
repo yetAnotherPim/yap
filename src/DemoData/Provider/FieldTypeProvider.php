@@ -64,19 +64,15 @@ class FieldTypeProvider
 
         if (!$fieldType instanceof FieldType) {
             $fieldType = new FieldType()
-                ->setCode($code);
+                ->setCode($code)
+                ->setTitle($definition['title']['en_GB'])
+                ->setInputType($definition['inputType'])
+                ->setFilterable($definition['filterable'])
+                ->setTranslatable($definition['translatable'])
+                ->setDecimalSeparator($definition['decimalSeparator'] ?? null);
 
             $this->entityManager->persist($fieldType);
         }
-
-        $fieldType
-            ->setTitle($definition['title']['en_GB'])
-            ->setInputType($definition['inputType'])
-            ->setFilterable($definition['filterable'])
-            ->setTranslatable($definition['translatable'])
-            ->setDecimalSeparator(
-                $definition['decimalSeparator'] ?? null,
-            );
 
         return $fieldType;
     }

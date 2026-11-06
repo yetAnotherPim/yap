@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: IdentifierRepository::class)]
@@ -51,6 +52,7 @@ class Identifier extends RelatedTimestampableEntity
     private IdentifierType $type;
 
     #[ORM\Column(length: 255)]
+    #[Length(max: 255)]
     #[NotBlank]
     #[Groups(['product:read', 'product:read:without-translations', 'product:write'])]
     private string $value = '';
