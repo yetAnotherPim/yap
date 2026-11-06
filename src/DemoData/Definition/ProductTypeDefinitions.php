@@ -4,16 +4,34 @@ declare(strict_types=1);
 
 namespace App\DemoData\Definition;
 
+/**
+ * @phpstan-type ProductVariationField array{
+ *     options: non-empty-list<string>
+ * }
+ * @phpstan-type ProductTypeDefinition array{
+ *     title: array<string, string>,
+ *     fields: array<string, array{
+ *         required?: bool,
+ *         options?: list<string>
+ *     }>
+ * }
+ */
 class ProductTypeDefinitions
 {
     /**
-     * @var array<string, array{
-     *     title: array<string, string>,
-     *     fields: array<string, array{
-     *         required?: bool,
-     *         options?: list<string>
-     *     }>
-     * }>
+     * @var array<string, ProductTypeDefinition>&array{
+     *     apparel: array{
+     *         title: array<string, string>,
+     *         fields: array<string, array{
+     *             required?: bool,
+     *             options?: list<string>
+     *         }> & array{
+     *             colour: ProductVariationField,
+     *             size: ProductVariationField,
+     *             fit: ProductVariationField
+     *         }
+     *     }
+     * }
      */
     public const array PRODUCT_TYPES = [
         'apparel' => [

@@ -11,7 +11,6 @@ use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Translation\Title\TitleTranslationInterface;
 use App\Repository\FieldTypeTitleTranslationRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Types\UuidType;

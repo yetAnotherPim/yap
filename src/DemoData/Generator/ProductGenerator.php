@@ -19,6 +19,7 @@ class ProductGenerator
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly ProductVariationGenerator $productVariationGenerator,
     ) {
     }
 
@@ -38,6 +39,7 @@ class ProductGenerator
         array $locales,
         ?callable $onProgress = null,
     ): void {
+        /** @var list<key-of<ProductDefinitions::PRODUCTS>> $typeCodes */
         $typeCodes = array_keys(ProductDefinitions::PRODUCTS);
 
         for ($i = 0; $i < $count; ++$i) {
@@ -63,9 +65,10 @@ class ProductGenerator
     }
 
     /**
-     * @param array<string, FieldType>      $fieldTypes
-     * @param array<string, IdentifierType> $identifierTypes
-     * @param array<string, Locale>         $locales
+     * @param key-of<ProductDefinitions::PRODUCTS> $typeCode
+     * @param array<string, FieldType>             $fieldTypes
+     * @param array<string, IdentifierType>        $identifierTypes
+     * @param array<string, Locale>                $locales
      */
     private function generateProduct(
         string $typeCode,
@@ -75,7 +78,7 @@ class ProductGenerator
         array $identifierTypes,
         array $locales,
     ): void {
-        $definition = ProductDefinitions::PRODUCTS[$typeCode];
+        $definition = $this->productVariationGenerator->generate($typeCode);
 
         $product = new Product()
             ->setProductType($productType);

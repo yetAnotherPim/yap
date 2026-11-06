@@ -8,7 +8,7 @@ use App\Entity\Locale\Locale;
 use App\Entity\Translation\Title\TitleTranslationInterface;
 use App\Entity\Translation\Title\TranslatableTitleInterface;
 
-final class TitleTranslationSynchronizer
+class TitleTranslationSynchronizer
 {
     /**
      * @template TTitleTranslation of TitleTranslationInterface

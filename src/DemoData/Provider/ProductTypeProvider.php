@@ -121,11 +121,8 @@ class ProductTypeProvider
                 );
             }
 
+            /** @var int $position */
             $position = array_search($fieldCode, array_keys($fieldDefinitions), true);
-
-            if (false === $position) {
-                throw new \LogicException(\sprintf('Field "%s" not found in field definitions.', $fieldCode));
-            }
 
             $configuration
                 ->setPosition($position)
