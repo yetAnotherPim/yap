@@ -2,6 +2,9 @@ twig:
     file_name_pattern: '*.twig'
     debug: true
 
+    globals:
+        app_version: '%env(APP_VERSION)%'
+
 when@test:
     twig:
         strict_variables: true

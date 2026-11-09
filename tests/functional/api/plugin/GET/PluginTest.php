@@ -20,6 +20,7 @@ use App\Controller\Admin\User\AccountCrudController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
 use App\Entity\Plugin\Plugin;
 use App\Entity\User\User;
@@ -121,6 +122,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(PasswordFormConfigurator::class)]
 #[UsesClass(AssetMapCompiler::class)]
 #[UsesClass(QueueMonitor::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 #[ResetDatabase]
 class PluginTest extends ApiTestCase
 {

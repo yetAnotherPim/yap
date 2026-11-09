@@ -35,7 +35,7 @@ class ProductColumnConfigurationRepository extends ServiceEntityRepository
             ->indexBy('configuration', 'configuration.fieldType')
             ->andWhere('configuration.user = :user')
             ->setParameter('user', $user)
-            ->orderBy('configuration.position', 'ASC')
+            ->orderBy('configuration.position', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
 

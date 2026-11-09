@@ -13,7 +13,6 @@ use App\Form\Product\Columns\Renderer\ColumnValueRenderer;
 use App\Repository\ProductColumnConfigurationRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -48,7 +47,7 @@ class ProductColumnsComposer
                     fn (Collection $identifiers): string => $identifiers
                         ->matching(
                             Criteria::create()
-                                ->orderBy(['type.title' => Order::Ascending])
+                                ->orderBy(['type.title' => \SortDirection::Ascending])
                         )
                         ->reduce(
                             /** @phpstan-ignore-next-line */

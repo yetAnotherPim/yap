@@ -20,6 +20,7 @@ use App\Controller\Admin\User\AccountCrudController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Field\Type\Translation\FieldTypeTitleTranslation;
@@ -114,6 +115,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(PasswordFormConfigurator::class)]
 #[UsesClass(QueueMonitor::class)]
 #[UsesClass(AssetMapCompiler::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 #[ResetDatabase]
 class FieldTypeTitleTranslationApiTest extends ApiTestCase
 {

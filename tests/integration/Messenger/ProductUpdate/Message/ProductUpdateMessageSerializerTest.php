@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Messenger\ProductUpdate\Message;
 
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Messenger\ProductUpdate\Message\Dto\FieldTranslation;
 use App\Messenger\ProductUpdate\Message\Dto\FieldTypeIdentifier;
 use App\Messenger\ProductUpdate\Message\Dto\ProductField;
@@ -19,6 +20,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[UsesClass(FieldTypeIdentifier::class)]
 #[UsesClass(FieldTranslation::class)]
 #[UsesClass(FieldTypeIdentifierType::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class ProductUpdateMessageSerializerTest extends KernelTestCase
 {
     public function testDeserializesCollections(): void

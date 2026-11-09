@@ -30,7 +30,7 @@ class RemoveObsoleteFields extends AbstractTask
                 'configuration.fieldType = fieldType',
             )
             ->where('configuration.id IS NULL')
-            ->orderBy('field.createdAt', 'ASC')
+            ->orderBy('field.createdAt', \SortDirection::Ascending)
             ->setMaxResults(self::LIMIT)
             ->getQuery()
             ->getResult();

@@ -6,6 +6,7 @@ namespace App\Tests\functional\frontend\Controller;
 
 use App\Controller\IndexController;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Localisation\Event\EventListener\LocaleListener;
 use App\Repository\LocaleRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(LocaleListener::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 final class IndexControllerTest extends WebTestCase
 {
     public function testIndex(): void

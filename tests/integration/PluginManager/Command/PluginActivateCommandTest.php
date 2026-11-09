@@ -19,6 +19,7 @@ use App\Controller\Api\PluginWorkflowController;
 use App\Controller\Provider\DashboardStatisticsProvider;
 use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Plugin\Plugin;
 use App\Form\Product\Columns\Composer\ProductColumnsComposer;
 use App\Form\Product\Fields\Composer\ProductFieldsComposer;
@@ -125,6 +126,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(PasswordFormConfigurator::class)]
 #[UsesClass(QueueMonitor::class)]
 #[UsesClass(AssetMapCompiler::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 #[RunTestsInSeparateProcesses]
 #[ResetDatabase]
 /** execute tests clearing the cache in a separate environment */

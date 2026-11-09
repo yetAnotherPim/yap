@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\integration\Entity\Product\Identifier;
 
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
@@ -31,6 +32,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[UsesClass(FieldType::class)]
 #[UsesClass(FieldRepository::class)]
 #[UsesClass(ProductType::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class IdentifierTest extends KernelTestCase
 {
     private EntityManagerInterface $entityManager;

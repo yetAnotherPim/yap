@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\integration\plugins\Scheduler\Task\CleanUp;
 
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\Enum\InputType;
@@ -33,6 +34,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[UsesClass(ProductTypeFieldConfiguration::class)]
 #[UsesClass(FieldRepository::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class RemoveObsoleteFieldsTest extends KernelTestCase
 {
     private EntityManagerInterface $entityManager;

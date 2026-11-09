@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\integration\plugins\Scheduler\Task\CleanUp;
 
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Abstract\RelatedTimestampableEntity;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
@@ -39,6 +40,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[UsesClass(LocaleRepository::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
 #[UsesClass(PluginManager::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class RemoveObsoleteFieldValueTranslationsTest extends KernelTestCase
 {
     private EntityManagerInterface $entityManager;

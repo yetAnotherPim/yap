@@ -82,7 +82,7 @@ class ProductColumnConfigurationRepositoryTest extends MockeryTestCase
         $queryBuilderMock
             ->shouldReceive('orderBy')
             ->once()
-            ->with('configuration.position', 'ASC')
+            ->with('configuration.position', \SortDirection::Ascending)
             ->andReturnSelf();
 
         $queryBuilderMock

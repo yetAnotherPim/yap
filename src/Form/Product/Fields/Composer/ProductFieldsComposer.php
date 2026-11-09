@@ -41,7 +41,7 @@ class ProductFieldsComposer
 
         $fields[] = FormField::addTab(new TranslatableMessage('product.labels.fields', [], 'admin'));
         $fields[] = FormField::addColumn(6);
-        $fields[] = FormField::addFieldset(new TranslatableMessage('product.labels.fields', [], 'admin'));
+        $fields[] = FormField::addFieldset(new TranslatableMessage('product.labels.fields', [], 'admin'), 'fa fa-pen');
         $fields[] = LocaleField::new('translation_locale_spacer', 'Sprache')
             ->addCssClass('translation-locale-spacer')
             ->setFormTypeOptions([
