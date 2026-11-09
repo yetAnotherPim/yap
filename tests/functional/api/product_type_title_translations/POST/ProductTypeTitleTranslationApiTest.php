@@ -7,6 +7,7 @@ namespace App\Tests\functional\api\product_type_title_translations\POST;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Type\ProductType;
 use App\Entity\Product\Type\Translation\ProductTypeTitleTranslation;
@@ -39,6 +40,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(User::class)]
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class ProductTypeTitleTranslationApiTest extends ApiTestCase
 {
     use AuthTrait;

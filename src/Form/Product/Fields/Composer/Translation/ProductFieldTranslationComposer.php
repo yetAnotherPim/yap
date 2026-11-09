@@ -53,7 +53,7 @@ class ProductFieldTranslationComposer
 
         $fields = [];
         $fields[] = FormField::addColumn(6);
-        $fields[] = FormField::addFieldset(new TranslatableMessage('general.labels.translation', [], 'admin'));
+        $fields[] = FormField::addFieldset(new TranslatableMessage('general.labels.translation', [], 'admin'), 'fa fa-globe');
         $fields[] = LocaleField::new('translation_locale', new TranslatableMessage('general.labels.locale', [], 'admin'))
             ->includeOnly($localeIds)
             ->addCssClass('translation-locale')

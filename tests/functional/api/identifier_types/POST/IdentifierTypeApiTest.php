@@ -7,6 +7,7 @@ namespace App\Tests\functional\api\identifier_types\POST;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Identifier\Type\IdentifierType;
 use App\Entity\User\User;
@@ -33,6 +34,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
 #[UsesClass(Locale::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class IdentifierTypeApiTest extends ApiTestCase
 {
     use AuthTrait;

@@ -148,7 +148,7 @@ class RemoveObsoleteFieldsTest extends MockeryTestCase
         $this->queryBuilder
             ->shouldReceive('orderBy')
             ->once()
-            ->with('field.createdAt', 'ASC')
+            ->with('field.createdAt', \SortDirection::Ascending)
             ->andReturnSelf();
 
         $this->queryBuilder

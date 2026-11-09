@@ -254,7 +254,7 @@ final class RemoveObsoleteFieldValueTranslationsTest extends MockeryTestCase
         $this->queryBuilder
             ->shouldReceive('orderBy')
             ->once()
-            ->with('translation.createdAt', 'ASC')
+            ->with('translation.createdAt', \SortDirection::Ascending)
             ->andReturnSelf();
 
         $this->queryBuilder

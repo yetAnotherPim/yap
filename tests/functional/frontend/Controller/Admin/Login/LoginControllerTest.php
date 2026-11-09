@@ -20,6 +20,7 @@ use App\Controller\Provider\DashboardSystemStatusProvider;
 use App\Controller\Provider\Dto\DashboardStatistic;
 use App\Controller\Provider\SystemStatus\InputVarsConfig;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
 use App\Entity\User\Enum\Roles;
 use App\Entity\User\User;
@@ -79,6 +80,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 #[UsesClass(DashboardStatistic::class)]
 #[UsesClass(QueueMonitor::class)]
 #[UsesClass(AdminAssetsConfiguredEvent::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class LoginControllerTest extends WebTestCase
 {
     private KernelBrowser $client;

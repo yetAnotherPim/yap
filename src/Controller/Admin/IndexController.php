@@ -24,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Theme;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
@@ -149,7 +150,12 @@ class IndexController extends AbstractDashboardController
                 '<img src="%s" alt="YAP" class="yap-admin-logo">',
                 htmlspecialchars($logoUrl, ENT_QUOTES),
             ))
-            ->setFaviconPath($faviconUrl);
+            ->setFaviconPath($faviconUrl)
+            ->setTheme(Theme::new()
+                ->primaryColor('#7F4AE2')
+                ->grays('slate')
+                ->radius('xs')
+            );
     }
 
     public function configureMenuItems(): iterable

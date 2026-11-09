@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\integration\Messenger\ProductUpdate;
 
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Translation\FieldValueTranslation;
@@ -60,6 +61,7 @@ use Zenstruck\Foundry\Attribute\ResetDatabase;
 #[UsesClass(ProductTypeFieldConfiguration::class)]
 #[UsesClass(ProductUpdateMessage::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 #[ResetDatabase]
 class ProductUpdateMessageHandlerTest extends KernelTestCase
 {

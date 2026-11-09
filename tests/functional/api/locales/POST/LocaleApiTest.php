@@ -7,6 +7,7 @@ namespace App\Tests\functional\api\locales\POST;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
 use App\Entity\User\User;
 use App\Localisation\Event\EventListener\LocaleListener;
@@ -30,6 +31,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(User::class)]
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class LocaleApiTest extends ApiTestCase
 {
     use AuthTrait;

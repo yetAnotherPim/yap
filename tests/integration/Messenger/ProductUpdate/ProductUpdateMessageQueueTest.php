@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\integration\Messenger\ProductUpdate;
 
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Product\Product;
 use App\Entity\Product\Type\ProductType;
 use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
@@ -37,6 +38,7 @@ use Zenstruck\Messenger\Test\InteractsWithMessenger;
 #[UsesClass(ProductUpdateMessage::class)]
 #[UsesClass(ProductUpdateMessageSerializer::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 final class ProductUpdateMessageQueueTest extends KernelTestCase
 {
     use InteractsWithMessenger;

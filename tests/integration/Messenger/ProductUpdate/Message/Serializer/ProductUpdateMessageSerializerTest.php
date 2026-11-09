@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\Messenger\ProductUpdate\Message\Serializer;
 
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Messenger\ProductUpdate\Message\ProductUpdateMessage;
 use App\Messenger\ProductUpdate\Message\Serializer\ProductUpdateMessageSerializer;
 use App\Messenger\ProductUpdate\ProductUpdateMessageHandler;
@@ -25,6 +26,7 @@ use Zenstruck\Messenger\Test\InteractsWithMessenger;
 #[UsesClass(ProductRepository::class)]
 #[UsesClass(ProductUpdateMessage::class)]
 #[UsesClass(ProductUpdateMessageHandler::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 final class ProductUpdateMessageSerializerTest extends KernelTestCase
 {
     use InteractsWithMessenger;

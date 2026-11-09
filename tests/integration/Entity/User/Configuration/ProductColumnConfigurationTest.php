@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\integration\Entity\User\Configuration;
 
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\User\Configuration\ProductColumnConfiguration;
 use App\Entity\User\User;
@@ -19,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 #[UsesClass(User::class)]
 #[UsesClass(FieldType::class)]
 #[UsesClass(RelatedTimestampUpdater::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class ProductColumnConfigurationTest extends KernelTestCase
 {
     private EntityManagerInterface $entityManager;

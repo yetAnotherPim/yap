@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\integration\Entity\Product\Field;
 
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Product\Field\Field;
 use App\Entity\Product\Field\Type\FieldType;
 use App\Entity\Product\Identifier\Identifier;
@@ -34,6 +35,7 @@ use Zenstruck\Foundry\Test\Factories;
 #[UsesClass(FieldRepository::class)]
 #[UsesClass(PluginManager::class)]
 #[UsesClass(ProductType::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class FieldTest extends KernelTestCase
 {
     use Factories;

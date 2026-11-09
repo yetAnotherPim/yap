@@ -24,7 +24,7 @@ class RemoveObsoleteFieldValueTranslations extends AbstractTask
             ->join('field.type', 'fieldType')
             ->where('fieldType.translatable = :translatable')
             ->setParameter('translatable', false)
-            ->orderBy('translation.createdAt', 'ASC')
+            ->orderBy('translation.createdAt', \SortDirection::Ascending)
             ->setMaxResults(self::LIMIT)
             ->getQuery()
             ->getResult();

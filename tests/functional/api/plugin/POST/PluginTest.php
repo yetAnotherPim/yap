@@ -8,6 +8,7 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Controller\Api\PluginWorkflowController;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
 use App\Entity\Plugin\Plugin;
 use App\Entity\User\User;
@@ -61,6 +62,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[UsesClass(LoginSuccessListener::class)]
 #[UsesClass(UserRepository::class)]
 #[UsesClass(Locale::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class PluginTest extends ApiTestCase
 {
     use DatabaseTrait;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\integration\PluginManager\DependencyInjection;
 
+use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\PluginManager\Plugin\PluginInterface;
 use App\PluginManager\PluginManager;
 use App\plugins\Scheduler\Controller\Admin\TasksController;
@@ -14,11 +15,13 @@ use App\plugins\Scheduler\Provider\TaskProvider;
 use App\plugins\Scheduler\Task\CleanUp\RemoveObsoleteFields;
 use App\plugins\Scheduler\Task\CleanUp\RemoveObsoleteFieldValueTranslations;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Kernel\KernelInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 #[CoversClass(PluginManager::class)]
+#[UsesClass(ValueIndexSchemaListener::class)]
 class PluginLoaderTest extends KernelTestCase
 {
     private const string DUMPFILE_PATH = __DIR__.'/../../../../var/plugin_configuration/test_plugin_configuration';
