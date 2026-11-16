@@ -205,9 +205,13 @@ jobs:
 
               echo "API locales and default locale successfully verified."
 
-        - name: Test task execution time has been updated
+        - name: Test Feed entity has been created successfully
           run: |
               php bin/console yap:plugins:list --refresh
+              php bin/console yap:plugin:activate Feeds
+
+        - name: Test task execution time has been updated
+          run: |
               php bin/console yap:plugin:activate Scheduler
               php bin/console ci:run-task
 

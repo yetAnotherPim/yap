@@ -33,6 +33,8 @@ class PluginManager
     private const string SERVICE_DEFINITION_FILE = 'services.yaml';
     private const string PLUGIN_FOLDER = __DIR__.'/../plugins/';
 
+    private const string ENTITY_FOLDER = 'Entity/';
+
     /** @phpstan-var Collection<int, PluginInterface> $plugins */
     private Collection $plugins;
 
@@ -200,9 +202,6 @@ class PluginManager
             $pluginName = trim($pluginName);
 
             $serviceDefinitionFile = self::PLUGIN_FOLDER.$pluginName.'/'.self::SERVICE_DEFINITION_FILE;
-            $twigFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::TWIG_FOLDER);
-            $translationFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::TRANSLATION_FOLDER);
-            $assetFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::ASSET_FOLDER);
 
             if (false === file_exists($serviceDefinitionFile)) {
                 continue;
@@ -216,42 +215,10 @@ class PluginManager
             try {
                 $loader->load(self::SERVICE_DEFINITION_FILE);
 
-                if (false !== $twigFolder && is_dir($twigFolder)) {
-                    $container->prependExtensionConfig(
-                        'twig',
-                        [
-                            'paths' => [
-                                $twigFolder => $pluginName,
-                            ],
-                        ],
-                    );
-                }
-
-                if (false !== $translationFolder && is_dir($translationFolder)) {
-                    $container->prependExtensionConfig(
-                        'framework',
-                        [
-                            'translator' => [
-                                'paths' => [
-                                    $translationFolder,
-                                ],
-                            ],
-                        ],
-                    );
-                }
-
-                if (false !== $assetFolder && is_dir($assetFolder)) {
-                    $container->prependExtensionConfig(
-                        'framework',
-                        [
-                            'asset_mapper' => [
-                                'paths' => [
-                                    $assetFolder => 'plugins/'.$pluginName,
-                                ],
-                            ],
-                        ],
-                    );
-                }
+                self::addTwigPath($pluginName, $container);
+                self::addTranslationPath($pluginName, $container);
+                self::addAssetPath($pluginName, $container);
+                self::addEntityMapping($pluginName, $container);
             } catch (\Exception $e) {
                 $successfullyLoaded = false;
             }
@@ -280,5 +247,89 @@ class PluginManager
         }
 
         $pluginEntity->setAssetCompilationRequired(true);
+    }
+
+    private static function addTwigPath(string $pluginName, ContainerBuilder $container): void
+    {
+        $twigFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::TWIG_FOLDER);
+
+        if (false === $twigFolder || false === is_dir($twigFolder)) {
+            return;
+        }
+
+        $container->prependExtensionConfig(
+            'twig',
+            [
+                'paths' => [
+                    $twigFolder => $pluginName,
+                ],
+            ],
+        );
+    }
+
+    private static function addTranslationPath(string $pluginName, ContainerBuilder $container): void
+    {
+        $translationFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::TRANSLATION_FOLDER);
+
+        if (false === $translationFolder || false === is_dir($translationFolder)) {
+            return;
+        }
+
+        $container->prependExtensionConfig(
+            'framework',
+            [
+                'translator' => [
+                    'paths' => [
+                        $translationFolder,
+                    ],
+                ],
+            ],
+        );
+    }
+
+    private static function addAssetPath(string $pluginName, ContainerBuilder $container): void
+    {
+        $assetFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::ASSET_FOLDER);
+
+        if (false === $assetFolder || false === is_dir($assetFolder)) {
+            return;
+        }
+
+        $container->prependExtensionConfig(
+            'framework',
+            [
+                'asset_mapper' => [
+                    'paths' => [
+                        $assetFolder => 'plugins/'.$pluginName,
+                    ],
+                ],
+            ],
+        );
+    }
+
+    private static function addEntityMapping(string $pluginName, ContainerBuilder $container): void
+    {
+        $entityFolder = realpath(self::PLUGIN_FOLDER.$pluginName.'/'.self::ENTITY_FOLDER);
+
+        if (false === $entityFolder || false === is_dir($entityFolder)) {
+            return;
+        }
+
+        $container->prependExtensionConfig(
+            'doctrine',
+            [
+                'orm' => [
+                    'mappings' => [
+                        $pluginName => [
+                            'type' => 'attribute',
+                            'is_bundle' => false,
+                            'dir' => $entityFolder,
+                            'prefix' => 'App\\plugins\\'.$pluginName.'\\Entity',
+                            'alias' => $pluginName,
+                        ],
+                    ],
+                ],
+            ],
+        );
     }
 }
