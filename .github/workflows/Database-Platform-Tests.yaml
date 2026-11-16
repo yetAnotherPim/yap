@@ -209,6 +209,7 @@ jobs:
           run: |
               php bin/console yap:plugins:list --refresh
               php bin/console yap:plugin:activate Feeds
+              php bin/console doctrine:query:dql "SELECT f.id FROM App\plugins\Feeds\Entity\Feed f"
 
         - name: Test task execution time has been updated
           run: |
