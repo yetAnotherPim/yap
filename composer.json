@@ -24,8 +24,8 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "api-platform/doctrine-orm": "^4.4.9",
-        "api-platform/symfony": "^4.4.9",
+        "api-platform/doctrine-orm": "^5.0",
+        "api-platform/symfony": "^5.0",
         "doctrine/doctrine-bundle": "^3.4.2",
         "doctrine/doctrine-migrations-bundle": "^4.0.1",
         "doctrine/orm": "^3.8.0",
@@ -146,6 +146,7 @@
         }
     },
     "require-dev": {
+        "api-platform/test": "^5.0",
         "friendsofphp/php-cs-fixer": "^3.95.32",
         "justinrainbow/json-schema": "^6.14.0",
         "mockery/mockery": "^1.6.15",
