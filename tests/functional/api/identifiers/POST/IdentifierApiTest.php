@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\functional\api\identifiers\POST;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Symfony\Bundle\Test\Client;
+use ApiPlatform\Test\ApiTestCase;
+use ApiPlatform\Test\Client;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;

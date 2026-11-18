@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\functional\api\field_type_title_translations\PATCH;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Symfony\Bundle\Test\Client;
+use ApiPlatform\Test\ApiTestCase;
+use ApiPlatform\Test\Client;
 use App\Controller\Admin\IndexController;
 use App\Controller\Admin\Products\IdentifierCrudController;
 use App\Controller\Admin\Products\ProductCrudController;
