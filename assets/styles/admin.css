@@ -101,7 +101,7 @@ div.field-collection-item > div.accordion-item * .col-form-label.required:after 
     flex-basis: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-top: 0.35rem;
+    margin-top: 2.0rem;
 }
 
 .product-batch-selection__message {
@@ -117,8 +117,6 @@ div.field-collection-item > div.accordion-item * .col-form-label.required:after 
     color: var(--bs-secondary-color);
     font-size: 0.8rem;
     text-decoration: underline;
-    top: 1.5rem;
-    margin-bottom: 0.5rem;
 }
 
 .batch-edit-textarea {
