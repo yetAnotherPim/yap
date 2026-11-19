@@ -61,7 +61,7 @@ class ProductTest extends KernelTestCase
 
         $this->assertNull($product->getUpdatedAt());
 
-        $product->setCreatedAt(new \DateTimeImmutable());
+        $product->setCreatedAt(new \DateTimeImmutable('-1 day'));
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\functional\api\products\GET;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Symfony\Bundle\Test\Client;
+use ApiPlatform\Test\ApiTestCase;
+use ApiPlatform\Test\Client;
 use App\Doctrine\Event\EventListener\RelatedTimestampUpdater;
 use App\Doctrine\Event\EventListener\ValueIndexSchemaListener;
 use App\Entity\Locale\Locale;
@@ -302,7 +302,10 @@ class ProductApiTest extends ApiTestCase
         /**
          * @var array{
          *     member: list<array{
-         *         fields: list<array<string, mixed>>
+         *         fields: list<array{
+         *             type: array{code: string},
+         *             translations?: list<array<string, mixed>>
+         *         }>
          *     }>
          * } $responseData
          */
@@ -314,12 +317,25 @@ class ProductApiTest extends ApiTestCase
         $product = $responseData['member'][0];
 
         $this->assertArrayHasKey('fields', $product);
-        $this->assertNotEmpty($product['fields']);
+        $this->assertCount(2, $product['fields']);
 
-        $field = $product['fields'][0];
+        $codeField = array_find(
+            $product['fields'],
+            static fn (array $field): bool => 'product_name' === $field['type']['code'],
+        );
 
-        $this->assertArrayHasKey('translations', $field);
-        $this->assertNotEmpty($field['translations']);
+        $this->assertNotNull($codeField);
+        $this->assertArrayHasKey('translations', $codeField);
+        $this->assertNotEmpty($codeField['translations']);
+
+        $similarToField = array_find(
+            $product['fields'],
+            static fn (array $field): bool => 'similar_to' === $field['type']['code'],
+        );
+
+        $this->assertNotNull($similarToField);
+        $this->assertArrayHasKey('translations', $similarToField);
+        $this->assertEmpty($similarToField['translations']);
     }
 
     /**

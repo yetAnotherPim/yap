@@ -99,10 +99,9 @@ div.field-collection-item > div.accordion-item * .col-form-label.required:after 
 
 .product-batch-selection {
     flex-basis: 100%;
-    width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-top: 0.35rem;
+    margin-top: 2.0rem;
 }
 
 .product-batch-selection__message {
