@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\plugins\Feeds\Entity;
 
 use App\Entity\Abstract\TimestampableEntity;
+use App\plugins\Feeds\Enum\Schedule;
 use App\plugins\Feeds\Repository\FeedRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,6 +23,12 @@ class Feed extends TimestampableEntity
 
     #[ORM\Column(length: 255)]
     private string $name;
+
+    #[ORM\Column(options: ['default' => true])]
+    private bool $active = true;
+
+    #[ORM\Column(enumType: Schedule::class)]
+    private Schedule $schedule = Schedule::DAILY;
 
     #[ORM\Column(nullable: true)]
     private ?array $productFilters = null;
@@ -61,6 +68,30 @@ class Feed extends TimestampableEntity
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): Feed
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getSchedule(): Schedule
+    {
+        return $this->schedule;
+    }
+
+    public function setSchedule(Schedule $schedule): Feed
+    {
+        $this->schedule = $schedule;
 
         return $this;
     }

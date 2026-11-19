@@ -1,0 +1,20 @@
+schedule:
+    hourly: 'Hourly'
+    daily: 'Daily'
+    weekly: 'Weekly'
+    monthly: 'Monthly'
+
+labels:
+    feed_name: 'Name'
+    feed_active: 'Active'
+    feed_schedule: 'Schedule'
+    feed_filename: 'Filename'
+    feed_head: 'Headline'
+    feed_content: 'Content'
+    feed_footer: 'Footer'
+    feed_latest: 'Latest'
+
+validation:
+    twig_syntax: 'The Twig template contains a syntax error: {{ error }}'
+
+

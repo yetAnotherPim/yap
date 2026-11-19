@@ -36,6 +36,8 @@ class Plugin implements PluginInterface
             (
                 id UUID NOT NULL,
                 name VARCHAR(255) NOT NULL,
+                active BOOLEAN DEFAULT true NOT NULL,
+                schedule VARCHAR(255) NOT NULL,
                 product_filters JSON DEFAULT NULL,
                 filename VARCHAR(255) NOT NULL,
                 head TEXT DEFAULT NULL,
@@ -54,6 +56,8 @@ class Plugin implements PluginInterface
             (
                 id BINARY(16) NOT NULL,
                 name VARCHAR(255) NOT NULL,
+                active TINYINT DEFAULT 1 NOT NULL,
+                schedule VARCHAR(255) NOT NULL,
                 product_filters JSON DEFAULT NULL,
                 filename VARCHAR(255) NOT NULL,
                 head LONGTEXT DEFAULT NULL,
