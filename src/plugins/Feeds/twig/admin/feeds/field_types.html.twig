@@ -1,0 +1,30 @@
+{% block feed_field_types_widget %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>{{ 'field_type.labels.code'|trans({}, 'admin') }}</th>
+                <th>{{ 'field_type.labels.title'|trans({}, 'admin') }}</th>
+                <th class="text-center">{{ 'field_type.labels.translatable'|trans({}, 'admin') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for fieldType in field_types %}
+                <tr>
+                    <td>
+                        <code>{{ fieldType.code }}</code>
+                    </td>
+                    <td>{{ fieldType.getTranslatedTitleByLocale(app.request.locale) }}</td>
+                    <td class="text-center">
+                        {% if fieldType.translatable %}
+                            <twig:ea:Icon name="internal:check" class="text-success" />
+                        {% else %}
+                            <twig:ea:Icon name="internal:xmark" class="text-body-secondary" />
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

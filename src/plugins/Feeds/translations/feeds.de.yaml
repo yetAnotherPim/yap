@@ -1,0 +1,18 @@
+schedule:
+    hourly: 'Stündlich'
+    daily: 'Täglich'
+    weekly: 'Wöchentlich'
+    monthly: 'Monatlich'
+
+labels:
+    feed_name: 'Name'
+    feed_active: 'Aktiv'
+    feed_schedule: 'Zeitplan'
+    feed_filename: 'Dateiname'
+    feed_head: 'Kopfzeile'
+    feed_content: 'Inhalt'
+    feed_footer: 'Fußzeile'
+    feed_latest: 'Letzte'
+
+validation:
+    twig_syntax: 'Das Twig-Template enthält folgenden Fehler: {{ error }}'
